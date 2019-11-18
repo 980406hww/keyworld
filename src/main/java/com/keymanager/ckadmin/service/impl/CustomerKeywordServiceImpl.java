@@ -12,6 +12,7 @@ import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.dao.CustomerKeywordDao;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.enums.CollectMethod;
 import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.EntryTypeEnum;
 import com.keymanager.ckadmin.enums.KeywordEffectEnum;
@@ -21,6 +22,7 @@ import com.keymanager.ckadmin.service.CustomerExcludeKeywordService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
+import com.keymanager.ckadmin.util.Constants;
 import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.CodeNameVo;
@@ -700,6 +702,60 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public void updateSelectFailReason(KeywordCriteria keywordCriteria) {
         customerKeywordDao.updateSelectFailReason(keywordCriteria);
+    }
+
+    @Override
+    public void addCustomerKeywordsFromSimpleUI(List<CustomerKeyword> customerKeywords, String terminalType, String entryType, String userName) {
+        if (CollectionUtils.isNotEmpty(customerKeywords)) {
+            long customerUuid = customerKeywords.get(0).getCustomerUuid();
+            int maxSequence = getMaxSequence(terminalType, entryType, customerUuid);
+            for (CustomerKeyword customerKeyword : customerKeywords) {
+                supplementInfoFromSimpleUI(customerKeyword, terminalType, entryType, ++maxSequence);
+                supplementIndexAndPriceFromExisting(customerKeyword);
+                addCustomerKeyword(customerKeyword, userName);
+            }
+        }
+    }
+
+    private int getMaxSequence(String terminalType, String entryType, Long customerUuid) {
+        Integer maxSequence;
+        try {
+            maxSequence = customerKeywordDao.getMaxSequence(terminalType, entryType, customerUuid);
+        } catch (Exception ex) {
+            throw new RuntimeException("customerKeywordDao.getMaxSequence() is error");
+        }
+        return maxSequence == null ? 0 : maxSequence;
+    }
+
+    private void supplementInfoFromSimpleUI(CustomerKeyword customerKeyword, String terminalType, String entryType, int maxSequence) {
+        customerKeyword.setType(entryType);
+        customerKeyword.setTerminalType(terminalType);
+        customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
+        customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
+        customerKeyword.setCollectMethod(CollectMethod.PerDay.getCode());
+        customerKeyword.setServiceProvider("baidutop123");
+        customerKeyword.setSequence(maxSequence);
+        customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
+        customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+        customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.UI.name());
+    }
+
+    private void supplementIndexAndPriceFromExisting(CustomerKeyword customerKeyword) {
+        List<CustomerKeyword> existingCustomerKeywords = customerKeywordDao.searchSameCustomerKeywords(customerKeyword.getTerminalType(),
+            customerKeyword.getCustomerUuid(), customerKeyword.getKeyword().trim(), customerKeyword.getSearchEngine());
+        if (CollectionUtils.isNotEmpty(existingCustomerKeywords)) {
+            CustomerKeyword existingCustomerKeyword = existingCustomerKeywords.get(0);
+            customerKeyword.setInitialIndexCount(existingCustomerKeyword.getInitialIndexCount());
+            customerKeyword.setCurrentIndexCount(existingCustomerKeyword.getCurrentIndexCount());
+            customerKeyword.setOptimizePlanCount(existingCustomerKeyword.getOptimizePlanCount());
+            customerKeyword.setOptimizeRemainingCount(existingCustomerKeyword.getOptimizePlanCount());
+            customerKeyword.setPositionFirstFee(existingCustomerKeyword.getPositionFirstFee());
+            customerKeyword.setPositionSecondFee(existingCustomerKeyword.getPositionSecondFee());
+            customerKeyword.setPositionThirdFee(existingCustomerKeyword.getPositionThirdFee());
+            customerKeyword.setPositionForthFee(existingCustomerKeyword.getPositionForthFee());
+            customerKeyword.setPositionFifthFee(existingCustomerKeyword.getPositionFifthFee());
+            customerKeyword.setPositionFirstPageFee(existingCustomerKeyword.getPositionFirstPageFee());
+        }
     }
 
     @Override

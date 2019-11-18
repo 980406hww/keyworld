@@ -838,28 +838,35 @@ public class CustomerKeyword extends BaseEntity {
     }
 
     public String getSearchEngineUrl() {
-        String searchEngineUrl = Constants.SEARCH_ENGINE_URL_MAP
-            .get(this.getSearchEngine() + "_" + this.getTerminalType()) + this.getKeyword();
+        String searchEngineUrl = Constants.SEARCH_ENGINE_URL_MAP.get(this.getSearchEngine() + "_" + this.getTerminalType()) + this.getKeyword();
         if (this.getSearchEngine() != null) {
-            if (this.getSearchEngine().equals(Constants.SEARCH_ENGINE_BAIDU)) {
-                searchEngineUrl +=
-                    "&pn=" + this.getPrepareBaiduPageNumber(this.getCurrentPosition());
-            } else if (this.getSearchEngine().equals(Constants.SEARCH_ENGINE_SOGOU)) {
-                if (this.getTerminalType().equals(TerminalTypeEnum.PC.name())) {
+            switch (this.getSearchEngine()) {
+                case Constants.SEARCH_ENGINE_BAIDU:
+                    searchEngineUrl += "&pn=";
+                    searchEngineUrl += this.getPrepareBaiduPageNumber(this.getCurrentPosition());
+                    break;
+                case Constants.SEARCH_ENGINE_SOGOU:
+                    if (this.getTerminalType().equals(TerminalTypeEnum.PC.name())) {
+                        searchEngineUrl += "&page=" + ((this.getCurrentPosition() / 10) + 1);
+                    } else {
+                        searchEngineUrl += "&p=" + ((this.getCurrentPosition() / 10) + 1);
+                    }
+                    break;
+                case Constants.SEARCH_ENGINE_360:
+                    searchEngineUrl += "&pn=" + ((this.getCurrentPosition() / 10) + 1);
+                    break;
+                case Constants.SEARCH_ENGINE_SM:
                     searchEngineUrl += "&page=" + ((this.getCurrentPosition() / 10) + 1);
-                } else {
-                    searchEngineUrl += "&p=" + ((this.getCurrentPosition() / 10) + 1);
-                }
-            } else if (this.getSearchEngine().equals(Constants.SEARCH_ENGINE_360)) {
-                searchEngineUrl += "&pn=" + ((this.getCurrentPosition() / 10) + 1);
-            } else if (this.getSearchEngine().equals(Constants.SEARCH_ENGINE_SM)) {
-                searchEngineUrl += "&page=" + ((this.getCurrentPosition() / 10) + 1);
+                    break;
             }
         }
         return searchEngineUrl;
     }
 
-    public int getPrepareBaiduPageNumber(int value) {
+    public int getPrepareBaiduPageNumber(Integer value) {
+        if (value == null) {
+            value = 0;
+        }
         int tmpValue = (value > 0 ? (value - 1) : 0);
         String valueString = tmpValue + "";
         String lastDigit = valueString.substring(valueString.length() - 1);

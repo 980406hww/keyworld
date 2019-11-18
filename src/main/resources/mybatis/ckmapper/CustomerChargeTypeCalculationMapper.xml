@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.CustomerChargeTypeCalculationDao">
+
+    <sql id="rowID">
+        t.fUuid AS `uuid`,
+        t.fCustomerChargeTypeUuid AS `customerChargeTypeUuid`,
+        t.fChargeDataType AS `chargeDataType`,
+        t.fOperationType AS `operationType`,
+        t.fChargesOfFirst AS `chargesOfFirst`,
+        t.fChargesOfSecond AS `chargesOfSecond`,
+        t.fChargesOfThird AS `chargesOfThird`,
+        t.fChargesOfFourth AS `chargesOfFourth`,
+        t.fChargesOfFifth AS `chargesOfFifth`,
+        t.fChargesOfFirstPage AS `chargesOfFirstPage`,
+        t.fMaxPrice AS `maxPrice`
+    </sql>
+
+    <select id="searchCustomerChargeTypeCalculations" resultType="com.keymanager.ckadmin.entity.CustomerChargeTypeCalculation">
+        select
+        <include refid="rowID"/>
+        FROM t_customer_charge_type_calculation t
+        WHERE t.fCustomerChargeTypeUuid = #{uuid}
+    </select>
+
+    <select id="deleteByCustomerChargeTypeUuid">
+        DELETE FROM t_customer_charge_type_calculation WHERE fCustomerChargeTypeUuid = #{customerChargeTypeUuid}
+    </select>
+</mapper>

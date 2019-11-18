@@ -15,6 +15,14 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/layui/add-or-upd.css">
     <style>
+        .click-czcs{
+            cursor: pointer;
+        }
+
+        .click-czcs:hover{
+            color: #0c7df5;
+        }
+
         .layui-tab-content {
             padding: 0px;
         }
@@ -1034,6 +1042,7 @@
                     height: 'full-105',
                     loading: true,
                     done: function (res, curr, count) {
+                        console.log(res);
                         successTable(res, whereCondition);
                         initSortRadio(whereCondition);
                     }
@@ -2909,8 +2918,7 @@
         /**
          * 全站添加关键字
          */
-        window.showAddKeywordDialog = function (uuid, customerUuid, domain, bearPawNumber,
-            searchEngine, type, pcGroup, phoneGroup) {
+        window.showAddKeywordDialog = function (uuid, customerUuid, domain, bearPawNumber, searchEngine, type, pcGroup, phoneGroup) {
             let terminalType = $("#terminalType").val();
             let optimizeGroupName = phoneGroup;
             if (terminalType === 'PC') {
@@ -3136,6 +3144,15 @@
             let url = '/internal/customerKeyword/toKeywordsWithQZ/qz/' + terminalType + '/' + customerUuid + '/' + group + '/' + searchEngine + '/' + status;
             let tit = group + '--关键字列表';
             let id = customerUuid + "-" + (status === 0 ? "暂停" : "激活");
+            common.updateOrNewTab(url, tit, id);
+        };
+
+        window.toCustomerKeywordFromQZ = function (customerUuid, pcGroup, phoneGroup) {
+            let group = pcGroup === 'null' ? phoneGroup : pcGroup;
+            let terminalType = document.getElementById('terminalType').value;
+            let url = '/internal/customerKeyword/toCustomerKeywordFromQZ/qz/' + terminalType + '/' + customerUuid + '/' + group;
+            let tit = group + '--关键字列表';
+            let id = customerUuid + '-czcs';
             common.updateOrNewTab(url, tit, id);
         };
 
@@ -3435,7 +3452,7 @@
                      </span>
                 </div>
                 <div class="layui-col-md12">
-                    <span>操作词数</span>
+                    <span class="click-czcs" onclick="toCustomerKeywordFromQZ('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">操作词数</span>
                 </div>
             </div>
             <div class="layui-col-md12 line1">

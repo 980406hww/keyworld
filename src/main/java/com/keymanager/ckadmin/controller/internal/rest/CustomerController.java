@@ -13,9 +13,11 @@ import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.ReflectUtils;
 import com.keymanager.ckadmin.util.SQLFilterUtils;
+import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.CustomerTypeVO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.util.TerminalTypeMapping;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +37,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -128,6 +132,19 @@ public class CustomerController extends SpringMVCBaseController {
     public ModelAndView toCustomersAdd() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("customers/customerAdd");
+        return mv;
+    }
+
+    /**
+     * 跳转客户规则
+     *
+     * @return
+     */
+    @RequiresPermissions("/internal/customerChargeType/saveCustomerChargeType")
+    @GetMapping(value = "/toCustomersRule")
+    public ModelAndView toCustomersRule() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("customers/customerRuleAdd");
         return mv;
     }
 
@@ -450,6 +467,28 @@ public class CustomerController extends SpringMVCBaseController {
             resultBean.setCode(400);
             resultBean.setMsg("未知错误");
             return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/customer/uploadDailyReportTemplate")
+    @RequestMapping(value = "/uploadDailyReportTemplate2", method = RequestMethod.POST)
+    public ResultBean uploadDailyReportTemplate(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        String customerUuid = request.getParameter("customerUuid");
+        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        String path = Utils.getWebRootPath() + "dailyreport" + File.separator + terminalType + File.separator;
+        String fileName = customerUuid + ".xls";
+        File targetFile = new File(path, fileName);
+        if (!targetFile.exists()) {
+            targetFile.mkdirs();
+        }
+        try {
+            file.transferTo(targetFile);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
         }
         return resultBean;
     }

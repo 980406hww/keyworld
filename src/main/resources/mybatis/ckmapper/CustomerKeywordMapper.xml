@@ -404,7 +404,7 @@
         </if>
         <if test="keywordCriteria.keyword != null and keywordCriteria.keyword != ''">
             <choose>
-                <when test="keywordCriteria.notLike != null and keywordCriteria.notLike == '1'">
+                <when test="keywordCriteria.notLike != null and keywordCriteria.notLike == 'on'">
                     AND ck.fKeyword = #{keywordCriteria.keyword}
                 </when>
                 <otherwise>
@@ -1138,7 +1138,29 @@
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
 
-    <select id="getMaxInvalidCountByMachineGroup" resultType="java.lang.Integer">
+    <select id="getMaxSequence" resultType="java.lang.Integer">
+        select max(fSequence) from t_customer_keyword where fTerminalType = #{terminalType} and fType = #{entryType} and fCustomerUuid =
+        #{customerUuid};
+    </select>
+
+    <select id="searchSameCustomerKeywords" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
+        SELECT
+        ck.fUuid	AS	'uuid',
+        ck.fInitialIndexCount	AS	'initialIndexCount',
+        ck.fCurrentIndexCount	AS	'currentIndexCount',
+        ck.fOptimizePlanCount	AS	'optimizePlanCount',
+        ck.fPositionFirstFee	AS	'positionFirstFee',
+        ck.fPositionSecondFee	AS	'positionSecondFee',
+        ck.fPositionThirdFee	AS	'positionThirdFee',
+        ck.fPositionForthFee	AS	'positionForthFee',
+        ck.fPositionFifthFee	AS	'positionFifthFee',
+        ck.fPositionFirstPageFee	AS	'positionFirstPageFee'
+        FROM t_customer_keyword ck
+        WHERE ck.fKeyword = #{keyword} and ck.fTerminalType = #{terminalType} and ck.fCustomerUuid = #{customerUuid} and ck.fSearchEngine = #{searchEngine}
+        order by ck.fCreateTime ASC
+    </select>
+    
+     <select id="getMaxInvalidCountByMachineGroup" resultType="java.lang.Integer">
         SELECT toc.fMaxInvalidCount
         FROM t_customer_keyword ck
         LEFT JOIN t_group g

@@ -400,26 +400,27 @@ function saveCustomerChargeType(customerUuid) {
         });
     }
     if (validationFlag) {
-        $.ajax({
-            url: '/internal/customerChargeType/saveCustomerChargeType',
-            data: JSON.stringify(customerChargeType),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            timeout: 5000,
-            type: 'POST',
-            success: function (result) {
-                if (result) {
-                    $().toastmessage('showSuccessToast', "操作成功",true);
-                } else {
-                    $().toastmessage('showErrorToast', "操作失败");
-                }
-            },
-            error: function () {
-                $().toastmessage('showErrorToast', "操作失败");
-            }
-        });
+        console.log(customerChargeType);
+        // $.ajax({
+        //     url: '/internal/customerChargeType/saveCustomerChargeType',
+        //     data: JSON.stringify(customerChargeType),
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json'
+        //     },
+        //     timeout: 5000,
+        //     type: 'POST',
+        //     success: function (result) {
+        //         if (result) {
+        //             $().toastmessage('showSuccessToast', "操作成功",true);
+        //         } else {
+        //             $().toastmessage('showErrorToast', "操作失败");
+        //         }
+        //     },
+        //     error: function () {
+        //         $().toastmessage('showErrorToast', "操作失败");
+        //     }
+        // });
         $("#customerChargeTypeDialog").dialog("close");
         $('#showRuleForm')[0].reset();
     }

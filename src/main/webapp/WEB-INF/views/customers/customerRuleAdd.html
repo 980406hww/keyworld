@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 96%">
+<head>
+    <meta charset="UTF-8">
+    <title>添加</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="/static/layui/add-or-upd.css">
+    <style>
+        .layui-col-md6 {
+            height: 43px;
+        }
+
+        .layui-form-select dl {
+            max-height: 200px;
+        }
+
+        .special-style .layui-form-label {
+            width: 70px !important;
+        }
+
+        .special-style .layui-input-block {
+            margin-left: 70px !important;
+        }
+
+        .layui-tab-card {
+            box-shadow: none !important;
+        }
+
+        .special-style-two .layui-form-label {
+            width: 60px !important;
+            padding: 8px 0 !important;
+        }
+
+        .special-style-two .layui-input-block {
+            margin-left: 60px !important;
+        }
+    </style>
+</head>
+<body style="height: 100%">
+<div style="height: 100%">
+    <!--form表单-->
+    <form class="layui-form layui-form-pane ok-form" lay-filter="saveRule" style="height: 96%">
+        <div class="ok-body" style="height: 100%">
+            <input type="hidden" value="" id="customerUuid" name="customerUuid"/>
+            <input type="hidden" value="" id="uuid" name="uuid"/>
+            <input type="hidden" value="Percentage" id="whichTab" name="whichTab"/>
+            <div class="layui-tab layui-tab-card" lay-filter="customerRuleTab" style="height: 94%;padding-bottom:5px">
+                <ul class="layui-tab-title">
+                    <li lay-id="Percentage" style="width: 50%;padding: 0 2px 0 0" class="layui-this" data-value="Percentage">按照百分比收费</li>
+                    <li lay-id="Range" style="width: 50%;padding:  0 0 0 2px" data-value="Range">按照区间收费</li>
+                </ul>
+                <div class="layui-tab-content" style="height: 90%;overflow-y: auto">
+                    <div class="layui-tab-item layui-show">
+                        <div class="layui-row">
+                            <div class="layui-col-md6 layui-col-sm6 padding-ten-right">
+                                <div class="layui-form-item" pane>
+                                    <label class="layui-form-label">电脑</label>
+                                    <div class="layui-input-block">
+                                        <input type="checkbox" name="pPC" lay-skin="switch" lay-filter="pPC" lay-text="选中|不选中">
+                                    </div>
+                                </div>
+                                <div class="layui-row" id="pPCContent" style="display: none">
+                                    <div class="layui-col-md6 layui-col-sm6 padding-ten-right">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width: 100%">指数小于100</label>
+                                        </div>
+                                        <div class="special-style">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第一</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPCSOne" onkeyup="inputNext(3,this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第二</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPCSTwo" onkeyup="handleValue(this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第三</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPCSThree" onkeyup="handleValue(this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第四</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPCSFour" onkeyup="inputNext(2,this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第五</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPCSFive" onkeyup="handleValue(this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">首页</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPCSIndex" onkeyup="handleValue(this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md6 layui-col-sm6 padding-ten-left">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width: 100%">指数大于100(%)</label>
+                                        </div>
+                                        <div class="special-style">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第一</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPCBOne" onkeyup="inputNext(3,this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第二</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPCBTwo" onkeyup="handleValue(this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第三</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPCBThree" onkeyup="handleValue(this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第四</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPCBFour" onkeyup="inputNext(2,this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第五</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPCBFive" onkeyup="handleValue(this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">首页</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPCBIndex" onkeyup="handleValue(this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">最大</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPCBBestBig" onkeyup="handleValue(this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md6 layui-col-sm6 padding-ten-left">
+                                <div class="layui-form-item" pane>
+                                    <label class="layui-form-label">手机</label>
+                                    <div class="layui-input-block">
+                                        <input type="checkbox" name="pPhone" lay-skin="switch" lay-filter="pPhone" lay-text="选中|不选中">
+                                    </div>
+                                </div>
+                                <div class="layui-row" id="pPhoneContent" style="display: none">
+                                    <div class="layui-col-md6 layui-col-sm6 padding-ten-right">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width: 100%">指数小于100</label>
+                                        </div>
+                                        <div class="special-style">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第一</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPhoneSOne" onkeyup="inputNext(3,this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第二</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPhoneSTwo" onkeyup="handleValue(this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第三</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPhoneSThree" onkeyup="handleValue(this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第四</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPhoneSFour" onkeyup="inputNext(2,this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第五</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPhoneSFive" onkeyup="handleValue(this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">首页</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPhoneSIndex" onkeyup="handleValue(this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md6 layui-col-sm6 padding-ten-left">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width: 100%">指数大于100(%)</label>
+                                        </div>
+                                        <div class="special-style">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第一</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPhoneBOne" onkeyup="inputNext(3,this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第二</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPhoneBTwo" onkeyup="handleValue(this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第三</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPhoneBThree" onkeyup="handleValue(this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第四</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPhoneBFour" onkeyup="inputNext(2,this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">第五</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPhoneBFive" onkeyup="handleValue(this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">首页</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPhoneBIndex" onkeyup="handleValue(this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">最大</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="pPhoneBBestBig" onkeyup="handleValue(this)" autocomplete="off" class="layui-input">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="layui-row">
+                            <div class="layui-col-md9 layui-col-sm9 padding-ten-right">
+                                <div class="layui-form-item" pane>
+                                    <label class="layui-form-label">电脑</label>
+                                    <div class="layui-input-block">
+                                        <input type="checkbox" name="rPC" lay-skin="switch" lay-filter="rPC" lay-text="选中|不选中">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md3 layui-col-sm3 padding-ten-left" style="line-height: 36px;">
+                                <button onclick="appendTable(true)" type="button" class="layui-btn layui-btn-sm" style="width: 100%">
+                                    增加规则
+                                </button>
+                            </div>
+                        </div>
+                        <div id="rPCContent" style="display: none">
+                            <div style="margin-bottom: 5px">
+                                <table border="0" width="100%" class="computer">
+                                    <tbody id="rPCTable">
+                                    <tr class="my-bg">
+                                        <td>
+                                            <div class="my-label my-header-title my-left my-padding">
+                                                序号
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-header-title my-left my-padding">
+                                                起始指数
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-header-title my-left my-padding">
+                                                终止指数
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-header-title my-left my-padding">
+                                                电脑端价格
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-header-title my-left my-padding my-bottom">
+                                                操作
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="my-label my-left my-padding">
+                                                1
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-left">
+                                                <input type="text" onkeyup="handleValue(this)" class="layui-input my-input">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-left">
+                                                <input type="text" onkeyup="handleValue(this)" class="layui-input my-input">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-left">
+                                                <input type="text" onkeyup="handleValue(this)" class="layui-input my-input">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-btn my-left my-bottom">
+                                                <button type="button" onclick="removeElement(this)" class="layui-btn layui-btn-xs layui-btn-danger">
+                                                    删除
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="layui-row special-style-two">
+                                <div class="layui-col-md2 layui-col-sm2 padding-ten-right">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">一(%)</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" value="100" onkeyup="handleValue(this)" name="rPCOne" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md2 layui-col-sm2 padding-ten-right padding-ten-left">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">二(%)</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" value="100" onkeyup="handleValue(this)" name="rPCTwo" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md2 layui-col-sm2 padding-ten-right padding-ten-left">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">三(%)</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" value="100" onkeyup="handleValue(this)" name="rPCThree" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md2 layui-col-sm2 padding-ten-right padding-ten-left">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">四(%)</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" value="50" onkeyup="handleValue(this)" name="rPCFour" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md2 layui-col-sm2 padding-ten-right padding-ten-left">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">五(%)</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" value="50" onkeyup="handleValue(this)" name="rPCFive" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md2 layui-col-sm2 padding-ten-left">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">十(%)</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" value="0" onkeyup="handleValue(this)" name="rPCTen" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-row">
+                            <div class="layui-col-md9 layui-col-sm9 padding-ten-right">
+                                <div class="layui-form-item" pane>
+                                    <label class="layui-form-label">手机</label>
+                                    <div class="layui-input-block">
+                                        <input type="checkbox" name="rPhone" lay-skin="switch" lay-filter="rPhone" lay-text="选中|不选中">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md3 layui-col-sm3 padding-ten-left" style="line-height: 36px;">
+                                <button onclick="appendTable(false)" type="button" class="layui-btn layui-btn-sm" style="width: 100%">
+                                    增加规则
+                                </button>
+                            </div>
+                        </div>
+                        <div id="rPhoneContent" style="display: none">
+                            <div style="margin-bottom: 5px">
+                                <table border="0" width="100%" class="computer">
+                                    <tbody id="rPhoneTable">
+                                    <tr class="my-bg">
+                                        <td>
+                                            <div class="my-label my-header-title my-left my-padding">
+                                                序号
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-header-title my-left my-padding">
+                                                起始指数
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-header-title my-left my-padding">
+                                                终止指数
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-header-title my-left my-padding">
+                                                电脑端价格
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-header-title my-left my-padding my-bottom">
+                                                操作
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="my-label my-left my-padding">
+                                                1
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-left">
+                                                <input type="text" onkeyup="handleValue(this)" class="layui-input my-input">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-left">
+                                                <input type="text" onkeyup="handleValue(this)" class="layui-input my-input">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-left">
+                                                <input type="text" onkeyup="handleValue(this)" class="layui-input my-input">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="my-label my-btn my-left my-bottom">
+                                                <button type="button" onclick="removeElement(this)" class="layui-btn layui-btn-xs layui-btn-danger">
+                                                    删除
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="layui-row special-style-two">
+                                <div class="layui-col-md2 layui-col-sm2 padding-ten-right">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">一(%)</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" value="100" onkeyup="handleValue(this)" name="rPhoneOne" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md2 layui-col-sm2 padding-ten-right padding-ten-left">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">二(%)</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" value="100" onkeyup="handleValue(this)" name="rPhoneTwo" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md2 layui-col-sm2 padding-ten-right padding-ten-left">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">三(%)</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" value="100" onkeyup="handleValue(this)" name="rPhoneThree" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md2 layui-col-sm2 padding-ten-right padding-ten-left">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">四(%)</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" value="0" onkeyup="handleValue(this)" name="rPhoneFour" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md2 layui-col-sm2 padding-ten-right padding-ten-left">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">五(%)</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" value="0" onkeyup="handleValue(this)" name="rPhoneFive" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md2 layui-col-sm2 padding-ten-left">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">十(%)</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" value="0" onkeyup="handleValue(this)" name="rPhoneTen" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" lay-submit lay-filter="save">确定</button>
+                <button class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">
+                    取消
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--js逻辑-->
+
+<script src="/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
+<script>
+    let layui_ = null;
+    let uuid_ = null;
+
+    let customer_ = document.getElementById('customerUuid');
+    let pPCContent = document.getElementById('pPCContent');
+    let pPhoneContent = document.getElementById('pPhoneContent');
+    let rPCContent = document.getElementById('rPCContent');
+    let rPhoneContent = document.getElementById('rPhoneContent');
+    let tbody_com = document.getElementById('rPCTable');
+    let tbody_phone = document.getElementById('rPhoneTable');
+
+    function initForm(uuid) {
+        uuid_ = uuid;
+        customer_.value = uuid;
+        if (layui_ != null) {
+            setForm(layui_, uuid_)
+        }
+    }
+
+    function setForm(l, uuid) {
+        l.$.ajax({
+            url: '/internal/customerChargeTypes/getCustomerChargeType/' + uuid,
+            type: 'get',
+            dataType: 'json',
+            success: function (res) {
+                if (res.code === 200 && res.data) {
+                    let d = res.data, s_d = {}, pcFlag = false, phoneFlag = false;
+                    l.element.tabChange('customerRuleTab', d.chargeType);
+                    s_d.uuid = d.uuid;
+                    s_d.whichTab = d.chargeType;
+                    if (d.chargeType === 'Percentage') {
+                        if (d.customerChargeTypeCalculations) {
+                            for (let i = 0; i < d.customerChargeTypeCalculations.length; i++) {
+                                let temp = d.customerChargeTypeCalculations[i];
+                                if (temp.chargeDataType === "LessThanHundred") {
+                                    if (temp.operationType === 'PC') {
+                                        pcFlag = true;
+                                        setCustomerChargeTypeCalculationLT(s_d, temp, 'PC')
+                                    } else {
+                                        phoneFlag = true;
+                                        setCustomerChargeTypeCalculationLT(s_d, temp, 'Phone')
+                                    }
+                                } else {
+                                    if (temp.operationType === 'PC') {
+                                        pcFlag = true;
+                                        setCustomerChargeTypeCalculationGT(s_d, temp, 'PC');
+                                    } else {
+                                        phoneFlag = true;
+                                        setCustomerChargeTypeCalculationGT(s_d, temp, 'Phone');
+                                    }
+                                }
+                            }
+                        }
+                        if (pcFlag) {
+                            s_d.pPC = true;
+                            pPCContent.style.display = 'block';
+                        }
+                        if (phoneFlag) {
+                            s_d.pPhone = true;
+                            pPhoneContent.style.display = 'block';
+                        }
+                    } else {
+                        if (d.customerChargeTypeIntervals) {
+                            let html = '                                    <tr>\n'
+                                + '                                        <td>\n'
+                                + '                                            <div class="my-label my-left my-padding">\n'
+                                + '                                            {0}</div>\n'
+                                + '                                        </td>\n'
+                                + '                                        <td>\n'
+                                + '                                            <div class="my-label my-left">\n'
+                                + '                                                <input type="text" value="{1}" onkeyup="handleValue(this)" class="layui-input my-input">\n'
+                                + '                                            </div>\n'
+                                + '                                        </td>\n'
+                                + '                                        <td>\n'
+                                + '                                            <div class="my-label my-left">\n'
+                                + '                                                <input type="text" value="{2}" onkeyup="handleValue(this)" class="layui-input my-input">\n'
+                                + '                                            </div>\n'
+                                + '                                        </td>\n'
+                                + '                                        <td>\n'
+                                + '                                            <div class="my-label my-left">\n'
+                                + '                                                <input type="text" value="{3}" onkeyup="handleValue(this)" class="layui-input my-input">\n'
+                                + '                                            </div>\n'
+                                + '                                        </td>\n'
+                                + '                                        <td>\n'
+                                + '                                            <div class="my-label my-btn my-left my-bottom">\n'
+                                + '                                                <button type="button" onclick="removeElement(this)" class="layui-btn layui-btn-xs layui-btn-danger">\n'
+                                + '                                                    删除\n'
+                                + '                                                </button>\n'
+                                + '                                            </div>\n'
+                                + '                                        </td>\n'
+                                + '                                    </tr>';
+                            let k = 2, l = 2;
+                            for (let i = 0; i < d.customerChargeTypeIntervals.length; i++) {
+                                let temp = d.customerChargeTypeIntervals[i];
+                                if (temp.operationType === 'PC') {
+                                    if (pcFlag) {
+                                        $(tbody_com).append(html.replace('{0}', k++).replace('{1}', temp.startIndex ? temp.startIndex : '').replace('{2}',
+                                            temp.endIndex ? temp.endIndex : '').replace('{3}', temp.price ? temp.price : ''));
+                                    } else {
+                                        let c = tbody_com.children[1].children;
+                                        c[1].firstElementChild.firstElementChild.value = temp.startIndex;
+                                        c[2].firstElementChild.firstElementChild.value = temp.endIndex;
+                                        c[3].firstElementChild.firstElementChild.value = temp.price;
+                                    }
+                                    pcFlag = true;
+                                } else {
+                                    if (phoneFlag) {
+                                        $(tbody_phone).append(html.replace('{0}', l++).replace('{1}', temp.startIndex ? temp.startIndex : '').replace('{2}',
+                                            temp.endIndex ? temp.endIndex : '').replace('{3}', temp.price ? temp.price : ''));
+                                    } else {
+                                        let c = tbody_phone.children[1].children;
+                                        c[1].firstElementChild.firstElementChild.value = temp.startIndex;
+                                        c[2].firstElementChild.firstElementChild.value = temp.endIndex;
+                                        c[3].firstElementChild.firstElementChild.value = temp.price;
+                                    }
+                                    phoneFlag = true;
+                                }
+                            }
+                        }
+                        if (d.customerChargeTypePercentages) {
+                            for (let i = 0; i < d.customerChargeTypePercentages.length; i++) {
+                                let temp = d.customerChargeTypePercentages[i];
+                                if (temp.operationType === 'PC') {
+                                    pcFlag = true;
+                                } else {
+                                    phoneFlag = true;
+                                }
+                                setCustomerChargeTypePercentage(s_d, temp, temp.operationType);
+                            }
+                        }
+                        if (pcFlag) {
+                            s_d.rPC = true;
+                            rPCContent.style.display = 'block';
+                        }
+                        if (phoneFlag) {
+                            s_d.rPhone = true;
+                            rPhoneContent.style.display = 'block';
+                        }
+                    }
+                    l.form.val("saveRule", s_d);
+                }
+            },
+            error: function () {
+                l.common.showFailMsg("网络异常请稍后再试");
+            }
+        });
+    }
+
+    function setCustomerChargeTypeCalculationLT(s, d, t) {
+        s['p' + t + 'SOne'] = d.chargesOfFirst;
+        s['p' + t + 'STwo'] = d.chargesOfSecond;
+        s['p' + t + 'SThree'] = d.chargesOfThird;
+        s['p' + t + 'SFour'] = d.chargesOfFourth;
+        s['p' + t + 'SFive'] = d.chargesOfFifth;
+        s['p' + t + 'SIndex'] = d.chargesOfFirstPage;
+    }
+
+    function setCustomerChargeTypeCalculationGT(s, d, t) {
+        s['p' + t + 'BOne'] = d.chargesOfFirst;
+        s['p' + t + 'BTwo'] = d.chargesOfSecond;
+        s['p' + t + 'BThree'] = d.chargesOfThird;
+        s['p' + t + 'BFour'] = d.chargesOfFourth;
+        s['p' + t + 'BFive'] = d.chargesOfFifth;
+        s['p' + t + 'BIndex'] = d.chargesOfFirstPage;
+        s['p' + t + 'BBestBig'] = d.maxPrice;
+    }
+
+    function setCustomerChargeTypePercentage(s, d, t) {
+        s['r' + t + 'One'] = d.firstChargePercentage;
+        s['r' + t + 'Two'] = d.secondChargePercentage;
+        s['r' + t + 'Three'] = d.secondChargePercentage;
+        s['r' + t + 'Four'] = d.thirdChargePercentage;
+        s['r' + t + 'Five'] = d.fifthChargePercentage;
+        s['r' + t + 'Ten'] = d.firstPageChargePercentage;
+    }
+
+    layui.use(["form", "jquery", "layer", 'common', 'element'], function () {
+        let form = layui.form;
+        let $ = layui.jquery;
+        let common = layui.common;
+        let element = layui.element;
+
+        if (uuid_ != null) {
+            setForm(layui, uuid_)
+        } else {
+            layui_ = layui;
+        }
+
+        form.on("submit(save)", function (data) {
+            let d = common.jsonObjectTrim(data.field);
+            let p_d = {};
+            p_d.uuid = d.uuid;
+            p_d.customerUuid = d.customerUuid;
+            p_d.chargeType = d.whichTab;
+            if (p_d.chargeType === 'Percentage') {
+                if (!d.pPC && !d.pPhone) {
+                    common.showFailMsg("必须选择一个操作类型电脑或手机");
+                    return false;
+                }
+                p_d.customerChargeTypeCalculations = [];
+                if (d.pPC) {
+                    if (!d.pPCSOne && !d.pPCBOne) {
+                        common.showFailMsg("至少填写一条排名第一的字段");
+                        return false;
+                    }
+                    if (d.pPCSOne) {
+                        p_d.customerChargeTypeCalculations.push(getCustomerChargeTypeCalculationLT(d, 'PC'));
+                    }
+                    if (d.pPCBOne) {
+                        p_d.customerChargeTypeCalculations.push(getCustomerChargeTypeCalculationGT(d, 'PC'));
+                    }
+                }
+                if (d.pPhone) {
+                    if (!d.pPhoneSOne && !d.pPhoneBOne) {
+                        common.showFailMsg("至少填写一条排名第一的字段");
+                        return false;
+                    }
+                    if (d.pPhoneSOne) {
+                        p_d.customerChargeTypeCalculations.push(getCustomerChargeTypeCalculationLT(d, 'Phone'));
+                    }
+                    if (d.pPhoneBOne) {
+                        p_d.customerChargeTypeCalculations.push(getCustomerChargeTypeCalculationGT(d, 'Phone'));
+                    }
+                }
+            } else {
+                if (!d.rPC && !d.rPhone) {
+                    common.showFailMsg("必须选择一个操作类型电脑或手机");
+                    return false;
+                }
+                p_d.customerChargeTypeIntervals = [];
+                p_d.customerChargeTypePercentages = [];
+                if (d.rPC) {
+                    if (tbody_com.children.length === 1) {
+                        common.showFailMsg('请至少填一条规则');
+                        return false;
+                    }
+                    if (getTableData(tbody_com.children, 'PC', p_d)) {
+                        return false;
+                    }
+                    p_d.customerChargeTypePercentages.push(getCustomerChargeTypePercentage(d, 'PC'));
+                }
+                if (d.rPhone) {
+                    if (tbody_phone.children.length === 1) {
+                        common.showFailMsg('请至少填一条规则');
+                        return false;
+                    }
+                    if (getTableData(tbody_phone.children, 'Phone', p_d)) {
+                        return false;
+                    }
+                    p_d.customerChargeTypePercentages.push(getCustomerChargeTypePercentage(d, 'Phone'));
+                }
+            }
+            $.ajax({
+                url: '/internal/customerChargeTypes/saveCustomerChargeType',
+                data: JSON.stringify(p_d),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (res) {
+                    if (res.code === 200) {
+                        common.showSuccessMsg("保存成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        common.showFailMsg("保存失败");
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络异常请稍后再试");
+                }
+            });
+            return false;
+        });
+
+        function getCustomerChargeTypeCalculationLT(d, t) {
+            let cctc = {};
+            cctc.chargeDataType = 'LessThanHundred';
+            cctc.operationType = t;
+            cctc.chargesOfFirst = d['p' + t + 'SOne'];
+            cctc.chargesOfSecond = d['p' + t + 'STwo'];
+            cctc.chargesOfThird = d['p' + t + 'SThree'];
+            cctc.chargesOfFourth = d['p' + t + 'SFour'];
+            cctc.chargesOfFifth = d['p' + t + 'SFive'];
+            cctc.chargesOfFirstPage = d['p' + t + 'SIndex'];
+            return cctc;
+        }
+
+        function getCustomerChargeTypeCalculationGT(d, t) {
+            let cccgt = {};
+            cccgt.chargeDataType = 'Percentage';
+            cccgt.operationType = t;
+            cccgt.chargesOfFirst = d['p' + t + 'BOne'];
+            cccgt.chargesOfSecond = d['p' + t + 'BTwo'];
+            cccgt.chargesOfThird = d['p' + t + 'BThree'];
+            cccgt.chargesOfFourth = d['p' + t + 'BFour'];
+            cccgt.chargesOfFifth = d['p' + t + 'BFive'];
+            cccgt.chargesOfFirstPage = d['p' + t + 'BIndex'];
+            cccgt.maxPrice = d['p' + t + 'BBestBig'];
+            return cccgt;
+        }
+
+        function getCustomerChargeTypePercentage(d, t) {
+            let cctp = {};
+            cctp.operationType = t;
+            cctp.firstChargePercentage = d['r' + t + 'One'] ? d['r' + t + 'One'] : 0;
+            cctp.secondChargePercentage = d['r' + t + 'Two'] ? d['r' + t + 'Two'] : 0;
+            cctp.thirdChargePercentage = d['r' + t + 'Three'] ? d['r' + t + 'Three'] : 0;
+            cctp.fourthChargePercentage = d['r' + t + 'Four'] ? d['r' + t + 'Four'] : 0;
+            cctp.fifthChargePercentage = d['r' + t + 'Five'] ? d['r' + t + 'Five'] : 0;
+            cctp.firstPageChargePercentage = d['r' + t + 'Ten'] ? d['r' + t + 'Ten'] : 0;
+            return cctp;
+        }
+
+        function getTableData(tab, t, p) {
+            let previousIndex = -1;
+            for (let i = 1; i < tab.length; i++) {
+                let c = {};
+                c.operationType = t;
+                let startIndex = tab[i].children[1].firstElementChild.firstElementChild.value;
+                if (!startIndex) {
+                    common.showFailMsg("起始指数不能为空");
+                    return true;
+                }
+                if (parseInt(startIndex) <= previousIndex) {
+                    common.showFailMsg("起始指数需大于前一条的终止指数");
+                    return true;
+                }
+                c.startIndex = startIndex;
+                let endIndex = tab[i].children[2].firstElementChild.firstElementChild.value;
+                if (i !== tab.length - 1 && !endIndex) {
+                    common.showFailMsg("终止指数不能为空");
+                    return true;
+                }
+                if (i !== tab.length - 1 && parseInt(endIndex) <= parseInt(startIndex)) {
+                    common.showFailMsg("终止指数需大于起始指数");
+                    return true;
+                }
+                c.endIndex = endIndex;
+                let price = tab[i].children[3].firstElementChild.firstElementChild.value;
+                if (!price) {
+                    common.showFailMsg("价格不能为空");
+                    return true;
+                }
+                c.price = price;
+                p.customerChargeTypeIntervals.push(c);
+                previousIndex = parseInt(endIndex);
+            }
+        }
+
+        //监听指定开关
+        form.on('switch(pPC)', function (data) {
+            if (this.checked) {
+                pPCContent.style.display = 'block';
+            } else {
+                pPCContent.style.display = 'none';
+            }
+        });
+
+        form.on('switch(pPhone)', function (data) {
+            if (this.checked) {
+                pPhoneContent.style.display = 'block';
+            } else {
+                pPhoneContent.style.display = 'none';
+            }
+        });
+
+        form.on('switch(rPC)', function (data) {
+            if (this.checked) {
+                rPCContent.style.display = 'block';
+            } else {
+                rPCContent.style.display = 'none';
+            }
+        });
+
+        form.on('switch(rPhone)', function (data) {
+            if (this.checked) {
+                rPhoneContent.style.display = 'block';
+            } else {
+                rPhoneContent.style.display = 'none';
+            }
+        });
+
+        let whichTab = document.getElementById('whichTab');
+        element.on('tab(customerRuleTab)', function (data) {
+            if (data.elem.context.dataset) {
+                whichTab.value = data.elem.context.dataset.value;
+            }
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+        window.inputNext = function (num, ele) {
+            handleValue(ele);
+            let p = ele.parentElement.parentElement;
+            for (let i = 1; i < num; i++) {
+                p = p.nextElementSibling;
+                p.children[1].children[0].value = ele.value;
+            }
+        };
+
+        let v_com = 2;
+        let v_phone = 2;
+        window.appendTable = function (f) {
+            let table, v;
+            if (f) {
+                table = tbody_com;
+                v = v_com++;
+            } else {
+                table = tbody_phone;
+                v = v_phone++;
+            }
+            let html = '                                    <tr>\n'
+                + '                                        <td>\n'
+                + '                                            <div class="my-label my-left my-padding">\n';
+            html += v;
+            html += '                                            </div>\n'
+                + '                                        </td>\n'
+                + '                                        <td>\n'
+                + '                                            <div class="my-label my-left">\n'
+                + '                                                <input type="text" onkeyup="handleValue(this)" class="layui-input my-input">\n'
+                + '                                            </div>\n'
+                + '                                        </td>\n'
+                + '                                        <td>\n'
+                + '                                            <div class="my-label my-left">\n'
+                + '                                                <input type="text" onkeyup="handleValue(this)" class="layui-input my-input">\n'
+                + '                                            </div>\n'
+                + '                                        </td>\n'
+                + '                                        <td>\n'
+                + '                                            <div class="my-label my-left">\n'
+                + '                                                <input type="text" onkeyup="handleValue(this)" class="layui-input my-input">\n'
+                + '                                            </div>\n'
+                + '                                        </td>\n'
+                + '                                        <td>\n'
+                + '                                            <div class="my-label my-btn my-left my-bottom">\n'
+                + '                                                <button type="button" onclick="removeElement(this)" class="layui-btn layui-btn-xs layui-btn-danger">\n'
+                + '                                                    删除\n'
+                + '                                                </button>\n'
+                + '                                            </div>\n'
+                + '                                        </td>\n'
+                + '                                    </tr>';
+            $(table).append(html);
+        };
+
+        window.removeElement = function (e) {
+            let m = e.parentElement.parentElement.parentElement;
+            let p = m.parentElement;
+            if (p.children.length <= 2) {
+                common.showFailMsg("必须拥有一条记录");
+                return;
+            }
+            p.removeChild(m);
+        };
+
+        window.handleValue = function (ele) {
+            ele.value = ele.value.replace(/^(0\d+)|^(00+)|[^\d]+/g, '');
+        };
+    })
+</script>
+</body>
+</html>

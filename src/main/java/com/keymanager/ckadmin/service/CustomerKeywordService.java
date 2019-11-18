@@ -123,4 +123,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void updateSelectFailReason(KeywordCriteria keywordCriteria);
 
     Integer getMaxInvalidCountByMachineGroup(String machineGroup);
+    
+    void addCustomerKeywordsFromSimpleUI(List<CustomerKeyword> customerKeywords, String terminalType, String entryType, String userName);
 }
