@@ -110,11 +110,50 @@
         .layui-table-page > div {
             height: 26px;
             position: fixed;
-            right: 165px;
+            right: 184px;
+        }
+
+        .layui-table, .layui-table-view{
+            margin-top: 0 !important;
+        }
+
+        .layui-inline .layui-form-label {
+            padding: 0;
+            width: 100px;
+            height: 30px;
+            line-height: 28px;
+        }
+
+        .layui-inline .layui-input-block {
+            margin-left: 100px;
+        }
+
+        .layui-btn {
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .layui-inline {
+            height: 30px;
+        }
+
+        .layui-inline input {
+            width: 150px;
+            height: 30px;
+        }
+
+        .search-form {
+            height: 30px;
+            padding: 10px 15px;
+            background-color: #f2f2f2;
+            border-top: #e6e6e6 solid 1px;
+            border-left: #e6e6e6 solid 1px;
+            border-right: #e6e6e6 solid 1px;
+            line-height: 30px;
         }
     </style>
 </head>
-<body class="childrenBody home">
+<body class="childrenBody home" style="padding-bottom: 0">
 <div class="layui-row layui-col-space15">
     <div class="layui-col-md1"></div>
     <div class="layui-col-md10">
@@ -141,7 +180,7 @@
                         </div>
                         <div style="float: right; width: 120px;margin: 0 0 0 6px">
                             <select name="type" id="type" lay-filter="type">
-                                <option value="">关键字类型</option>
+                                <option value="">类型</option>
                             </select>
                         </div>
                         <div style="float: right;position: relative;top: 2px;">
@@ -154,6 +193,35 @@
                 <div style="height: 300px;" id="keywordLogShow"></div>
             </div>
             <div class="yskj-card-body clearfix" style="padding: 0 20px 10px 20px;">
+                <div class="search-form">
+                    <form class="layui-form layui-form-pane" lay-filter="searchForm" id="searchForm">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">关键字</label>
+                            <div class="layui-input-block">
+                                <input type="text" autocomplete="off" name="keyword" class="layui-input" placeholder="请输入关键字">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">统计时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" autocomplete="off" name="dateStart" id="dateStart" class="layui-input" style="width: 100px;" placeholder=">=">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-block" style="margin-left: 0;">
+                                <input type="text" autocomplete="off" name="dateEnd" id="dateEnd" class="layui-input" style="width: 100px;" placeholder="<=">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-btn" style="position: relative;top: -2px;" onclick="searchTable()">搜索</div>
+                        </div>
+                        <div class="layui-inline">
+                            <button style="background: #897c00;color: #ffffff;position: relative;top:-2px;" class="layui-btn" type="reset">
+                                重置
+                            </button>
+                        </div>
+                    </form>
+                </div>
                 <table id="table" lay-filter="table"></table>
             </div>
         </div>
@@ -179,9 +247,13 @@
         var $ = layui.jquery;
         var form = layui.form;
         var common = layui.common;
+        var laydate = layui.laydate;
 
         initCustomer();
         initKeywordType();
+
+        laydate.render({elem: '#dateStart', value: layui.util.toDateString(new Date(), 'yyyy-MM-dd')});
+        laydate.render({elem: '#dateEnd', value: layui.util.toDateString(new Date(), 'yyyy-MM-dd')});
 
         function initCustomer() {
             $.ajax({
@@ -219,7 +291,7 @@
                     if (res.code === 200) {
                         let type = $("#type");
                         type.empty();
-                        type.append('<option value="">关键字类型</option>');
+                        type.append('<option value="">类型</option>');
                         if (res.data != null) {
                             $.each(res.data, function (idx, val) {
                                 var v = val.split('#');
@@ -237,59 +309,5 @@
             });
         }
     });
-</script>
-
-<!-- 头工具栏模板 -->
-<script type="text/html" id="toolbarTpl">
-    <div>
-        <form class="layui-form layui-form-pane" lay-filter="searchForm" id="searchForm">
-            <div class="layui-inline">
-                <label class="layui-form-label">域名</label>
-                <div class="layui-input-block">
-                    <input type="text" autocomplete="off" name="qzDomain" id="qzDomain" class="layui-input" style="width: 100px;" placeholder="请输入域名">
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">客户名称</label>
-                <div class="layui-input-block">
-                    <select name="customer" id="customer">
-                        <option value="" selected>请选择客户名称</option>
-                    </select>
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">操作类型</label>
-                <div class="layui-input-block">
-                    <select name="operationType" id="operationType">
-                        <option value="">请选择操作类型</option>
-                        <option value="2">新增</option>
-                        <option value="1">续费</option>
-                        <option value="0">暂停</option>
-                        <option value="3">下架</option>
-                        <option value="4">删除</option>
-                    </select>
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">操作时间</label>
-                <div class="layui-input-block">
-                    <input type="text" autocomplete="off" name="dateStart" id="dateStart" class="layui-input" style="width: 100px;" placeholder=">=">
-                </div>
-            </div>
-            <div class="layui-inline">
-                <div class="layui-input-block" style="margin-left: 0;">
-                    <input type="text" autocomplete="off" name="dateEnd" id="dateEnd" class="layui-input" style="width: 100px;" placeholder="<=">
-                </div>
-            </div>
-            <div class="layui-inline">
-                <div class="layui-btn" id="search" style="position: relative;top: -2px;" onclick="getManyData()">搜索</div>
-            </div>
-            <div class="layui-inline">
-                <button style="background: #897c00;color: #ffffff;position: relative;top:-2px;" class="layui-btn" type="reset" onclick="resetForm()">
-                    重置
-                </button>
-            </div>
-        </form>
-    </div>
 </script>
 </html>

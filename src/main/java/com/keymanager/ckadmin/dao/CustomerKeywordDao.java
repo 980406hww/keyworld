@@ -139,5 +139,7 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     
     List<QZRateKeywordCountVO> getQZRateKeywordCount(Page<QZRateKeywordCountVO> page, @Param("qzRateKewordCountCriteria") QZRateKewordCountCriteria qzRateKewordCountCriteria);
 
+    int getQZRateKeywordCountByCriteria(@Param("criteria") QZRateKewordCountCriteria criteria);
+    
     Map<String, Object> getCustomerKeywordStatusCount();
 }

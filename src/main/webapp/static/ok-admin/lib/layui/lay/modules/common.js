@@ -12,9 +12,10 @@ layui.define(['jquery', 'layer', 'okTab'], function (exports) {
             formData = formData.replace(/&/g, "\",\"");
             formData = formData.replace(/=/g, "\":\"");
             formData = "{\"" + formData + "\"}";
+            formData = formData.replace(/\+/g, " ").replace(/\t/g, "");
             formData = $.parseJSON(formData);
             $.each(formData, function (idx, item) {
-                formData[idx] = $.trim(item.replace(/\+/g, " "));
+                formData[idx] = $.trim(item);
             });
             return formData;
         },

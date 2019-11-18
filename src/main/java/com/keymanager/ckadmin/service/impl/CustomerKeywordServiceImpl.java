@@ -708,13 +708,15 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public Page<QZRateKeywordCountVO> getQZRateKeywordCountList(Page<QZRateKeywordCountVO> page,
-        QZRateKewordCountCriteria qzRateKewordCountCriteria) throws CloneNotSupportedException {
+    public Page<QZRateKeywordCountVO> getQZRateKeywordCountList(Page<QZRateKeywordCountVO> page, QZRateKewordCountCriteria qzRateKewordCountCriteria) throws CloneNotSupportedException {
         List<Long> qzUuids = qzSettingService.getQZUuidsByUserID(qzRateKewordCountCriteria.getUserID(), qzRateKewordCountCriteria.getSearchEngine(), qzRateKewordCountCriteria.getTerminalType());
         if (null == qzUuids || qzUuids.isEmpty()) {
             return page;
         }
         qzRateKewordCountCriteria.setQzUuids(qzUuids);
+        // 不使用mp自带分页查询，解决count慢问题
+        page.setSearchCount(false);
+        page.setTotal(customerKeywordDao.getQZRateKeywordCountByCriteria(qzRateKewordCountCriteria));
         List<QZRateKeywordCountVO> qzRateKeywordCountVOS = customerKeywordDao.getQZRateKeywordCount(page, qzRateKewordCountCriteria);
         if (CollectionUtils.isNotEmpty(qzRateKeywordCountVOS)) {
             SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
@@ -740,8 +742,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                 qzRateKeywordCountVOS = qzRateKeywordCountVONewList;
             } else {
                 for (QZRateKeywordCountVO qzRateKeywordCountVO : qzRateKeywordCountVOS) {
-                    qzRateKeywordCountVO
-                        .setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVO.getQzUuid(), qzRateKewordCountCriteria.getTerminalType(), todayDate));
+                    qzRateKeywordCountVO.setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVO.getQzUuid(), qzRateKewordCountCriteria.getTerminalType(), todayDate));
                     qzRateKeywordCountVO.setTerminalType(qzRateKewordCountCriteria.getTerminalType());
                 }
             }

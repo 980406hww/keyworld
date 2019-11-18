@@ -25,7 +25,7 @@ layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
             orient: 'horizontal',
             icon: "rect",
             top: '40',
-            left: '35%',
+            x: 'center',
             data: ['新增', '续费', '暂停', '下架', '删除']
         },
         tooltip: {
@@ -165,7 +165,7 @@ layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
             size: 'sm',
             id: 'table',
             toolbar: "#toolbarTpl",
-            even: false,//隔行背景
+            even: true,//隔行背景
             where: condition,
             defaultToolbar: [],
             contentType: 'application/json',
@@ -251,11 +251,13 @@ layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
 
     function conditionChanged() {
         let form_condition = common.formToJsonObject('form');
-        let searchForm_condition = common.formToJsonObject('searchForm');
-        searchForm_condition.searchEngine = form_condition.searchEngine;
-        searchForm_condition.qzTerminal = form_condition.qzTerminal;
         getChargeMonData(form_condition);
-        qzChargeTableInit(searchForm_condition);
+        if (document.getElementById('searchForm')) {
+            let searchForm_condition = common.formToJsonObject('searchForm');
+            searchForm_condition.searchEngine = form_condition.searchEngine;
+            searchForm_condition.qzTerminal = form_condition.qzTerminal;
+            qzChargeTableInit(searchForm_condition);
+        }
     }
 
     window.qz_handle = function (name, data, sel) {

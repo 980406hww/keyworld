@@ -58,24 +58,21 @@ public class CustomerKeywordMonServiceImpl extends ServiceImpl<CustomerKeywordMo
         if (null == cur || null == limit || cur.equals(0) || limit.equals(0)) {
             return null;
         }
-        Date date = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.DATE, -1);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String day = sdf.format(date);
-        String yesterday = sdf.format(calendar.getTime());
-        condition.put("yesterday", yesterday);
-        condition.put("day", day);
         Page<Map<String, Object>> page = new Page<>();
         Integer total = customerKeywordMonDao.selectCountByCondition(condition);
         if (null == total || total == 0) {
             return null;
         }
-        calendar.add(Calendar.DATE, -6);
-        String sevenDayAgo = sdf.format(calendar.getTime());
-        condition.put("sevenDayAgo", sevenDayAgo);
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        condition.put("today", sdf.format(date) + " 23:59:59");
+        calendar.add(Calendar.DATE, -14);
+        String fifteenDayAgo = sdf.format(calendar.getTime());
+        condition.put("fifteenDayAgo", fifteenDayAgo);
         condition.put("start", (cur - 1) * limit);
+        page.setSearchCount(false);
         page.setTotal(total);
         List<Map<String, Object>> data = customerKeywordMonDao.selectTableByCondition(condition);
         page.setRecords(data);
