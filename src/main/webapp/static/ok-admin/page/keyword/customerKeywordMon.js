@@ -391,7 +391,6 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                 option.series[0].data = data[i].hData.split(',');
                 option.xAxis.data = data[i].hDate.split(',');
                 boxLogShow.setOption(option);
-                // boxes[i].children[0].children[0].style.cursor = 'pointer';
             }
         }
     }

@@ -14,6 +14,7 @@ import com.keymanager.ckadmin.vo.CookieVO;
 import com.keymanager.ckadmin.vo.MachineInfoGroupSummaryVO;
 import com.keymanager.ckadmin.vo.MachineInfoMachineGroupSummaryVO;
 import com.keymanager.ckadmin.vo.MachineInfoSummaryVO;
+import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -116,4 +117,6 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
     List<MachineInfoSummaryVO> getAllMachineInfo();
 
     List<MachineInfoSummaryVO> getMachineInfoBody(@Param("city") String city);
+
+    Map<String,String> getMachineStatusCount();
 }

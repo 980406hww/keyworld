@@ -566,5 +566,35 @@
                 }
             });
         }
+
+        getMachineStatusCount();
+
+        /**
+         * 获取机器各状态下的数量
+         */
+        function getMachineStatusCount() {
+            $.ajax({
+                url: '/internal/machineManage/getMachineStatusCount',
+                dataType: 'json',
+                timeout: 5000,
+                type: 'get',
+                success: function (res) {
+                    if (res.code === 200) {
+                        if (res.data != null) {
+                            let data = res.data;
+                            $("#machine_pc_active").html(data.pcAll);
+                            $("#machine_pc_stop").html(data.pcDie);
+                            $("#machine_phone_active").html(data.phoneAll);
+                            $("#machine_phone_stop").html(data.phoneDie);
+                        }
+                    } else {
+                        common.showFailMsg(res.msg);
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络异常请稍后再试")
+                }
+            });
+        }
     });
 </script>
