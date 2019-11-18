@@ -127,6 +127,8 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     Integer getMaxInvalidCountByMachineGroup(String machineGroup);
     
     Page<QZRateKeywordCountVO> getQZRateKeywordCountList(Page<QZRateKeywordCountVO> page, QZRateKewordCountCriteria qzRateKewordCountCriteria) throws CloneNotSupportedException;
+    
+    void addCustomerKeywordsFromSimpleUI(List<CustomerKeyword> customerKeywords, String terminalType, String entryType, String userName);
 
     Map<String, Object> getCustomerKeywordStatusCount();
 }

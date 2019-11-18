@@ -103,4 +103,9 @@
         FROM t_group g
         ORDER BY g.fCreateTime
     </select>
+
+    <insert id="saveExternalGroup">
+        INSERT INTO t_group (fGroupName, fOperationCombineUuid, fCreateBy)
+        VALUES(#{groupCriteria.groupName}, #{groupCriteria.operationCombineId}, #{groupCriteria.createBy})
+    </insert>
 </mapper>

@@ -33,6 +33,13 @@
         WHERE atk.fAlgorithmTestPlanUuid = #{algorithmTestPlanUuid}
     </select>
 
+    <select id="selectByAlgorithmTestPlanUuid" resultType="com.keymanager.ckadmin.entity.AlgorithmTestTask">
+        select
+        <include refid="Base_Column_List"/>
+        from t_algorithm_test_task atk
+        where atk.fAlgorithmTestPlanUuid = #{testPlanUuid}
+    </select>
+
     <insert id="saveAlgorithmTestTask">
         INSERT INTO t_algorithm_test_task ( fAlgorithmTestPlanUuid, fKeywordGroup, fCustomerName, fActualKeywordCount, fStartDate )
         VALUES (#{algorithmTestTask.algorithmTestPlanUuid}, #{algorithmTestTask.keywordGroup}, #{algorithmTestTask.customerName},

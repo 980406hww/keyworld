@@ -6,7 +6,7 @@
     <resultMap id="BaseResultMap" type="com.keymanager.monitoring.entity.AlgorithmTestPlan">
         <id column="fUuid" property="uuid" />
         <result column="fAlgorithmTestPlanName" property="algorithmTestPlanName" />
-        <result column="fOperationCombineName" property="operationCombineName" />
+        <result column="fOperationCombineId" property="operationCombineId" />
         <result column="fTerminalType" property="terminalType" />
         <result column="fSearchEngine" property="searchEngine" />
         <result column="fMachineGroup" property="machineGroup" />
@@ -29,7 +29,7 @@
     <sql id="Base_Column_List">
         atp.fUuid AS uuid,
         atp.fAlgorithmTestPlanName AS algorithmTestPlanName,
-        atp.fOperationCombineName AS operationCombineName,
+        atp.fOperationCombineId AS operationCombineId,
         atp.fTerminalType AS terminalType,
         atp.fSearchEngine AS searchEngine,
         atp.fMachineGroup AS machineGroup,
@@ -50,31 +50,69 @@
 
     <select id="searchAlgorithmTestPlans" resultType="com.keymanager.ckadmin.entity.AlgorithmTestPlan">
         SELECT
-        <include refid="Base_Column_List"/>
+        atp.fUuid AS uuid,
+        atp.fAlgorithmTestPlanName AS algorithmTestPlanName,
+        atp.fOperationCombineId AS operationCombineId,
+        atp.fTerminalType AS terminalType,
+        atp.fSearchEngine AS searchEngine,
+        atp.fMachineGroup AS machineGroup,
+        atp.fTestIntervalDay AS testIntervalDay,
+        atp.fTestKeywordCount AS testKeywordCount,
+        atp.fTestkeywordRankBegin AS testkeywordRankBegin,
+        atp.fTestkeywordRankEnd AS testkeywordRankEnd,
+        atp.fOptimizePlanCount AS optimizePlanCount,
+        atp.fStatus AS status,
+        atp.fExecuteQueryTime AS executeQueryTime,
+        atp.fExcuteStatus AS excuteStatus,
+        atp.fExcuteType AS excuteType,
+        atp.fExcuteCount AS excuteCount,
+        atp.fCreateBy AS createBy,
+        atp.fCreateTime AS createTime,
+        atp.fUpdateTime AS updateTime,
+        oc.fOperationCombineName AS operationCombineName
         FROM
         t_algorithm_test_plan atp
+        LEFT JOIN t_operation_combine oc ON atp.fOperationCombineId = oc.fUuid
         <where>
             <if test="algorithmTestCriteria.init != null and algorithmTestCriteria.init == 'init'">AND 1 != 1</if>
             <if test="algorithmTestCriteria.algorithmTestPlanName!=null and algorithmTestCriteria.algorithmTestPlanName!=''">
                 AND atp.fAlgorithmTestPlanName LIKE concat(#{algorithmTestCriteria.algorithmTestPlanName},'%')
             </if>
             <if test="algorithmTestCriteria.operationCombineName!=null and algorithmTestCriteria.operationCombineName!=''">
-                AND atp.fOperationCombineName LIKE concat(#{algorithmTestCriteria.operationCombineName},'%')
+                AND oc.fOperationCombineName LIKE concat(#{algorithmTestCriteria.operationCombineName},'%')
             </if>
             <if test="algorithmTestCriteria.machineGroup!=null and algorithmTestCriteria.machineGroup!=''">
                 AND atp.fMachineGroup LIKE concat(#{algorithmTestCriteria.machineGroup},'%')
+            </if>
+            <if test="algorithmTestCriteria.terminalType!=null and algorithmTestCriteria.terminalType!=''">
+                AND atp.fTerminalType = #{algorithmTestCriteria.terminalType}
+            </if>
+            <if test="algorithmTestCriteria.searchEngine!=null and algorithmTestCriteria.searchEngine!=''">
+                AND atp.fSearchEngine = #{algorithmTestCriteria.searchEngine}
             </if>
         </where>
     </select>
 
     <select id="selectOneAvailableAlgorithmTestPlan" resultType="com.keymanager.ckadmin.entity.AlgorithmTestPlan">
         SELECT
-        <include refid="Base_Column_List"/>
-        FROM t_algorithm_test_plan atp
-        WHERE atp.fstatus = 1
-        AND (atp.fExcuteStatus= 0 AND (atp.fExecuteQueryTime IS NULL OR atp.fExecuteQueryTime &lt;=
-        DATE_SUB(CURRENT_DATE(), INTERVAL fTestIntervalDay-1 DAY))
-        OR(atp.fExcuteStatus = 1 AND atp.fExecuteQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE))
+          <include refid="Base_Column_List"/>
+        FROM
+          t_algorithm_test_plan atp
+        WHERE
+          atp.fstatus = 1
+        AND
+        (
+            atp.fExcuteStatus = 0
+            OR
+              (
+                atp.fExcuteStatus = 2
+                AND (atp.fExecuteQueryTime &lt;= DATE_SUB(CURRENT_DATE (),INTERVAL fTestIntervalDay - 1 DAY))
+              )
+            OR
+            (
+              atp.fExcuteStatus = 1
+              AND atp.fExecuteQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+            )
         )
         LIMIT 1
     </select>
@@ -100,5 +138,27 @@
         t_algorithm_test_plan atp
         WHERE atp.fUuid = #{uuid}
     </select>
+
+    <update id="updateExcuteQueryTimeAndExcuteCount">
+        UPDATE t_algorithm_test_plan atp
+        SET atp.fExecuteQueryTime = NOW() ,atp.fExcuteStatus = 1, atp.fExcuteCount = atp.fExcuteCount+1
+        WHERE atp.fUuid = #{uuid}
+    </update>
+
+    <update id="updateAlgorithmTestPlansStatus">
+        UPDATE t_algorithm_test_plan SET fStatus = #{status}
+        WHERE fUuid IN
+        <foreach item="uuid" collection="uuids" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
+
+    <update id="executeAlgorithmTestPlans">
+        UPDATE t_algorithm_test_plan SET fExcuteStatus = 0
+        WHERE fUuid IN
+        <foreach item="uuid" collection="uuids" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
 
 </mapper>

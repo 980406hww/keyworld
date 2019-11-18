@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.CustomerChargeTypeIntervalDao">
+
+    <sql id="rowID">
+    t.fUuid AS `uuid`,
+    t.fCustomerChargeTypeUuid AS `customerChargeTypeUuid`,
+    t.fOperationType AS `operationType`,
+    t.fStartIndex AS `startIndex`,
+    t.fEndIndex AS `endIndex`,
+    t.fPrice AS `price`
+</sql>
+
+    <select id="searchCustomerChargeTypeIntervals" resultType="com.keymanager.ckadmin.entity.CustomerChargeTypeInterval">
+        select
+        <include refid="rowID"/>
+        FROM t_customer_charge_type_interval t
+        WHERE t.fCustomerChargeTypeUuid = #{uuid}
+        order by t.fStartIndex
+    </select>
+
+    <select id="deleteByCustomerChargeTypeUuid">
+    DELETE FROM t_customer_charge_type_interval WHERE fCustomerChargeTypeUuid = #{customerChargeTypeUuid}
+</select>
+</mapper>

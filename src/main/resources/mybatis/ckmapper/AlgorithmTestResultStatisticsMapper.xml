@@ -61,4 +61,12 @@
         FROM t_algorithm_test_data_statistics atds
         WHERE atds.fAlgorithmTestPlanUuid = #{algorithmTestPlanUuid}
     </select>
+
+    <select id="selectAlgorithmTestHistoryByAlgorithmTestPlanUuid" resultType="com.keymanager.ckadmin.entity.AlgorithmTestDataStatistics">
+        SELECT
+        <include refid="Base_Column_List"></include>
+        FROM t_algorithm_test_data_statistics atds
+        WHERE atds.fAlgorithmTestPlanUuid = #{algorithmTestPlanUuid}
+    </select>
+
 </mapper>

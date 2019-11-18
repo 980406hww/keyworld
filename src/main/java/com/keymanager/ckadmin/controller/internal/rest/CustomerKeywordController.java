@@ -333,12 +333,11 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/customerKeyword/toKeywords")
     @PostMapping(value = "/getCustomerKeywords")
-    public ResultBean searchCustomerKeywords(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
+    public ResultBean searchCustomerKeywords(@RequestBody KeywordCriteria keywordCriteria) {
         ResultBean resultBean = new ResultBean();
         try {
             Page<CustomerKeyword> page = new Page<>(keywordCriteria.getPage(), keywordCriteria.getLimit());
-            String orderByField = ReflectUtils
-                .getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
+            String orderByField = ReflectUtils.getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
             if (StringUtils.isNotEmpty(orderByField)) {
                 page.setOrderByField(orderByField);
                 if (keywordCriteria.getOrderMode() != null && keywordCriteria.getOrderMode() == 0) {
@@ -425,8 +424,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean(200, "success");
         String userName = (String) request.getSession().getAttribute("username");
         try {
-            boolean uploaded = customerKeywordService.handleExcel(keywordCountDO.getFile().getInputStream(), keywordCountDO.getExcelType(), keywordCountDO.getCustomerUuid(),
-                    keywordCountDO.getEntryType(), keywordCountDO.getTerminalType(), userName);
+            boolean uploaded = customerKeywordService.handleExcel(keywordCountDO.getFile().getInputStream(), keywordCountDO.getExcelType(), keywordCountDO.getCustomerUuid(), keywordCountDO.getEntryType(), keywordCountDO.getTerminalType(), userName);
             if (uploaded) {
                 resultBean.setMsg("文件上传成功");
             } else {
@@ -677,6 +675,22 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/customerKeyword/saveCustomerKeywords")
+    @RequestMapping(value = "/saveCustomerKeywords2", method = RequestMethod.POST)
+    public ResultBean saveCustomerKeywords(@RequestBody List<CustomerKeyword> customerKeywords, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            String userName = (String) request.getSession().getAttribute("username");
+            String terminalType = TerminalTypeMapping.getTerminalType(request);
+            customerKeywordService.addCustomerKeywordsFromSimpleUI(customerKeywords, terminalType, "qt", userName);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(ex.getMessage());
+        }
+        return resultBean;
+    }
+
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
     @GetMapping(value = {"/toKeywordsFromPT/{businessType}/{terminalType}/{keyword}/{searchEngine}/{belongUser}",
         "/toKeywordsFromPT/{businessType}/{terminalType}/{keyword}/{searchEngine}", "/toKeywordsFromPT/{businessType}/{terminalType}/{keyword}/{belongUser}",
@@ -696,7 +710,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             mv.addObject("belongUser", belongUser);
         }
         mv.addObject("Keyword", keyword);
-        mv.addObject("notLike", "1");
+        mv.addObject("notLike", "on");
         return mv;
     }
 
@@ -813,6 +827,20 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             resultBean.setMsg(e.getMessage());
         }
         return resultBean;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = "/toCustomerKeywordFromQZ/{businessType}/{terminalType}/{customerUuid}/{group}")
+    public ModelAndView toCustomerKeywordFromQZ(@PathVariable(name = "businessType") String businessType,
+        @PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "customerUuid") Long customerUuid,
+        @PathVariable(name = "group") String group) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("keywords/customerKeyword");
+        mv.addObject("businessType", businessType);
+        mv.addObject("terminalType2", terminalType);
+        mv.addObject("customerUuid", customerUuid);
+        mv.addObject("group", group);
+        return mv;
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")

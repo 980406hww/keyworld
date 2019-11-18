@@ -704,16 +704,16 @@
                 <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
                     when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then
                     <choose>
-                        <when test="updateOptimizedCountVO.totalSucceedCount == 0">
-                            fInvalidRefreshCount = fInvalidRefreshCount
+                        <when test="updateOptimizedCountVO.totalSucceedCount > 0">
+                            0
                         </when>
                         <otherwise>
-                            fInvalidRefreshCount = 0
+                            fInvalidRefreshCount
                         </otherwise>
                     </choose>
                 </foreach>
             </trim>
-            fInvalidFlag = if(fInvalidRefreshCount > 8, 1, 0), fLastOptimizeDateTime = now(), fQueryTime = if(fOptimizePlanCount > fOptimizedCount, fQueryTime, DATE_ADD(NOW(), INTERVAL 1 DAY)), fUpdateTime = NOW()
+            fInvalidFlag = if(fInvalidRefreshCount > 8, 1, 0), fLastOptimizeDateTime = now(), fQueryTime = if(fOptimizeTodayCount > fOptimizedCount, fQueryTime, DATE_ADD(NOW(), INTERVAL 1 DAY)), fUpdateTime = NOW()
         </trim>
 		WHERE fUuid IN
         <foreach item="updateOptimizedCountVO" index="index" collection="updateOptimizedCountVOs" open="(" separator="," close=")">

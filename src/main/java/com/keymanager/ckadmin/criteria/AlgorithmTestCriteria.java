@@ -14,6 +14,26 @@ public class AlgorithmTestCriteria extends BaseCriteria {
     private String operationCombineName;
     private String machineGroup;
 
+    private String terminalType;
+
+    private String searchEngine;
+
+    public String getTerminalType() {
+        return terminalType;
+    }
+
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
+    }
+
+    public void setTerminalType(String terminalType) {
+        this.terminalType = terminalType;
+    }
+
     public String getAlgorithmTestPlanName() {
         return algorithmTestPlanName;
     }

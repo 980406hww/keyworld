@@ -121,6 +121,7 @@
     let firstBody = document.getElementById('firstBody');
     let src = '<#if url?exists>${url}<#else>/internal/customerKeyword/toKeywords</#if>';
     let key = '<#if key?exists>${key}<#else>关键字统计</#if>';
+    let tit = '<#if tit?exists>${tit}</#if>';
     firstTab.setAttribute('lay-id', '<#if first?exists>home<#elseif key?exists>${id}<#else>z-z</#if>');
     firstTab.children[0].dataset.url = src;
     firstTab.children[2].innerHTML = key;
@@ -138,12 +139,18 @@
         contentBody.classList.add('single-body');
         document.getElementById('firstBody').parentElement.parentElement.style.top = '40px';
     } else {
-        let tit = '<#if tit?exists>${tit}</#if>';
-        document.title = tit ? tit : key;
+        if (!!window.ActiveXObject || "ActiveXObject" in window) { //if not IE
+            firstBody.onload = function () {
+                window.setTimeout(function () {
+                    document.title = tit ? tit : key;
+                }, 500);
+            };
+        } else {
+            document.title = tit ? tit : key;
+        }
         let notLogo = document.getElementById('notLogo');
         notLogo.classList.add('not-logo');
         notLogo.innerHTML = document.getElementById('multiPage').innerHTML;
-
         window.showSelect = function (ele) {
             let flag = true;
             let classList = ele.classList;

@@ -14,15 +14,18 @@
     .layui-tab-content {
         padding: 0px;
     }
+
     .layui-card-body {
         position: relative;
         padding: 0px;
         line-height: 24px;
     }
+
     .layui-table, .layui-table-view {
         margin: 0px;
         border-width: 1px;
     }
+
     .my-collapse > div:first-child {
         background: #f2f2f2;
         border: 0px;
@@ -153,7 +156,7 @@
         isSEOSales = false;
     </@shiro.hasAnyRoles>
 </script>
-<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script src="/static/ok-admin/js/somePublic.js"></script>
 <script src="/static/ok-admin/page/customer/customer.js"></script>
 <script>
@@ -175,7 +178,7 @@
                         if (result.data != null) {
                             $.each(result.data,function(idx,val){
                                 var date = new Date(val.completeTime);
-                                htmlContent +=' <a class="layui-btn layui-btn-sm" href="' + val.reportPath + '">下载日报表(' + ((date.getHours() < 10) ? '0'
+                                htmlContent += '<a class="layui-btn layui-btn-sm" href="' + val.reportPath + '">下载日报表(' + ((date.getHours() < 10) ? '0'
                                     + date.getHours() : date.getHours()) + ':' + ((date.getMinutes() < 10) ? '0' + date.getMinutes()
                                     : date.getMinutes()) + ')</a>';
                             });
@@ -202,7 +205,7 @@
         window.searchCurrentDateCompletedReportsIntervalId = intervalId;
         window.hasPer = true;
     </@shiro.hasPermission>
-    })
+    });
 </script>
 </body>
 </html>
