@@ -86,7 +86,7 @@ public class QZChargeMonController {
                 wrapper.where("fOperationDate >= {0}", criteria.getDateStart());
             }
             if (null != criteria.getDateEnd() && !"".equals(criteria.getDateEnd())) {
-                wrapper.where("fOperationDate <= {0}", criteria.getDateEnd());
+                wrapper.where("fOperationDate <= {0}", criteria.getDateEnd() + " 23:59:59");
             }
             page = qzChargeMonService.selectPage(page, wrapper);
             resultBean.setData(page.getRecords());
@@ -124,12 +124,8 @@ public class QZChargeMonController {
             mv.addObject("search", search);
         }
         Date date = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.DATE, 1);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         mv.addObject("dateStart", sdf.format(date));
-        mv.addObject("dateEnd", sdf.format(calendar.getTime()));
         return mv;
     }
 }

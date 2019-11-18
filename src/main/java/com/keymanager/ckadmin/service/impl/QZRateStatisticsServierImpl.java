@@ -40,7 +40,6 @@ public class QZRateStatisticsServierImpl extends ServiceImpl<QZRateStatisticsDao
             String[] dateList = qzKeywordRankInfo.getDate().replace("[", "").replace("]", "").replace("'", "").replace(" ", "").split(",");
             String[] fullDateList = qzKeywordRankInfo.getFullDate().replace("[", "").replace("]", "").replace("'", "").replace(" ", "").split(",");
             String[] curveData = qzKeywordRankInfo.getTopTen().replace("[", "").replace("]", "").replace(" ", "").split(",");
-            String totalRecord = qzKeywordRankInfo.getTopTen();
             if (dateList.length >= 2) {
                 QZRateStatistics qzRateStatistics = new QZRateStatistics();
                 qzRateStatistics.setQzSettingUuid(qzKeywordRankInfo.getQzSettingUuid());
@@ -62,7 +61,7 @@ public class QZRateStatisticsServierImpl extends ServiceImpl<QZRateStatisticsDao
                 QZRateStatistics qzRateStatistics = new QZRateStatistics();
                 qzRateStatistics.setQzSettingUuid(qzKeywordRankInfo.getQzSettingUuid());
                 qzRateStatistics.setTerminalType(qzKeywordRankInfo.getTerminalType());
-                // 只有一条记录的时候该设什么值？ 目前先设0
+                // 只有一条记录的时候设0
                 qzRateStatistics.setRate(0);
                 qzRateStatistics.setRateDate(dateList[0]);
                 qzRateStatistics.setRateFullDate(fullDateList[0]);

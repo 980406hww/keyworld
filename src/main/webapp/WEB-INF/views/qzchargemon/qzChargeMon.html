@@ -170,13 +170,12 @@
     var search = '<#if search?exists>${search}</#if>';
     var time = '<#if time?exists>${time}</#if>';
     var dateStart = '<#if dateStart?exists>${dateStart}</#if>';
-    var dateEnd = '<#if dateEnd?exists>${dateEnd}</#if>';
     var condition = {
         searchEngines: search,
         qzTerminal: terminal,
         time: time,
         dateStart: dateStart,
-        dateEnd: dateEnd
+        dateEnd: dateStart
     };
 </script>
 <script type="text/javascript" src="/static/ok-admin/lib/layui/layui.js"></script>
