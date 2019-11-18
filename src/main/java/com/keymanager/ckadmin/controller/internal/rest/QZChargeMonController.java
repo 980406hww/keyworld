@@ -60,7 +60,6 @@ public class QZChargeMonController {
         return resultBean;
     }
 
-    //@RequiresPermissions("/internal/qzchargemon/toQzChargeMon")
     @GetMapping(value = "/toQzChargeMon")
     public ModelAndView toQzChargeMon() {
         ModelAndView mv = new ModelAndView();
@@ -101,7 +100,6 @@ public class QZChargeMonController {
         return resultBean;
     }
 
-    //@RequiresPermissions("/internal/qzchargemon/toQzChargeMon")
     @GetMapping(value = {"/toQzChargeMonWithParam/{time}/{terminal}/{search}", "/toQzChargeMonWithParam/{time}/{search}", "/toQzChargeMonWithParam/{time}/{terminal}",
         "/toQzChargeMonWithParam/{time}"})
     public ModelAndView toQzChargeMonWithParam(@PathVariable(name = "time") String time, @PathVariable(name = "terminal", required = false) String terminal,
