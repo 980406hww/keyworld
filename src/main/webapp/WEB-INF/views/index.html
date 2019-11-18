@@ -59,10 +59,10 @@
         <div class="layui-tab ok-tab" id="mainnav" lay-filter="ok-tab" lay-allowClose="true" lay-unauto>
             <div id="yesLogo" style="display: none">
                 <ul class="layui-tab-title ok-tab-title not-scroll">
-                    <li class="layui-this" id="firstTab" lay-id="home">
-                        <strong style="display: none;" is-close="true" lay-id="home" data-url=""></strong>
+                    <li class="layui-this" id="firstTab" lay-id="1-1">
+                        <strong style="display: none;" data-url=""></strong>
                             <i class="ok-icon ok-iconairplay"></i>
-                        <cite>主页</cite>
+                        <cite>关键字统计</cite>
                     </li>
                 </ul>
             </div>
@@ -119,8 +119,8 @@
 
     let firstTab = document.getElementById('firstTab');
     let firstBody = document.getElementById('firstBody');
-    let src = '<#if url?exists>${url}<#else>/internal/layer/home</#if>';
-    let key = '<#if key?exists>${key}<#else>主页</#if>';
+    let src = '<#if url?exists>${url}<#else>/internal/customerKeyword/toKeywords</#if>';
+    let key = '<#if key?exists>${key}<#else>关键字统计</#if>';
     firstTab.setAttribute('lay-id', '<#if first?exists>home<#elseif key?exists>${id}<#else>z-z</#if>');
     firstTab.children[0].dataset.url = src;
     firstTab.children[2].innerHTML = key;

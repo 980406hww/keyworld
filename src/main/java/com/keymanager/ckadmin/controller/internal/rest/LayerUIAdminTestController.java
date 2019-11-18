@@ -51,7 +51,7 @@ public class LayerUIAdminTestController {
         mv.setViewName("/index");
         mv.addObject("url", url);
         if (null == url || "".equals(url)) {
-            mv.addObject("first", "home");
+            mv.addObject("first", "1-1");
             return mv;
         }
         List menus = (List) session.getAttribute("menus");

@@ -78,7 +78,7 @@ public class LoginController extends BaseController {
                 return mv;
             } else {
                 mv.setViewName("/index");
-                mv.addObject("first", "home");
+                mv.addObject("first", "1-1");
                 return mv;
             }
         }
