@@ -130,6 +130,9 @@
         <if test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''">
             AND mi.fSwitchGroupName = #{machineInfoCriteria.switchGroupName}
         </if>
+        <if test="machineInfoCriteria.allowSwitchGroup != null and machineInfoCriteria.allowSwitchGroup != ''">
+            AND mi.fAllowSwitchGroup = #{machineInfoCriteria.allowSwitchGroup}
+        </if>
         <if test="machineInfoCriteria.gtMemory != null and machineInfoCriteria.gtMemory != ''">AND mi.fMemory &gt;= #{machineInfoCriteria.gtMemory}</if>
         <if test="machineInfoCriteria.ltMemory != null and machineInfoCriteria.ltMemory != ''">AND mi.fMemory &lt;= #{machineInfoCriteria.ltMemory}</if>
         <if test="machineInfoCriteria.switchGroups != null">AND mi.fSwitchGroupName IN
@@ -645,6 +648,9 @@
         </if>
         <if test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''">
             AND mi.fSwitchGroupName = #{machineInfoCriteria.switchGroupName}
+        </if>
+        <if test="machineInfoCriteria.allowSwitchGroup != null and machineInfoCriteria.allowSwitchGroup != ''">
+            AND mi.fAllowSwitchGroup = #{machineInfoCriteria.allowSwitchGroup}
         </if>
         <if test="machineInfoCriteria.switchGroups != null">AND mi.fSwitchGroupName IN
             <foreach collection="machineInfoCriteria.switchGroups" item="switchGroup" open="(" close=")" separator=",">
