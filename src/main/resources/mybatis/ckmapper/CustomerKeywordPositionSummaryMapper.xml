@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.CustomerKeywordPositionSummaryDao">
+
+    <select id="getCustomerKeywordPositionSummaryData" resultType="com.keymanager.ckadmin.vo.CustomerKeywordPositionSummaryCountVO">
+        SELECT
+            SUM(IF(cps.fPosition BETWEEN 1 AND 3, 1, 0)) AS 'topThreeCount',
+            SUM(IF(cps.fPosition BETWEEN 1 AND 5, 1, 0)) AS 'topFiveCount',
+            SUM(IF(cps.fPosition BETWEEN 1 AND 10, 1, 0)) AS 'topTenCount',
+            SUM(IF(cps.fPosition BETWEEN 1 AND 50, 1, 0)) AS 'topFifthCount',
+            cps.fCreateDate AS 'date'
+        FROM t_ck_position_summary cps
+        LEFT JOIN t_customer_keyword ck
+        ON cps.fCustomerKeywordUuid = ck.fUuid
+        WHERE 1 = 1
+        <if test="condition.ltDate != null and condition.ltDate != ''">
+            AND cps.fCreateDate >= #{condition.ltDate}
+        </if>
+        <if test="condition.gtDate != null and condition.gtDate != ''">
+            AND cps.fCreateDate &lt; #{condition.gtDate}
+        </if>
+        <if test="condition.customer != null and condition.customer != ''">
+            AND ck.fCustomerUuid = #{condition.customer}
+        </if>
+        <if test="condition.searchEngine != null and condition.searchEngine != ''">
+            AND ck.fSearchEngine = #{condition.searchEngine}
+        </if>
+        <if test="condition.terminal != null and condition.terminal != ''">
+            AND ck.fTerminalType = #{condition.terminal}
+        </if>
+        <if test="condition.type != null and condition.type != ''">
+            AND ck.fType = #{condition.type}
+        </if>
+        GROUP BY cps.fCreateDate
+    </select>
+
+    <select id="getCKPositionSummaryDataInitTable" resultType="java.util.HashMap">
+        SELECT
+            ck.fKeyword AS 'keyword',
+            c.fContactPerson AS 'customer',
+            cps.fCustomerKeywordUuid AS 'customerKeywordUuid',
+            cps.fPosition AS 'position',
+            ck.fSearchEngine AS 'searchEngine',
+            ck.fTerminalType AS 'terminal',
+            ck.fType AS 'type',
+            cps.fCreateDate AS 'date',
+            (
+                SELECT GROUP_CONCAT(cps_s.fPosition)
+                FROM t_ck_position_summary cps_s
+                WHERE cps_s.fCustomerKeywordUuid = cps.fCustomerKeywordUuid
+                AND cps_s.fCreateDate >= #{condition.fifteenDayAgo}
+                AND cps_s.fCreateDate &lt; #{condition.today}
+                GROUP BY cps_s.fCustomerKeywordUuid
+            ) AS 'hData',
+            (
+                SELECT GROUP_CONCAT(DATE_FORMAT(cps_s.fCreateDate, '%Y-%m-%d'))
+                FROM t_ck_position_summary cps_s
+                WHERE cps_s.fCustomerKeywordUuid = cps.fCustomerKeywordUuid
+                AND cps_s.fCreateDate >= #{condition.fifteenDayAgo}
+                AND cps_s.fCreateDate &lt; #{condition.today}
+                GROUP BY cps_s.fCustomerKeywordUuid
+            ) AS 'hDate'
+        FROM t_ck_position_summary cps
+        LEFT JOIN t_customer_keyword ck
+        ON cps.fCustomerKeywordUuid = ck.fUuid
+        LEFT JOIN t_customer c
+        ON ck.fCustomerUuid = c.fUuid
+        WHERE 1 = 1
+        <if test="condition.dateStart != null and condition.dateStart != ''">
+            AND cps.fCreateDate >= #{condition.dateStart}
+        </if>
+        <if test="condition.dateEnd != null and condition.dateEnd != ''">
+            AND cps.fCreateDate &lt; #{condition.dateEnd}
+        </if>
+        <if test="condition.searchEngine != null and condition.searchEngine != ''">
+            AND ck.fSearchEngine = #{condition.searchEngine}
+        </if>
+        <if test="condition.terminal != null and condition.terminal != ''">
+            AND ck.fTerminalType = #{condition.terminal}
+        </if>
+        <if test="condition.customer != null and condition.customer != ''">
+            AND ck.fCustomerUuid = #{condition.customer}
+        </if>
+        <if test="condition.type != null and condition.type != ''">
+            AND ck.fType = #{condition.type}
+        </if>
+        <if test="condition.keyword != null and condition.keyword != ''">
+            AND ck.fKeyword LIKE CONCAT(#{condition.keyword},'%')
+        </if>
+        GROUP BY cps.fCustomerKeywordUuid
+        LIMIT #{condition.start}, #{condition.limit};
+    </select>
+</mapper>

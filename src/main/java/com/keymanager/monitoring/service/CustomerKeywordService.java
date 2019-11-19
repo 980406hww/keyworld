@@ -1916,7 +1916,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void cleanCKLogFromAWeekAgo() {
         customerKeywordInvalidCountLogService.deleteInvalidCountLogFromAWeekAgo();
-        customerKeywordPositionSummaryService.deletePositionSummaryFromAWeekAgo();
+        // TODO 清空一年前的关键词排名
+        customerKeywordPositionSummaryService.deletePositionSummaryFromOneYearAgo();
         dailyReportService.deleteDailyReportFromAWeekAgo();
         dailyReportItemService.deleteDailyReportItemFromAWeekAgo();
     }

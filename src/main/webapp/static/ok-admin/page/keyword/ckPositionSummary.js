@@ -99,12 +99,12 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
     keywordLogShow.showLoading({text: '数据加载中'});
 
     if (condition) {
-        getKeywordMonData(condition);
+        getCustomerKeywordPositionSummaryData(condition);
         condition.dateStart = layui.util.toDateString(new Date(), 'yyyy-MM-dd');
         condition.dateEnd = condition.dateStart + ' 23:59:59';
         tableInit(condition);
     } else {
-        getKeywordMonData({searchEngine: '', terminal: '', time: '-90'});
+        getCustomerKeywordPositionSummaryData({searchEngine: '', terminal: '', time: '-90'});
         tableInit({
             searchEngine: '',
             terminal: '',
@@ -113,9 +113,9 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
         });
     }
 
-    function getKeywordMonData(condition) {
+    function getCustomerKeywordPositionSummaryData(condition) {
         $.ajax({
-            url: '/internal/customerkeywordmon/getCustomerKeywordMonData',
+            url: '/internal/ckpositionsummary/getCustomerKeywordPositionSummaryData',
             type: 'post',
             dataType: 'json',
             headers: {
@@ -151,13 +151,13 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
 
     form.on('select(searchEngine)', function () {
         var condition = common.formToJsonObject('keywordFrom');
-        getKeywordMonData(condition);
+        getCustomerKeywordPositionSummaryData(condition);
         reload(condition);
     });
 
     form.on('select(terminal)', function () {
         var condition = common.formToJsonObject('keywordFrom');
-        getKeywordMonData(condition);
+        getCustomerKeywordPositionSummaryData(condition);
         reload(condition);
     });
 
@@ -174,18 +174,18 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                 keywordOption.xAxis.axisLabel.interval = 6;
                 break;
         }
-        getKeywordMonData(condition);
+        getCustomerKeywordPositionSummaryData(condition);
     });
 
     form.on('select(type)', function () {
         var condition = common.formToJsonObject('keywordFrom');
-        getKeywordMonData(condition);
+        getCustomerKeywordPositionSummaryData(condition);
         reload(condition);
     });
 
     form.on('select(customer)', function () {
         var condition = common.formToJsonObject('keywordFrom');
-        getKeywordMonData(condition);
+        getCustomerKeywordPositionSummaryData(condition);
         reload(condition);
     });
 
@@ -312,7 +312,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
         table.render({
             elem: '#table',
             method: 'post',
-            url: '/internal/customerkeywordmon/getMonTableDataByCondition',
+            url: '/internal/ckpositionsummary/getCKPositionSummaryDataInitTable',
             page: true,
             limit: 100,
             limits: [10, 25, 50, 100, 500],

@@ -10,7 +10,6 @@ import com.keymanager.ckadmin.service.QzChargeMonService;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -37,6 +36,7 @@ public class QZChargeMonController {
     @Resource(name = "qzChargeMonService2")
     private QzChargeMonService qzChargeMonService;
 
+    @RequiresPermissions("/internal/qzchargemon/toQzChargeMon")
     @PostMapping(value = "/getQZChargeMonData")
     public ResultBean getQZChargeMonData(@RequestBody Map<String, Object> condition) {
         ResultBean resultBean = new ResultBean(200, "success");
@@ -60,6 +60,7 @@ public class QZChargeMonController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/qzchargemon/toQzChargeMon")
     @GetMapping(value = "/toQzChargeMon")
     public ModelAndView toQzChargeMon() {
         ModelAndView mv = new ModelAndView();
@@ -67,6 +68,7 @@ public class QZChargeMonController {
         return mv;
     }
 
+    @RequiresPermissions("/internal/qzchargemon/toQzChargeMon")
     @PostMapping(value = "/getMonDataByCondition")
     public ResultBean getMonDataByCondition(@RequestBody QZChargeMonCriteria criteria) {
         ResultBean resultBean = new ResultBean(0, "success");
@@ -100,6 +102,7 @@ public class QZChargeMonController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/qzchargemon/toQzChargeMon")
     @GetMapping(value = {"/toQzChargeMonWithParam/{time}/{terminal}/{search}", "/toQzChargeMonWithParam/{time}/{search}", "/toQzChargeMonWithParam/{time}/{terminal}",
         "/toQzChargeMonWithParam/{time}"})
     public ModelAndView toQzChargeMonWithParam(@PathVariable(name = "time") String time, @PathVariable(name = "terminal", required = false) String terminal,

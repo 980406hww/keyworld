@@ -1,11 +1,10 @@
 package com.keymanager.ckadmin.service.impl;
 
-import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.keymanager.ckadmin.dao.CustomerKeywordMonDao;
-import com.keymanager.ckadmin.entity.CustomerKeywordMon;
-import com.keymanager.ckadmin.service.CustomerKeywordMonService;
-import com.keymanager.ckadmin.vo.CustomerKeywordMonCountVO;
+import com.keymanager.ckadmin.dao.CustomerKeywordPositionSummaryDao;
+import com.keymanager.ckadmin.entity.CustomerKeywordPositionSummary;
+import com.keymanager.ckadmin.service.CustomerKeywordPositionSummaryService;
+import com.keymanager.ckadmin.vo.CustomerKeywordPositionSummaryCountVO;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,28 +16,31 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
-@Service("customerKeywordMonService2")
-public class CustomerKeywordMonServiceImpl extends ServiceImpl<CustomerKeywordMonDao, CustomerKeywordMon> implements CustomerKeywordMonService {
+/**
+ * @author shunshikj40
+ */
+@Service("ckPositionSummaryService2")
+public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<CustomerKeywordPositionSummaryDao, CustomerKeywordPositionSummary> implements CustomerKeywordPositionSummaryService {
 
-    @Resource(name = "customerKeywordMonDao2")
-    private CustomerKeywordMonDao customerKeywordMonDao;
+    @Resource(name = "customerKeywordPositionSummaryDao2")
+    private CustomerKeywordPositionSummaryDao customerKeywordPositionSummaryDao;
 
     @Override
-    public Map<String, Object> getCustomerKeywordMonData(Map<String, Object> condition) {
+    public Map<String, Object> getCustomerKeywordPositionSummaryData(Map<String, Object> condition) {
         handleCondition(condition);
-        List<CustomerKeywordMonCountVO> customerKeywordMonCountVos = customerKeywordMonDao.getCustomerKeywordMonData(condition);
-        if (CollectionUtils.isNotEmpty(customerKeywordMonCountVos)) {
+        List<CustomerKeywordPositionSummaryCountVO> customerKeywordPositionSummaryCountVos = customerKeywordPositionSummaryDao.getCustomerKeywordPositionSummaryData(condition);
+        if (CollectionUtils.isNotEmpty(customerKeywordPositionSummaryCountVos)) {
             List<String> dates = new ArrayList<>();
             List<Long> topThreeData = new ArrayList<>();
             List<Long> topFiveData = new ArrayList<>();
             List<Long> topTenData = new ArrayList<>();
             List<Long> topFifthData = new ArrayList<>();
-            for (CustomerKeywordMonCountVO customerKeywordMonCountVo : customerKeywordMonCountVos) {
-                dates.add(customerKeywordMonCountVo.getDate());
-                topThreeData.add(customerKeywordMonCountVo.getTopThreeCount());
-                topFiveData.add(customerKeywordMonCountVo.getTopFiveCount());
-                topTenData.add(customerKeywordMonCountVo.getTopTenCount());
-                topFifthData.add(customerKeywordMonCountVo.getTopFifthCount());
+            for (CustomerKeywordPositionSummaryCountVO customerKeywordPositionSummaryCountVo : customerKeywordPositionSummaryCountVos) {
+                dates.add(customerKeywordPositionSummaryCountVo.getDate());
+                topThreeData.add(customerKeywordPositionSummaryCountVo.getTopThreeCount());
+                topFiveData.add(customerKeywordPositionSummaryCountVo.getTopFiveCount());
+                topTenData.add(customerKeywordPositionSummaryCountVo.getTopTenCount());
+                topFifthData.add(customerKeywordPositionSummaryCountVo.getTopFifthCount());
             }
             Map<String, Object> data = new HashMap<>(5);
             data.put("date", dates);
@@ -52,15 +54,10 @@ public class CustomerKeywordMonServiceImpl extends ServiceImpl<CustomerKeywordMo
     }
 
     @Override
-    public Page<Map<String, Object>> selectTableByCondition(Map<String, Object> condition) {
+    public List<Map<String, Object>> getCKPositionSummaryDataInitTable(Map<String, Object> condition) {
         Integer cur = (Integer) condition.get("page");
         Integer limit = (Integer) condition.get("limit");
         if (null == cur || null == limit || cur.equals(0) || limit.equals(0)) {
-            return null;
-        }
-        Page<Map<String, Object>> page = new Page<>();
-        Integer total = customerKeywordMonDao.selectCountByCondition(condition);
-        if (null == total || total == 0) {
             return null;
         }
         Date date = new Date();
@@ -72,11 +69,7 @@ public class CustomerKeywordMonServiceImpl extends ServiceImpl<CustomerKeywordMo
         String fifteenDayAgo = sdf.format(calendar.getTime());
         condition.put("fifteenDayAgo", fifteenDayAgo);
         condition.put("start", (cur - 1) * limit);
-        page.setSearchCount(false);
-        page.setTotal(total);
-        List<Map<String, Object>> data = customerKeywordMonDao.selectTableByCondition(condition);
-        page.setRecords(data);
-        return page;
+        return customerKeywordPositionSummaryDao.getCKPositionSummaryDataInitTable(condition);
     }
 
     private void handleCondition(Map<String, Object> condition) {
