@@ -1,7 +1,9 @@
 package com.keymanager.ckadmin.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.entity.QZChargeStatus;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -15,4 +17,5 @@ import org.springframework.stereotype.Repository;
 @Repository("qzChargeStatusDao2")
 public interface QZChargeStatusDao extends BaseMapper<QZChargeStatus> {
 
+    Page<QZChargeStatus> getQzChargeStatus(@Param("page") Page<QZChargeStatus> page, @Param("qzSettingUuid") Long qzSettingUuid);
 }

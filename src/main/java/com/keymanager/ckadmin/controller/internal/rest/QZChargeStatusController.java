@@ -1,7 +1,5 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.QZChargeStatusCriteria;
@@ -91,13 +89,9 @@ public class QZChargeStatusController {
     public ResultBean getQzChargeStatus(@RequestBody QZChargeStatusCriteria criteria) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(0);
-        Page<QZChargeStatus> page = new Page<>(criteria.getPage(), criteria.getLimit());
-        page.setOrderByField("fCreateTime");
-        page.setAsc(false);
-        Wrapper<QZChargeStatus> wrapper = new EntityWrapper<>();
-        wrapper.where("fQZSettingUuid = {0}", criteria.getQzSettingUuid());
         try {
-            page = qzChargeStatusService.selectPage(page, wrapper);
+            Page<QZChargeStatus> page = new Page<>(criteria.getPage(), criteria.getLimit());
+            page = qzChargeStatusService.getQzChargeStatus(page, criteria.getQzSettingUuid());
             resultBean.setData(page.getRecords());
             resultBean.setCount(page.getTotal());
         } catch (Exception e) {

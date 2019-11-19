@@ -1,7 +1,9 @@
 package com.keymanager.ckadmin.service.impl;
 
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.ckadmin.criteria.QZChargeStatusCriteria;
 import com.keymanager.ckadmin.dao.QZChargeStatusDao;
 import com.keymanager.ckadmin.dao.QZSettingDao;
 import com.keymanager.ckadmin.entity.QZChargeStatus;
@@ -52,5 +54,10 @@ public class QZChargeStatusServiceImpl extends ServiceImpl<QZChargeStatusDao, QZ
         qzSetting.setRenewalStatus(qzChargeStatus.getChargeStatus());
         qzSetting.setChargeStatusUuid(qzChargeStatus.getUuid());
         qzSettingDao.updateById(qzSetting);
+    }
+
+    @Override
+    public Page<QZChargeStatus> getQzChargeStatus(Page<QZChargeStatus> page, Long qzSettingUuid) {
+        return qzChargeStatusDao.getQzChargeStatus(page, qzSettingUuid);
     }
 }

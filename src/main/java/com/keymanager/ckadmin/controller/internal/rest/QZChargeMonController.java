@@ -1,7 +1,5 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.QZChargeMonCriteria;
@@ -74,28 +72,13 @@ public class QZChargeMonController {
         ResultBean resultBean = new ResultBean(0, "success");
         try {
             Page<QzChargeMon> page = new Page<>(criteria.getPage(), criteria.getLimit());
-            page.setOrderByField("fOperationDate");
-            page.setAsc(false);
-            Wrapper<QzChargeMon> wrapper = new EntityWrapper<>();
-            wrapper.like("fTerminalType", criteria.getQzTerminal());
-            if (null != criteria.getSearchEngine() && !"".equals(criteria.getSearchEngine())) {
-                wrapper.eq("fSearchEngine", criteria.getSearchEngine());
-            }
-            if (null != criteria.getOperationType()) {
-                wrapper.eq("fOperationType", criteria.getOperationType());
-            }
-            if (null != criteria.getDateStart() && !"".equals(criteria.getDateStart())) {
-                wrapper.where("fOperationDate >= {0}", criteria.getDateStart());
-            }
-            if (null != criteria.getDateEnd() && !"".equals(criteria.getDateEnd())) {
-                wrapper.where("fOperationDate <= {0}", criteria.getDateEnd() + " 23:59:59");
-            }
-            page = qzChargeMonService.selectPage(page, wrapper);
+            page = qzChargeMonService.getMonDateByCondition(page, criteria);
             resultBean.setData(page.getRecords());
             resultBean.setCount(page.getTotal());
         } catch (Exception e) {
-            resultBean.setCode(400);
+            e.printStackTrace();
             logger.error(e.getMessage());
+            resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
             return resultBean;
         }

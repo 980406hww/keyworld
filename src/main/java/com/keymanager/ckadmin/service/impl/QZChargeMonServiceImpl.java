@@ -1,6 +1,8 @@
 package com.keymanager.ckadmin.service.impl;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.ckadmin.criteria.QZChargeMonCriteria;
 import com.keymanager.ckadmin.dao.QzChargeMonDao;
 import com.keymanager.ckadmin.entity.QzChargeMon;
 import com.keymanager.ckadmin.service.QzChargeMonService;
@@ -74,5 +76,10 @@ public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
             return data;
         }
         return null;
+    }
+
+    @Override
+    public Page<QzChargeMon> getMonDateByCondition(Page<QzChargeMon> page, QZChargeMonCriteria criteria) {
+        return qzChargeMonDao.getMonDateByCondition(page, criteria);
     }
 }
