@@ -22,4 +22,9 @@
             </otherwise>
         </choose>
     </select>
+
+    <delete id="deleteByQZSettingUuid">
+        DELETE FROM t_exclude_keyword WHERE fQZSettingUuid = #{qzSettingUuid}
+    </delete>
+
 </mapper>

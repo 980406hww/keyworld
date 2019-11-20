@@ -9,4 +9,6 @@ public interface CustomerExcludeKeywordDao extends BaseMapper<CustomerExcludeKey
     CustomerExcludeKeyword searchCustomerExcludeKeyword(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType);
 
     String getCustomerExcludeKeyword(@Param("customerUuid") Long customerUuid, @Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType, @Param("url") String url);
+
+    void deleteByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid);
 }

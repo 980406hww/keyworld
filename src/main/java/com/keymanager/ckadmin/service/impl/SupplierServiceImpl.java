@@ -1,7 +1,5 @@
 package com.keymanager.ckadmin.service.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.SupplierCriteria;
@@ -32,17 +30,7 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierDao, Supplier> impl
     @Override
     public Page<Supplier> searchSuppliers(SupplierCriteria criteria) {
         Page<Supplier> page = new Page<>(criteria.getPage(), criteria.getLimit());
-        page.setOrderByField("fCreateTime");
-        page.setAsc(false);
-        Wrapper<Supplier> wrapper = new EntityWrapper<>();
-        if (null != criteria.getInit() && "init".equals(criteria.getInit())) {
-            wrapper.where("1 != 1", "");
-        } else {
-            wrapper.like("fContactperson", criteria.getContactPerson());
-            wrapper.like("fQq", criteria.getQq());
-            wrapper.like("fPhone", criteria.getPhone());
-        }
-        page = selectPage(page, wrapper);
+        page.setRecords(supplierDao.searchSuppliers(page, criteria));
         for (Supplier supplier : page.getRecords()) {
             supplementServiceType(supplier);
         }

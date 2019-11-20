@@ -10,9 +10,10 @@ import java.util.List;
 
 @Repository("clientUpgradeDao2")
 public interface ClientUpgradeDao extends BaseMapper<ClientUpgrade> {
-    List<ClientUpgrade> searchClientUpgrades(Page<ClientUpgrade> page, @Param("terminalType")String terminalType);
+
+    List<ClientUpgrade> searchClientUpgrades(Page<ClientUpgrade> page, @Param("terminalType") String terminalType);
 
     List<ClientUpgrade> findClientUpgradeJobs();
 
-    void updateClientUpgradeStatus(@Param("uuid")Long uuid, @Param("status")Boolean status);
+    void updateClientUpgradeStatus(@Param("uuid") Long uuid, @Param("status") Boolean status);
 }

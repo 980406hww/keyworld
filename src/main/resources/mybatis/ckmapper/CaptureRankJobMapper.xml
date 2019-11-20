@@ -100,4 +100,47 @@
             #{uuid}
         </foreach>
     </update>
+
+    <select id="selectPageByCriteria" resultType="com.keymanager.ckadmin.entity.CaptureRankJob">
+        SELECT
+        <include refid="colID"/>
+        FROM t_capture_rank_job c
+        WHERE 1 = 1
+        <if test="criteria.init != null and criteria.init == 'init'">
+            AND 1 != 1
+        </if>
+        <if test="criteria.groupNames != null and criteria.groupNames != ''">
+            AND c.fGroupNames LIKE CONCAT('', '%')
+        </if>
+        <if test="criteria.customerUuid != null and criteria.customerUuid != ''">
+            AND c.fCustomerUuid = #{criteria.customerUuid}
+        </if>
+        <if test="criteria.operationType != null and criteria.operationType != ''">
+            AND c.fOperationType = #{criteria.operationType}
+        </if>
+        <if test="criteria.exectionType != null and criteria.exectionType != ''">
+            AND c.fExectionType = #{criteria.exectionType}
+        </if>
+        <if test="criteria.exectionStatus != null and criteria.exectionStatus != ''">
+            AND c.fExectionStatus = #{criteria.exectionStatus}
+        </if>
+        <choose>
+            <when test="criteria.rankJobType == 'Common'">
+                AND c.fRankJobType = #{criteria.rankJobType}
+                AND c.fQZSettingUuid IS NULL
+            </when>
+            <when test="criteria.rankJobType == 'Station'">
+                AND c.fQZSettingUuid > ''
+            </when>
+            <otherwise>
+                AND c.fRankJobType = #{criteria.rankJobType}
+            </otherwise>
+        </choose>
+        <if test="criteria.rankJobArea != null and criteria.rankJobArea != ''">
+            AND c.fRankJobArea = #{criteria.rankJobArea}
+        </if>
+        <if test="criteria.rankJobCity != null and criteria.rankJobCity != ''">
+            AND c.fRankJobCity = #{criteria.rankJobCity}
+        </if>
+    </select>
 </mapper>

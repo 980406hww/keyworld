@@ -85,7 +85,7 @@ public class IndustryDetailController {
     public ResultBean updRemarkByUuids(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
         try {
-            List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
+            List<Long> uuids = (List<Long>) requestMap.get("uuids");
             String remark = (String) requestMap.get("remark");
             industryDetailService.updRemarkByUuids(uuids, remark);
             resultBean.setCode(200);

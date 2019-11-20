@@ -17,7 +17,7 @@ public interface IndustryDetailService extends IService<IndustryDetail> {
 
     void saveIndustryDetail(IndustryDetail industryDetail);
 
-    void updRemarkByUuids(List<Integer> uuids,String remark);
+    void updRemarkByUuids(List<Long> uuids,String remark);
 
     void delIndustryDetail(long uuid);
 

@@ -91,7 +91,7 @@ public class QZChargeStatusController {
         resultBean.setCode(0);
         try {
             Page<QZChargeStatus> page = new Page<>(criteria.getPage(), criteria.getLimit());
-            page = qzChargeStatusService.getQzChargeStatus(page, criteria.getQzSettingUuid());
+            page.setRecords(qzChargeStatusService.getQzChargeStatus(page, criteria.getQzSettingUuid()));
             resultBean.setData(page.getRecords());
             resultBean.setCount(page.getTotal());
         } catch (Exception e) {

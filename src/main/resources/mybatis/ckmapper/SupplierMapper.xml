@@ -21,11 +21,14 @@
         <include refid="colID"/>
         FROM t_supplier s
         WHERE 1 = 1
-        <if test="criteria.contactPerson != null and criteria.contactPerson != ''">AND s.fContactperson like
-            '%${criteria.contactPerson}%'
+        <if test="criteria.init != null and criteria.init == 'init'">
+            AND 1 != 1
         </if>
-        <if test="criteria.qq != null and criteria.qq != ''">AND s.fQq like '${criteria.qq}%'</if>
-        <if test="criteria.phone != null and criteria.phone != '' ">AND s.fPhone like '%${criteria.phone}%'</if>
+        <if test="criteria.contactPerson != null and criteria.contactPerson != ''">
+            AND s.fContactperson LIKE '%${criteria.contactPerson}%'
+        </if>
+        <if test="criteria.qq != null and criteria.qq != ''">AND s.fQq LIKE '${criteria.qq}%'</if>
+        <if test="criteria.phone != null and criteria.phone != '' ">AND s.fPhone LIKE '%${criteria.phone}%'</if>
         order by s.fUuid DESC
     </select>
 

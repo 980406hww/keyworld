@@ -72,7 +72,7 @@ public class QZChargeMonController {
         ResultBean resultBean = new ResultBean(0, "success");
         try {
             Page<QzChargeMon> page = new Page<>(criteria.getPage(), criteria.getLimit());
-            page = qzChargeMonService.getMonDateByCondition(page, criteria);
+            page.setRecords(qzChargeMonService.getMonDateByCondition(page, criteria));
             resultBean.setData(page.getRecords());
             resultBean.setCount(page.getTotal());
         } catch (Exception e) {

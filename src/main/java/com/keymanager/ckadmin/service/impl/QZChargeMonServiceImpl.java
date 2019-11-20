@@ -79,7 +79,7 @@ public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
     }
 
     @Override
-    public Page<QzChargeMon> getMonDateByCondition(Page<QzChargeMon> page, QZChargeMonCriteria criteria) {
+    public List<QzChargeMon> getMonDateByCondition(Page<QzChargeMon> page, QZChargeMonCriteria criteria) {
         return qzChargeMonDao.getMonDateByCondition(page, criteria);
     }
 }

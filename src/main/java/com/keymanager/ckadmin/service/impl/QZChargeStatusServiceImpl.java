@@ -57,7 +57,7 @@ public class QZChargeStatusServiceImpl extends ServiceImpl<QZChargeStatusDao, QZ
     }
 
     @Override
-    public Page<QZChargeStatus> getQzChargeStatus(Page<QZChargeStatus> page, Long qzSettingUuid) {
+    public List<QZChargeStatus> getQzChargeStatus(Page<QZChargeStatus> page, Long qzSettingUuid) {
         return qzChargeStatusDao.getQzChargeStatus(page, qzSettingUuid);
     }
 }

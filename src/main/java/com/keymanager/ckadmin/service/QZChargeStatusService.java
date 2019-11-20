@@ -21,5 +21,5 @@ public interface QZChargeStatusService extends IService<QZChargeStatus> {
 
     void saveOneQZChargeStatus(QZChargeStatus qzChargeStatus);
 
-    Page<QZChargeStatus> getQzChargeStatus(Page<QZChargeStatus> page, Long qzSettingUuid);
+    List<QZChargeStatus> getQzChargeStatus(Page<QZChargeStatus> page, Long qzSettingUuid);
 }

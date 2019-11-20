@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.KeywordInfoDao">
+
+    <sql id="colID">
+        kif.fId AS "id",
+        kif.fUserName as "userName",
+        kif.fSpliterStr as "spliterStr",
+        kif.fSearchEngine as "searchEngine",
+        kif.fOperationType as "operationType",
+        kif.fKeywordInfo as "keywordInfo",
+        kif.fStatus as "status",
+        kif.fUpdateTime as "updateTime",
+        kif.fCreateTime as "createTime"
+    </sql>
+
+    <select id="searchKeywordInfos" resultType="com.keymanager.ckadmin.entity.KeywordInfo">
+        SELECT
+        <include refid="colID" />
+        FROM t_keyword_info kif
+        WHERE 1 = 1
+        <if test="criteria.init != null and criteria.init == 'init'">
+            AND 1 != 1
+        </if>
+        <if test="criteria.userName != null and criteria.userName != ''">
+            AND kif.fUserName LIKE '%${criteria.userName}%'
+        </if>
+        <if test="criteria.searchEngine != null and criteria.searchEngine != ''">
+            AND kif.fSearchEngine LIKE '${criteria.searchEngine}%'
+        </if>
+        <if test="criteria.terminalType != null and criteria.terminalType != ''">
+            AND kif.fSearchEngine LIKE '%${criteria.terminalType}'
+        </if>
+        <if test="criteria.operationType != null and criteria.operationType != ''">
+            AND kif.fOperationType = #{criteria.operationType}
+        </if>
+        <if test="criteria.keywordInfo != null and criteria.keywordInfo != ''">
+            AND kif.fKeywordInfo LIKE '%${criteria.keywordInfo}%'
+        </if>
+        <if test="criteria.createTime != null and criteria.createTime != ''">
+            AND kif.fCreateTime BETWEEN CONCAT(#{criteria.createTime}, ' 00:00:00') AND CONCAT(#{criteria.createTime}, ' 23:59:59')
+        </if>
+        ORDER BY createTime DESC
+    </select>
+
+</mapper>

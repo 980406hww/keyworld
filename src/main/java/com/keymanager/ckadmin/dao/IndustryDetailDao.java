@@ -22,8 +22,7 @@ public interface IndustryDetailDao extends BaseMapper<IndustryDetail> {
 
     void delIndustryDetailsByIndustryID(@Param("industryID") long industryID);
 
-    List<IndustryDetail> searchIndustryDetails(@Param("page") Page<IndustryDetail> page, @Param("industryDetailCriteria")
-            IndustryDetailCriteria industryDetailCriteria);
+    List<IndustryDetail> searchIndustryDetails(Page<IndustryDetail> page, @Param("industryDetailCriteria") IndustryDetailCriteria industryDetailCriteria);
 
     void deleteIndustryDetails(@Param("uuids") List<String> uuids);
 
@@ -36,4 +35,6 @@ public interface IndustryDetailDao extends BaseMapper<IndustryDetail> {
     void removeUselessIndustryDetail(@Param("industryID") long industryID);
 
     List<Map> getIndustryInfos(@Param("uuid") long uuid);
+
+    void updRemarkByUuids(@Param("uuids") List<Long> uuids, @Param("remark") String remark);
 }
