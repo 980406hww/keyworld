@@ -16,4 +16,6 @@ public interface QzChargeMonDao extends BaseMapper<QzChargeMon> {
     List<QZChargeMonCountVO> getQZChargeMonData(@Param("condition") Map<String, Object> condition);
 
     List<QzChargeMon> getMonDateByCondition(Page<QzChargeMon> page, @Param("criteria") QZChargeMonCriteria criteria);
+
+    void deleteByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid);
 }

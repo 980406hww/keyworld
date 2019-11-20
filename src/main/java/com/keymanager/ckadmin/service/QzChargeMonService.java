@@ -12,4 +12,6 @@ public interface QzChargeMonService extends IService<QzChargeMon> {
     Map<String, Object> getQZChargeMonData(String searchEngines, String terminal, String time);
 
     List<QzChargeMon> getMonDateByCondition(Page<QzChargeMon> page, QZChargeMonCriteria criteria);
+
+    void deleteByQZSettingUuid(Long qzSettingUuid);
 }

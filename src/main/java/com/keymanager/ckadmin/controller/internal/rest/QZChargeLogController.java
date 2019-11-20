@@ -133,7 +133,7 @@ public class QZChargeLogController {
             qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
             qzChargeMon.setTerminalType(terminal);
             qzChargeMon.setOperationUser(userName);
-            qzChargeMon.setQzzSettingUuid(uuid);
+            qzChargeMon.setQzSettingUuid(uuid);
             qzChargeMonService.insert(qzChargeMon);
         } catch (Exception e) {
             logger.error(e.getMessage());

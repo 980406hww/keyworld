@@ -11,7 +11,7 @@ public class QzChargeMon {
     private Long uuid;
 
     @TableField("fQzSettingUuid ")
-    private Long qzzSettingUuid;
+    private Long qzSettingUuid;
 
     @TableField("fOperationDate")
     private Date operationDate;
@@ -34,15 +34,18 @@ public class QzChargeMon {
     @TableField("fOperationUser")
     private String operationUser;
 
+    /**
+     * 0 删除  1 未删除
+     */
     @TableField("fIsDel")
     private Integer isDel;
 
-    public Long getQzzSettingUuid() {
-        return qzzSettingUuid;
+    public Long getQzSettingUuid() {
+        return qzSettingUuid;
     }
 
-    public void setQzzSettingUuid(Long qzzSettingUuid) {
-        this.qzzSettingUuid = qzzSettingUuid;
+    public void setQzSettingUuid(Long qzSettingUuid) {
+        this.qzSettingUuid = qzSettingUuid;
     }
 
     public Integer getIsDel() {

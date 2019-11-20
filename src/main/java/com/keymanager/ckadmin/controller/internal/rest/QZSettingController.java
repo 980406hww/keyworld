@@ -1,7 +1,5 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +15,6 @@ import com.keymanager.ckadmin.enums.KeywordEffectEnum;
 import com.keymanager.ckadmin.vo.QZChargeRuleStandardInfoVO;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
-import com.keymanager.ckadmin.vo.QZSettingCountVO;
 import com.keymanager.util.TerminalTypeMapping;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -61,9 +58,6 @@ public class QZSettingController extends SpringMVCBaseController {
 
     @Resource(name = "qzChargeRuleService2")
     private QZChargeRuleService qzChargeRuleService;
-
-    @Resource(name = "qzChargeMonService2")
-    private QzChargeMonService qzChargeMonService;
 
     /**
      * 获取网站分类标签
@@ -348,9 +342,7 @@ public class QZSettingController extends SpringMVCBaseController {
     public ResultBean deleteQZSetting(@PathVariable("uuid") Long uuid, HttpSession session) {
         ResultBean resultBean = new ResultBean();
         try {
-            // 日志监控
-            saveQzChargeMon(uuid, (String) session.getAttribute("name"));
-            qzSettingService.deleteOne(uuid);
+            qzSettingService.deleteOne(uuid, (String) session.getAttribute("username"));
             resultBean.setCode(200);
             resultBean.setMsg("删除站点成功");
         } catch (Exception e) {
@@ -370,9 +362,7 @@ public class QZSettingController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean();
         try {
             List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
-            // 日志监控
-            updQzStatusMonLows(uuids, (String) session.getAttribute("name"));
-            qzSettingService.deleteAll(uuids);
+            qzSettingService.deleteAll(uuids, (String) session.getAttribute("username"));
             resultBean.setCode(200);
             resultBean.setMsg("删除站点成功");
         } catch (Exception e) {
@@ -431,7 +421,6 @@ public class QZSettingController extends SpringMVCBaseController {
                 }
             }
             qzSettingService.saveQZSetting(qzSetting, userName);
-            saveQzChargeMon(qzSetting, (String) session.getAttribute("name"));
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
@@ -628,116 +617,6 @@ public class QZSettingController extends SpringMVCBaseController {
             resultBean.setCode(400);
         }
         return resultBean;
-    }
-
-    private void saveQzChargeMon(QZSetting qzSetting, String userName) {
-        try {
-            if (qzSetting.getRenewalStatus() == 4) {
-                return;
-            }
-            Customer customer = customerService.selectById(qzSetting.getCustomerUuid());
-            String terminal = "";
-            if (null == qzSetting.getPcGroup() || "".equals(qzSetting.getPcGroup())) {
-                if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
-                    terminal = "Phone";
-                }
-            } else {
-                terminal = "PC";
-                if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
-                    terminal += ",Phone";
-                }
-            }
-            QzChargeMon qzChargeMon = new QzChargeMon();
-            qzChargeMon.setOperationType(2); // 2:新增状态
-            qzChargeMon.setQzDomain(qzSetting.getDomain());
-            qzChargeMon.setQzCustomer(customer.getContactPerson());
-            qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
-            qzChargeMon.setTerminalType(terminal);
-            qzChargeMon.setOperationUser(userName);
-            qzChargeMon.setQzzSettingUuid(qzSetting.getUuid());
-            qzChargeMonService.insert(qzChargeMon);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void saveQzChargeMon(Long uuid, String userName) {
-        try {
-            QZSetting qzSetting = qzSettingService.selectById(uuid);
-            if (qzSetting.getRenewalStatus() == 4) {
-                return;
-            }
-
-            Customer customer = customerService.selectById(qzSetting.getCustomerUuid());
-            String terminal = "";
-            if (null == qzSetting.getPcGroup() || "".equals(qzSetting.getPcGroup())) {
-                if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
-                    terminal = "Phone";
-                }
-            } else {
-                terminal = "PC";
-                if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
-                    terminal += ",Phone";
-                }
-            }
-            QzChargeMon qzChargeMon = new QzChargeMon();
-            qzChargeMon.setOperationType(4); // 4:删除状态
-            qzChargeMon.setQzDomain(qzSetting.getDomain());
-            qzChargeMon.setQzCustomer(customer.getContactPerson());
-            qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
-            qzChargeMon.setTerminalType(terminal);
-            qzChargeMon.setOperationUser(userName);
-            qzChargeMon.setQzzSettingUuid(uuid);
-            qzChargeMonService.insert(qzChargeMon);
-            QzChargeMon qzStatus = new QzChargeMon();
-            qzStatus.setIsDel(0);
-            Wrapper<QzChargeMon> wrapper = new EntityWrapper<>();
-            wrapper.eq("fQzSettingUuid", qzChargeMon.getQzzSettingUuid());
-            qzChargeMonService.update(qzStatus, wrapper);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void updQzStatusMonLows(List<Integer> uuids, String userName) {
-        try {
-            if (null == uuids || uuids.isEmpty()) {
-                return;
-            }
-            List<QZSetting> qzSettings = qzSettingService.selectByUuids(uuids);
-            for (QZSetting qzSetting : qzSettings) {
-                if (qzSetting.getRenewalStatus() == 4) {
-                    continue;
-                }
-                String terminal = "";
-                if (null == qzSetting.getPcGroup() || "".equals(qzSetting.getPcGroup())) {
-                    if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
-                        terminal += "Phone";
-                    }
-                } else {
-                    terminal += "PC";
-                    if (null != qzSetting.getPhoneGroup() && !"".equals(qzSetting.getPhoneGroup())) {
-                        terminal += ",Phone";
-                    }
-                }
-                QzChargeMon qzChargeMon = new QzChargeMon();
-                qzChargeMon.setOperationType(4); // 4:删除状态
-                qzChargeMon.setQzDomain(qzSetting.getDomain());
-                qzChargeMon.setQzCustomer(qzSetting.getContactPerson());
-                qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
-                qzChargeMon.setTerminalType(terminal);
-                qzChargeMon.setOperationUser(userName);
-                qzChargeMon.setQzzSettingUuid(qzSetting.getUuid());
-                qzChargeMonService.insert(qzChargeMon);
-            }
-            QzChargeMon qzStatus = new QzChargeMon();
-            qzStatus.setIsDel(0);
-            Wrapper<QzChargeMon> wrapper = new EntityWrapper<>();
-            wrapper.in("fQzSettingUuid", uuids);
-            qzChargeMonService.update(qzStatus, wrapper);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
     }
 
     @PostMapping("/getQzSettingRenewalStatusCount")

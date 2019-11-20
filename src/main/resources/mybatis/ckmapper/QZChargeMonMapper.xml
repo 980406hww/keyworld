@@ -39,7 +39,7 @@
         FROM t_qz_charge_mon
         WHERE 1 = 1
         <if test="criteria.qzTerminal != null and criteria.qzTerminal != ''">
-            AND fTerminalType = #{criteria.qzTerminal}
+            AND fTerminalType LIKE CONCAT('%', #{criteria.qzTerminal}, '%')
         </if>
         <if test="criteria.searchEngine != null and criteria.searchEngine != ''">
             AND fSearchEngine = #{criteria.searchEngine}
@@ -55,4 +55,9 @@
         </if>
         ORDER BY fOperationDate DESC
     </select>
+
+    <update id="deleteByQZSettingUuid">
+        UPDATE t_qz_charge_mon SET fIsDel = 0 WHERE fQzSettingUuid = #{qzSettingUuid}
+    </update>
+
 </mapper>

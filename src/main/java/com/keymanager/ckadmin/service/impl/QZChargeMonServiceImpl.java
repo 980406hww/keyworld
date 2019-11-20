@@ -82,4 +82,9 @@ public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
     public List<QzChargeMon> getMonDateByCondition(Page<QzChargeMon> page, QZChargeMonCriteria criteria) {
         return qzChargeMonDao.getMonDateByCondition(page, criteria);
     }
+
+    @Override
+    public void deleteByQZSettingUuid(Long qzSettingUuid) {
+        qzChargeMonDao.deleteByQZSettingUuid(qzSettingUuid);
+    }
 }
