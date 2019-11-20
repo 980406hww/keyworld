@@ -2070,6 +2070,9 @@
                 case 'addQz':
                     addQZSetting();
                     break;
+                case 'addQzs':
+                    addQZSettings();
+                    break;
                 case 'updFZTags':
                     openUpdFZTags();
                     break;
@@ -2264,7 +2267,7 @@
         };
 
         window.showChargeStatus = function(uuid){
-            okLayer.open("其他 / 前往全站设置信息 / 收费状态记录", "/internal/qzchargestatus/toQzChargeStatus", "60%", "70%",
+            okLayer.open("其他 / 全站设置信息 / 收费状态记录", "/internal/qzchargestatus/toQzChargeStatus", "60%", "70%",
                 function (layero) {
                     window[layero.find("iframe")[0]["name"]].initForm(uuid);
                 }, function () {
@@ -2568,9 +2571,21 @@
         }
 
         function addQZSetting() {
-            okLayer.open("其他 / 前往全站设置信息 / 添加", "/internal/qzsetting/toQZSettingAdd", "90%", "90%",
+            okLayer.open("其他 / 全站设置信息 / 添加", "/internal/qzsetting/toQZSettingAdd", "90%", "90%",
                 function (layero) {
                     window[layero.find("iframe")[0]["name"]].initForm2('${isSEOSales}');
+                }, function () {
+                    if (sign) {
+                        active['reload'].call(this);
+                        sign = false;
+                    }
+                },'40px');
+        }
+
+        function addQZSettings() {
+            okLayer.open("其他 / 全站设置信息 / 批量添加", "/internal/qzsetting/toQZSettingsAdd", "90%", "90%",
+                function (layero) {
+                    window[layero.find("iframe")[0]["name"]].initForm('${isSEOSales}');
                 }, function () {
                     if (sign) {
                         active['reload'].call(this);
@@ -2589,7 +2604,7 @@
          * 修改
          */
         window.showSettingDialog = function (uuid) {
-            okLayer.open("其他 / 前往全站设置信息 / 修改", "/internal/qzsetting/toQZSettingAdd", "90%",
+            okLayer.open("其他 / 全站设置信息 / 修改", "/internal/qzsetting/toQZSettingAdd", "90%",
                 "90%", function (layero) {
                     window[layero.find("iframe")[0]["name"]].initForm(uuid);
                 }, function () {
@@ -2603,7 +2618,7 @@
          * 收费
          */
         window.showChargeDialog = function (uuid, contactPearson, domain, renewalStatus) {
-            okLayer.open("其他 / 前往全站设置信息 / 收费", "/internal/qzsetting/toQZSettingCharge", "60%",
+            okLayer.open("其他 / 全站设置信息 / 收费", "/internal/qzsetting/toQZSettingCharge", "60%",
                 "70%", function (layero) {
                     window[layero.find("iframe")[0]["name"]].initForm(
                         {
@@ -2854,7 +2869,7 @@
             if (terminalType === 'PC') {
                 optimizeGroupName = pcGroup;
             }
-            okLayer.open("其他 / 前往全站设置信息 / 排除关键字", "/internal/qzsetting/toExcludeCustomerKeyword",
+            okLayer.open("其他 / 全站设置信息 / 排除关键字", "/internal/qzsetting/toExcludeCustomerKeyword",
                 "60%", "70%", function (layero) {
                     window[layero.find("iframe")[0]["name"]].initForm({
                         qzSettingUuid: uuid,
@@ -3259,6 +3274,9 @@
     <@shiro.hasPermission name="/internal/qzsetting/save">
         <button class="layui-btn layui-btn-sm" lay-event="addQz">
             <i style="position: relative;top: -1px" class="layui-icon">&#xe654;</i>添加整站
+        </button>
+        <button class="layui-btn layui-btn-sm" lay-event="addQzs">
+            <i style="position: relative;top: -1px" class="layui-icon">&#xe654;</i>批量添加整站
         </button>
         <button class="layui-btn layui-btn-sm " lay-event="updFZTags">
             <i class="layui-icon">&#xe642;</i>修改标签

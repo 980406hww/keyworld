@@ -377,4 +377,11 @@
             #{item}
         </foreach>
     </update>
+
+    <select id="selectByCondition" resultType="java.lang.Long">
+        SELECT fUuid FROM t_qz_setting
+        WHERE fCustomerUuid = #{customerUuid}
+        AND fDomain = #{domain}
+        AND fSearchEngine = #{searchEngine}
+    </select>
 </mapper>

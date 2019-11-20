@@ -914,4 +914,9 @@ public class QZSettingServiceImpl extends
             captureRankJobService.updateCaptureRankJobCustomerUuids(jobUuids, customerUuid);
         }
     }
+
+    @Override
+    public Long selectByCondition(Long customerUuid, String domain, String searchEngine) {
+        return qzSettingDao.selectByCondition(customerUuid, domain, searchEngine);
+    }
 }

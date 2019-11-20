@@ -132,6 +132,17 @@ public class QZSettingController extends SpringMVCBaseController {
     }
 
     /**
+     * 跳转添加或修改全站页面
+     */
+    @RequiresPermissions("/internal/qzsetting/save")
+    @GetMapping(value = "/toQZSettingsAdd")
+    public ModelAndView toQZSettingsAdd() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("qzsettings/qzsettingsAdd");
+        return mv;
+    }
+
+    /**
      * 跳转添加或修改全站收费页面
      */
     @GetMapping(value = "/toQZSettingCharge")
@@ -403,6 +414,33 @@ public class QZSettingController extends SpringMVCBaseController {
                 resultBean.setData(qzChargeLogService.getQZChargeLog(uuid));
             }
             return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    /**
+     * 站点信息  批量保存
+     */
+    @RequiresPermissions("/internal/qzsetting/save")
+    @PostMapping(value = "/saveQZSettings")
+    public ResultBean saveQZSettings(@RequestBody List<QZSetting> qzSettings, HttpSession session) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            int status = getCurrentUser().getRoles().contains("DepartmentManager") ? 1 : 2;
+            String userName = (String) session.getAttribute("username");
+            Long qzUuid;
+            for (QZSetting qzSetting : qzSettings) {
+                qzUuid = qzSettingService.selectByCondition(qzSetting.getCustomerUuid(), qzSetting.getDomain(), qzSetting.getSearchEngine());
+                if (qzUuid != null) {
+                    qzSetting.setUuid(qzUuid);
+                }
+                qzSetting.setStatus(status);
+                qzSettingService.saveQZSetting(qzSetting, userName);
+            }
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
