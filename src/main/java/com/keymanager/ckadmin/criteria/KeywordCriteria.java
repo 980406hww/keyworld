@@ -47,6 +47,7 @@ public class KeywordCriteria extends BaseCriteria {
 
     private Integer noReachStandardDays;//未达标天数
 
+    private Long qzSetting;
     private String targetOptimizeGroupName;
     private String targetMachineGroup;
     private String targetBearPawNumber;
@@ -55,6 +56,14 @@ public class KeywordCriteria extends BaseCriteria {
     private String targetSearchEngine;
 
     private String deleteType;
+
+    public Long getQzSetting() {
+        return qzSetting;
+    }
+
+    public void setQzSetting(Long qzSetting) {
+        this.qzSetting = qzSetting;
+    }
 
     public String getOptimizeGroupNameLike() {
         return optimizeGroupNameLike;

@@ -15,13 +15,11 @@ import com.keymanager.ckadmin.enums.KeywordEffectEnum;
 import com.keymanager.ckadmin.vo.QZChargeRuleStandardInfoVO;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
-import com.keymanager.ckadmin.vo.QZSettingCountVO;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -593,6 +591,24 @@ public class QZSettingController extends SpringMVCBaseController {
             } else {
                 resultBean.setData(data);
             }
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+            resultBean.setMsg(ex.getMessage());
+            resultBean.setCode(400);
+        }
+        return resultBean;
+    }
+
+    @RequestMapping(value = "/getQzSettingByCustomer/{customerUuid}", method = RequestMethod.GET)
+    public ResultBean getQzSettingByCustomer(@PathVariable Long customerUuid) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            List<QZSetting> qzSettings = qzSettingService.getQzSettingByCustomer(customerUuid);
+            if (null == qzSettings || qzSettings.isEmpty()) {
+                resultBean.setCode(300);
+                return resultBean;
+            }
+            resultBean.setData(qzSettings);
         } catch (Exception ex) {
             logger.error(ex.getMessage());
             resultBean.setMsg(ex.getMessage());

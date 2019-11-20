@@ -512,6 +512,9 @@
         <if test="keywordCriteria.keywordEffect != null and keywordCriteria.keywordEffect != ''">
             AND ck.fKeywordEffect = #{keywordCriteria.keywordEffect}
         </if>
+        <if test="keywordCriteria.qzSetting != null and keywordCriteria.qzSetting != '' and keywordCriteria.type != null and keywordCriteria.type == 'qz'">
+            AND ck.fQZSettingUuid = #{keywordCriteria.qzSetting}
+        </if>
     </sql>
 
     <sql id="updateCustomerKeywordsCriteria">
@@ -842,6 +845,7 @@
         t_customer_keyword ck
         WHERE 1 = 1
         <include refid="searchCustomerKeywordsCriteria"/>
+        ORDER BY ck.fKeyword
     </select>
 
     <select id="selectAllKeywordAndUrl" resultType="java.util.Map">

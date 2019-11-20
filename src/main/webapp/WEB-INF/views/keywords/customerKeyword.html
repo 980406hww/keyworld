@@ -67,13 +67,17 @@
                                     <input type="hidden" name="type" id="type" value="<#if businessType?exists>${businessType}<#else>pt</#if>">
                                     <input type="hidden" name="terminalType" id="terminalType" value="<#if terminalType2?exists>${terminalType2}<#else>PC</#if>">
 
-                                    <div class="layui-inline" style="width: 140px">
+                                    <div class="layui-inline" style="width: 120px">
                                         <select name="searchEngine" id="searchEngine">
                                             <option value=''>搜索引擎</option>
                                         </select>
                                     </div>
-
-                                    <div class="layui-inline" style="width: 140px">
+                                    <div class="layui-inline" style="width: 120px">
+                                        <select name="qzSetting" id="qzSetting">
+                                            <option value=''>选择整站</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-inline" style="width: 130px">
                                         <input type="text" name="keyword" id="keyword" placeholder="请输入关键字" class="layui-input"
                                                onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                     </div>
@@ -85,7 +89,7 @@
                                     <div class="layui-inline one-special">
                                         <input type="checkbox" name="optimizeGroupNameLike" value="on" title="模糊搜索">
                                     </div>
-                                    <div class="layui-inline" style="width: 140px">
+                                    <div class="layui-inline" style="width: 130px">
                                         <input type="text" name="url" id="url" placeholder="请输入域名" autocomplete="off" class="layui-input"
                                                onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                     </div>
@@ -100,7 +104,7 @@
                                                    onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');">
                                         </div>
                                     </div>
-                                    <div class="layui-inline" style="width: 140px">
+                                    <div class="layui-inline" style="width: 120px">
                                         <div class="layui-input-inline">
                                             <select name="status" id="status">
                                                 <option value=''>关键字状态</option>
@@ -111,7 +115,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="layui-inline" style="width: 140px">
+                                    <div class="layui-inline" style="width: 120px">
                                         <div class="layui-input-inline">
                                             <select name="customerKeywordSource" id="customerKeywordSource">
                                                 <option value="">关键字来源</option>
@@ -266,6 +270,7 @@
 <script>
     let qzBusiness = '<#if businessType?exists>${businessType}</#if>';
     let searchEngine = '<#if searchEngine?exists>${searchEngine}</#if>';
+    let qzUuid = '<#if qzUuid?exists>${qzUuid}</#if>';
 
     function if_from_qz(l) {
         let status = '<#if status?exists>${status}</#if>';
@@ -306,6 +311,7 @@
     <input type="hidden"  name="searchEngine" id="searchEngineHidden" value=""/>
     <input type="hidden"  name="keywordEffect" id="keywordEffectHidden" value=""/>
     <input type="hidden"  name="noPosition" id="noPositionHidden" value=""/>
+    <input type="hidden"  name="qzSetting" id="qzSettingHidden" value=""/>
 
 </form>
 </body>

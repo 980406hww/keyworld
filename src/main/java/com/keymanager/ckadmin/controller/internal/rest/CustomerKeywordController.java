@@ -468,7 +468,12 @@ public class CustomerKeywordController extends SpringMVCBaseController {
                 CustomerKeywordInfoExcelWriter excelWriter = new CustomerKeywordInfoExcelWriter();
                 excelWriter.writeDataToExcel(customerKeywords);
                 Customer customer = customerService.selectById(keywordCriteria.getCustomerUuid());
-                String fileName = customer.getContactPerson() + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
+                String fileName;
+                if ("qz".equals(keywordCriteria.getType())) {
+                    fileName = customer.getContactPerson() + keywordCriteria.getOptimizeGroupName() + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
+                } else {
+                    fileName = customer.getContactPerson() + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
+                }
                 fileName = new String(fileName.getBytes("gb2312"), "ISO8859-1");
                 byte[] buffer = excelWriter.getExcelContentBytes();
                 downExcelFile(response, fileName, buffer);
@@ -735,10 +740,10 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toKeywordsWithQZ/{businessType}/{terminalType}/{customerUuid}/{group}/{searchEngine}/{status}")
+    @GetMapping(value = "/toKeywordsWithQZ/{businessType}/{terminalType}/{customerUuid}/{group}/{searchEngine}/{status}/{qzUuid}")
     public ModelAndView toKeywordsWithQZ(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
         @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "group") String group,
-        @PathVariable(name = "searchEngine") String searchEngine,
+        @PathVariable(name = "searchEngine") String searchEngine, @PathVariable(name = "qzUuid") String qzUuid,
         @PathVariable(name = "status") int status) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/customerKeyword");
@@ -748,6 +753,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         mv.addObject("group", group);
         mv.addObject("status", status);
         mv.addObject("searchEngine", searchEngine);
+        mv.addObject("qzUuid", qzUuid);
         return mv;
     }
 
@@ -833,16 +839,17 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toCustomerKeywordFromQZ/{businessType}/{terminalType}/{customerUuid}/{group}")
+    @GetMapping(value = "/toCustomerKeywordFromQZ/{businessType}/{terminalType}/{customerUuid}/{group}/{qzUuid}")
     public ModelAndView toCustomerKeywordFromQZ(@PathVariable(name = "businessType") String businessType,
         @PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "customerUuid") Long customerUuid,
-        @PathVariable(name = "group") String group) {
+        @PathVariable(name = "group") String group, @PathVariable(name = "qzUuid") String qzUuid) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/customerKeyword");
         mv.addObject("businessType", businessType);
         mv.addObject("terminalType2", terminalType);
         mv.addObject("customerUuid", customerUuid);
         mv.addObject("group", group);
+        mv.addObject("qzUuid", qzUuid);
         return mv;
     }
 

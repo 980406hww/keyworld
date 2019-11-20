@@ -57,10 +57,45 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     function init_search() {
         init_keyword_type();
         init_searchEngine();
+        getQzSettings();
         if (qzBusiness === 'qz') {
             if_from_qz(layui);
+            showQzSettings();
         }
         get_keywords(common.formToJsonObject('searchForm'));
+    }
+
+    function showQzSettings() {
+        document.getElementById('qzSetting').parentElement.style.display = 'inline-block';
+    }
+
+    function hideQzSettings() {
+        document.getElementById('qzSetting').parentElement.style.display = 'none';
+    }
+
+    function getQzSettings() {
+        let uuid = document.getElementById('customerUuid').value;
+        $.ajax({
+            url: '/internal/qzsetting/getQzSettingByCustomer/' + uuid,
+            dataType: 'json',
+            async: false,
+            type: 'get',
+            success: function (res) {
+                console.log(res);
+                if (res.code === 200) {
+                    $("#qzSetting").empty();
+                    $("#qzSetting").append('<option value="">选择整站</option>');
+                    $.each(res.data, function (index, item) {
+                        if (item.uuid + '' === qzUuid) {
+                            $('#qzSetting').append('<option value="' + item.uuid + '" selected>' + item.domain + '</option>');// 下拉菜单里添加元素
+                        } else {
+                            $('#qzSetting').append('<option value="' + item.uuid + '">' + item.domain + '</option>');// 下拉菜单里添加元素
+                        }
+                    });
+                    form.render("select");
+                }
+            }
+        });
     }
 
     function init_keyword_type() {
@@ -90,6 +125,11 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         let d = data.elem.context.dataset;
         $('#type').val(d.type);
         $('#terminalType').val(d.terminal);
+        if (d.type === 'qz') {
+            showQzSettings();
+        } else {
+            hideQzSettings();
+        }
         active['reload'].call(this);
     });
 

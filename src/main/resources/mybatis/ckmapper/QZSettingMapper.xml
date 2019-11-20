@@ -377,4 +377,10 @@
             #{item}
         </foreach>
     </update>
+
+    <select id="getQzSettingByCustomer" resultType="com.keymanager.ckadmin.entity.QZSetting">
+        SELECT fUuid AS 'uuid',fDomain AS 'domain'
+        FROM t_qz_setting
+        WHERE fCustomerUuid = #{customerUuid}
+    </select>
 </mapper>
