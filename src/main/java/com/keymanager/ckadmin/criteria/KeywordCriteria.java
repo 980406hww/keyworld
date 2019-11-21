@@ -56,6 +56,8 @@ public class KeywordCriteria extends BaseCriteria {
 
     private String deleteType;
 
+    private String orderingElement;
+
     public String getOptimizeGroupNameLike() {
         return optimizeGroupNameLike;
     }
@@ -376,5 +378,13 @@ public class KeywordCriteria extends BaseCriteria {
 
     public void setKeywordEffect(String keywordEffect) {
         this.keywordEffect = keywordEffect;
+    }
+
+    public String getOrderingElement() {
+        return orderingElement;
+    }
+
+    public void setOrderingElement(String orderingElement) {
+        this.orderingElement = orderingElement;
     }
 }

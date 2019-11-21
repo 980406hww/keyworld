@@ -180,7 +180,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     table.on('sort(tableFilter)', function(obj){
         let postData = common.formToJsonObject('searchForm');
         postData.orderBy = obj.field;
+        $("#downloadKeywordForm").find("#orderByHidden").val(postData.orderBy);
         postData.orderMode = obj.type === 'desc' ? '0' : '1';
+        $("#downloadKeywordForm").find("#orderModeHidden").val(postData.orderMode);
         if (!postData.optimizeGroupNameLike) {
             postData.optimizeGroupNameLike = '';
         }
@@ -500,7 +502,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         $.each(searchCriteriaArray, function (idx, val) {
             downloadKeywordForm.find("#"+val.name+"Hidden").val(val.value === '' ? null : val.value);
         });
-
         $("#downloadKeywordForm").submit();
     }
 

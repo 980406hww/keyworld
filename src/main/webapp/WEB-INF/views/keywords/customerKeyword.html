@@ -280,7 +280,6 @@
 <script src="/static/ok-admin/page/keyword/customerKeyword.js"></script>
 <#include "./customerKeywordTpl.html"/>
 <form id="downloadKeywordForm" hidden lay-filter="downloadKeywordForm" method="post" action="/internal/customerKeyword/downloadCustomerKeywordInfo2">
-
     <input type="hidden"  name="customerUuid" id="customerUuidHidden" value=""/>
     <input type="hidden"  name="type" id="typeHidden" value=""/>
     <input type="hidden"  name="terminalType" id="terminalTypeHidden" value=""/>
@@ -306,7 +305,8 @@
     <input type="hidden"  name="searchEngine" id="searchEngineHidden" value=""/>
     <input type="hidden"  name="keywordEffect" id="keywordEffectHidden" value=""/>
     <input type="hidden"  name="noPosition" id="noPositionHidden" value=""/>
-
+    <input type="hidden"  name="orderBy" id="orderByHidden" value=""/>
+    <input type="hidden"  name="orderMode" id="orderModeHidden" value=""/>
 </form>
 </body>
 <form action="/internal/customerKeyword/keywordUrlExport2" method="post" id="keywordUrlForm">

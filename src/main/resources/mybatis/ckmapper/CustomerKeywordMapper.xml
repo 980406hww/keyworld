@@ -512,6 +512,9 @@
         <if test="keywordCriteria.keywordEffect != null and keywordCriteria.keywordEffect != ''">
             AND ck.fKeywordEffect = #{keywordCriteria.keywordEffect}
         </if>
+        <if test="keywordCriteria.orderingElement != null and keywordCriteria.orderingElement != ''">
+            ORDER BY ${keywordCriteria.orderingElement}
+        </if>
     </sql>
 
     <sql id="updateCustomerKeywordsCriteria">
@@ -624,7 +627,7 @@
         </if>
     </sql>
 
-    <select id="searchKeywords" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
+    <select id="searchKeywords" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
         SELECT
         ck.fUuid AS 'uuid',
         c.fUserID AS 'userID',
@@ -818,8 +821,7 @@
         AND ck.fStatus = 1
     </select>
 
-    <select id="searchCustomerKeywordInfo" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria"
-            resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
+    <select id="searchCustomerKeywordInfo" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
         SELECT
         ck.fKeyword AS 'keyword',
         ck.fUrl AS 'url',

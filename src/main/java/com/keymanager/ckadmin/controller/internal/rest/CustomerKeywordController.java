@@ -334,7 +334,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     @RequiresPermissions("/internal/customerKeyword/toKeywords")
     @PostMapping(value = "/getCustomerKeywords")
     public ResultBean searchCustomerKeywords(@RequestBody KeywordCriteria keywordCriteria) {
-        ResultBean resultBean = new ResultBean();
+        ResultBean resultBean = new ResultBean(0, "success");
         try {
             Page<CustomerKeyword> page = new Page<>(keywordCriteria.getPage(), keywordCriteria.getLimit());
             String orderByField = ReflectUtils.getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
@@ -346,9 +346,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             }
             page = customerKeywordService.searchCustomerKeywords(page, keywordCriteria);
             List<CustomerKeyword> keywords = page.getRecords();
-            resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("success");
             resultBean.setData(keywords);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -457,9 +455,18 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     //导出成Excel文件
     @RequiresPermissions("/internal/customerKeyword/downloadCustomerKeywordInfo")
     @PostMapping(value = "/downloadCustomerKeywordInfo2")
-    public ResultBean downloadCustomerKeywordInfo(HttpServletRequest request, HttpServletResponse response, KeywordCriteria keywordCriteria) {
+    public ResultBean downloadCustomerKeywordInfo(HttpServletResponse response, KeywordCriteria keywordCriteria) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
+            String orderByField = ReflectUtils.getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
+            if (StringUtils.isNotEmpty(orderByField)) {
+                keywordCriteria.setOrderingElement(orderByField);
+                if (keywordCriteria.getOrderMode() != null && keywordCriteria.getOrderMode() == 0) {
+                    keywordCriteria.setOrderingElement(orderByField + " DESC");
+                }
+            } else {
+                keywordCriteria.setOrderingElement("fKeyword DESC");
+            }
             List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywordInfo(keywordCriteria);
             if (!Utils.isEmpty(customerKeywords)) {
                 CustomerKeywordInfoExcelWriter excelWriter = new CustomerKeywordInfoExcelWriter();
