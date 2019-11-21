@@ -34,25 +34,6 @@
             padding: 8px 0;
         }
     </style>
-    <script>
-        let v_com = 2;
-        let v_phone = 2;
-
-        function appendTable(f) {
-            let t, v;
-            if (f) {
-                t = tbody_com;
-                v = v_com++;
-            } else {
-                t = tbody_phone;
-                v = v_phone++;
-            }
-            let html = '<tr>\n                                    <td>\n                                        <div class="my-label my-left my-padding">';
-            html += v;
-            html += '</div>\n                                    </td>\n                                    <td>\n                                        <div class="my-label my-left">\n                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,\'\')" class="layui-input my-input">\n                                        </div>\n                                    </td>\n                                    <td>\n                                        <div class="my-label my-left">\n                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,\'\')" class="layui-input my-input">\n                                        </div>\n                                    </td>\n                                    <td>\n                                        <div class="my-label my-left">\n                                            <input type="text" onkeyup="value=value.replace(/^(0+)|[^\\d]+/g,\'\')" class="layui-input my-input">\n                                        </div>\n                                    </td>\n                                    <td>\n                                        <div class="my-label my-btn my-left my-bottom">\n                                            <button type="button" onclick="removeElement(this)"\n                                                    class="layui-btn layui-btn-xs layui-btn-danger">\n                                                删除\n                                            </button>\n                                        </div>\n                                    </td>\n                                </tr>';
-            t.append(html);
-        }
-    </script>
 </head>
 <div>
     <!--form表单-->
@@ -863,8 +844,13 @@
         function toMsgTable(se, list, table, t) {
             clearTable(table);
             table = $(table);
+            let listMap = {};
             for (let i = 0; i < list.length; i++) {
                 list[i] = list[i].trim();
+                if (listMap[list[i]]) {
+                    continue;
+                }
+                listMap[list[i]] = 'notNull';
                 if (list[i]) {
                     let group = toGroup(se, list[i], t);
                     if (group === false) {

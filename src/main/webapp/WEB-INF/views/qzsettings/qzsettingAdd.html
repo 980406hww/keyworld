@@ -114,7 +114,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">标签</label>
                         <div class="layui-input-block">
-                            <input type="text" name="tagNames" placeholder="例如MBA,算法,每个词用逗号隔开" autocomplete="off" class="layui-input" lay-verify="tagNames">
+                            <input type="text" name="tagNames" placeholder="例如MBA,算法,每个词用逗号隔开" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                 </div>
@@ -1225,7 +1225,7 @@
                 "请正确输入域名"
             ],
             tagNames: [
-                /(^$)|(^[\u4e00-\u9fa50-9a-zA-Z,]+$)/,
+                /(^$)|(^[\u4e00-\u9fa50-9a-zA-Z,-]+$)/,
                 "请正确输入标签,例如：阿卡索,MBA,算法"
             ]
         });
