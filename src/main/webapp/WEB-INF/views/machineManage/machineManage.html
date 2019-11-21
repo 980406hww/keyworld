@@ -150,10 +150,6 @@
         display: inline;
     }
 
-    #checkGroup input{
-        display: none;
-    }
-
     .my-height {
         line-height: 40px !important;
     }
@@ -258,10 +254,6 @@
                                         </select>
                                     </div>
                                     <div class="layui-inline">
-                                        <input type="checkbox" name="hasProblem" id="hasProblem" value="hasProblem" title="停了">
-                                        <input type="checkbox" name="noUpgrade" value="noUpgrade" title="没升级">
-                                    </div>
-                                    <div class="layui-inline">
                                         <button class="layui-collapse my-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
                                     </div>
                                     <div class="layui-inline">
@@ -273,6 +265,12 @@
                                         <button style="background: #897c00;color: #ffffff" class="layui-collapse my-btn" type="reset" id="resetBtn">
                                             重置
                                         </button>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <input type="checkbox" name="hasProblem" id="hasProblem" value="hasProblem" title="停了">
+                                        <input type="checkbox" name="noUpgrade" value="noUpgrade" title="没升级">
+                                        <input type="checkbox" name="noVNC" value="noVNC" title="没VNC">
+                                        <input type="checkbox" name="noChangePassword" value="noChangePassword" title="没修改密码">
                                     </div>
                                 </div>
                                 <div class="my-hide" id="searchContent">
@@ -315,6 +313,16 @@
                                             </div>
                                         </div>
                                         <div class="layui-inline">
+                                            <label class="layui-form-label">是否流转</label>
+                                            <div class="layui-input-inline">
+                                                <select name="allowSwitchGroup">
+                                                    <option value="" selected>是否流转</option>
+                                                    <option value="1">流转</option>
+                                                    <option value="0">不流转</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
                                             <label class="layui-form-label">是否有机器分组</label>
                                             <div class="layui-input-inline">
                                                 <select name="hasOrNoMachineGroup">
@@ -337,10 +345,6 @@
                                                     <option value='Error'>Error</option>
                                                 </select>
                                             </div>
-                                        </div>
-                                        <div class="layui-inline" id="checkGroup">
-                                            <input type="checkbox" name="noVNC" value="noVNC" title="没VNC">
-                                            <input type="checkbox" name="noChangePassword" value="noChangePassword" title="没修改密码">
                                         </div>
                                     </div>
                                 </div>
