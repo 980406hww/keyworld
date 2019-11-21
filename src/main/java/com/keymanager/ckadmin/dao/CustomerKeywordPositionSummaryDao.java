@@ -19,4 +19,6 @@ public interface CustomerKeywordPositionSummaryDao extends BaseMapper<CustomerKe
     List<Map<String, Object>> getCKPositionSummaryDataInitTable(@Param("condition") Map<String, Object> condition);
 
     int getCKPositionSummaryDataInitCount(@Param("condition") Map<String, Object> condition);
+
+    Map<String, Object> getOneCKPositionSummaryData(@Param("condition") Map<String, Object> condition);
 }

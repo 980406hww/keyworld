@@ -323,8 +323,8 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
             defaultToolbar: [],
             contentType: 'application/json',
             cols: [[
-                {field: 'keyword', title: '关键字', width: '20%', align: 'center'},
-                {field: 'customer', title: '客户名称', width: '16%', align: 'center'},
+                {field: 'keyword', title: '关键字', width: '20%', align: 'left'},
+                {field: 'customer', title: '客户名称', width: '16%', align: 'left'},
                 {title: '近日趋势', width: '20%', align: 'center'},
                 {
                     field: 'position', title: '现排名', width: '6%', align: 'center', templet: function (d) {
@@ -386,12 +386,25 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
     function showLogData(data) {
         var boxes = document.getElementsByClassName('layui-table-body')[0].getElementsByTagName('tr');
         for (let i = 0; i < boxes.length; i++) {
-            if (data[i].hData) {
-                let boxLogShow = echarts.init(boxes[i].children[2].firstElementChild);
-                option.series[0].data = data[i].hData.split(',');
-                option.xAxis.data = data[i].hDate.split(',');
-                boxLogShow.setOption(option);
-            }
+            $.ajax({
+                url: '/internal/ckpositionsummary/getOneCKPositionSummaryData/' + data[i].customerKeywordUuid,
+                timeout: 5000,
+                type: 'GET',
+                dataType: 'json',
+                success: function (result) {
+                    if (result.code === 200) {
+                        if (result.data !== null && result.data.hData !== null && result.data.hDate !== null) {
+                            option.series[0].data = result.data.hData.split(',');
+                            option.xAxis.data = result.data.hDate.split(',');
+                            echarts.init(boxes[i].children[2].firstElementChild).setOption(option);
+                        } else {
+                            boxes[i].children[2].firstElementChild.innerHTML = '暂无数据';
+                        }
+                    } else {
+                        boxes[i].children[2].firstElementChild.innerHTML = '暂无数据';
+                    }
+                }
+            });
         }
     }
 

@@ -4,11 +4,11 @@
 
     <select id="getCustomerKeywordPositionSummaryData" resultType="com.keymanager.ckadmin.vo.CustomerKeywordPositionSummaryCountVO">
         SELECT
-            SUM(IF(cps.fPosition BETWEEN 1 AND 3, 1, 0)) AS 'topThreeCount',
-            SUM(IF(cps.fPosition BETWEEN 1 AND 5, 1, 0)) AS 'topFiveCount',
-            SUM(IF(cps.fPosition BETWEEN 1 AND 10, 1, 0)) AS 'topTenCount',
-            SUM(IF(cps.fPosition BETWEEN 1 AND 50, 1, 0)) AS 'topFifthCount',
-            cps.fCreateDate AS 'date'
+        SUM(IF(cps.fPosition BETWEEN 1 AND 3, 1, 0)) AS 'topThreeCount',
+        SUM(IF(cps.fPosition BETWEEN 1 AND 5, 1, 0)) AS 'topFiveCount',
+        SUM(IF(cps.fPosition BETWEEN 1 AND 10, 1, 0)) AS 'topTenCount',
+        SUM(IF(cps.fPosition BETWEEN 1 AND 50, 1, 0)) AS 'topFifthCount',
+        cps.fCreateDate AS 'date'
         FROM t_ck_position_summary cps
         LEFT JOIN t_customer_keyword ck
         ON cps.fCustomerKeywordUuid = ck.fUuid
@@ -36,30 +36,14 @@
 
     <select id="getCKPositionSummaryDataInitTable" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ck.fKeyword AS 'keyword',
-            c.fContactPerson AS 'customer',
-            cps.fCustomerKeywordUuid AS 'customerKeywordUuid',
-            cps.fPosition AS 'position',
-            ck.fSearchEngine AS 'searchEngine',
-            ck.fTerminalType AS 'terminal',
-            ck.fType AS 'type',
-            cps.fCreateDate AS 'date',
-            (
-                SELECT GROUP_CONCAT(cps_s.fPosition)
-                FROM t_ck_position_summary cps_s
-                WHERE cps_s.fCustomerKeywordUuid = cps.fCustomerKeywordUuid
-                AND cps_s.fCreateDate >= #{condition.fifteenDayAgo}
-                AND cps_s.fCreateDate &lt; #{condition.today}
-                GROUP BY cps_s.fCustomerKeywordUuid
-            ) AS 'hData',
-            (
-                SELECT GROUP_CONCAT(DATE_FORMAT(cps_s.fCreateDate, '%Y-%m-%d'))
-                FROM t_ck_position_summary cps_s
-                WHERE cps_s.fCustomerKeywordUuid = cps.fCustomerKeywordUuid
-                AND cps_s.fCreateDate >= #{condition.fifteenDayAgo}
-                AND cps_s.fCreateDate &lt; #{condition.today}
-                GROUP BY cps_s.fCustomerKeywordUuid
-            ) AS 'hDate'
+        ck.fKeyword AS 'keyword',
+        c.fContactPerson AS 'customer',
+        cps.fCustomerKeywordUuid AS 'customerKeywordUuid',
+        cps.fPosition AS 'position',
+        ck.fSearchEngine AS 'searchEngine',
+        ck.fTerminalType AS 'terminal',
+        ck.fType AS 'type',
+        cps.fCreateDate AS 'date'
         FROM t_ck_position_summary cps
         LEFT JOIN t_customer_keyword ck
         ON cps.fCustomerKeywordUuid = ck.fUuid
@@ -120,5 +104,16 @@
             AND ck.fKeyword LIKE CONCAT(#{condition.keyword},'%')
         </if>
         GROUP BY cps.fCustomerKeywordUuid ) T
+    </select>
+
+    <select id="getOneCKPositionSummaryData" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            GROUP_CONCAT(fPosition)   AS 'hData',
+            GROUP_CONCAT(fCreateDate) AS 'hDate'
+        FROM t_ck_position_summary
+        WHERE fCustomerKeywordUuid = #{condition.uuid}
+        AND fCreateDate >= #{condition.fifteenDayAgo}
+        AND fCreateDate &lt; #{condition.today}
+        GROUP BY fCustomerKeywordUuid
     </select>
 </mapper>

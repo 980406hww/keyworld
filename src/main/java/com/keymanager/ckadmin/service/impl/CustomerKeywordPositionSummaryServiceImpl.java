@@ -65,18 +65,25 @@ public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<Custo
             return null;
         }
         page.setTotal(customerKeywordPositionSummaryDao.getCKPositionSummaryDataInitCount(condition));
+        condition.put("start", (cur - 1) * limit);
+        condition.put("limit", limit);
+        page.setRecords(customerKeywordPositionSummaryDao.getCKPositionSummaryDataInitTable(condition));
+        return page;
+    }
+
+    @Override
+    public Map<String, Object> getOneCKPositionSummaryData(Long uuid) {
+        Map<String, Object> condition = new HashMap<>(3);
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         condition.put("today", sdf.format(date) + " 23:59:59");
-        calendar.add(Calendar.DATE, -14);
+        calendar.add(Calendar.DATE, -100);
         String fifteenDayAgo = sdf.format(calendar.getTime());
         condition.put("fifteenDayAgo", fifteenDayAgo);
-        condition.put("start", (cur - 1) * limit);
-        condition.put("limit", limit);
-        page.setRecords(customerKeywordPositionSummaryDao.getCKPositionSummaryDataInitTable(condition));
-        return page;
+        condition.put("uuid", uuid);
+        return customerKeywordPositionSummaryDao.getOneCKPositionSummaryData(condition);
     }
 
     private void handleCondition(Map<String, Object> condition) {

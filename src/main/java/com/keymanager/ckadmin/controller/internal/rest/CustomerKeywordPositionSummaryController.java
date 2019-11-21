@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
+import javafx.beans.binding.ObjectExpression;
 import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -64,6 +65,27 @@ public class CustomerKeywordPositionSummaryController {
             } else {
                 resultBean.setCount(page.getTotal());
                 resultBean.setData(page.getRecords());
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/ckpositionsummary/toCustomerKeywordPositionSummary")
+    @GetMapping(value = "/getOneCKPositionSummaryData/{uuid}")
+    public ResultBean getOneCKPositionSummaryData(@PathVariable(name = "uuid") Long uuid) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            Map<String, Object> data = customerKeywordPositionSummaryService.getOneCKPositionSummaryData(uuid);
+            if (null == data || data.isEmpty()){
+                resultBean.setCode(300);
+                resultBean.setMsg("暂无数据");
+            }else {
+                resultBean.setData(data);
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
