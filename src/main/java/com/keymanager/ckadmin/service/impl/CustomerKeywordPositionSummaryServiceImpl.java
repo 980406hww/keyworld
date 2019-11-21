@@ -1,5 +1,6 @@
 package com.keymanager.ckadmin.service.impl;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.dao.CustomerKeywordPositionSummaryDao;
 import com.keymanager.ckadmin.entity.CustomerKeywordPositionSummary;
@@ -20,7 +21,8 @@ import org.springframework.stereotype.Service;
  * @author shunshikj40
  */
 @Service("ckPositionSummaryService2")
-public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<CustomerKeywordPositionSummaryDao, CustomerKeywordPositionSummary> implements CustomerKeywordPositionSummaryService {
+public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<CustomerKeywordPositionSummaryDao, CustomerKeywordPositionSummary> implements
+    CustomerKeywordPositionSummaryService {
 
     @Resource(name = "customerKeywordPositionSummaryDao2")
     private CustomerKeywordPositionSummaryDao customerKeywordPositionSummaryDao;
@@ -28,7 +30,8 @@ public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<Custo
     @Override
     public Map<String, Object> getCustomerKeywordPositionSummaryData(Map<String, Object> condition) {
         handleCondition(condition);
-        List<CustomerKeywordPositionSummaryCountVO> customerKeywordPositionSummaryCountVos = customerKeywordPositionSummaryDao.getCustomerKeywordPositionSummaryData(condition);
+        List<CustomerKeywordPositionSummaryCountVO> customerKeywordPositionSummaryCountVos = customerKeywordPositionSummaryDao
+            .getCustomerKeywordPositionSummaryData(condition);
         if (CollectionUtils.isNotEmpty(customerKeywordPositionSummaryCountVos)) {
             List<String> dates = new ArrayList<>();
             List<Long> topThreeData = new ArrayList<>();
@@ -54,12 +57,14 @@ public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<Custo
     }
 
     @Override
-    public List<Map<String, Object>> getCKPositionSummaryDataInitTable(Map<String, Object> condition) {
+    public Page<Map<String, Object>> getCKPositionSummaryDataInitTable(Map<String, Object> condition) {
+        Page<Map<String, Object>> page = new Page<>();
         Integer cur = (Integer) condition.get("page");
         Integer limit = (Integer) condition.get("limit");
         if (null == cur || null == limit || cur.equals(0) || limit.equals(0)) {
             return null;
         }
+        page.setTotal(customerKeywordPositionSummaryDao.getCKPositionSummaryDataInitCount(condition));
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -69,7 +74,9 @@ public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<Custo
         String fifteenDayAgo = sdf.format(calendar.getTime());
         condition.put("fifteenDayAgo", fifteenDayAgo);
         condition.put("start", (cur - 1) * limit);
-        return customerKeywordPositionSummaryDao.getCKPositionSummaryDataInitTable(condition);
+        condition.put("limit", limit);
+        page.setRecords(customerKeywordPositionSummaryDao.getCKPositionSummaryDataInitTable(condition));
+        return page;
     }
 
     private void handleCondition(Map<String, Object> condition) {

@@ -1,5 +1,6 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.service.CustomerKeywordPositionSummaryService;
 import java.io.UnsupportedEncodingException;
@@ -56,13 +57,13 @@ public class CustomerKeywordPositionSummaryController {
     public ResultBean getCKPositionSummaryDataInitTable(@RequestBody Map<String, Object> condition) {
         ResultBean resultBean = new ResultBean(0, "success");
         try {
-            List<Map<String, Object>> mapList = customerKeywordPositionSummaryService.getCKPositionSummaryDataInitTable(condition);
-            if (CollectionUtils.isEmpty(mapList)) {
+            Page<Map<String, Object>> page = customerKeywordPositionSummaryService.getCKPositionSummaryDataInitTable(condition);
+            if (CollectionUtils.isEmpty(page.getRecords())) {
                 resultBean.setCode(300);
                 resultBean.setMsg("暂无数据");
             } else {
-                resultBean.setCount(mapList.size());
-                resultBean.setData(mapList);
+                resultBean.setCount(page.getTotal());
+                resultBean.setData(page.getRecords());
             }
         } catch (Exception e) {
             logger.error(e.getMessage());

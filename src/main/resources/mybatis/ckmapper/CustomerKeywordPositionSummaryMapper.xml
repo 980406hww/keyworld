@@ -34,7 +34,7 @@
         GROUP BY cps.fCreateDate
     </select>
 
-    <select id="getCKPositionSummaryDataInitTable" resultType="java.util.HashMap">
+    <select id="getCKPositionSummaryDataInitTable" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ck.fKeyword AS 'keyword',
             c.fContactPerson AS 'customer',
@@ -89,5 +89,36 @@
         </if>
         GROUP BY cps.fCustomerKeywordUuid
         LIMIT #{condition.start}, #{condition.limit};
+    </select>
+
+    <select id="getCKPositionSummaryDataInitCount" parameterType="java.util.HashMap" resultType="int">
+        SELECT COUNT(1) FROM (
+        SELECT 1
+        FROM t_ck_position_summary cps
+        LEFT JOIN t_customer_keyword ck
+        ON cps.fCustomerKeywordUuid = ck.fUuid
+        WHERE 1 = 1
+        <if test="condition.dateStart != null and condition.dateStart != ''">
+            AND cps.fCreateDate >= #{condition.dateStart}
+        </if>
+        <if test="condition.dateEnd != null and condition.dateEnd != ''">
+            AND cps.fCreateDate &lt; #{condition.dateEnd}
+        </if>
+        <if test="condition.searchEngine != null and condition.searchEngine != ''">
+            AND ck.fSearchEngine = #{condition.searchEngine}
+        </if>
+        <if test="condition.terminal != null and condition.terminal != ''">
+            AND ck.fTerminalType = #{condition.terminal}
+        </if>
+        <if test="condition.customer != null and condition.customer != ''">
+            AND ck.fCustomerUuid = #{condition.customer}
+        </if>
+        <if test="condition.type != null and condition.type != ''">
+            AND ck.fType = #{condition.type}
+        </if>
+        <if test="condition.keyword != null and condition.keyword != ''">
+            AND ck.fKeyword LIKE CONCAT(#{condition.keyword},'%')
+        </if>
+        GROUP BY cps.fCustomerKeywordUuid ) T
     </select>
 </mapper>
