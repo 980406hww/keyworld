@@ -1,6 +1,9 @@
 package com.keymanager.ckadmin.vo;
 
-public class CustomerKeywordMonCountVO {
+/**
+ * @author shunshikj40
+ */
+public class CustomerKeywordPositionSummaryCountVO {
 
     private Long topThreeCount;
     private Long topFiveCount;

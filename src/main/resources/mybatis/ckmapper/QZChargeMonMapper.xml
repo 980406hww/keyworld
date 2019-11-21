@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.ckadmin.dao.QzChargeMonDao">
+
+    <sql id="colID">
+        fUuid AS 'uuid',
+        fQzSettingUuid AS 'qzSettingUuid',
+        fQzDomain AS 'qzDomain',
+        fQzCustomer AS 'qzCustomer',
+        fTerminalType AS 'terminalType',
+        fOperationUser AS 'operationUser',
+        fOperationType AS 'operationType',
+        fIsDel AS 'fIsDel',
+        fOperationDate AS 'operationDate'
+    </sql>
     <!--查询一条操作类型信息-->
     <select id="getQZChargeMonData" resultType="com.keymanager.ckadmin.vo.QZChargeMonCountVO">
         SELECT
@@ -20,4 +32,32 @@
         </if>
         GROUP BY DATE_FORMAT(fOperationDate, #{condition.dateFormat})
     </select>
+
+    <select id="getMonDateByCondition" resultType="com.keymanager.ckadmin.entity.QzChargeMon">
+        SELECT
+        <include refid="colID"/>
+        FROM t_qz_charge_mon
+        WHERE 1 = 1
+        <if test="criteria.qzTerminal != null and criteria.qzTerminal != ''">
+            AND fTerminalType LIKE CONCAT('%', #{criteria.qzTerminal}, '%')
+        </if>
+        <if test="criteria.searchEngine != null and criteria.searchEngine != ''">
+            AND fSearchEngine = #{criteria.searchEngine}
+        </if>
+        <if test="criteria.operationType != null and criteria.operationType != ''">
+            AND fOperationType = #{criteria.operationType}
+        </if>
+        <if test="criteria.dateStart != null and criteria.dateStart != ''">
+            AND fOperationDate &gt;= #{criteria.dateStart}
+        </if>
+        <if test="criteria.dateEnd != null and criteria.dateEnd != ''">
+            AND fOperationDate &lt;= #{criteria.dateEnd}
+        </if>
+        ORDER BY fOperationDate DESC
+    </select>
+
+    <update id="deleteByQZSettingUuid">
+        UPDATE t_qz_charge_mon SET fIsDel = 0 WHERE fQzSettingUuid = #{qzSettingUuid}
+    </update>
+
 </mapper>

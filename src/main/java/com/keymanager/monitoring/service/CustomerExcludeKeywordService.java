@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.monitoring.dao.CustomerExcludeKeywordDao;
 import com.keymanager.monitoring.entity.CustomerExcludeKeyword;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,17 +21,21 @@ public class CustomerExcludeKeywordService extends ServiceImpl<CustomerExcludeKe
         customerExcludeKeyword.setCustomerUuid(qzSettingExcludeCustomerKeywordsCriteria.getCustomerUuid());
         customerExcludeKeyword.setQzSettingUuid(qzSettingExcludeCustomerKeywordsCriteria.getQzSettingUuid());
         customerExcludeKeyword.setTerminalType(qzSettingExcludeCustomerKeywordsCriteria.getTerminalType());
-        StringBuilder jointKeyword = new StringBuilder();
-        for (String keyword: qzSettingExcludeCustomerKeywordsCriteria.getKeywords()) {
-            jointKeyword.append(keyword).append(",");
-        }
-        customerExcludeKeyword.setKeyword(jointKeyword.toString().substring(0, jointKeyword.toString().length() - 1));
-        if (null == qzSettingExcludeCustomerKeywordsCriteria.getExcludeKeywordUuid()){
-            customerExcludeKeywordDao.insert(customerExcludeKeyword);
-        }else {
-            customerExcludeKeyword.setUuid(qzSettingExcludeCustomerKeywordsCriteria.getExcludeKeywordUuid());
-            customerExcludeKeyword.setUpdateTime(new Date());
-            customerExcludeKeywordDao.updateById(customerExcludeKeyword);
+        if (CollectionUtils.isNotEmpty(qzSettingExcludeCustomerKeywordsCriteria.getKeywords())) {
+            StringBuilder jointKeyword = new StringBuilder();
+            for (String keyword : qzSettingExcludeCustomerKeywordsCriteria.getKeywords()) {
+                jointKeyword.append(keyword).append(",");
+            }
+            customerExcludeKeyword.setKeyword(jointKeyword.toString().substring(0, jointKeyword.toString().length() - 1));
+            if (null == qzSettingExcludeCustomerKeywordsCriteria.getExcludeKeywordUuid()) {
+                customerExcludeKeywordDao.insert(customerExcludeKeyword);
+            } else {
+                customerExcludeKeyword.setUuid(qzSettingExcludeCustomerKeywordsCriteria.getExcludeKeywordUuid());
+                customerExcludeKeyword.setUpdateTime(new Date());
+                customerExcludeKeywordDao.updateById(customerExcludeKeyword);
+            }
+        } else {
+            customerExcludeKeywordDao.deleteByQZSettingUuid(qzSettingExcludeCustomerKeywordsCriteria.getQzSettingUuid());
         }
     }
 

@@ -15,5 +15,4 @@ public interface KeywordInfoDao extends BaseMapper<KeywordInfo> {
 
     List<KeywordInfo> searchKeywordInfos(Page<KeywordInfo> page, @Param("keywordInfoCriteria") KeywordInfoCriteria keywordInfoCriteria);
 
-
 }

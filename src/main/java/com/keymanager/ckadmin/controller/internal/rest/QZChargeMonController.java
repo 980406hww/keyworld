@@ -1,7 +1,5 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.QZChargeMonCriteria;
@@ -10,7 +8,6 @@ import com.keymanager.ckadmin.service.QzChargeMonService;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -37,6 +34,7 @@ public class QZChargeMonController {
     @Resource(name = "qzChargeMonService2")
     private QzChargeMonService qzChargeMonService;
 
+    @RequiresPermissions("/internal/qzchargemon/toQzChargeMon")
     @PostMapping(value = "/getQZChargeMonData")
     public ResultBean getQZChargeMonData(@RequestBody Map<String, Object> condition) {
         ResultBean resultBean = new ResultBean(200, "success");
@@ -60,6 +58,7 @@ public class QZChargeMonController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/qzchargemon/toQzChargeMon")
     @GetMapping(value = "/toQzChargeMon")
     public ModelAndView toQzChargeMon() {
         ModelAndView mv = new ModelAndView();
@@ -67,39 +66,26 @@ public class QZChargeMonController {
         return mv;
     }
 
+    @RequiresPermissions("/internal/qzchargemon/toQzChargeMon")
     @PostMapping(value = "/getMonDataByCondition")
     public ResultBean getMonDataByCondition(@RequestBody QZChargeMonCriteria criteria) {
         ResultBean resultBean = new ResultBean(0, "success");
         try {
             Page<QzChargeMon> page = new Page<>(criteria.getPage(), criteria.getLimit());
-            page.setOrderByField("fOperationDate");
-            page.setAsc(false);
-            Wrapper<QzChargeMon> wrapper = new EntityWrapper<>();
-            wrapper.like("fTerminalType", criteria.getQzTerminal());
-            if (null != criteria.getSearchEngine() && !"".equals(criteria.getSearchEngine())) {
-                wrapper.eq("fSearchEngine", criteria.getSearchEngine());
-            }
-            if (null != criteria.getOperationType()) {
-                wrapper.eq("fOperationType", criteria.getOperationType());
-            }
-            if (null != criteria.getDateStart() && !"".equals(criteria.getDateStart())) {
-                wrapper.where("fOperationDate >= {0}", criteria.getDateStart());
-            }
-            if (null != criteria.getDateEnd() && !"".equals(criteria.getDateEnd())) {
-                wrapper.where("fOperationDate <= {0}", criteria.getDateEnd() + " 23:59:59");
-            }
-            page = qzChargeMonService.selectPage(page, wrapper);
+            page.setRecords(qzChargeMonService.getMonDateByCondition(page, criteria));
             resultBean.setData(page.getRecords());
             resultBean.setCount(page.getTotal());
         } catch (Exception e) {
-            resultBean.setCode(400);
+            e.printStackTrace();
             logger.error(e.getMessage());
+            resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/qzchargemon/toQzChargeMon")
     @GetMapping(value = {"/toQzChargeMonWithParam/{time}/{terminal}/{search}", "/toQzChargeMonWithParam/{time}/{search}", "/toQzChargeMonWithParam/{time}/{terminal}",
         "/toQzChargeMonWithParam/{time}"})
     public ModelAndView toQzChargeMonWithParam(@PathVariable(name = "time") String time, @PathVariable(name = "terminal", required = false) String terminal,

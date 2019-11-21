@@ -83,4 +83,13 @@
         ON tid.fIndustryID = tii.fUuid
         WHERE tid.fIndustryID = #{uuid}
     </select>
+
+    <update id="updRemarkByUuids">
+        UPDATE t_industry_detail
+        SET fRemark = #{remark}, fUpdateTime = NOW()
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" separator="," open="(" close=")">
+            #{uuid}
+        </foreach>
+    </update>
 </mapper>

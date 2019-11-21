@@ -19,11 +19,12 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("algorithmTestResultStatisticsDao2")
 public interface AlgorithmTestResultStatisticsDao extends BaseMapper<AlgorithmTestDataStatistics> {
+
     void saveAlgorithmTaskDataDaily();
 
-    List<AlgorithmTestDataStatistics> selectAlgorithmTestResultStatisticsByAlgorithmTestPlanUuid(
-        Page<AlgorithmTestDataStatistics> algorithmTestResultStatisticsPage, @Param("algorithmTestPlanUuid") Long algorithmTestPlanUuid);
+    List<AlgorithmTestDataStatistics> selectAlgorithmTestResultStatisticsByAlgorithmTestPlanUuid(Page<AlgorithmTestDataStatistics> algorithmTestResultStatisticsPage,
+        @Param("algorithmTestPlanUuid") Long algorithmTestPlanUuid);
 
-    List<AlgorithmTestDataStatistics> selectAlgorithmTestHistoryByAlgorithmTestPlanUuid(
-            Page<AlgorithmTestDataStatisticsVo> algorithmTestResultStatisticsPage, @Param("algorithmTestPlanUuid") Long algorithmTestPlanUuid);
+    List<AlgorithmTestDataStatistics> selectAlgorithmTestHistoryByAlgorithmTestPlanUuid(Page<AlgorithmTestDataStatisticsVo> algorithmTestResultStatisticsPage,
+        @Param("algorithmTestPlanUuid") Long algorithmTestPlanUuid);
 }

@@ -19,6 +19,7 @@ import com.keymanager.ckadmin.entity.QZChargeRule;
 import com.keymanager.ckadmin.entity.QZKeywordRankInfo;
 import com.keymanager.ckadmin.entity.QZOperationType;
 import com.keymanager.ckadmin.entity.QZSetting;
+import com.keymanager.ckadmin.entity.QzChargeMon;
 import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.QZCaptureTitleLogStatusEnum;
 import com.keymanager.ckadmin.enums.QZSettingStatusEnum;
@@ -36,6 +37,7 @@ import com.keymanager.ckadmin.service.QZChargeRuleService;
 import com.keymanager.ckadmin.service.QZKeywordRankInfoService;
 import com.keymanager.ckadmin.service.QZOperationTypeService;
 import com.keymanager.ckadmin.service.QZSettingService;
+import com.keymanager.ckadmin.service.QzChargeMonService;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.ExternalQZSettingVO;
 import com.keymanager.ckadmin.vo.GroupVO;
@@ -115,6 +117,9 @@ public class QZSettingServiceImpl extends
 
     @Resource(name = "qzCaptureTitleLogService2")
     private QZCaptureTitleLogService qzCaptureTitleLogService;
+
+    @Resource(name = "qzChargeMonService2")
+    private QzChargeMonService qzChargeMonService;
 
     @Override
     public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingCriteria) {
@@ -301,8 +306,7 @@ public class QZSettingServiceImpl extends
     }
 
     @Override
-    public Long saveQZSetting(QZSetting qzSetting, String userName) {
-        Long qzSettingUuid = null;
+    public void saveQZSetting(QZSetting qzSetting, String userName) {
         if (qzSetting.getUuid() != null) {
             //修改qzSetting表
             QZSetting existingQZSetting = qzSettingDao.selectById(qzSetting.getUuid());
@@ -338,7 +342,7 @@ public class QZSettingServiceImpl extends
         } else {
             qzSetting.setUpdateTime(new Date());
             qzSettingDao.insert(qzSetting);
-            qzSettingUuid = qzSetting.getUuid();
+            Long qzSettingUuid = qzSetting.getUuid();
             // 插入qzSetting是的uuid
             for (QZOperationType qzOperationType : qzSetting.getQzOperationTypes()) {
                 qzOperationType.setQzSettingUuid(qzSettingUuid);
@@ -373,8 +377,8 @@ public class QZSettingServiceImpl extends
                 qzCategoryTag.setQzSettingUuid(qzSettingUuid);
                 qzCategoryTagService.insert(qzCategoryTag);
             }
+            saveQzChargeMon(qzSetting.getUuid(), userName, 2);
         }
-        return qzSettingUuid;
     }
 
     private void updateQZKeywordRankInfo(List<QZKeywordRankInfo> existingQZKeywordRankInfos,
@@ -570,7 +574,7 @@ public class QZSettingServiceImpl extends
     }
 
     @Override
-    public void deleteOne(Long uuid) {
+    public void deleteOne(Long uuid, String username) {
         //根据数据库中的uuid去查询
         List<QZOperationType> qzOperationTypes = qzOperationTypeService.searchQZOperationTypesByQZSettingUuid(uuid);
         if (CollectionUtils.isNotEmpty(qzOperationTypes)) {
@@ -600,12 +604,13 @@ public class QZSettingServiceImpl extends
         }
         qzCategoryTagService.deleteById(uuid);
         qzSettingDao.deleteById(uuid);
+        saveQzChargeMon(uuid, username, 4);
     }
 
     @Override
-    public void deleteAll(List<Integer> uuids) {
+    public void deleteAll(List<Integer> uuids, String username) {
         for (Integer uuid : uuids) {
-            deleteOne(Long.valueOf(uuid));
+            deleteOne(Long.valueOf(uuid), username);
         }
     }
 
@@ -938,5 +943,36 @@ public class QZSettingServiceImpl extends
     @Override
     public Map<String, Object> getQzSettingRenewalStatusCount() {
         return qzSettingDao.getQzSettingRenewalStatusCount();
+    }
+
+    private void saveQzChargeMon(Long uuid, String userName, int operationType) {
+        QZSetting qzSetting = qzSettingDao.selectById(uuid);
+        if (qzSetting.getRenewalStatus() == 4) {
+            return;
+        }
+        Customer customer = customerService.selectById(qzSetting.getCustomerUuid());
+        String terminal = "";
+        if (null == qzSetting.getPcGroup() || "".equals(qzSetting.getPcGroup())) {
+            if (!com.keymanager.ckadmin.util.StringUtils.isEmpty(qzSetting.getPhoneGroup())) {
+                terminal = "Phone";
+            }
+        } else {
+            terminal = "PC";
+            if (!com.keymanager.ckadmin.util.StringUtils.isEmpty(qzSetting.getPhoneGroup())) {
+                terminal += ",Phone";
+            }
+        }
+        QzChargeMon qzChargeMon = new QzChargeMon();
+        qzChargeMon.setOperationType(operationType);
+        qzChargeMon.setQzDomain(qzSetting.getDomain());
+        qzChargeMon.setQzCustomer(customer.getContactPerson());
+        qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
+        qzChargeMon.setTerminalType(terminal);
+        qzChargeMon.setOperationUser(userName);
+        qzChargeMon.setQzSettingUuid(uuid);
+        qzChargeMonService.insert(qzChargeMon);
+        if (operationType == 4) {
+            qzChargeMonService.deleteByQZSettingUuid(qzChargeMon.getQzSettingUuid());
+        }
     }
 }

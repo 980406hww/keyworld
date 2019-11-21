@@ -145,13 +145,19 @@ public class CustomerKeywordRestController extends SpringMVCBaseController {
 		if(StringUtils.isNotEmpty(orderElement)){
 			switch (orderElement.charAt(0)){
 				case '0':
-					customerKeywordCriteria.setOrderingElement("");break;
+					customerKeywordCriteria.setOrderingElement("");
+					break;
 				case '1':
-					customerKeywordCriteria.setOrderingElement("fCreateTime");break;
+					customerKeywordCriteria.setOrderingElement("fCreateTime");
+					break;
 				case '2':
-					customerKeywordCriteria.setOrderingElement("fCurrentPosition");break;
+					customerKeywordCriteria.setOrderingElement("fCurrentPosition");
+					break;
 				case '3':
-					customerKeywordCriteria.setOrderingElement("fSequence");break;
+					customerKeywordCriteria.setOrderingElement("fSequence");
+					break;
+				default:
+					break;
 			}
 		}
 	}

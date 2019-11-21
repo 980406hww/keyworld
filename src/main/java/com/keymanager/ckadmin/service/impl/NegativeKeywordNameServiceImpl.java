@@ -1,7 +1,5 @@
 package com.keymanager.ckadmin.service.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.NegativeKeywordNameCriteria;
@@ -24,20 +22,8 @@ public class NegativeKeywordNameServiceImpl extends ServiceImpl<NegativeKeywordN
     @Override
     public Page<NegativeKeywordName> searchNegativeKeywordNames(NegativeKeywordNameCriteria criteria) {
         Page<NegativeKeywordName> page = new Page<>(criteria.getPage(), criteria.getLimit());
-        page.setOrderByField("fUpdateTime");
-        Wrapper<NegativeKeywordName> wrapper = new EntityWrapper<>();
-        if (null != criteria.getInit() && "init".equals(criteria.getInit())) {
-            wrapper.where("1 != 1", "");
-        } else {
-            if (null != criteria.getGroup() && !"".equals(criteria.getGroup())) {
-                wrapper.eq("fGroup", criteria.getGroup());
-            }
-            if (null != criteria.getHasEmail() && !"".equals(criteria.getHasEmail())) {
-                wrapper.isNotNull("fEmail");
-                wrapper.where("fEmail != {0}", "");
-            }
-        }
-        return selectPage(page, wrapper);
+        page.setRecords(negativeKeywordNameDao.searchNegativeKeywordNames(page, criteria));
+        return page;
     }
 
     @Override
@@ -47,13 +33,7 @@ public class NegativeKeywordNameServiceImpl extends ServiceImpl<NegativeKeywordN
 
     @Override
     public List<NegativeKeywordName> findAllNegativeKeywordName(NegativeKeywordNameCriteria criteria) {
-        Wrapper<NegativeKeywordName> wrapper = new EntityWrapper<>();
-        wrapper.eq("fGroup", criteria.getGroup());
-        if (null != criteria.getHasEmail() && !"".equals(criteria.getHasEmail())) {
-            wrapper.isNotNull("fEmail");
-            wrapper.where("fEmail != {0}", "");
-        }
-        return negativeKeywordNameDao.selectList(wrapper);
+        return negativeKeywordNameDao.searchNegativeKeywordNameByGroup(criteria);
     }
 
     @Override

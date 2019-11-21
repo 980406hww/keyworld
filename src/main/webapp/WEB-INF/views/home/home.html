@@ -190,7 +190,7 @@
                 <div style="position: absolute;top: 18px;left: 0;z-index: 9999;width: 100%;">
                     <form class="layui-form layui-form-pane" id="keywordFrom">
                         <div style="float: right; width: 100px;margin: 0 16px 0 6px">
-                            <div class="my-btn" onclick="toCustomerKeywordMon()">数据详情</div>
+                            <div class="my-btn" onclick="toCKPositionSummary()">数据详情</div>
                         </div>
                         <div style="float: right; width: 120px;margin: 0 0 0 6px">
                             <select name="terminal" id="terminal" lay-filter="terminal">
@@ -294,7 +294,7 @@
 <script type="text/javascript" src="/static/ok-admin/lib/layui/layui.js"></script>
 <script src="/static/ok-admin/js/somePublic.js"></script>
 <script type="text/javascript" src="/static/ok-admin/js/home.js"></script>
-<script type="text/javascript" src="/static/ok-admin/page/keyword/customerKeywordMon.js"></script>
+<script type="text/javascript" src="/static/ok-admin/page/keyword/ckPositionSummary.js"></script>
 <script type="text/javascript" src="/static/ok-admin/page/qzsetting/qzChargeMon.js"></script>
 <script>
     layui.use(['jquery', 'form', 'common'], function () {
@@ -335,7 +335,7 @@
 
         function init_qz_rate_statistics(condition) {
             $.ajax({
-                url: '/internal/layer/generateQZRateStatisticsDataMap',
+                url: '/internal/qzRateStatistics/generateQZRateStatisticsDataMap',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'

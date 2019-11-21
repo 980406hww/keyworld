@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.SysLogDao">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        fUuid AS `uuid`,
+        fLoginName AS `loginName`,
+        fRoleName AS `roleName`,
+        fOptContent AS `optContent`,
+        fClientIP AS `clientIP`,
+        fUpdateTime AS `updateTime`,
+        fCreateTime AS `createTime`
+    </sql>
+
+    <select id="selectLoginLog" resultType="com.keymanager.ckadmin.entity.SysLog">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_system_log
+        WHERE 1 = 1
+        <if test="init != null and init == 'init'">
+            AND 1 != 1
+        </if>
+        <if test="loginName != null and loginName == 'init'">
+            AND fLoginName = #{loginName}
+        </if>
+        ORDER BY fCreateTime DESC
+    </select>
+
+</mapper>

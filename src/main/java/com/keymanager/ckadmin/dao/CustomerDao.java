@@ -23,13 +23,11 @@ import org.springframework.stereotype.Repository;
 @Repository("customerDao2")
 public interface CustomerDao extends BaseMapper<Customer> {
 
-    List<Customer> searchCustomers(Page<Customer> page,
-        @Param("customerCriteria") CustomerCriteria customerCriteria);
+    List<Customer> searchCustomers(Page<Customer> page, @Param("customerCriteria") CustomerCriteria customerCriteria);
 
     void updateCustomerDailyReportIdentify(@Param("uuids") List<Integer> uuids);
 
-    List<Customer> getActiveCustomerSimpleInfo(
-        @Param("customerCriteria") CustomerCriteria customerCriteria);
+    List<Customer> getActiveCustomerSimpleInfo(@Param("customerCriteria") CustomerCriteria customerCriteria);
 
     Long lastInsertID();
 

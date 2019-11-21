@@ -1,9 +1,5 @@
 package com.keymanager.monitoring.controller.rest.external;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.keymanager.ckadmin.entity.CustomerKeywordMon;
-import com.keymanager.ckadmin.service.CustomerKeywordMonService;
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
 import com.keymanager.monitoring.criteria.BaiduIndexCriteria;
 import com.keymanager.monitoring.criteria.BaseCriteria;
@@ -25,12 +21,10 @@ import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.JSONArray;
@@ -64,9 +58,6 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
 
     @Autowired
     private ConfigService configService;
-
-    @Resource(name = "customerKeywordMonService2")
-    private CustomerKeywordMonService customerKeywordMonService;
 
     private String getIP(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
@@ -503,7 +494,6 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             if (validUser(userName, password)) {
                 if (position > -1) {
                     customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp(), ip, city);
-                    updCustomerKeywordMon(customerKeywordUuid, position);
                 } else {
                     customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
                 }
@@ -794,34 +784,5 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             logger.error("updateKeywordsIndex:    " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-    }
-
-    private void updCustomerKeywordMon(Long uuid, int position) {
-        try {
-            CustomerKeyword customerKeyword = customerKeywordService.selectById(uuid);
-            if (null != customerKeyword) {
-                Wrapper<CustomerKeywordMon> wrapper = new EntityWrapper<>();
-                wrapper.where("DATE_FORMAT(fRecordDate, '%Y-%m-%d') = {0}", new SimpleDateFormat("yyyy-MM-dd").format(new Date())).eq("fKeywordUuid", uuid);
-                CustomerKeywordMon customerKeywordMon = customerKeywordMonService.selectOne(wrapper);
-                if (null == customerKeywordMon) {
-                    customerKeywordMon = new CustomerKeywordMon();
-                }
-                customerKeywordMon.setCustomerUuid(customerKeyword.getCustomerUuid());
-                customerKeywordMon.setKeywordUuid(uuid);
-                customerKeywordMon.setKeyword(customerKeyword.getKeyword());
-                customerKeywordMon.setPosition(position);
-                if (null == customerKeywordMon.getUuid()) {
-                    customerKeywordMonService.insert(customerKeywordMon);
-                } else {
-                    wrapper = new EntityWrapper<>();
-                    wrapper.eq("fUuid", customerKeywordMon.getUuid());
-                    customerKeywordMon.setUuid(null);
-                    customerKeywordMon.setRecordDate(new Date());
-                    customerKeywordMonService.update(customerKeywordMon, wrapper);
-                }
-            }
-        } catch (Exception e) {
-            logger.error("updCustomerKeywordMon:     " + e.getMessage());
-        }
     }
 }

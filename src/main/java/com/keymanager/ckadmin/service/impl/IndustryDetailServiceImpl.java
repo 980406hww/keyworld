@@ -1,7 +1,5 @@
 package com.keymanager.ckadmin.service.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.IndustryDetailCriteria;
@@ -10,7 +8,6 @@ import com.keymanager.ckadmin.entity.IndustryDetail;
 import com.keymanager.ckadmin.service.IndustryDetailService;
 import com.keymanager.ckadmin.service.QZSettingService;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -34,11 +31,11 @@ public class IndustryDetailServiceImpl extends ServiceImpl<IndustryDetailDao, In
     @Override
     public Page<IndustryDetail> searchIndustryDetails(Page<IndustryDetail> page, IndustryDetailCriteria industryDetailCriteria) {
         page.setRecords(industryDetailDao.searchIndustryDetails(page, industryDetailCriteria));
-        this.wrapperForIndustryDetail(page);
+        this.dealWithIndustryDetail(page);
         return page;
     }
 
-    private void wrapperForIndustryDetail(Page<IndustryDetail> page) {
+    private void dealWithIndustryDetail(Page<IndustryDetail> page) {
         for (IndustryDetail industryDetail : page.getRecords()) {
             if (null != industryDetail.getQq() && !"".equals(industryDetail.getQq())) {
                 industryDetail.setQq(industryDetail.getQq().replaceAll(",", "<br>"));
@@ -75,12 +72,8 @@ public class IndustryDetailServiceImpl extends ServiceImpl<IndustryDetailDao, In
     }
 
     @Override
-    public void updRemarkByUuids(List<Integer> uuids, String remark) {
-        Wrapper<IndustryDetail> wrapper = new EntityWrapper<>();
-        wrapper.in("fUuid", uuids);
-        IndustryDetail industryDetail = new IndustryDetail();
-        industryDetail.setRemark(remark);
-        industryDetailDao.update(industryDetail, wrapper);
+    public void updRemarkByUuids(List<Long> uuids, String remark) {
+        industryDetailDao.updRemarkByUuids(uuids, remark);
     }
 
     @Override

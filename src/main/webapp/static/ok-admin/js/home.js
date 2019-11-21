@@ -6,7 +6,7 @@ layui.config({base: "/static/ok-admin/js/"}).use(useModel, function () {
         window.qzRateDetail = function () {
             let postData = common.formToJsonObject('qzRateSearchForm');
             let qzRateRange = postData.qzRateRange === '' ? '1' : postData.qzRateRange;
-            let url = '/internal/layer/toQZRateStatisticsDetail/' + qzRateRange + '/' + postData.terminalType + '/' + postData.searchEngine;
+            let url = '/internal/qzRateStatistics/toQZRateStatisticsDetail/' + qzRateRange + '/' + postData.terminalType + '/' + postData.searchEngine;
             url = encodeURI(encodeURI(url));
             common.updateOrNewTab(url, '站点趋势详情', 'qzRateStatisticsDetail');
         };
@@ -18,9 +18,9 @@ layui.config({base: "/static/ok-admin/js/"}).use(useModel, function () {
             common.updateOrNewTab(url, '站点监控详情', 'qzChargeMon');
         };
 
-        window.toCustomerKeywordMon = function () {
+        window.toCKPositionSummary = function () {
             let condition = common.formToJsonObject('keywordFrom');
-            let url = '/internal/customerkeywordmon/toCustomerKeywordMon/' + condition.time + '/' + condition.terminal + '/' + condition.searchEngine;
+            let url = '/internal/ckpositionsummary/toCustomerKeywordPositionSummary/' + condition.time + '/' + condition.terminal + '/' + condition.searchEngine;
             url = encodeURI(encodeURI(url));
             common.updateOrNewTab(url, '排名涨幅详情', 'customerKeywordsMon');
         };

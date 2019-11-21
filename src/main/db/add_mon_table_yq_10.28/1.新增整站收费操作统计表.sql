@@ -1,25 +1,4 @@
-/*
- Navicat Premium Data Transfer
 
- Source Server         : 公司
- Source Server Type    : MySQL
- Source Server Version : 50517
- Source Host           : server:3306
- Source Schema         : db_keyword
-
- Target Server Type    : MySQL
- Target Server Version : 50517
- File Encoding         : 65001
-
- Date: 29/10/2019 15:51:17
-*/
-
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
-
--- ----------------------------
--- Table structure for t_qz_charge_mon
--- ----------------------------
 DROP TABLE IF EXISTS `t_qz_charge_mon`;
 CREATE TABLE `t_qz_charge_mon`  (
   `fUuid` int(11) NOT NULL AUTO_INCREMENT,
