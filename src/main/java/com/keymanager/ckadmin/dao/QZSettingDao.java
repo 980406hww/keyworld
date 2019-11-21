@@ -53,6 +53,6 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     void updateCustomerUuidByQzUuids(@Param("customerUuid") Long customerUuid, @Param("qzUuids") List<Long> qzUuids);
 
-    Long selectByCondition(@Param("customerUuid") Long customerUuid, @Param("domain") String domain, @Param("searchEngine") String searchEngine);
+    Long getExistingQzSettingUuid(@Param("customerUuid") Long customerUuid, @Param("domain") String domain, @Param("searchEngine") String searchEngine);
 }
 

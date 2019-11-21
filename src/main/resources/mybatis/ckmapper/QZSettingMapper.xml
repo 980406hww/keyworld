@@ -378,7 +378,7 @@
         </foreach>
     </update>
 
-    <select id="selectByCondition" resultType="java.lang.Long">
+    <select id="getExistingQzSettingUuid" resultType="java.lang.Long">
         SELECT fUuid FROM t_qz_setting
         WHERE fCustomerUuid = #{customerUuid}
         AND fDomain = #{domain}

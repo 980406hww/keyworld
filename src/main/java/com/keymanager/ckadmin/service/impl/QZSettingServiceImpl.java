@@ -916,7 +916,7 @@ public class QZSettingServiceImpl extends
     }
 
     @Override
-    public Long selectByCondition(Long customerUuid, String domain, String searchEngine) {
-        return qzSettingDao.selectByCondition(customerUuid, domain, searchEngine);
+    public Long getExistingQzSettingUuid(Long customerUuid, String domain, String searchEngine) {
+        return qzSettingDao.getExistingQzSettingUuid(customerUuid, domain, searchEngine);
     }
 }

@@ -423,7 +423,7 @@ public class QZSettingController extends SpringMVCBaseController {
     }
 
     /**
-     * 站点信息  批量保存
+     * 站点信息 批量保存
      */
     @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/saveQZSettings")
@@ -434,7 +434,7 @@ public class QZSettingController extends SpringMVCBaseController {
             String userName = (String) session.getAttribute("username");
             Long qzUuid;
             for (QZSetting qzSetting : qzSettings) {
-                qzUuid = qzSettingService.selectByCondition(qzSetting.getCustomerUuid(), qzSetting.getDomain(), qzSetting.getSearchEngine());
+                qzUuid = qzSettingService.getExistingQzSettingUuid(qzSetting.getCustomerUuid(), qzSetting.getDomain(), qzSetting.getSearchEngine());
                 if (qzUuid != null) {
                     qzSetting.setUuid(qzUuid);
                 }

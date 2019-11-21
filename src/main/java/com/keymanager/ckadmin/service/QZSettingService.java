@@ -76,5 +76,5 @@ public interface QZSettingService extends IService<QZSetting> {
 
     void updateQZSettingFrom(Long customerUuid, List<Long> uuids);
 
-    Long selectByCondition(Long customerUuid, String domain, String searchEngine);
+    Long getExistingQzSettingUuid(Long customerUuid, String domain, String searchEngine);
 }
