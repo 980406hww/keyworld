@@ -50,13 +50,14 @@ public class NegativeKeywordNameController extends SpringMVCBaseController {
     @RequiresPermissions("/internal/negativeKeywordName/searchNegativeKeywordNames")
     @RequestMapping(value = "/getNegativeKeywords", method = RequestMethod.POST)
     public ResultBean searchNegativeKeywordNamesPost(@RequestBody NegativeKeywordNameCriteria criteria) {
-        ResultBean resultBean = new ResultBean();
-        resultBean.setCode(0);
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(criteria.getInit())) {
+            return resultBean;
+        }
         try {
             Page<NegativeKeywordName> page = negativeKeywordNameService.searchNegativeKeywordNames(criteria);
             resultBean.setData(page.getRecords());
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("success");
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

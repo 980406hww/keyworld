@@ -4,16 +4,12 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.ClientUpgradeCriteria;
-import com.keymanager.ckadmin.criteria.base.BaseCriteria;
 import com.keymanager.ckadmin.entity.ClientUpgrade;
 import com.keymanager.ckadmin.service.ClientUpgradeService;
 import com.keymanager.ckadmin.util.ReflectUtils;
-import com.keymanager.util.TerminalTypeMapping;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping(value = "/internal/clientUpgrade")
 public class ClientUpgradeController {
+
     private static Logger logger = LoggerFactory.getLogger(ClientUpgradeController.class);
 
     @Resource(name = "clientUpgradeService2")
@@ -42,8 +39,11 @@ public class ClientUpgradeController {
 
     @RequiresPermissions("/internal/clientUpgrade/toClientUpgrades2")
     @RequestMapping(value = "/getClientUpgrades2")
-    public ResultBean getClientUpgrades2(@RequestBody ClientUpgradeCriteria clientUpgradeCriteria){
-        ResultBean resultBean = new ResultBean();
+    public ResultBean getClientUpgrades2(@RequestBody ClientUpgradeCriteria clientUpgradeCriteria) {
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(clientUpgradeCriteria.getInit())) {
+            return resultBean;
+        }
         try {
             Page<ClientUpgrade> page = new Page<>(clientUpgradeCriteria.getPage(), clientUpgradeCriteria.getLimit());
             String orderByField = ReflectUtils.getTableFieldValue(ClientUpgrade.class, clientUpgradeCriteria.getOrderBy());
@@ -54,8 +54,6 @@ public class ClientUpgradeController {
                 page.setAsc(false);
             }
             page = clientUpgradeService.searchClientUpgrades(page, clientUpgradeCriteria.getTerminalType());
-            resultBean.setCode(0);
-            resultBean.setMsg("success");
             resultBean.setData(page.getRecords());
             resultBean.setCount(page.getTotal());
         } catch (Exception e) {
@@ -69,7 +67,7 @@ public class ClientUpgradeController {
 
     @RequiresPermissions("/internal/clientUpgrade/saveClientUpgrade")
     @RequestMapping(value = "/toClientUpgradeAdd", method = RequestMethod.GET)
-    public ModelAndView toClientUpgradeAdd(){
+    public ModelAndView toClientUpgradeAdd() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("client/clientUpgradeAdd");
         return mv;
@@ -126,7 +124,7 @@ public class ClientUpgradeController {
 
     @RequiresPermissions("/internal/clientUpgrade/deleteClientUpgrade")
     @RequestMapping(value = "/batchDeleteClientUpgrade", method = RequestMethod.POST)
-    public ResultBean batchDeleteClientUpgrade(@RequestBody Map<String, Object> requestMap){
+    public ResultBean batchDeleteClientUpgrade(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean();
         try {
             List<Integer> uuids = (List<Integer>) requestMap.get("uuids");

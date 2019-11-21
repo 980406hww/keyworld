@@ -38,6 +38,9 @@ public class SystemLogController {
     @PostMapping("/getLoginLogData")
     public ResultBean getLoginLogData(@RequestBody Map<String, Object> criteria) {
         ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(criteria.get("init"))) {
+            return resultBean;
+        }
         try {
             Page<SysLog> page = sysLogService.selectLoginLog(criteria);
             resultBean.setData(page.getRecords());

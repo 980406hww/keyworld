@@ -17,12 +17,8 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogDao, SysLog> implements
     public Page<SysLog> selectLoginLog(Map<String, Object> criteria) {
         Page<SysLog> page = new Page<>((Integer) criteria.get("page"), (Integer) criteria.get("limit"));
         Wrapper<SysLog> wrapper = new EntityWrapper<>();
-        if (null != criteria.get("init") && "init".equals(criteria.get("init"))) {
-            wrapper.where("1 != 1", "");
-        } else {
-            if (null != criteria.get("loginName") && !"".equals(criteria.get("loginName"))) {
-                wrapper.eq("fLoginName", criteria.get("loginName"));
-            }
+        if (null != criteria.get("loginName") && !"".equals(criteria.get("loginName"))) {
+            wrapper.eq("fLoginName", criteria.get("loginName"));
         }
         wrapper.orderBy("fCreateTime", false);
         return selectPage(page, wrapper);

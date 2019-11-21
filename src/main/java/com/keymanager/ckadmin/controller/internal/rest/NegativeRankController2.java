@@ -55,7 +55,10 @@ public class NegativeRankController2 {
 
     @PostMapping(value = "/getNegativeRanks")
     public ResultBean getNegativeRanks(@RequestBody NegativeRankCriteria negativeRankCriteria) {
-        ResultBean resultBean = new ResultBean();
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(negativeRankCriteria.getInit())) {
+            return resultBean;
+        }
         if (SQLFilterUtils.sqlInject(negativeRankCriteria.toString())) {
             resultBean.setCode(400);
             resultBean.setMsg("查询参数错误或包含非法字符，请检查后重试！");
@@ -65,9 +68,7 @@ public class NegativeRankController2 {
             Page<NegativeRank> page = new Page<>(negativeRankCriteria.getPage(), negativeRankCriteria.getLimit());
             page = negativeRankService.searchNegativeRanks(page, negativeRankCriteria);
             List<NegativeRank> customers = page.getRecords();
-            resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("success");
             resultBean.setData(customers);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -81,7 +82,6 @@ public class NegativeRankController2 {
     @PostMapping(value = "/getNegativeKeywords")
     public ResultBean getNegativeKeywords() {
         ResultBean resultBean = new ResultBean();
-
         try {
             Set<String> keywords=configService.getNegativeKeyword();
             resultBean.setCode(200);

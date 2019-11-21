@@ -147,7 +147,10 @@ public class QZSettingController extends SpringMVCBaseController {
     @RequiresPermissions("/internal/qzsetting/searchQZSettings")
     @PostMapping("/getQZSettings")
     public ResultBean getQZSettings(@RequestBody QZSettingSearchCriteria qzSettingCriteria, HttpServletRequest request) {
-        ResultBean resultBean = new ResultBean();
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(qzSettingCriteria.getInit())) {
+            return resultBean;
+        }
         try {
             Page<QZSetting> page = new Page<>(qzSettingCriteria.getPage(),
                 qzSettingCriteria.getLimit());
@@ -157,8 +160,6 @@ public class QZSettingController extends SpringMVCBaseController {
             }
             request.getSession().getAttribute("username");
             page = qzSettingService.searchQZSetting(page, qzSettingCriteria);
-            resultBean.setCode(0);
-            resultBean.setMsg("success");
             resultBean.setData(page.getRecords());
             resultBean.setCount(page.getTotal());
         } catch (Exception e) {

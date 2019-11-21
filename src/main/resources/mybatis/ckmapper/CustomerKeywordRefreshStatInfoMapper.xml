@@ -80,7 +80,6 @@
             , t_qz_operation_type ot, t_qz_category_tag qc
         </if>
         WHERE ck.fStatus = 1
-        <if test="criteria.init != null and criteria.init == 'init'">AND 1 != 1</if>
         <if test="(criteria.userName != null and criteria.userName != '') || (criteria.customerName!=null and criteria.customerName!='')">
             AND ck.fCustomerUuid = c.fUuid
         </if>

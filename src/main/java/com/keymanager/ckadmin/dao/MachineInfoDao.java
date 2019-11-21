@@ -85,7 +85,7 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     List<CustomerKeywordTerminalRefreshStatRecord> searchMachineInfoForRefreshStat(@Param("criteria") RefreshStatisticsCriteria criteria);
 
-    List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(@Param("clientIDPrefix") String clientIDPrefix, @Param("city") String city, @Param("switchGroupName") String switchGroupName,@Param("init") String init);
+    List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(@Param("clientIDPrefix") String clientIDPrefix, @Param("city") String city, @Param("switchGroupName") String switchGroupName);
 
     List<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(Page<MachineInfoGroupSummaryVO> page, @Param("machineInfoGroupStatCriteria") MachineInfoGroupStatCriteria machineInfoGroupStatCriteria);
 

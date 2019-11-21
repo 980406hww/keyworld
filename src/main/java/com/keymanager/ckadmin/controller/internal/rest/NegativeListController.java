@@ -46,14 +46,15 @@ public class NegativeListController {
     @RequiresPermissions("/internal/negativelists/toSearchNegativeLists")
     @RequestMapping(value = "/searchNegativeLists", method = RequestMethod.POST)
     public ResultBean searchNegativeLists(@RequestBody NegativeListCriteria negativeListCriteria) {
-        ResultBean resultBean = new ResultBean();
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(negativeListCriteria.getInit())) {
+            return resultBean;
+        }
         try {
             Page<NegativeList> page = new Page<>(negativeListCriteria.getPage(), negativeListCriteria.getLimit());
             page = negativeListService.searchNegativeLists(page, negativeListCriteria);
             List<NegativeList> negativeList = page.getRecords();
-            resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("success");
             resultBean.setData(negativeList);
         } catch (Exception e) {
             logger.error(e.getMessage());

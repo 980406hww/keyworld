@@ -55,7 +55,10 @@ public class ScreenedWebsiteController2 {
 
     @PostMapping(value = "/getScreenedWebsites")
     public ResultBean getScreenedWebsites(@RequestBody ScreenedWebsiteCriteria screenedWebsiteCriteria) {
-        ResultBean resultBean = new ResultBean();
+        ResultBean resultBean = new ResultBean(0, "successs");
+        if ("init".equals(screenedWebsiteCriteria.getInit())) {
+            return resultBean;
+        }
         if (SQLFilterUtils.sqlInject(screenedWebsiteCriteria.toString())) {
             resultBean.setCode(400);
             resultBean.setMsg("查询参数错误或包含非法字符，请检查后重试！");
@@ -65,9 +68,7 @@ public class ScreenedWebsiteController2 {
             Page<ScreenedWebsite> page = new Page<>(screenedWebsiteCriteria.getPage(), screenedWebsiteCriteria.getLimit());
             page = screenedWebsiteService.searchCustomerKeywordListsPage(page, screenedWebsiteCriteria);
             List<ScreenedWebsite> screenedWebsites = page.getRecords();
-            resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("success");
             resultBean.setData(screenedWebsites);
         } catch (Exception e) {
             logger.error(e.getMessage());

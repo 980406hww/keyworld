@@ -129,6 +129,18 @@
         NProgress.done();
     };
 
+    setHeight();
+
+    function setHeight() {
+        let h = window.innerHeight;
+        let negativeKeywords = document.getElementById('negativeKeywords');
+        let customerNegativeKeywords = document.getElementById('customerNegativeKeywords');
+        let websiteWhiteList = document.getElementById('websiteWhiteList');
+        negativeKeywords.style.height = (h - 102) + 'px';
+        customerNegativeKeywords.style.height = (h - 107) + 'px';
+        websiteWhiteList.style.height = (h - 102) + 'px';
+    }
+
     let negativeKeywords = '';
     var sign = false;
 

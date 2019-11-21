@@ -71,38 +71,34 @@ public class CaptureRankJobServiceImpl extends ServiceImpl<CaptureRankJobDao, Ca
     public Page<CaptureRankJob> selectPageByCriteria(CaptureRankJobSearchCriteria criteria) {
         Page<CaptureRankJob> page = new Page<>(criteria.getPage(), criteria.getLimit());
         Wrapper<CaptureRankJob> wrapper = new EntityWrapper<>();
-        if (null != criteria.getInit() && "init".equals(criteria.getInit())) {
-            wrapper.where("1 != 1", "");
+        if (null != criteria.getGroupNames() && !"".equals(criteria.getGroupNames())) {
+            wrapper.where("fGroupNames LIKE CONCAT({0},'%')", criteria.getGroupNames());
+        }
+        if (null != criteria.getCustomerUuid() && !"".equals(criteria.getCustomerUuid())) {
+            wrapper.where("fcustomerUuid = {0}", criteria.getCustomerUuid());
+        }
+        if (null != criteria.getOperationType() && !"".equals(criteria.getOperationType())) {
+            wrapper.where("fOperationType = {0}", criteria.getOperationType());
+        }
+        if (null != criteria.getExectionType() && !"".equals(criteria.getExectionType())) {
+            wrapper.where("fExectionType = {0}", criteria.getExectionType());
+        }
+        if (null != criteria.getExectionStatus() && !"".equals(criteria.getExectionStatus())) {
+            wrapper.where("fExectionStatus = {0}", criteria.getExectionStatus());
+        }
+        if ("Common".equals(criteria.getRankJobType())) {
+            wrapper.where("fRankJobType = {0}", "Common");
+            wrapper.isNull("fQZSettingUuid");
+        } else if ("Station".equals(criteria.getRankJobType())) {
+            wrapper.isNotNull("fQZSettingUuid");
         } else {
-            if (null != criteria.getGroupNames() && !"".equals(criteria.getGroupNames())) {
-                wrapper.where("fGroupNames LIKE CONCAT({0},'%')", criteria.getGroupNames());
-            }
-            if (null != criteria.getCustomerUuid() && !"".equals(criteria.getCustomerUuid())) {
-                wrapper.where("fcustomerUuid = {0}", criteria.getCustomerUuid());
-            }
-            if (null != criteria.getOperationType() && !"".equals(criteria.getOperationType())) {
-                wrapper.where("fOperationType = {0}", criteria.getOperationType());
-            }
-            if (null != criteria.getExectionType() && !"".equals(criteria.getExectionType())) {
-                wrapper.where("fExectionType = {0}", criteria.getExectionType());
-            }
-            if (null != criteria.getExectionStatus() && !"".equals(criteria.getExectionStatus())) {
-                wrapper.where("fExectionStatus = {0}", criteria.getExectionStatus());
-            }
-            if ("Common".equals(criteria.getRankJobType())) {
-                wrapper.where("fRankJobType = {0}", "Common");
-                wrapper.isNull("fQZSettingUuid");
-            } else if ("Station".equals(criteria.getRankJobType())) {
-                wrapper.isNotNull("fQZSettingUuid");
-            } else {
-                wrapper.where("fRankJobType = {0}", criteria.getRankJobType());
-            }
-            if (null != criteria.getRankJobArea() && !"".equals(criteria.getRankJobArea())) {
-                wrapper.where("fRankJobArea = {0}", criteria.getRankJobArea());
-            }
-            if (null != criteria.getRankJobCity() && !"".equals(criteria.getRankJobCity())) {
-                wrapper.where("fRankJobCity = {0}", criteria.getRankJobCity());
-            }
+            wrapper.where("fRankJobType = {0}", criteria.getRankJobType());
+        }
+        if (null != criteria.getRankJobArea() && !"".equals(criteria.getRankJobArea())) {
+            wrapper.where("fRankJobArea = {0}", criteria.getRankJobArea());
+        }
+        if (null != criteria.getRankJobCity() && !"".equals(criteria.getRankJobCity())) {
+            wrapper.where("fRankJobCity = {0}", criteria.getRankJobCity());
         }
         page = selectPage(page, wrapper);
         Map<Long, Customer> customerMap = new HashMap<>();

@@ -65,14 +65,15 @@ public class SalesInfoController {
 
     @PostMapping("/searchSalesInfos")
     public ResultBean searchSalesInfos(@RequestBody SalesInfoCriteria salesInfoCriteria) {
-        ResultBean resultBean = new ResultBean();
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(salesInfoCriteria.getInit())) {
+            return resultBean;
+        }
         try {
             Page<SalesManage> page = new Page<>(salesInfoCriteria.getPage(), salesInfoCriteria.getLimit());
             page = salesManageService.SearchSalesManages(salesInfoCriteria, page);
             List<SalesManage> salesInfoList = page.getRecords();
-            resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("success");
             resultBean.setData(salesInfoList);
         } catch (Exception e) {
             logger.error(e.getMessage());

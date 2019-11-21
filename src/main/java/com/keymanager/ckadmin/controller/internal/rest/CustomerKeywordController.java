@@ -10,6 +10,7 @@ import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
 import com.keymanager.ckadmin.criteria.PTKeywordCountCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
+import com.keymanager.ckadmin.criteria.base.BaseCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.entity.UserInfo;
@@ -98,15 +99,16 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/customerKeyword/toMachineGroupAndSize")
     @RequestMapping(value = "/searchMachineGroupAndSize", method = RequestMethod.POST)
-    public ResultBean searchMachineGroupAndSize(HttpServletRequest request) {
-        ResultBean resultBean = new ResultBean();
+    public ResultBean searchMachineGroupAndSize(HttpServletRequest request, @RequestBody BaseCriteria criteria) {
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(criteria.getInit())) {
+            return resultBean;
+        }
         long startMilleSeconds = System.currentTimeMillis();
         String terminalType = TerminalTypeMapping.getTerminalType(request);
         try {
             List<MachineGroupQueueVO> machineGroupQueueVos = customerKeywordService.getMachineGroupAndSize();
             performanceService.addPerformanceLog(terminalType + ":showMachineGroupAndSize", (System.currentTimeMillis() - startMilleSeconds), null);
-            resultBean.setCode(0);
-            resultBean.setMsg("success");
             resultBean.setData(machineGroupQueueVos);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -128,7 +130,10 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
     @PostMapping(value = "/getKeywords")
     public ResultBean searchKeywords(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
-        ResultBean resultBean = new ResultBean();
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(keywordCriteria.getInit())) {
+            return resultBean;
+        }
         try {
             Set<String> roles = getCurrentUser().getRoles();
             if (!roles.contains("DepartmentManager")) {
@@ -144,9 +149,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             }
             page = customerKeywordService.searchKeywords(page, keywordCriteria);
             List<CustomerKeyword> keywords = page.getRecords();
-            resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("success");
             resultBean.setData(keywords);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -427,7 +430,9 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean(200, "success");
         String userName = (String) request.getSession().getAttribute("username");
         try {
-            boolean uploaded = customerKeywordService.handleExcel(keywordCountDO.getFile().getInputStream(), keywordCountDO.getExcelType(), keywordCountDO.getCustomerUuid(), keywordCountDO.getEntryType(), keywordCountDO.getTerminalType(), userName);
+            boolean uploaded = customerKeywordService
+                .handleExcel(keywordCountDO.getFile().getInputStream(), keywordCountDO.getExcelType(), keywordCountDO.getCustomerUuid(),
+                    keywordCountDO.getEntryType(), keywordCountDO.getTerminalType(), userName);
             if (uploaded) {
                 resultBean.setMsg("文件上传成功");
             } else {
@@ -653,7 +658,10 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 
     @PostMapping(value = "/getPTKeywords")
     public ResultBean getPTKeywords(@RequestBody PTKeywordCountCriteria keywordCriteria, HttpServletRequest request) {
-        ResultBean resultBean = new ResultBean();
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(keywordCriteria.getInit())) {
+            return resultBean;
+        }
         try {
             Page<PTkeywordCountVO> page = new Page<>(keywordCriteria.getPage(), keywordCriteria.getLimit());
             String orderByField = ReflectUtils.getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
@@ -665,9 +673,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             }
             page = customerKeywordService.searchPTKeywordCount(page, keywordCriteria);
             List<PTkeywordCountVO> keywords = page.getRecords();
-            resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("success");
             resultBean.setData(keywords);
         } catch (Exception e) {
             logger.error(e.getMessage());

@@ -119,7 +119,7 @@ public interface MachineInfoService extends IService<MachineInfo> {
 
     List<CustomerKeywordTerminalRefreshStatRecord> searchMachineInfoForRefreshStat(RefreshStatisticsCriteria criteria);
 
-    List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(String clientIDPrefix, String city, String switchGroupName, String init);
+    List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(String clientIDPrefix, String city, String switchGroupName);
 
     Page<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(Page<MachineInfoGroupSummaryVO> page, MachineInfoGroupStatCriteria machineInfoGroupStatCriteria);
 

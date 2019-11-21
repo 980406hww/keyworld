@@ -51,8 +51,10 @@ public class RefreshStatisticsController {
 
     @PostMapping(value = "/getRefreshDataByCondition")
     public ResultBean getRefreshDataByCondition(@RequestBody RefreshStatisticsCriteria criteria, HttpServletRequest request) {
-        ResultBean resultBean = new ResultBean();
-        resultBean.setCode(0);
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(criteria.getInit())) {
+            return resultBean;
+        }
         try {
             HttpSession session = request.getSession();
             String userName = (String) session.getAttribute("username");

@@ -26,16 +26,12 @@ public class NegativeKeywordNameServiceImpl extends ServiceImpl<NegativeKeywordN
         Page<NegativeKeywordName> page = new Page<>(criteria.getPage(), criteria.getLimit());
         page.setOrderByField("fUpdateTime");
         Wrapper<NegativeKeywordName> wrapper = new EntityWrapper<>();
-        if (null != criteria.getInit() && "init".equals(criteria.getInit())) {
-            wrapper.where("1 != 1", "");
-        } else {
-            if (null != criteria.getGroup() && !"".equals(criteria.getGroup())) {
-                wrapper.eq("fGroup", criteria.getGroup());
-            }
-            if (null != criteria.getHasEmail() && !"".equals(criteria.getHasEmail())) {
-                wrapper.isNotNull("fEmail");
-                wrapper.where("fEmail != {0}", "");
-            }
+        if (null != criteria.getGroup() && !"".equals(criteria.getGroup())) {
+            wrapper.eq("fGroup", criteria.getGroup());
+        }
+        if (null != criteria.getHasEmail() && !"".equals(criteria.getHasEmail())) {
+            wrapper.isNotNull("fEmail");
+            wrapper.where("fEmail != {0}", "");
         }
         return selectPage(page, wrapper);
     }

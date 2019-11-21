@@ -81,16 +81,17 @@ public class OperationTypeListController {
 
     @RequestMapping(value = "/searchOperationTypeLists", method = RequestMethod.POST)
     public ResultBean searchOperationTypeLists(@RequestBody OperationTypeCriteria operationTypeCriteria) {
-        ResultBean resultBean = new ResultBean();
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(operationTypeCriteria.getInit())) {
+            return resultBean;
+        }
         try {
             Page<OperationType> page = new Page<>(operationTypeCriteria.getPage(), operationTypeCriteria.getLimit());
             OperationType operationType = new OperationType();
             operationType.setTerminalType(operationTypeCriteria.getTerminalType());
             operationType.setOperationTypeName(operationTypeCriteria.getOperationTypeName());
             List<OperationType> operationTypeList = operationTypeService.getOperationTypes(operationType, page, operationTypeCriteria.getInit());
-            resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("success");
             resultBean.setData(operationTypeList);
         } catch (Exception e) {
             logger.error(e.getMessage());

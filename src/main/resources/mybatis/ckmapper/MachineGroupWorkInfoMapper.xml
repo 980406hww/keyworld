@@ -17,7 +17,6 @@
         SUM(ck.fQueryCount)             AS "queryCount"
         FROM t_customer_keyword ck, t_group g, t_operation_combine toc
         WHERE ck.fStatus = 1
-        <if test="criteria.init != null and criteria.init == 'init'">AND 1 != 1</if>
         AND toc.fUuid = g.fOperationCombineUuid
         AND ck.fOptimizeGroupName = g.fGroupName
         AND ck.fTerminalType = toc.fTerminalType
