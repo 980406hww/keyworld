@@ -25,7 +25,7 @@ public class CustomerChargeTypeService extends ServiceImpl<CustomerChargeTypeDao
     @Autowired
     private CustomerChargeTypePercentageService customerChargeTypePercentageService;
 
-    public void saveCustomerChargeType(CustomerChargeType customerChargeType) throws Exception {
+    public void saveCustomerChargeType(CustomerChargeType customerChargeType) {
         if (null != customerChargeType.getUuid()) {
             customerChargeTypeCalculationService.deleteByCustomerChargeTypeUuid(customerChargeType.getUuid().longValue());
             customerChargeTypeIntervalService.deleteByCustomerChargeTypeUuid(customerChargeType.getUuid().longValue());
@@ -34,7 +34,7 @@ public class CustomerChargeTypeService extends ServiceImpl<CustomerChargeTypeDao
             CustomerChargeType oldCustomerChargeType = customerChargeTypeDao.selectById(customerChargeType.getUuid());
             oldCustomerChargeType.setCustomerUuid(customerChargeType.getCustomerUuid());
             oldCustomerChargeType.setChargeType(customerChargeType.getChargeType());
-            customerChargeType.setUpdateTime(new Date());
+            oldCustomerChargeType.setUpdateTime(new Date());
             customerChargeTypeDao.updateById(oldCustomerChargeType);
         } else {
             addCustomerChargeType(customerChargeType);

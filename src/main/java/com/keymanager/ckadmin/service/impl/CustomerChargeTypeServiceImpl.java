@@ -78,17 +78,17 @@ public class CustomerChargeTypeServiceImpl extends ServiceImpl<CustomerChargeTyp
         if (ChargeTypeEnum.Percentage.name().equals(customerChargeType.getChargeType())) {
             List<CustomerChargeTypeCalculation> customerChargeTypeCalculations = customerChargeType.getCustomerChargeTypeCalculations();
             for (CustomerChargeTypeCalculation customerChargeTypeCalculation : customerChargeTypeCalculations) {
-                customerChargeTypeCalculation.setCustomerChargeTypeUuid(customerChargeType.getUuid().intValue());
+                customerChargeTypeCalculation.setCustomerChargeTypeUuid(customerChargeType.getUuid().longValue());
                 customerChargeTypeCalculationService.insert(customerChargeTypeCalculation);
             }
         } else {
             List<CustomerChargeTypeInterval> customerChargeTypeIntervals = customerChargeType.getCustomerChargeTypeIntervals();
             for (CustomerChargeTypeInterval customerChargeTypeInterval : customerChargeTypeIntervals) {
-                customerChargeTypeInterval.setCustomerChargeTypeUuid(customerChargeType.getUuid().intValue());
+                customerChargeTypeInterval.setCustomerChargeTypeUuid(customerChargeType.getUuid().longValue());
                 customerChargeTypeIntervalService.insert(customerChargeTypeInterval);
             }
             for (CustomerChargeTypePercentage customerChargeTypePercentage : customerChargeType.getCustomerChargeTypePercentages()) {
-                customerChargeTypePercentage.setCustomerChargeTypeUuid(customerChargeType.getUuid().intValue());
+                customerChargeTypePercentage.setCustomerChargeTypeUuid(customerChargeType.getUuid().longValue());
                 customerChargeTypePercentageService.insert(customerChargeTypePercentage);
             }
         }
