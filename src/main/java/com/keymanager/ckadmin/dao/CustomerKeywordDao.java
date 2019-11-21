@@ -79,6 +79,8 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateBearPawNumber(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
 
+    void updCustomerKeywordFormQz(@Param("ckUuids") List<Long> ckUuids, @Param("qzUuid") Long qzUuid);
+
     void deleteCustomerKeywordsByUuids(@Param("customerKeywordUuids") List<Long> customerKeywordUuids);
 
     void deleteCustomerKeywordsWhenEmptyTitle(@Param("keywordCriteria") KeywordCriteria keywordCriteria);

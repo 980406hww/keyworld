@@ -23,6 +23,7 @@ import java.io.InputStream;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
 import java.util.List;
 import java.util.Map;
+import sun.rmi.runtime.Log;
 
 /**
  * <p>
@@ -69,6 +70,8 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void updateMachineGroup(KeywordCriteria keywordCriteria);
 
     void updateBearPawNumber(KeywordCriteria keywordCriteria);
+
+    void updCustomerKeywordFormQz(List<Long> ckUuids, Long qzUuid);
 
     void deleteCustomerKeywordsByDeleteType(KeywordCriteria keywordCriteria);
 
