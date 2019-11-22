@@ -364,6 +364,8 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                                 return '全站';
                             case 'fm':
                                 return '负面';
+                            case 'qt':
+                                return '其他';
                             default:
                                 return '未知';
                         }

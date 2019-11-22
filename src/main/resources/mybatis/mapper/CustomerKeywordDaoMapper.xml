@@ -473,16 +473,13 @@
     </update>
 
     <select id="searchCustomerKeywordUuidByRank" resultType="java.lang.Long">
-       select
-          ps.fCustomerKeywordUuid
-        from t_ck_position_summary ps,
-          t_customer_keyword ck
-        where ck.fUuid = ps.fCustomerKeywordUuid
-            AND ck.fCustomerUuid = #{resultMap.customerUuid}
-            and ck.fTerminalType = #{resultMap.terminalType}
-            and ck.fType = #{resultMap.entryType}
-            and (ps.fPosition = 0 or ps.fPosition > #{resultMap.position})
-            and ps.fCreateDate >= DATE_SUB(CURRENT_DATE(), INTERVAL #{resultMap.day} DAY)
+        SELECT ps.fCustomerKeywordUuid
+        FROM t_ck_position_summary ps
+        WHERE ps.fCustomerUuid = #{resultMap.customerUuid}
+        AND (ps.fPosition = 0 or ps.fPosition > #{resultMap.position})
+        AND ps.fCreateDate >= DATE_SUB(CURRENT_DATE(), INTERVAL #{resultMap.day} DAY)
+        AND ps.fTerminalType = #{resultMap.terminalType}
+        AND ps.fType = #{resultMap.entryType}
         GROUP BY ps.fCustomerKeywordUuid
         HAVING count(1) >=#{resultMap.day}
     </select>

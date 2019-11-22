@@ -23,6 +23,21 @@ public class CustomerKeywordPositionSummary {
     @TableField(value = "fPosition")
     private Integer position;
 
+    @TableField(value = "fCustomerUuid")
+    private Long customerUuid;
+
+    @TableField(value = "fSearchEngine")
+    private String searchEngine;
+
+    @TableField(value = "fTerminalType")
+    private String terminalType;
+
+    /**
+     * qz, pt, fm
+     */
+    @TableField(value = "fType")
+    private String type;
+
     @TableField(value = "fCreateDate")
     private Date createDate;
 
@@ -48,6 +63,38 @@ public class CustomerKeywordPositionSummary {
 
     public void setPosition(Integer position) {
         this.position = position;
+    }
+
+    public Long getCustomerUuid() {
+        return customerUuid;
+    }
+
+    public void setCustomerUuid(Long customerUuid) {
+        this.customerUuid = customerUuid;
+    }
+
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
+    }
+
+    public String getTerminalType() {
+        return terminalType;
+    }
+
+    public void setTerminalType(String terminalType) {
+        this.terminalType = terminalType;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Date getCreateDate() {

@@ -10,26 +10,20 @@
             SUM(IF(cps.fPosition BETWEEN 1 AND 50, 1, 0)) AS 'topFifthCount',
             cps.fCreateDate AS 'date'
         FROM t_ck_position_summary cps
-        LEFT JOIN t_customer_keyword ck
-        ON cps.fCustomerKeywordUuid = ck.fUuid
-        WHERE 1 = 1
+        WHERE cps.fSearchEngine = #{condition.searchEngine}
+        AND cps.fTerminalType = #{condition.terminal}
+        AND cps.fPosition > 0
+        <if test="condition.customer != null and condition.customer != ''">
+            AND cps.fCustomerUuid = #{condition.customer}
+        </if>
+        <if test="condition.type != null and condition.type != ''">
+            AND cps.fType = #{condition.type}
+        </if>
         <if test="condition.ltDate != null and condition.ltDate != ''">
             AND cps.fCreateDate >= #{condition.ltDate}
         </if>
         <if test="condition.gtDate != null and condition.gtDate != ''">
             AND cps.fCreateDate &lt; #{condition.gtDate}
-        </if>
-        <if test="condition.customer != null and condition.customer != ''">
-            AND ck.fCustomerUuid = #{condition.customer}
-        </if>
-        <if test="condition.searchEngine != null and condition.searchEngine != ''">
-            AND ck.fSearchEngine = #{condition.searchEngine}
-        </if>
-        <if test="condition.terminal != null and condition.terminal != ''">
-            AND ck.fTerminalType = #{condition.terminal}
-        </if>
-        <if test="condition.type != null and condition.type != ''">
-            AND ck.fType = #{condition.type}
         </if>
         GROUP BY cps.fCreateDate
     </select>
@@ -47,18 +41,11 @@
         FROM t_customer_keyword ck
         LEFT JOIN t_customer c
         ON ck.fCustomerUuid = c.fUuid
-        WHERE fStatus = 1
-        <if test="condition.dateStart != null and condition.dateStart != ''">
-            AND ck.fCapturePositionQueryTime >= #{condition.dateStart}
-        </if>
-        <if test="condition.dateEnd != null and condition.dateEnd != ''">
-            AND ck.fCapturePositionQueryTime &lt; #{condition.dateEnd}
-        </if>
-        <if test="condition.searchEngine != null and condition.searchEngine != ''">
-            AND ck.fSearchEngine = #{condition.searchEngine}
-        </if>
-        <if test="condition.terminal != null and condition.terminal != ''">
-            AND ck.fTerminalType = #{condition.terminal}
+        WHERE ck.fSearchEngine = #{condition.searchEngine}
+        AND ck.fTerminalType = #{condition.terminal}
+        AND fStatus = 1
+        <if test="condition.keyword != null and condition.keyword != ''">
+            AND ck.fKeyword LIKE CONCAT(#{condition.keyword},'%')
         </if>
         <if test="condition.customer != null and condition.customer != ''">
             AND ck.fCustomerUuid = #{condition.customer}
@@ -66,8 +53,11 @@
         <if test="condition.type != null and condition.type != ''">
             AND ck.fType = #{condition.type}
         </if>
-        <if test="condition.keyword != null and condition.keyword != ''">
-            AND ck.fKeyword LIKE CONCAT(#{condition.keyword},'%')
+        <if test="condition.dateStart != null and condition.dateStart != ''">
+            AND ck.fCapturePositionQueryTime >= #{condition.dateStart}
+        </if>
+        <if test="condition.dateEnd != null and condition.dateEnd != ''">
+            AND ck.fCapturePositionQueryTime &lt; #{condition.dateEnd}
         </if>
         GROUP BY ck.fUuid
         LIMIT #{condition.start}, #{condition.limit}
@@ -76,18 +66,11 @@
     <select id="getCKPositionSummaryDataInitCount" parameterType="java.util.HashMap" resultType="int">
         SELECT COUNT(1)
         FROM t_customer_keyword ck
-        WHERE fStatus = 1
-        <if test="condition.dateStart != null and condition.dateStart != ''">
-            AND ck.fCapturePositionQueryTime >= #{condition.dateStart}
-        </if>
-        <if test="condition.dateEnd != null and condition.dateEnd != ''">
-            AND ck.fCapturePositionQueryTime &lt; #{condition.dateEnd}
-        </if>
-        <if test="condition.searchEngine != null and condition.searchEngine != ''">
-            AND ck.fSearchEngine = #{condition.searchEngine}
-        </if>
-        <if test="condition.terminal != null and condition.terminal != ''">
-            AND ck.fTerminalType = #{condition.terminal}
+        WHERE ck.fSearchEngine = #{condition.searchEngine}
+        AND ck.fTerminalType = #{condition.terminal}
+        AND fStatus = 1
+        <if test="condition.keyword != null and condition.keyword != ''">
+            AND ck.fKeyword LIKE CONCAT(#{condition.keyword},'%')
         </if>
         <if test="condition.customer != null and condition.customer != ''">
             AND ck.fCustomerUuid = #{condition.customer}
@@ -95,8 +78,11 @@
         <if test="condition.type != null and condition.type != ''">
             AND ck.fType = #{condition.type}
         </if>
-        <if test="condition.keyword != null and condition.keyword != ''">
-            AND ck.fKeyword LIKE CONCAT(#{condition.keyword},'%')
+        <if test="condition.dateStart != null and condition.dateStart != ''">
+            AND ck.fCapturePositionQueryTime >= #{condition.dateStart}
+        </if>
+        <if test="condition.dateEnd != null and condition.dateEnd != ''">
+            AND ck.fCapturePositionQueryTime &lt; #{condition.dateEnd}
         </if>
         GROUP BY ck.fUuid
     </select>
