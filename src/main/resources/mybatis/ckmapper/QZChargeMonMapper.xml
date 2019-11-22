@@ -31,7 +31,7 @@
             AND fTerminalType = #{condition.terminal}
         </if>
         <if test="condition.loginName != null and condition.loginName != ''">
-            AND fOperationUser = #{condition.loginName}
+            AND EXISTS(SELECT 1 FROM t_customer c WHERE c.fContactPerson = t_qz_charge_mon.fQzCustomer AND c.fUserID = #{condition.loginName})
         </if>
         GROUP BY DATE_FORMAT(fOperationDate, #{condition.dateFormat})
     </select>
@@ -57,7 +57,7 @@
             AND fOperationDate &lt;= #{criteria.dateEnd}
         </if>
         <if test="criteria.loginName != null and criteria.loginName != ''">
-            AND fOperationUser = #{criteria.loginName}
+            AND EXISTS(SELECT 1 FROM t_customer c WHERE c.fContactPerson = t_qz_charge_mon.fQzCustomer AND c.fUserID = #{criteria.loginName})
         </if>
         ORDER BY fOperationDate DESC
     </select>
