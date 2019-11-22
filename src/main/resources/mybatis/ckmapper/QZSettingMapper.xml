@@ -397,12 +397,14 @@
     <select id="getQZUuidsByUserID" resultType="java.lang.Long">
         SELECT fUuid
         FROM t_qz_setting qs
-        WHERE EXISTS (
+        WHERE 1 = 1
+        <if test="userID!=null and userID!=''">
+            AND EXISTS (
             SELECT 1
             FROM t_customer
             WHERE fUuid = qs.fCustomerUuid
-            AND fUserID = #{userID}
-        )
+            AND fUserID = #{userID})
+        </if>
         <if test="searchEngine!=null and searchEngine!=''">
             AND qs.fSearchEngine = #{searchEngine}
         </if>
@@ -413,7 +415,6 @@
             <when test="terminalType == 'Phone'">
                 AND qs.fPhoneGroup &gt; ''
             </when>
-            <otherwise></otherwise>
         </choose>
     </select>
 

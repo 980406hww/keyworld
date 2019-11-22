@@ -470,9 +470,7 @@ public class QZSettingServiceImpl extends
         }
     }
 
-    private void updateOperationTypeAndChargeRule(List<QZOperationType> oldOperationTypes,
-        List<QZOperationType> newOperationTypes, Long qzSettingUuid, long customerUuid,
-        String userName) {
+    private void updateOperationTypeAndChargeRule(List<QZOperationType> oldOperationTypes, List<QZOperationType> newOperationTypes, Long qzSettingUuid, long customerUuid, String userName) {
         Map<String, QZOperationType> oldOperationTypeMap = new HashMap<>(2);
         for (QZOperationType qzOperationType : oldOperationTypes) {
             oldOperationTypeMap.put(qzOperationType.getOperationType(), qzOperationType);

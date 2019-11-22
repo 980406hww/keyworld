@@ -25,7 +25,7 @@ public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
     private QzChargeMonDao qzChargeMonDao;
 
     @Override
-    public Map<String, Object> getQZChargeMonData(String searchEngines, String terminal, String time) {
+    public Map<String, Object> getQZChargeMonData(String searchEngines, String terminal, String time, String loginName) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         int countTime = Integer.parseInt(time);
@@ -44,12 +44,13 @@ public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
         }
         String pattern = "yyyy-MM-dd";
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-        Map<String, Object> condition = new HashMap<>(4);
+        Map<String, Object> condition = new HashMap<>(6);
         condition.put("ltDate", sdf.format(calendar.getTime()));
         condition.put("gtDate", sdf.format(new Date()) + " 23:59:59");
         condition.put("searchEngine", searchEngines);
         condition.put("terminal", terminal);
         condition.put("dateFormat", dateFormat);
+        condition.put("loginName", loginName);
         List<QZChargeMonCountVO> chargeMonCountVos = qzChargeMonDao.getQZChargeMonData(condition);
         if (CollectionUtils.isNotEmpty(chargeMonCountVos)) {
             List<String> date = new ArrayList<>();
