@@ -64,12 +64,12 @@ public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<Custo
             return null;
         }
         int totalCount = customerKeywordPositionSummaryDao.getCKPositionSummaryDataInitCount(condition);
-        page.setTotal(totalCount);
         if (totalCount > 0) {
             condition.put("start", (cur - 1) * limit);
             condition.put("limit", limit);
             page.setRecords(customerKeywordPositionSummaryDao.getCKPositionSummaryDataInitTable(condition));
         }
+        page.setTotal(totalCount);
         return page;
     }
 

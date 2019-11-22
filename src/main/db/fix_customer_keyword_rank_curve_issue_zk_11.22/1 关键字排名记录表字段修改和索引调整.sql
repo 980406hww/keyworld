@@ -23,3 +23,6 @@ CREATE INDEX NewIndex3 ON `db_keyword`.`t_ck_position_summary`(fCustomerUuid, fP
 
 # 客户业务表建立索引
 CREATE INDEX customerUuid_index ON `db_keyword`.`t_customer_business`(fCustomerUuid);
+
+# 建立关键字表索引
+CREATE INDEX CKPositionSummaryIndex ON `db_keyword`.`t_customer_keyword`(fSearchEngine, fTerminalType, fStatus, fCurrentPosition, fType);

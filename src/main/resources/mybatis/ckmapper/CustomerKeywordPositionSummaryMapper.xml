@@ -25,6 +25,9 @@
         <if test="condition.gtDate != null and condition.gtDate != ''">
             AND cps.fCreateDate &lt; #{condition.gtDate}
         </if>
+        <if test="condition.loginName != null and condition.loginName != ''">
+            AND EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = cps.fCustomerUuid AND c.fUserID = #{condition.loginName})
+        </if>
         GROUP BY cps.fCreateDate
     </select>
 
@@ -41,23 +44,22 @@
         FROM t_customer_keyword ck
         LEFT JOIN t_customer c
         ON ck.fCustomerUuid = c.fUuid
-        WHERE ck.fSearchEngine = #{condition.searchEngine}
-        AND ck.fTerminalType = #{condition.terminal}
-        AND ck.fStatus = 1
+        WHERE 1 = 1
         <if test="condition.keyword != null and condition.keyword != ''">
-            AND ck.fKeyword LIKE CONCAT(#{condition.keyword},'%')
+            AND ck.fKeyword LIKE CONCAT(#{condition.keyword}, '%')
         </if>
         <if test="condition.customer != null and condition.customer != ''">
             AND ck.fCustomerUuid = #{condition.customer}
         </if>
+        AND ck.fSearchEngine = #{condition.searchEngine}
+        AND ck.fTerminalType = #{condition.terminal}
+        AND ck.fStatus = 1
+        AND ck.fCurrentPosition > -1
         <if test="condition.type != null and condition.type != ''">
             AND ck.fType = #{condition.type}
         </if>
-        <if test="condition.dateStart != null and condition.dateStart != ''">
-            AND ck.fCapturePositionQueryTime >= #{condition.dateStart}
-        </if>
-        <if test="condition.dateEnd != null and condition.dateEnd != ''">
-            AND ck.fCapturePositionQueryTime &lt; #{condition.dateEnd}
+        <if test="condition.loginName != null and condition.loginName != ''">
+            AND EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = ck.fCustomerUuid AND c.fUserID = #{condition.loginName})
         </if>
         GROUP BY ck.fUuid
         LIMIT #{condition.start}, #{condition.limit}
@@ -66,25 +68,23 @@
     <select id="getCKPositionSummaryDataInitCount" resultType="java.lang.Integer">
         SELECT COUNT(1)
         FROM t_customer_keyword ck
-        WHERE ck.fSearchEngine = #{condition.searchEngine}
-        AND ck.fTerminalType = #{condition.terminal}
-        AND ck.fStatus = 1
+        WHERE 1 = 1
         <if test="condition.keyword != null and condition.keyword != ''">
             AND ck.fKeyword LIKE CONCAT(#{condition.keyword}, '%')
         </if>
         <if test="condition.customer != null and condition.customer != ''">
             AND ck.fCustomerUuid = #{condition.customer}
         </if>
+        AND ck.fSearchEngine = #{condition.searchEngine}
+        AND ck.fTerminalType = #{condition.terminal}
+        AND ck.fStatus = 1
+        AND ck.fCurrentPosition > -1
         <if test="condition.type != null and condition.type != ''">
             AND ck.fType = #{condition.type}
         </if>
-        <if test="condition.dateStart != null and condition.dateStart != ''">
-            AND ck.fCapturePositionQueryTime >= #{condition.dateStart}
+        <if test="condition.loginName != null and condition.loginName != ''">
+            AND EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = ck.fCustomerUuid AND c.fUserID = #{condition.loginName})
         </if>
-        <if test="condition.dateEnd != null and condition.dateEnd != ''">
-            AND ck.fCapturePositionQueryTime &lt; #{condition.dateEnd}
-        </if>
-        GROUP BY ck.fUuid
     </select>
 
     <select id="getOneCKPositionSummaryData" resultType="java.util.HashMap">

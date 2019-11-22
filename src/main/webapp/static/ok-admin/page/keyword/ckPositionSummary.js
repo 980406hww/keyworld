@@ -100,14 +100,12 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
 
     if (condition) {
         getCustomerKeywordPositionSummaryData(condition);
-        condition.dateStart = layui.util.toDateString(new Date(), 'yyyy-MM-dd');
-        condition.dateEnd = condition.dateStart + ' 23:59:59';
         tableInit(condition);
     } else {
         getCustomerKeywordPositionSummaryData({searchEngine: '百度', terminal: 'PC', time: '-90'});
         tableInit({
-            searchEngine: '',
-            terminal: '',
+            searchEngine: '百度',
+            terminal: 'PC',
             dateStart: layui.util.toDateString(new Date(), 'yyyy-MM-dd'),
             dateEnd: layui.util.toDateString(new Date(), 'yyyy-MM-dd') + ' 23:59:59'
         });
@@ -133,11 +131,13 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                     keywordOption.series[3].data = res.data.topFifthData;
                     keywordLogShow.setOption(keywordOption);
                 } else if (res.code === 300) {
+                    keywordOption.xAxis.data = [];
                     keywordOption.series[0].data = [];
                     keywordOption.series[1].data = [];
                     keywordOption.series[2].data = [];
                     keywordOption.series[3].data = [];
                     keywordLogShow.setOption(keywordOption);
+                    common.showFailMsg(res.msg);
                 } else {
                     common.showFailMsg('每日排名趋势数据获取失败');
                 }
@@ -226,7 +226,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
     if (condition) {
         let options = document.getElementById('terminal').children;
         let radios = document.getElementsByName('time');
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 2; i++) {
             options[i].removeAttribute('selected');
             if (options[i].value === condition.terminal) {
                 options[i].setAttribute('selected', '');
@@ -239,7 +239,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
         if (searchEngine) {
             handle('searchEngine', searchEngine);
         } else {
-            getSeData('searchEngine');
+            getSeData('searchEngine', '百度');
         }
         form.render('select');
     }
@@ -371,7 +371,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                     }
                 },
                 {
-                    field: 'date', title: '统计时间', width: '15%', align: 'center', templet: function (d) {
+                    field: 'date', title: '抓取时间', width: '15%', align: 'center', templet: function (d) {
                         return layui.util.toDateString(d.date, 'yyyy-MM-dd HH:mm:ss');
                     }
                 }
