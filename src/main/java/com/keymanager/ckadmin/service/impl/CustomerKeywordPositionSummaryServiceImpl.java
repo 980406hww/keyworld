@@ -30,8 +30,7 @@ public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<Custo
     @Override
     public Map<String, Object> getCustomerKeywordPositionSummaryData(Map<String, Object> condition) {
         handleCondition(condition);
-        List<CustomerKeywordPositionSummaryCountVO> customerKeywordPositionSummaryCountVos = customerKeywordPositionSummaryDao
-            .getCustomerKeywordPositionSummaryData(condition);
+        List<CustomerKeywordPositionSummaryCountVO> customerKeywordPositionSummaryCountVos = customerKeywordPositionSummaryDao.getCustomerKeywordPositionSummaryData(condition);
         if (CollectionUtils.isNotEmpty(customerKeywordPositionSummaryCountVos)) {
             List<String> dates = new ArrayList<>();
             List<Long> topThreeData = new ArrayList<>();
@@ -79,9 +78,9 @@ public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<Custo
         calendar.setTime(date);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         condition.put("today", sdf.format(date) + " 23:59:59");
-        calendar.add(Calendar.DATE, -100);
-        String fifteenDayAgo = sdf.format(calendar.getTime());
-        condition.put("fifteenDayAgo", fifteenDayAgo);
+        calendar.add(Calendar.DATE, -7);
+        String oneWeekAgo = sdf.format(calendar.getTime());
+        condition.put("oneWeekAgo", oneWeekAgo);
         condition.put("uuid", uuid);
         return customerKeywordPositionSummaryDao.getOneCKPositionSummaryData(condition);
     }

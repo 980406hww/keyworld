@@ -383,6 +383,9 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
         });
     }
 
+    /**
+     * 一周的数据
+     */
     function showLogData(data) {
         var boxes = document.getElementsByClassName('layui-table-body')[0].getElementsByTagName('tr');
         for (let i = 0; i < boxes.length; i++) {
