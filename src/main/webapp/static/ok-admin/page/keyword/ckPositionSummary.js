@@ -104,7 +104,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
         condition.dateEnd = condition.dateStart + ' 23:59:59';
         tableInit(condition);
     } else {
-        getCustomerKeywordPositionSummaryData({searchEngine: '', terminal: '', time: '-90'});
+        getCustomerKeywordPositionSummaryData({searchEngine: '百度', terminal: 'PC', time: '-90'});
         tableInit({
             searchEngine: '',
             terminal: '',
@@ -195,7 +195,6 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
 
     window.handle = function (name, data, searchEngine) {
         $("#" + name).empty();
-        $('#' + name).append('<option value>搜索引擎</option>');// 下拉菜单里添加元素
         $.each(data, function (index, item) {
             if (searchEngine === item) {
                 $('#' + name).append('<option value="' + item + '" selected>' + item + '</option>');// 下拉菜单里添加元素

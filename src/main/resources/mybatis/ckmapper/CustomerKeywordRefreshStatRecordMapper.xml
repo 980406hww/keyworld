@@ -2,20 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.ckadmin.dao.CustomerKeywordTerminalRefreshStatRecordDao">
 
-    <select id="selectTotalCount" parameterType="com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria"
-        resultType="int">
-        SELECT COUNT(1)
-        FROM (
-            SELECT
-                ckrsr.fGroup
-            FROM t_ck_refresh_stat_record ckrsr
-            WHERE DATE_SUB(CURDATE(), INTERVAL #{criteria.dayNum} DAY) = ckrsr.fCreateDate
-            AND ckrsr.fType = #{criteria.entryType}
-            AND ckrsr.fTerminalType = #{criteria.terminalType}
-            GROUP BY ckrsr.fUuid
-            ORDER BY ckrsr.fGroup) t
-    </select>
-
     <select id="getHistoryTerminalRefreshStatRecord" parameterType="com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria"
         resultType="com.keymanager.ckadmin.entity.RefreshStatRecord">
         SELECT

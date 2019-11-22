@@ -28,7 +28,7 @@ public interface QZOperationTypeDao extends BaseMapper<QZOperationType> {
     /**
      * 上一级的主键
      */
-    int selectLastId();
+    long selectLastId();
 
     void updateQZOperationTypeStandardTime(@Param("uuid") long uuid, @Param("isStandardFlag") int isStandardFlag);
 

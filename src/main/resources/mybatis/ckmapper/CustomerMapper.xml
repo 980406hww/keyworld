@@ -107,7 +107,7 @@
         order by c.fContactPerson
     </select>
 
-    <select id="selectLastId" resultType="int">
+    <select id="selectLastId" resultType="long">
         select LAST_INSERT_ID()
     </select>
 

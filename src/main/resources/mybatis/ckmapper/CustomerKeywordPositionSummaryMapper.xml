@@ -37,13 +37,13 @@
             ck.fSearchEngine AS 'searchEngine',
             ck.fTerminalType AS 'terminal',
             ck.fType AS 'type',
-            DATE_FORMAT(ck.fCapturePositionQueryTime, '%y-%M-&d') AS 'date'
+            DATE_FORMAT(ck.fCapturePositionQueryTime, '%y-%M-%d') AS 'date'
         FROM t_customer_keyword ck
         LEFT JOIN t_customer c
         ON ck.fCustomerUuid = c.fUuid
         WHERE ck.fSearchEngine = #{condition.searchEngine}
         AND ck.fTerminalType = #{condition.terminal}
-        AND fStatus = 1
+        AND ck.fStatus = 1
         <if test="condition.keyword != null and condition.keyword != ''">
             AND ck.fKeyword LIKE CONCAT(#{condition.keyword},'%')
         </if>
@@ -63,14 +63,14 @@
         LIMIT #{condition.start}, #{condition.limit}
     </select>
 
-    <select id="getCKPositionSummaryDataInitCount" parameterType="java.util.HashMap" resultType="int">
+    <select id="getCKPositionSummaryDataInitCount" resultType="java.lang.Integer">
         SELECT COUNT(1)
         FROM t_customer_keyword ck
         WHERE ck.fSearchEngine = #{condition.searchEngine}
         AND ck.fTerminalType = #{condition.terminal}
-        AND fStatus = 1
+        AND ck.fStatus = 1
         <if test="condition.keyword != null and condition.keyword != ''">
-            AND ck.fKeyword LIKE CONCAT(#{condition.keyword},'%')
+            AND ck.fKeyword LIKE CONCAT(#{condition.keyword}, '%')
         </if>
         <if test="condition.customer != null and condition.customer != ''">
             AND ck.fCustomerUuid = #{condition.customer}
@@ -96,4 +96,5 @@
         AND fCreateDate BETWEEN #{condition.oneWeekAgo} AND #{condition.today}
         GROUP BY fCustomerKeywordUuid
     </select>
+
 </mapper>

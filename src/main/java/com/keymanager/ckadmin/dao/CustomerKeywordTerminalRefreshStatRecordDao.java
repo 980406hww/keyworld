@@ -9,7 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository("customerKeywordTerminalRefreshStatRecordDao2")
 public interface CustomerKeywordTerminalRefreshStatRecordDao {
 
-    Integer selectTotalCount(@Param("criteria") RefreshStatisticsCriteria criteria);
-
     List<RefreshStatRecord> getHistoryTerminalRefreshStatRecord(@Param("criteria") RefreshStatisticsCriteria criteria);
 }

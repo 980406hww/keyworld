@@ -284,8 +284,7 @@
         SELECT COUNT(1) FROM t_machine_info WHERE fStartUpStatus = "Downloading"
     </select>
 
-    <select id="getUpgradingMachineCount"
-            parameterType="com.keymanager.ckadmin.entity.ClientUpgrade" resultType="int">
+    <select id="getUpgradingMachineCount" resultType="int">
         SELECT COUNT(1) FROM t_machine_info
         WHERE fVersion = #{clientUpgrade.version}
         AND fRunningProgramType = #{clientUpgrade.programType}
@@ -293,8 +292,7 @@
         AND fTerminalType = #{clientUpgrade.terminalType}
     </select>
 
-    <select id="getResidualMachineCount"
-            parameterType="com.keymanager.ckadmin.entity.ClientUpgrade" resultType="int">
+    <select id="getResidualMachineCount" resultType="int">
         SELECT COUNT(1) FROM t_machine_info
         WHERE fVersion = #{clientUpgrade.version}
         AND fRunningProgramType = #{clientUpgrade.programType}

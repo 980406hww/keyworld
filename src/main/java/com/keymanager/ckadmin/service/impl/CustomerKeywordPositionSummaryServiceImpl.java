@@ -63,10 +63,13 @@ public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<Custo
         if (null == cur || null == limit || cur.equals(0) || limit.equals(0)) {
             return null;
         }
-        page.setTotal(customerKeywordPositionSummaryDao.getCKPositionSummaryDataInitCount(condition));
-        condition.put("start", (cur - 1) * limit);
-        condition.put("limit", limit);
-        page.setRecords(customerKeywordPositionSummaryDao.getCKPositionSummaryDataInitTable(condition));
+        int totalCount = customerKeywordPositionSummaryDao.getCKPositionSummaryDataInitCount(condition);
+        page.setTotal(totalCount);
+        if (totalCount > 0) {
+            condition.put("start", (cur - 1) * limit);
+            condition.put("limit", limit);
+            page.setRecords(customerKeywordPositionSummaryDao.getCKPositionSummaryDataInitTable(condition));
+        }
         return page;
     }
 

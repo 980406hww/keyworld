@@ -215,7 +215,7 @@
         LIMIT 1
     </select>
 
-    <select id="selectLastId" resultType="int">
+    <select id="selectLastId" resultType="long">
         select LAST_INSERT_ID()
     </select>
 
@@ -400,10 +400,11 @@
         WHERE 1 = 1
         <if test="userID != null and userID != ''">
             AND EXISTS (
-            SELECT 1
-            FROM t_customer
-            WHERE fUuid = qs.fCustomerUuid
-            AND fUserID = #{userID})
+                SELECT 1
+                FROM t_customer
+                WHERE fUuid = qs.fCustomerUuid
+                AND fUserID = #{userID}
+            )
         </if>
         <if test="searchEngine!=null and searchEngine!=''">
             AND qs.fSearchEngine = #{searchEngine}

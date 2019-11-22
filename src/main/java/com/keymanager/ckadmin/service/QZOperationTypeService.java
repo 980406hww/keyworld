@@ -13,7 +13,7 @@ public interface QZOperationTypeService extends IService<QZOperationType> {
 
     List<QZOperationType> searchQZOperationTypesIsDelete(long uuid);
 
-    int selectLastId();
+    long selectLastId();
 
     void deleteByQZSettingUuid(long uuid);
 

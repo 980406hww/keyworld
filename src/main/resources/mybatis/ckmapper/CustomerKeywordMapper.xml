@@ -666,7 +666,7 @@
         <include refid="searchCustomerKeywordsCriteria"/>
     </select>
 
-    <select id="getKeywordCountByKeywordCriteria" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria" resultType="int">
+    <select id="getKeywordCountByKeywordCriteria" resultType="int">
         SELECT
         COUNT(1)
         FROM
@@ -1003,7 +1003,7 @@
         </foreach>
     </update>
 
-    <select id="searchCustomerKeywordForNoReachStandard" parameterType="com.keymanager.ckadmin.criteria.KeywordStandardCriteria" resultType="int">
+    <select id="searchCustomerKeywordForNoReachStandard" resultType="int">
         SELECT
         COUNT(1)
         FROM
