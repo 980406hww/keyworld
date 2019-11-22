@@ -49,8 +49,8 @@ public class CustomerKeywordPositionSummaryService extends ServiceImpl<CustomerK
         }
     }
 
-    public void deletePositionSummaryFromOneYearAgo() {
-        customerKeywordPositionSummaryDao.deletePositionSummaryFromOneYearAgo();
+    public void deletePositionSummaryFromThreeMonthAgo() {
+        customerKeywordPositionSummaryDao.deletePositionSummaryFromThreeMonthAgo();
     }
 
     private CustomerKeywordPositionSummary fixFieldValueByCustomerKeyword(Long customerKeywordUuid, CustomerKeywordPositionSummary positionSummary) {

@@ -1190,21 +1190,21 @@
         LEFT JOIN t_qz_setting qz on ck.fQZSettingUuid = qz.fUuid
         LEFT JOIN t_customer c on c.fUuid = qz.fCustomerUuid
         WHERE 1=1
-            <if test="qzRateKewordCountCriteria.terminalType != null and qzRateKewordCountCriteria.terminalType != ''">
-                AND ck.fTerminalType=#{qzRateKewordCountCriteria.terminalType}
-            </if>
-            <if test="qzRateKewordCountCriteria.customerUuid != null and qzRateKewordCountCriteria.customerUuid != ''">
-                AND c.fUuid=#{qzRateKewordCountCriteria.customerUuid}
-            </if>
+        <if test="qzRateKewordCountCriteria.terminalType != null and qzRateKewordCountCriteria.terminalType != ''">
+            AND ck.fTerminalType=#{qzRateKewordCountCriteria.terminalType}
+        </if>
+        <if test="qzRateKewordCountCriteria.customerUuid != null and qzRateKewordCountCriteria.customerUuid != ''">
+            AND c.fUuid=#{qzRateKewordCountCriteria.customerUuid}
+        </if>
         <if test="qzRateKewordCountCriteria.domain != null and qzRateKewordCountCriteria.domain != ''">
             AND qz.fDomain LIKE CONCAT(#{qzRateKewordCountCriteria.domain},'%')
         </if>
-            <if test="qzRateKewordCountCriteria.qzUuids != null">
-                AND ck.fQZSettingUuid IN
-                <foreach item="qzUuid"  collection="qzRateKewordCountCriteria.qzUuids" open="(" separator="," close=")">
-                    #{qzUuid}
-                </foreach>
-            </if>
+        <if test="qzRateKewordCountCriteria.qzUuids != null">
+            AND ck.fQZSettingUuid IN
+            <foreach item="qzUuid"  collection="qzRateKewordCountCriteria.qzUuids" open="(" separator="," close=")">
+                #{qzUuid}
+            </foreach>
+        </if>
         GROUP BY ck.fQZSettingUuid
     </select>
 
@@ -1243,5 +1243,8 @@
         COUNT(ck.fStatus = 0 OR NULL)  AS 'stopCount',
         COUNT(ck.fStatus = 3 OR NULL)  AS 'obtainedCount'
         FROM t_customer_keyword ck
+        <if test="loginName != null and loginName != ''">
+            WHERE EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = ck.fCustomerUuid AND c.fUserID = #{loginName})
+        </if>
     </select>
 </mapper>

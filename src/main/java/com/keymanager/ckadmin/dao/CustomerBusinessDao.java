@@ -30,5 +30,5 @@ public interface CustomerBusinessDao extends BaseMapper<CustomerBusiness> {
 
     void insertCustomerBusiness(@Param("customerBusiness") CustomerBusiness customerBusiness);
 
-    Map<String, Object> getCustomerBusinessCount();
+    Map<String, Object> getCustomerBusinessCount(@Param("loginName") String loginName);
 }

@@ -24,5 +24,5 @@ public interface CustomerBusinessService extends IService<CustomerBusiness> {
 
     List<String> getCustomerBusinessStrByCustomerUuid(long customerUuid);
 
-    Map<String, Object> getCustomerBusinessCount();
+    Map<String, Object> getCustomerBusinessCount(String loginName);
 }
