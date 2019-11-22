@@ -73,12 +73,15 @@ layui.use(["form", "common", "jquery", "layer"], function () {
             delete data.field['customerBusinessList[qt]'];
         }
 
+        if (customerBusinessList.length === 0){
+            common.showFailMsg('业务类型必须选择一个');
+            return false;
+        }
         data.field.customerBusinessList = customerBusinessList;
         data.field.customerBusinessStr = customerBusinessStr;
         if (!common.waitMoment()) {
             return false;
         }
-        console.log(data.field);
         $.ajax({
             url: '/internal/customer/saveCustomer2',
             type: 'post',

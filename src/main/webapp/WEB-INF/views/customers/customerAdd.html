@@ -41,7 +41,6 @@
                 <div class="layui-input">
                     <input type="radio" name="type" value="普通客户" title="普通客户" checked>
                     <input type="radio" name="type" value="测试客户" title="测试客户">
-
                 </div>
             </div>
         </div>
@@ -59,16 +58,16 @@
             <div class="layui-input-block">
                 <div class="layui-input">
                     <@shiro.hasRole name="PTSpecial">
-                    <input type="checkbox" name="customerBusinessList[keyword]" value="keyword" title="单词" />
+                    <input type="checkbox" name="customerBusinessList[keyword]" value="keyword" title="单词"/>
                     </@shiro.hasRole>
                     <@shiro.hasRole name="QZSpecial">
-                    <input type="checkbox" name="customerBusinessList[qzsetting]" value="qzsetting" title="全站" />
+                    <input type="checkbox" name="customerBusinessList[qzsetting]" value="qzsetting" title="全站"/>
                     </@shiro.hasRole>
                     <@shiro.hasRole name="FMSpecial">
-                    <input type="checkbox" name="customerBusinessList[fm]" value="fm" title="负面" />
+                    <input type="checkbox" name="customerBusinessList[fm]" value="fm" title="负面"/>
                     </@shiro.hasRole>
                     <@shiro.hasRole name="QTSpecial">
-                    <input type="checkbox" name="customerBusinessList[qt]" value="qt" title="其他" />
+                    <input type="checkbox" name="customerBusinessList[qt]" value="qt" title="其他"/>
                     </@shiro.hasRole>
                 </div>
             </div>
