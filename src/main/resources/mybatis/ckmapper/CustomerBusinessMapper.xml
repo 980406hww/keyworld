@@ -48,7 +48,6 @@
         SELECT cb.`fType` AS `customerBusiness`
         FROM t_customer_business cb
         WHERE cb.fCustomerUuid = #{customerUuid}
-
     </select>
 
     <insert id="insertCustomerBusiness" parameterType="com.keymanager.ckadmin.entity.CustomerBusiness">
@@ -58,10 +57,13 @@
 
     <select id="getCustomerBusinessCount" resultType="java.util.Map">
         SELECT
-            COUNT(fType = 'keyword' OR NULL) AS 'keyword',
-            COUNT(fType = 'qzsetting' OR NULL) AS 'qzsetting',
-            COUNT(fType = 'fm' OR NULL) AS 'fm',
-            COUNT(fType = 'qt' OR NULL) AS 'qt'
-        FROM t_customer_business
+            COUNT(cb.fType = 'keyword' OR NULL) AS 'keyword',
+            COUNT(cb.fType = 'qzsetting' OR NULL) AS 'qzsetting',
+            COUNT(cb.fType = 'fm' OR NULL) AS 'fm',
+            COUNT(cb.fType = 'qt' OR NULL) AS 'qt'
+        FROM t_customer_business cb
+        <if test="loginName != null and loginName != ''">
+            WHERE EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = cb.fCustomerUuid AND c.fUserID = #{loginName})
+        </if>
     </select>
 </mapper>

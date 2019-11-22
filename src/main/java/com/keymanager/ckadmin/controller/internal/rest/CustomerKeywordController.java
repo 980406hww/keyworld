@@ -902,10 +902,15 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @PostMapping("/getCustomerKeywordStatusCount")
-    public ResultBean getCustomerKeywordStatusCount() {
+    public ResultBean getCustomerKeywordStatusCount(HttpSession session) {
         ResultBean resultBean = new ResultBean(200, "获取关键词各状态下的数量成功");
         try {
-            resultBean.setData(customerKeywordService.getCustomerKeywordStatusCount());
+            String loginName = null;
+            Set<String> roles = getCurrentUser().getRoles();
+            if (!roles.contains("DepartmentManager")) {
+                loginName = (String) session.getAttribute("username");
+            }
+            resultBean.setData(customerKeywordService.getCustomerKeywordStatusCount(loginName));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());

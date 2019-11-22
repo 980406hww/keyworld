@@ -130,5 +130,5 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     
     void addCustomerKeywordsFromSimpleUI(List<CustomerKeyword> customerKeywords, String terminalType, String entryType, String userName);
 
-    Map<String, Object> getCustomerKeywordStatusCount();
+    Map<String, Object> getCustomerKeywordStatusCount(String loginName);
 }

@@ -419,12 +419,15 @@
 
     <select id="getQzSettingRenewalStatusCount" resultType="java.util.Map">
         SELECT
-            COUNT(qs.fRenewalStatus = 2 OR NULL) AS 'addCount',
-            COUNT(qs.fRenewalStatus = 1 OR NULL) AS 'operatorCount',
-            COUNT(qs.fRenewalStatus = 0 OR NULL) AS 'stopCount',
-            COUNT(qs.fRenewalStatus = 3 OR NULL) AS 'obtainedCount',
-            COUNT(qs.fRenewalStatus = 4 OR NULL) AS 'otherCount'
+        COUNT(qs.fRenewalStatus = 2 OR NULL) AS 'addCount',
+        COUNT(qs.fRenewalStatus = 1 OR NULL) AS 'operatorCount',
+        COUNT(qs.fRenewalStatus = 0 OR NULL) AS 'stopCount',
+        COUNT(qs.fRenewalStatus = 3 OR NULL) AS 'obtainedCount',
+        COUNT(qs.fRenewalStatus = 4 OR NULL) AS 'otherCount'
         FROM t_qz_setting qs
         WHERE EXISTS(SELECT 1 FROM t_qz_operation_type qot WHERE qot.fQZSettingUuid = qs.fUuid AND fIsDeleted = 0 LIMIT 1)
+        <if test="loginName != null and loginName != ''">
+            AND EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = qs.fCustomerUuid AND c.fUserID = #{loginName})
+        </if>
     </select>
 </mapper>

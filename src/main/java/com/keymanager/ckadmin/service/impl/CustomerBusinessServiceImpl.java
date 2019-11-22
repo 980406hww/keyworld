@@ -47,7 +47,7 @@ public class CustomerBusinessServiceImpl extends ServiceImpl<CustomerBusinessDao
     }
 
     @Override
-    public Map<String, Object> getCustomerBusinessCount() {
-        return customerBusinessDao.getCustomerBusinessCount();
+    public Map<String, Object> getCustomerBusinessCount(String loginName) {
+        return customerBusinessDao.getCustomerBusinessCount(loginName);
     }
 }

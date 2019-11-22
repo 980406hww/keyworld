@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -620,10 +621,15 @@ public class QZSettingController extends SpringMVCBaseController {
     }
 
     @PostMapping("/getQzSettingRenewalStatusCount")
-    public ResultBean getQzSettingRenewalStatusCount() {
+    public ResultBean getQzSettingRenewalStatusCount(HttpSession session) {
         ResultBean resultBean = new ResultBean(200, "获取站点各续费状态下的数量成功");
         try {
-            resultBean.setData(qzSettingService.getQzSettingRenewalStatusCount());
+            String loginName = null;
+            Set<String> roles = getCurrentUser().getRoles();
+            if (!roles.contains("DepartmentManager")) {
+                loginName = (String) session.getAttribute("username");
+            }
+            resultBean.setData(qzSettingService.getQzSettingRenewalStatusCount(loginName));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());

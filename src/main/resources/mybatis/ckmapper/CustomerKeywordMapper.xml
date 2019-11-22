@@ -1243,5 +1243,8 @@
         COUNT(ck.fStatus = 0 OR NULL)  AS 'stopCount',
         COUNT(ck.fStatus = 3 OR NULL)  AS 'obtainedCount'
         FROM t_customer_keyword ck
+        <if test="loginName != null and loginName != ''">
+            WHERE EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = ck.fCustomerUuid AND c.fUserID = #{loginName})
+        </if>
     </select>
 </mapper>

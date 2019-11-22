@@ -941,8 +941,8 @@ public class QZSettingServiceImpl extends
     }
 
     @Override
-    public Map<String, Object> getQzSettingRenewalStatusCount() {
-        return qzSettingDao.getQzSettingRenewalStatusCount();
+    public Map<String, Object> getQzSettingRenewalStatusCount(String loginName) {
+        return qzSettingDao.getQzSettingRenewalStatusCount(loginName);
     }
 
     private void saveQzChargeMon(Long uuid, String userName, int operationType) {

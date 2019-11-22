@@ -818,8 +818,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public Map<String, Object> getCustomerKeywordStatusCount() {
-        return customerKeywordDao.getCustomerKeywordStatusCount();
+    public Map<String, Object> getCustomerKeywordStatusCount(String loginName) {
+        return customerKeywordDao.getCustomerKeywordStatusCount(loginName);
     }
 }
 
