@@ -191,6 +191,7 @@
 
     <select id="getQZSettingGroupInfo" resultType="java.util.Map">
         SELECT
+        COUNT(ck.fStatus = 2 OR NULL) AS 'newCount',
         COUNT(ck.fStatus = 1 OR NULL) AS 'activeCount',
         COUNT(ck.fStatus = 0 OR NULL) AS 'stopCount'
         FROM t_customer_keyword ck

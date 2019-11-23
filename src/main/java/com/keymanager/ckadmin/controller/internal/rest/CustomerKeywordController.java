@@ -541,6 +541,18 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         }
     }
 
+    @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordStatus")
+    @PostMapping(value = "/updCKStatusFromQZ")
+    public ResultBean updCKStatusFromQZ(@RequestBody Map<String, Object> condition) {
+        try {
+            customerKeywordService.updCKStatusFromQZ(condition);
+            return new ResultBean(200, "success");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResultBean(400, e.getMessage());
+        }
+    }
+
     //重采标题
     @RequiresPermissions("/internal/customerKeyword/cleanTitle")
     @PostMapping(value = "/cleanTitle2")

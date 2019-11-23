@@ -98,6 +98,8 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     void changeCustomerKeywordStatusInCKPage(CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria);
 
+    void updCKStatusFromQZ(Map<String, Object> condition);
+
     void cleanTitle(CustomerKeywordCleanTitleCriteria customerKeywordCleanTitleCriteria);
 
     void deleteDuplicateKeywords(CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria);
