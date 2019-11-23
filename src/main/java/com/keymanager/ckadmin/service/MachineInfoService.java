@@ -149,5 +149,5 @@ public interface MachineInfoService extends IService<MachineInfo> {
 
     Map<String, Object> getMachineInfoBody(String cityName);
 
-    Map<String, String> getMachineStatusCount();
+    Map<String, String> getMachineStatusCount(String username);
 }

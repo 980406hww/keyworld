@@ -379,6 +379,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
             height: 'full-425',
             loading: true,
             done: function (res, curr, count) {
+                console.log(res);
                 showLogData(res.data);
             }
         });
@@ -414,12 +415,8 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
 
     function reload(condition) {
         let postData = common.formToJsonObject('searchForm');
-        if (postData.dateStart) {
-            postData.dateStart += ' 00:00:00';
-        }
-        if (postData.dateEnd) {
-            postData.dateEnd += ' 23:59:59';
-        }
+        postData.dateStart = layui.util.toDateString(new Date(), 'yyyy-MM-dd');
+        postData.dateEnd = layui.util.toDateString(new Date(), 'yyyy-MM-dd') + ' 23:59:59';
         Object.assign(condition, postData);
         table.reload('table', {
             where: condition,
@@ -427,6 +424,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                 curr: 1
             },
             done: function (res, curr, count) {
+                console.log(res);
                 showLogData(res.data);
             }
         });

@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -714,10 +715,14 @@ public class MachineInfoController extends SpringMVCBaseController {
     }
 
     @GetMapping("/getMachineStatusCount")
-    public ResultBean getMachineStatusCount() {
+    public ResultBean getMachineStatusCount(HttpSession session) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
-            resultBean.setData(machineInfoService.getMachineStatusCount());
+            String username = null;
+            if (!getCurrentUser().getRoles().contains("Operation") && !getCurrentUser().getRoles().contains("Technical")) {
+                username = (String) session.getAttribute("username");
+            }
+            resultBean.setData(machineInfoService.getMachineStatusCount(username));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());

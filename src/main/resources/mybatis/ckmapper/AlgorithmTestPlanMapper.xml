@@ -145,14 +145,6 @@
         WHERE atp.fUuid = #{uuid}
     </update>
 
-    <update id="updateAlgorithmTestPlansStatus">
-        UPDATE t_algorithm_test_plan SET fStatus = #{status}
-        WHERE fUuid IN
-        <foreach item="uuid" collection="uuids" open="(" separator="," close=")">
-            #{uuid}
-        </foreach>
-    </update>
-
     <update id="executeAlgorithmTestPlans">
         UPDATE t_algorithm_test_plan SET fExcuteStatus = 0
         WHERE fUuid IN

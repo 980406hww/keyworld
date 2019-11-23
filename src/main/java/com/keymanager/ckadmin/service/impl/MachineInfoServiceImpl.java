@@ -9,9 +9,8 @@ import com.keymanager.ckadmin.entity.CustomerKeywordTerminalRefreshStatRecord;
 import com.keymanager.ckadmin.entity.MachineGroupWorkInfo;
 import com.keymanager.ckadmin.entity.MachineInfo;
 import com.keymanager.ckadmin.enums.ClientStartUpStatusEnum;
-import com.keymanager.ckadmin.service.ClientStatusRestartLogService;
-import com.keymanager.ckadmin.service.ConfigService;
-import com.keymanager.ckadmin.service.GroupSettingService;
+import com.keymanager.ckadmin.enums.TerminalTypeEnum;
+import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.MachineInfoService;
 import com.keymanager.ckadmin.vo.ClientStatusForOptimization;
 import com.keymanager.ckadmin.vo.CookieVO;
@@ -25,11 +24,14 @@ import com.keymanager.util.common.StringUtil;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -41,14 +43,8 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     @Resource(name = "machineInfoDao2")
     private MachineInfoDao machineInfoDao;
 
-    @Resource(name = "groupSettingService2")
-    private GroupSettingService groupSettingService;
-
-    @Resource(name = "configService2")
-    private ConfigService configService;
-
-    @Resource(name = "clientStatusRestartLogService2")
-    private ClientStatusRestartLogService clientStatusRestartLogService;
+    @Resource(name = "customerKeywordService2")
+    private CustomerKeywordService customerKeywordService;
 
     @Override
     public Integer getUpgradingMachineCount(ClientUpgrade clientUpgrade) {
@@ -594,8 +590,33 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     }
 
     @Override
-    public Map<String, String> getMachineStatusCount() {
-        return machineInfoDao.getMachineStatusCount();
+    public Map<String, String> getMachineStatusCount(String username) {
+        Map<String, String> machineCountMap = machineInfoDao.getMachineStatusCount();
+        if (username == null) {
+            return machineCountMap;
+        }
+        Map<String, Object> useMachinePropMap = customerKeywordService.getUseMachineProportion(username);
+        if (null == useMachinePropMap || useMachinePropMap.isEmpty()) {
+            return machineCountMap;
+        }
+        Set<Entry<String, Object>> entries = useMachinePropMap.entrySet();
+        for (Entry<String, Object> entry : entries) {
+            if (entry.getKey().equals(TerminalTypeEnum.PC.name())) {
+                String pcAll = machineCountMap.get("pcAll");
+                double newPcAll = Double.parseDouble(pcAll) * (Double) entry.getValue();
+                BigDecimal bd = new BigDecimal(newPcAll);
+                bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+                machineCountMap.put("pcAll", bd.toString());
+            }
+            if (entry.getKey().equals(TerminalTypeEnum.Phone.name())) {
+                String phoneAll = machineCountMap.get("phoneAll");
+                double newPhoneAll = Double.parseDouble(phoneAll) * (Double) entry.getValue();
+                BigDecimal bd = new BigDecimal(newPhoneAll);
+                bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+                machineCountMap.put("phoneAll", bd.toString());
+            }
+        }
+        return machineCountMap;
     }
 
     private Map<String, Object> getCityMap(String cityName) {
@@ -617,4 +638,6 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
         }
         return -1;
     }
+
+
 }

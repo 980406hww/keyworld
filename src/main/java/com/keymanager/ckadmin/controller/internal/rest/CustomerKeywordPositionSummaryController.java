@@ -46,6 +46,7 @@ public class CustomerKeywordPositionSummaryController extends SpringMVCBaseContr
             Map<String, Object> data = customerKeywordPositionSummaryService.getCustomerKeywordPositionSummaryData(condition);
             if (null == data || data.isEmpty()) {
                 resultBean.setCode(300);
+                resultBean.setMsg("暂无关键字排名趋势图");
             } else {
                 resultBean.setData(data);
             }

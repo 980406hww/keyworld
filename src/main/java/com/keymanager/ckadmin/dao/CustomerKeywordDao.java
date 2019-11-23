@@ -146,4 +146,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<CustomerKeyword> searchSameCustomerKeywords(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String keyword, @Param("searchEngine") String searchEngine);
 
     Map<String, Object> getCustomerKeywordStatusCount(@Param("loginName") String loginName);
+
+    Map<String, Object> getUseMachineProportion(@Param("username") String username);
 }

@@ -1247,4 +1247,33 @@
             WHERE EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = ck.fCustomerUuid AND c.fUserID = #{loginName})
         </if>
     </select>
+
+    <select id="getUseMachineProportion" resultType="java.util.Map">
+        SELECT
+            t1.terminalType AS 'terminalType',
+            ROUND(t1.number / t2.total * 100.000000, 6) AS 'proportion'
+        FROM
+        (
+            SELECT
+            ck.fTerminalType AS 'terminalType',
+            SUM(fQueryCount) AS 'number'
+            FROM t_customer_keyword ck
+            LEFT JOIN t_customer c
+            ON c.fUuid = ck.fCustomerUuid
+            WHERE ck.fStatus > 0
+            AND c.fUserID = #{username}
+            GROUP BY c.fUserID, ck.fTerminalType
+        ) t1,
+        (
+            SELECT
+            ck.fTerminalType AS 'terminalType',
+            SUM(fQueryCount) AS 'total'
+            FROM t_customer_keyword ck
+            LEFT JOIN t_customer c
+            ON c.fUuid = ck.fCustomerUuid
+            WHERE ck.fStatus > 0
+            GROUP BY ck.fTerminalType
+        ) t2
+        WHERE t1.terminalType = t2.terminalType
+    </select>
 </mapper>

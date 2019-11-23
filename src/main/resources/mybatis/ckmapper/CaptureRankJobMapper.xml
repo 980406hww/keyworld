@@ -110,7 +110,7 @@
             AND 1 != 1
         </if>
         <if test="criteria.groupNames != null and criteria.groupNames != ''">
-            AND c.fGroupNames LIKE CONCAT('', '%')
+            AND c.fGroupNames LIKE CONCAT(#{criteria.groupNames}, '%')
         </if>
         <if test="criteria.customerUuid != null and criteria.customerUuid != ''">
             AND c.fCustomerUuid = #{criteria.customerUuid}
