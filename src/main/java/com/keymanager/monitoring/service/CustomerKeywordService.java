@@ -306,11 +306,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             if (customerKeywordCrawlQZRankQueue.size() < 15000) {
                 List<CustomerKeyWordCrawlRankVO> customerKeyWordCrawlRankVos = null;
                 do {
-                    customerKeyWordCrawlRankVos = customerKeywordDao
-                        .getCrawlRankKeywords("qz", 1, null);
+                    customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords("qz", 1);
                     if (CollectionUtils.isEmpty(customerKeyWordCrawlRankVos)) {
-                        customerKeyWordCrawlRankVos = customerKeywordDao
-                            .getCrawlRankKeywords("qz", 0, null);
+                        customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords("qz", 0);
                     }
                     if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos)) {
                         List<Long> customerKeywordUuids = new ArrayList<>();
@@ -350,11 +348,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     if (currentSize < 5000) {
                         List<CustomerKeyWordCrawlRankVO> customerKeyWordCrawlRankVos = null;
                         do {
-                            customerKeyWordCrawlRankVos = customerKeywordDao
-                                .getCrawlRankKeywords("pt", 1, city);
+                            customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords("pt", 1);
                             if (CollectionUtils.isEmpty(customerKeyWordCrawlRankVos)) {
-                                customerKeyWordCrawlRankVos = customerKeywordDao
-                                    .getCrawlRankKeywords("pt", 0, city);
+                                customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords("pt", 0);
                             }
                             if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos)) {
                                 List<Long> customerKeywordUuids = new ArrayList<>();

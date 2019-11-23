@@ -1736,10 +1736,6 @@
                 AND ck.fCapturePositionQueryTime &lt; CURRENT_DATE()
             </otherwise>
         </choose>
-        <choose>
-            <when test="city != null">AND ck.fCity = #{city}</when>
-            <when test="city == null and type == 'pt'">AND ck.fCity IS NULL </when>
-        </choose>
         LIMIT 3000
     </select>
 

@@ -105,6 +105,14 @@
         <if test="captureJobCriteria.rankJobArea != null and captureJobCriteria.rankJobArea != ''">
             AND c.fRankJobArea = #{captureJobCriteria.rankJobArea}
         </if>
+        <choose>
+            <when test="captureJobCriteria.rankJobCity != null and captureJobCriteria.rankJobCity != ''">
+                AND c.fRankJobCity = #{captureJobCriteria.rankJobCity}
+            </when>
+            <otherwise>
+                AND c.fRankJobCity IS NULL
+            </otherwise>
+        </choose>
         ORDER BY c.fExectionTime
         limit 1
     </select>
@@ -123,6 +131,14 @@
         <if test="captureJobCriteria.rankJobArea != null and captureJobCriteria.rankJobArea != ''">
             AND c.fRankJobArea = #{captureJobCriteria.rankJobArea}
         </if>
+        <choose>
+            <when test="captureJobCriteria.rankJobCity != null and captureJobCriteria.rankJobCity != ''">
+                AND c.fRankJobCity = #{captureJobCriteria.rankJobCity}
+            </when>
+            <otherwise>
+                AND c.fRankJobCity IS NULL
+            </otherwise>
+        </choose>
         order By c.fExectionTime
         limit 1
     </select>
