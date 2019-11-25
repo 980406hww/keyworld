@@ -1,6 +1,7 @@
 package com.keymanager.ckadmin.controller.external.rest;
 
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
+import com.keymanager.ckadmin.criteria.CaptureRankJobCriteria;
 import com.keymanager.ckadmin.criteria.ExternalCaptureJobCriteria;
 import com.keymanager.ckadmin.entity.CaptureRankJob;
 import com.keymanager.ckadmin.service.CaptureRankJobService;
@@ -40,6 +41,23 @@ public class ExternalCrawlRankingController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             e.printStackTrace();
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/updateCaptureRankJobTempTwo2", method = RequestMethod.POST)
+    public ResponseEntity<?> updateCaptureRankJobTempTwo(@RequestBody CaptureRankJobCriteria captureRankJobCriteria) {
+        String userName = captureRankJobCriteria.getUserName();
+        String password = captureRankJobCriteria.getPassword();
+        CaptureRankJob captureRankJob = captureRankJobCriteria.getCaptureRankJob();
+        try {
+            if (validUser(userName, password)) {
+                captureRankJobService.completeCaptureRankJobTempTwo(captureRankJob);
+                return new ResponseEntity<Object>(HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
