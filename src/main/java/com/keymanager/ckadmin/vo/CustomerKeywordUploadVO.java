@@ -1,27 +1,33 @@
-package com.keymanager.ckadmin.webDo;
+package com.keymanager.ckadmin.vo;
 
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * @ClassName KeywordCountVO
- * @Description TODO
  * @Author lhc
  * @Date 2019/9/17 14:03
- * @Version 1.0
  */
-public class KeywordCountDO {
+public class CustomerKeywordUploadVO {
 
-    private Integer customerUuid;
+    private Long qzUuid;
+    private Long customerUuid;
     private String excelType;
     private String entryType;
     private String terminalType;
     private MultipartFile file;
 
-    public Integer getCustomerUuid() {
+    public Long getQzUuid() {
+        return qzUuid;
+    }
+
+    public void setQzUuid(Long qzUuid) {
+        this.qzUuid = qzUuid;
+    }
+
+    public Long getCustomerUuid() {
         return customerUuid;
     }
 
-    public void setCustomerUuid(Integer customerUuid) {
+    public void setCustomerUuid(Long customerUuid) {
         this.customerUuid = customerUuid;
     }
 

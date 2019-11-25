@@ -521,21 +521,22 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
      * 简化版Excel文件导入
      */
     @Override
-    public boolean handleExcel(InputStream inputStream, String excelType, int customerUuid, String type, String terminalType, String userName)
+    public boolean handleExcel(InputStream inputStream, String excelType, long customerUuid, long qzUuid, String type, String terminalType, String userName)
         throws Exception {
         AbstractExcelReader operator = AbstractExcelReader.createExcelOperator(inputStream, excelType);
         if (null != operator) {
             List<CustomerKeyword> customerKeywords = operator.readDataFromExcel();
-            supplementInfo(customerKeywords, customerUuid, type, terminalType);
+            supplementInfo(customerKeywords, customerUuid, qzUuid, type, terminalType);
             addCustomerKeywords(customerKeywords, userName);
             return true;
         }
         return false;
     }
 
-    private void supplementInfo(List<CustomerKeyword> customerKeywords, int customerUuid, String type, String terminalType) {
+    private void supplementInfo(List<CustomerKeyword> customerKeywords, long customerUuid, long qzUuid, String type, String terminalType) {
         for (CustomerKeyword customerKeyword : customerKeywords) {
             customerKeyword.setCustomerUuid(customerUuid);
+            customerKeyword.setQzSettingUuid(qzUuid);
             customerKeyword.setType(type);
             customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
             customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());

@@ -45,7 +45,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     let okLayer = layui.okLayer;
     let common = layui.common;
     let layer = layui.layer;
-    let qzList = '<option value="">选择整站</option>';
+    let qzList = '<option value="">请选择整站</option>';
     //日期范围
     laydate.render({
         elem: '#gtCreateTime',
@@ -67,11 +67,11 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     }
 
     function showQzSettings() {
-        document.getElementById('qzSetting').parentElement.style.display = 'inline-block';
+        document.getElementById('qzUuid').parentElement.style.display = 'inline-block';
     }
 
     function hideQzSettings() {
-        document.getElementById('qzSetting').parentElement.style.display = 'none';
+        document.getElementById('qzUuid').parentElement.style.display = 'none';
     }
 
     function getQzSettings() {
@@ -84,14 +84,14 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
             success: function (res) {
                 console.log(res);
                 if (res.code === 200) {
-                    $("#qzSetting").empty();
-                    $("#qzSetting").append('<option value="">选择整站</option>');
-                    $("#qzSetting").append('<option value="-1">未关联整站数据</option>');
+                    $("#qzUuid").empty();
+                    $("#qzUuid").append('<option value="">请选择整站</option>');
+                    $("#qzUuid").append('<option value="-1">未关联整站数据</option>');
                     $.each(res.data, function (index, item) {
                         if (item.uuid + '' === qzUuid) {
-                            $('#qzSetting').append('<option value="' + item.uuid + '" selected>' + item.domain + '</option>');// 下拉菜单里添加元素
+                            $('#qzUuid').append('<option value="' + item.uuid + '" selected>' + item.domain + '</option>');// 下拉菜单里添加元素
                         } else {
-                            $('#qzSetting').append('<option value="' + item.uuid + '">' + item.domain + '</option>');// 下拉菜单里添加元素
+                            $('#qzUuid').append('<option value="' + item.uuid + '">' + item.domain + '</option>');// 下拉菜单里添加元素
                         }
                         qzList += '<option value="' + item.uuid + '">' + item.domain + '</option>';
                     });
@@ -522,7 +522,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         }
         layer.open({
             type: 1,
-            title: '更改整站所属',
+            title: '更改整站关联',
             area: ['680px', '500px'],
             content: html.replace('{0}', qzList),//注意，如果str是object，那么需要字符拼接。
             btn: ['确定', '取消'],
@@ -569,14 +569,20 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     }
 
     function upload_keyword(excelType) {
-        let customerUuid = $('#customerUuid').val();
+        let qzUuid = $('#qzUuid').val();
         let type = $('#type').val();
+        if (type === 'qz' && (!qzUuid || qzUuid === '-1')) {
+            common.showFailMsg("请选择要上传关键字的整站");
+            return null;
+        }
+        let customerUuid = $('#customerUuid').val();
         let terminalType = $('#terminalType').val();
         let data = {};
         data.customerUuid = customerUuid;
         data.type = type;
         data.terminalType = terminalType;
         data.excelType = excelType;
+        data.qzUuid = qzUuid;
         let url = '/internal/customerKeyword/toUploadKeywords';
         let msg = excelType === 'SuperUserSimple' ? '简化版' : '完整版';
         okLayer.open("关键字管理 / 客户关键字 / Excel上传关键字(" + msg + ")", url, "30%", "25%", function (layero) {
@@ -590,13 +596,24 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     }
 
     function download_keyword_info() {
-        let searchCriteriaArray = $('#searchForm').serializeArray();
-        let downloadKeywordForm = $('#downloadKeywordForm');
-        $.each(searchCriteriaArray, function (idx, val) {
-            downloadKeywordForm.find("#"+val.name+"Hidden").val(val.value === '' ? null : val.value);
+        let domain =  $("#qzUuid").find("option:selected").text();
+        let type = $('#type').val();
+        var msg = "确定导出所有关键字吗？";
+        if (type === 'qz') {
+            if (!domain || domain === '-1') {
+                msg = "确定导出所有站点的关键字排名吗？"
+            } else {
+                msg = '确定导出' + domain + '站点的关键字排名吗？';
+            }
+        }
+        layer.confirm(msg, {icon: 3, title: '导出结果'}, function (index) {
+            let searchCriteriaArray = $('#searchForm').serializeArray();
+            let downloadKeywordForm = $('#downloadKeywordForm');
+            $.each(searchCriteriaArray, function (idx, val) {
+                downloadKeywordForm.find("#"+val.name+"Hidden").val(val.value === '' ? null : val.value);
+            });
+            $("#downloadKeywordForm").submit();
         });
-
-        $("#downloadKeywordForm").submit();
     }
 
     function download_keyword_url() {

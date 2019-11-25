@@ -82,14 +82,14 @@
                                     <input type="hidden" name="type" id="type" value="<#if businessType?exists>${businessType}<#else>pt</#if>">
                                     <input type="hidden" name="terminalType" id="terminalType" value="<#if terminalType2?exists>${terminalType2}<#else>PC</#if>">
 
-                                    <div class="layui-inline" style="width: 120px">
+                                    <div class="layui-inline" style="width: 100px">
                                         <select name="searchEngine" id="searchEngine">
                                             <option value=''>搜索引擎</option>
                                         </select>
                                     </div>
-                                    <div class="layui-inline" style="width: 140px">
-                                        <select name="qzSetting" id="qzSetting">
-                                            <option value=''>选择整站</option>
+                                    <div class="layui-inline" style="width: 180px">
+                                        <select name="qzUuid" id="qzUuid">
+                                            <option value=''>请选择整站</option>
                                             <option value='-1'>未关联整站数据</option>
                                         </select>
                                     </div>
@@ -301,7 +301,7 @@
 <script src="/static/ok-admin/page/keyword/customerKeyword.js"></script>
 <#include "./customerKeywordTpl.html"/>
 <form id="downloadKeywordForm" hidden lay-filter="downloadKeywordForm" method="post" action="/internal/customerKeyword/downloadCustomerKeywordInfo2">
-
+    <input type="hidden"  name="qzUuid" id="qzUuidHidden" value=""/>
     <input type="hidden"  name="customerUuid" id="customerUuidHidden" value=""/>
     <input type="hidden"  name="type" id="typeHidden" value=""/>
     <input type="hidden"  name="terminalType" id="terminalTypeHidden" value=""/>
