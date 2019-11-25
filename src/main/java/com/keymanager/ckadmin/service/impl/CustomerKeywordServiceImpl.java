@@ -710,7 +710,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public Page<QZRateKeywordCountVO> getQZRateKeywordCountList(Page<QZRateKeywordCountVO> page, QZRateKewordCountCriteria qzRateKewordCountCriteria) throws CloneNotSupportedException {
+    public Page<QZRateKeywordCountVO> getQZRateKeywordCountList(Page<QZRateKeywordCountVO> page, QZRateKewordCountCriteria qzRateKewordCountCriteria) {
         List<Long> qzUuids = qzSettingService.getQZUuidsByUserID(qzRateKewordCountCriteria.getUserID(), qzRateKewordCountCriteria.getSearchEngine(), qzRateKewordCountCriteria.getTerminalType());
         if (null == qzUuids || qzUuids.isEmpty()) {
             return page;
@@ -719,37 +719,34 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         // 不使用mp自带分页查询，解决count慢问题
         page.setSearchCount(false);
         page.setTotal(customerKeywordDao.getQZRateKeywordCountByCriteria(qzRateKewordCountCriteria));
-        List<QZRateKeywordCountVO> qzRateKeywordCountVOS = customerKeywordDao.getQZRateKeywordCount(page, qzRateKewordCountCriteria);
-        if (CollectionUtils.isNotEmpty(qzRateKeywordCountVOS)) {
+        List<QZRateKeywordCountVO> qzRateKeywordCountVos = customerKeywordDao.getQZRateKeywordCount(page, qzRateKewordCountCriteria);
+        if (CollectionUtils.isNotEmpty(qzRateKeywordCountVos)) {
             SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
             String todayDate = f.format(new Date());
             // 当不传入终端类型时，需要判断当前站点是否包含pc、phone终端类型
             if (("").equals(qzRateKewordCountCriteria.getTerminalType())) {
-                List<QZRateKeywordCountVO> qzRateKeywordCountVONewList = new ArrayList<>();
-                for (QZRateKeywordCountVO qzRateKeywordCountVO : qzRateKeywordCountVOS) {
-                    if (qzRateKeywordCountVO.getHasPC() == 1) {
-                        QZRateKeywordCountVO qzRateKeywordCountVOClone1 = (QZRateKeywordCountVO) qzRateKeywordCountVO.clone();
-                        qzRateKeywordCountVOClone1.setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVO.getQzUuid(), "PC", todayDate));
-                        qzRateKeywordCountVOClone1.setTerminalType("PC");
-                        qzRateKeywordCountVONewList.add(qzRateKeywordCountVOClone1);
+                List<QZRateKeywordCountVO> qzRateKeywordCountVoList = new ArrayList<>();
+                for (QZRateKeywordCountVO qzRateKeywordCountVo : qzRateKeywordCountVos) {
+                    if (qzRateKeywordCountVo.getHasPC() == 1) {
+                        qzRateKeywordCountVo.setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVo.getQzUuid(), "PC", todayDate));
+                        qzRateKeywordCountVo.setTerminalType("PC");
+                        qzRateKeywordCountVoList.add(qzRateKeywordCountVo);
                     }
-                    if (qzRateKeywordCountVO.getHasPhone() == 1) {
-                        QZRateKeywordCountVO qzRateKeywordCountVOClone2 = (QZRateKeywordCountVO) qzRateKeywordCountVO.clone();
-                        qzRateKeywordCountVOClone2.setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVO.getQzUuid(), "Phone", todayDate));
-                        qzRateKeywordCountVOClone2.setTerminalType("Phone");
-                        qzRateKeywordCountVONewList.add(qzRateKeywordCountVOClone2);
+                    if (qzRateKeywordCountVo.getHasPhone() == 1) {
+                        qzRateKeywordCountVo.setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVo.getQzUuid(), "Phone", todayDate));
+                        qzRateKeywordCountVo.setTerminalType("Phone");
+                        qzRateKeywordCountVoList.add(qzRateKeywordCountVo);
                     }
-
                 }
-                qzRateKeywordCountVOS = qzRateKeywordCountVONewList;
+                qzRateKeywordCountVos = qzRateKeywordCountVoList;
             } else {
-                for (QZRateKeywordCountVO qzRateKeywordCountVO : qzRateKeywordCountVOS) {
-                    qzRateKeywordCountVO.setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVO.getQzUuid(), qzRateKewordCountCriteria.getTerminalType(), todayDate));
-                    qzRateKeywordCountVO.setTerminalType(qzRateKewordCountCriteria.getTerminalType());
+                for (QZRateKeywordCountVO qzRateKeywordCountVo : qzRateKeywordCountVos) {
+                    qzRateKeywordCountVo.setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVo.getQzUuid(), qzRateKewordCountCriteria.getTerminalType(), todayDate));
+                    qzRateKeywordCountVo.setTerminalType(qzRateKewordCountCriteria.getTerminalType());
                 }
             }
         }
-        page.setRecords(qzRateKeywordCountVOS);
+        page.setRecords(qzRateKeywordCountVos);
         return page;
     }
     

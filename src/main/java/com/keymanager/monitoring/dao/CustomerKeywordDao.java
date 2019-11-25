@@ -256,8 +256,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<keywordAmountCountVo> searchKeywordAmountCountList(Page<keywordAmountCountVo> customerKeywordPage, @Param("keywordAmountCountCriteria") KeywordAmountCountCriteria keywordAmountCountCriteria);
 
-    List<String> getCities();
-
     List<ExternalCustomerKeywordVO> getTenCustomerKeywordsForCaptureIndex();
 
     void updateCaptureIndexQueryTimeByKeywords(@Param("customerKeywords") List<ExternalCustomerKeywordVO> customerKeywords);

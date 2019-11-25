@@ -1131,18 +1131,18 @@
     </update>
 
     <update id="updateSelectFailReason" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria">
-        UPDATE
-        t_customer_keyword ck,t_customer c
-        SET
-        ck.fFailedCause = null,
-        ck.fUpdateTime = NOW()
+        UPDATE t_customer_keyword ck, t_customer c
+        SET ck.fFailedCause = null, ck.fUpdateTime = NOW()
         WHERE c.fUuid = ck.fCustomerUuid
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
 
     <select id="getMaxSequence" resultType="java.lang.Integer">
-        select max(fSequence) from t_customer_keyword where fTerminalType = #{terminalType} and fType = #{entryType} and fCustomerUuid =
-        #{customerUuid};
+        select max(fSequence)
+        from t_customer_keyword
+        where fTerminalType = #{terminalType}
+        and fType = #{entryType}
+        and fCustomerUuid = #{customerUuid}
     </select>
 
     <select id="searchSameCustomerKeywords" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
@@ -1158,8 +1158,11 @@
         ck.fPositionFifthFee	AS	'positionFifthFee',
         ck.fPositionFirstPageFee	AS	'positionFirstPageFee'
         FROM t_customer_keyword ck
-        WHERE ck.fKeyword = #{keyword} and ck.fTerminalType = #{terminalType} and ck.fCustomerUuid = #{customerUuid} and ck.fSearchEngine = #{searchEngine}
-        order by ck.fCreateTime ASC
+        WHERE ck.fKeyword = #{keyword}
+        AND ck.fTerminalType = #{terminalType}
+        AND ck.fCustomerUuid = #{customerUuid}
+        AND ck.fSearchEngine = #{searchEngine}
+        ORDER BY ck.fCreateTime
     </select>
     
      <select id="getMaxInvalidCountByMachineGroup" resultType="java.lang.Integer">
@@ -1181,30 +1184,33 @@
             ck.fQZSettingUuid AS qzUuid,
             qz.fDomain AS qzDomain,
             <if test="qzRateKewordCountCriteria.terminalType == null or qzRateKewordCountCriteria.terminalType == ''">
-                IF(qz.fPcGroup>'',1,0) AS hasPC,
-                IF(qz.fPhoneGroup>'',1,0) AS hasPhone,
+                IF(qz.fPcGroup > '', 1, 0) AS hasPC,
+                IF(qz.fPhoneGroup > '', 1, 0) AS hasPhone,
             </if>
             COUNT(1) AS totalKeywordCount,
-            SUM(IF(ck.fCurrentPosition BETWEEN 1 AND 10,1,0)) AS topTenKeywordCount
+            SUM(IF(ck.fCurrentPosition BETWEEN 1 AND 10, 1, 0)) AS topTenKeywordCount
         FROM t_customer_keyword ck
         LEFT JOIN t_qz_setting qz on ck.fQZSettingUuid = qz.fUuid
         LEFT JOIN t_customer c on c.fUuid = qz.fCustomerUuid
-        WHERE 1=1
-            <if test="qzRateKewordCountCriteria.terminalType != null and qzRateKewordCountCriteria.terminalType != ''">
-                AND ck.fTerminalType=#{qzRateKewordCountCriteria.terminalType}
-            </if>
-            <if test="qzRateKewordCountCriteria.customerUuid != null and qzRateKewordCountCriteria.customerUuid != ''">
-                AND c.fUuid=#{qzRateKewordCountCriteria.customerUuid}
-            </if>
+        WHERE 1 = 1
+        <if test="qzRateKewordCountCriteria.searchEngine != null and qzRateKewordCountCriteria.searchEngine != ''">
+            AND ck.fSearchEngine = #{qzRateKewordCountCriteria.searchEngine}
+        </if>
+        <if test="qzRateKewordCountCriteria.terminalType != null and qzRateKewordCountCriteria.terminalType != ''">
+            AND ck.fTerminalType = #{qzRateKewordCountCriteria.terminalType}
+        </if>
+        <if test="qzRateKewordCountCriteria.customerUuid != null and qzRateKewordCountCriteria.customerUuid != ''">
+            AND c.fUuid = #{qzRateKewordCountCriteria.customerUuid}
+        </if>
         <if test="qzRateKewordCountCriteria.domain != null and qzRateKewordCountCriteria.domain != ''">
             AND qz.fDomain LIKE CONCAT(#{qzRateKewordCountCriteria.domain},'%')
         </if>
-            <if test="qzRateKewordCountCriteria.qzUuids != null">
-                AND ck.fQZSettingUuid IN
-                <foreach item="qzUuid"  collection="qzRateKewordCountCriteria.qzUuids" open="(" separator="," close=")">
-                    #{qzUuid}
-                </foreach>
-            </if>
+        <if test="qzRateKewordCountCriteria.qzUuids != null">
+            AND ck.fQZSettingUuid IN
+            <foreach item="qzUuid"  collection="qzRateKewordCountCriteria.qzUuids" open="(" separator="," close=")">
+                #{qzUuid}
+            </foreach>
+        </if>
         GROUP BY ck.fQZSettingUuid
     </select>
 
@@ -1216,12 +1222,15 @@
         FROM t_customer_keyword ck
         LEFT JOIN t_qz_setting qz on ck.fQZSettingUuid = qz.fUuid
         LEFT JOIN t_customer c on c.fUuid = qz.fCustomerUuid
-        WHERE 1=1
+        WHERE 1 = 1
+        <if test="criteria.searchEngine != null and criteria.searchEngine != ''">
+            AND ck.fSearchEngine = #{criteria.searchEngine}
+        </if>
         <if test="criteria.terminalType != null and criteria.terminalType != ''">
-            AND ck.fTerminalType=#{criteria.terminalType}
+            AND ck.fTerminalType = #{criteria.terminalType}
         </if>
         <if test="criteria.customerUuid != null and criteria.customerUuid != ''">
-            AND c.fUuid=#{criteria.customerUuid}
+            AND c.fUuid = #{criteria.customerUuid}
         </if>
         <if test="criteria.domain != null and criteria.domain != ''">
             AND qz.fDomain LIKE CONCAT(#{criteria.domain},'%')

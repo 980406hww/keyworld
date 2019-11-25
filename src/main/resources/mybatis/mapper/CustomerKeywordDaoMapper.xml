@@ -1787,14 +1787,6 @@
         ORDER BY keywordCount DESC
     </select>
 
-    <select id="getCities" resultType="java.lang.String">
-        SELECT fCity
-        FROM t_customer_keyword ck
-        WHERE ck.fType = 'pt'
-        AND ck.fStatus = 1
-        GROUP BY ck.fCity
-    </select>
-
     <select id="getTenCustomerKeywordsForCaptureIndex" resultType="com.keymanager.monitoring.vo.ExternalCustomerKeywordVO">
         SELECT
         ck.fUuid AS 'uuid',
