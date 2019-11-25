@@ -135,4 +135,8 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     Map<String, Object> getCustomerKeywordStatusCount();
 
     List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePositionTemp(Long qzSettingUuid, String terminalType, String groupName, Long customerUuid, Date startTime, Long captureRankJobUuid,Boolean saveTopThree);
+
+    void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime, String ip, String city);
+
+    void updateCustomerKeywordQueryTime(Long customerKeywordUuid, Date date);
 }

@@ -116,4 +116,25 @@
         AND fCreateDate &lt; #{condition.today}
         GROUP BY fCustomerKeywordUuid
     </select>
+
+    <select id="getTodayPositionSummary" resultType="com.keymanager.ckadmin.entity.CustomerKeywordPositionSummary">
+        SELECT
+          ps.fUuid                AS 'uuid',
+          ps.fCustomerKeywordUuid AS 'customerKeywordUuid',
+          ps.fPosition          AS 'position',
+          ps.fCreateDate          AS 'createDate'
+        FROM t_ck_position_summary ps
+        WHERE ps.fCustomerKeywordUuid = #{customerKeywordUuid}
+        AND ps.fCreateDate = CURRENT_DATE()
+    </select>
+
+    <insert id="addPositionSummary" parameterType="com.keymanager.ckadmin.entity.CustomerKeywordPositionSummary">
+        INSERT INTO t_ck_position_summary
+            (fCustomerKeywordUuid,
+             fPosition,
+             fCreateDate)
+        VALUES (#{customerKeywordPositionSummary.customerKeywordUuid},
+            #{customerKeywordPositionSummary.position},
+            CURRENT_DATE())
+    </insert>
 </mapper>

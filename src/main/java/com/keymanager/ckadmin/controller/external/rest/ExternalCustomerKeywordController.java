@@ -2,6 +2,9 @@ package com.keymanager.ckadmin.controller.external.rest;
 
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
+import com.keymanager.ckadmin.service.MachineInfoService;
+import com.keymanager.ckadmin.util.StringUtil;
+import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +24,9 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
 
     @Resource(name = "customerKeywordService2")
     private CustomerKeywordService customerKeywordService;
+
+    @Resource(name = "machineInfoService2")
+    private MachineInfoService machineInfoService;
 
     @RequestMapping(value = "/getCustomerKeywordForCapturePositionTemp2", method = RequestMethod.POST)
     public ResponseEntity<?> getCustomerKeywordForCapturePositionTemp(@RequestBody Map<String, Object> requestMap) {
@@ -50,5 +56,35 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
             logger.error("getCustomerKeywordForCapturePositionTemp:" + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/updateCustomerKeywordPosition2", method = RequestMethod.POST)
+    public ResponseEntity<?> updateCustomerKeywordPosition(@RequestBody Map<String, Object> requestMap) throws Exception {
+        String userName = (String) requestMap.get("userName");
+        String password = (String) requestMap.get("password");
+
+        Long customerKeywordUuid = Long.parseLong(requestMap.get("customerKeywordUuid").toString());
+        int position = (Integer) requestMap.get("position");
+        String ip = (String) requestMap.get("capturePositionIP");
+        String clientID = (String) requestMap.get("clientID");
+        String city = (String) requestMap.get("capturePositionCity");
+        Date startTime = new Date((Long) requestMap.get("startTime"));
+        try {
+            if (validUser(userName, password)) {
+                if (position > -1) {
+                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp(), ip, city);
+                } else {
+                    customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
+                }
+                if (StringUtil.isNotNullNorEmpty(clientID)) {
+                    machineInfoService.updateMachineInfoForCapturePosition(clientID);
+                }
+                return new ResponseEntity<Object>(true, HttpStatus.OK);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.error("updateCustomerKeywordPosition:        " + ex.getMessage());
+        }
+        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
     }
 }

@@ -154,4 +154,10 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePositionTemp(@Param("uuids") List uuids);
 
     void updateCapturePositionQueryTimeAndCaptureStatusTemp(@Param("uuids") List uuids);
+
+    CustomerKeyword getCustomerKeywordFee(@Param("uuid") Long uuid);
+
+    void updatePosition(@Param("uuid") Long uuid, @Param("position") Integer position, @Param("capturePositionQueryTime") Date capturePositionQueryTime, @Param("todayFee") Double todayFee, @Param("ip") String ip, @Param("city") String city);
+
+    void updateCustomerKeywordQueryTime(@Param("customerKeywordUuid") Long customerKeywordUuid, @Param("capturePositionQueryTime") Date capturePositionQueryTime);
 }

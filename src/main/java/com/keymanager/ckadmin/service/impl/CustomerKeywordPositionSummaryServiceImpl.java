@@ -86,6 +86,28 @@ public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<Custo
         return customerKeywordPositionSummaryDao.getOneCKPositionSummaryData(condition);
     }
 
+    @Override
+    public void savePositionSummary(Long customerKeywordUuid, int position) {
+        try {
+            CustomerKeywordPositionSummary positionSummary = customerKeywordPositionSummaryDao.getTodayPositionSummary(customerKeywordUuid);
+            if (positionSummary != null) {
+                boolean updFlag =
+                    (positionSummary.getPosition() == null || positionSummary.getPosition() <= 0) || (position > 0 && positionSummary.getPosition() > position);
+                if (updFlag) {
+                    positionSummary.setPosition(position);
+                    customerKeywordPositionSummaryDao.updateById(positionSummary);
+                }
+            } else {
+                positionSummary = new CustomerKeywordPositionSummary();
+                positionSummary.setPosition(position);
+                positionSummary.setCustomerKeywordUuid(customerKeywordUuid);
+                customerKeywordPositionSummaryDao.addPositionSummary(positionSummary);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     private void handleCondition(Map<String, Object> condition) {
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar = Calendar.getInstance();

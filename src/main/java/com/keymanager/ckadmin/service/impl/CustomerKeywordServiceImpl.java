@@ -21,6 +21,7 @@ import com.keymanager.ckadmin.excel.operator.AbstractExcelReader;
 import com.keymanager.ckadmin.service.CaptureRankJobService;
 import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.CustomerExcludeKeywordService;
+import com.keymanager.ckadmin.service.CustomerKeywordPositionSummaryService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.QZRateStatisticsService;
 import com.keymanager.ckadmin.service.QZSettingService;
@@ -90,6 +91,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     @Resource(name = "captureRankJobService2")
     private CaptureRankJobService captureRankJobService;
+
+    @Resource(name = "ckPositionSummaryService2")
+    private CustomerKeywordPositionSummaryService ckPositionSummaryService;
 
     private final static Map<String, LinkedBlockingQueue> machineGroupQueueMap = new HashMap<>();
 
@@ -841,6 +845,36 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             }
         }
         return customerKeywordForCapturePositions;
+    }
+
+    @Override
+    public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime, String ip, String city) {
+        Double todayFee = null;
+        if (position > 0 && position <= 10) {
+            CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordFee(customerKeywordUuid);
+            if (customerKeyword.getPositionFirstFee() != null && customerKeyword.getPositionFirstFee() > 0 && position == 1) {
+                todayFee = customerKeyword.getPositionFirstFee();
+            } else if (customerKeyword.getPositionSecondFee() != null && customerKeyword.getPositionSecondFee() > 0 && position == 2) {
+                todayFee = customerKeyword.getPositionSecondFee();
+            } else if (customerKeyword.getPositionThirdFee() != null && customerKeyword.getPositionThirdFee() > 0 && position == 3) {
+                todayFee = customerKeyword.getPositionThirdFee();
+            } else if (customerKeyword.getPositionForthFee() != null && customerKeyword.getPositionForthFee() > 0 && position == 4) {
+                todayFee = customerKeyword.getPositionForthFee();
+            } else if (customerKeyword.getPositionFifthFee() != null && customerKeyword.getPositionFifthFee() > 0 && position == 5) {
+                todayFee = customerKeyword.getPositionFifthFee();
+            } else if (customerKeyword.getPositionFirstPageFee() != null && customerKeyword.getPositionFirstPageFee() > 0) {
+                todayFee = customerKeyword.getPositionFirstPageFee();
+            }
+        }
+        customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee, ip, city);
+        if (capturePositionQueryTime != null) {
+            ckPositionSummaryService.savePositionSummary(customerKeywordUuid, position);
+        }
+    }
+
+    @Override
+    public void updateCustomerKeywordQueryTime(Long customerKeywordUuid, Date date) {
+        customerKeywordDao.updateCustomerKeywordQueryTime(customerKeywordUuid, DateUtils.addMinutes(date, -3));
     }
 }
 

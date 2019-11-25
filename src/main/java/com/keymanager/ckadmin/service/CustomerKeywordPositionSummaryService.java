@@ -15,4 +15,6 @@ public interface CustomerKeywordPositionSummaryService extends IService<Customer
     Page<Map<String,Object>> getCKPositionSummaryDataInitTable(Map<String, Object> condition);
 
     Map<String,Object> getOneCKPositionSummaryData(Long uuid);
+
+    void savePositionSummary(Long customerKeywordUuid, int position);
 }

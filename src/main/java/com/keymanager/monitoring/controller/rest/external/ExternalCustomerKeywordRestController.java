@@ -497,7 +497,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 } else {
                     customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
                 }
-                if (StringUtil.isNotNullNorEmpty(clientID)) {
+                    if (StringUtil.isNotNullNorEmpty(clientID)) {
                     machineInfoService.updateMachineInfoForCapturePosition(clientID);
                 }
                 return new ResponseEntity<Object>(true, HttpStatus.OK);

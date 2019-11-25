@@ -134,7 +134,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public void updateMachineInfoForCapturePosition(String clientID) {
-
+        machineInfoDao.updateMachineInfoForCapturePosition(clientID);
     }
 
     @Override
