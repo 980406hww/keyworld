@@ -22,7 +22,7 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
     @Resource(name = "customerKeywordService2")
     private CustomerKeywordService customerKeywordService;
 
-    @RequestMapping(value = "/getCustomerKeywordForCapturePositionTemp", method = RequestMethod.POST)
+    @RequestMapping(value = "/getCustomerKeywordForCapturePositionTemp2", method = RequestMethod.POST)
     public ResponseEntity<?> getCustomerKeywordForCapturePositionTemp(@RequestBody Map<String, Object> requestMap) {
         String userName = (String) requestMap.get("userName");
         String password = (String) requestMap.get("password");
