@@ -512,8 +512,15 @@
         <if test="keywordCriteria.keywordEffect != null and keywordCriteria.keywordEffect != ''">
             AND ck.fKeywordEffect = #{keywordCriteria.keywordEffect}
         </if>
-        <if test="keywordCriteria.qzSetting != null and keywordCriteria.qzSetting != '' and keywordCriteria.type != null and keywordCriteria.type == 'qz'">
-            AND ck.fQZSettingUuid = #{keywordCriteria.qzSetting}
+        <if test="keywordCriteria.type == 'qz' and keywordCriteria.qzSetting != null and keywordCriteria.qzSetting != ''">
+            <choose>
+                <when test="keywordCriteria.qzSetting == -1">
+                    AND ck.fQZSettingUuid IS NULL
+                </when>
+                <otherwise>
+                    AND ck.fQZSettingUuid = #{keywordCriteria.qzSetting}
+                </otherwise>
+            </choose>
         </if>
     </sql>
 
@@ -562,9 +569,6 @@
         </if>
         <if test="keywordCriteria.customerKeywordSource != null and keywordCriteria.customerKeywordSource != ''">
             AND ck.fCustomerKeywordSource = #{keywordCriteria.customerKeywordSource}
-        </if>
-        <if test="keywordCriteria.status != null and keywordCriteria.status != ''">
-            AND ck.fStatus = #{keywordCriteria.status}
         </if>
         <if test="keywordCriteria.gtOptimizePlanCount != null">
             AND ck.fOptimizePlanCount &gt;= #{keywordCriteria.gtOptimizePlanCount}
@@ -712,6 +716,16 @@
         ck.fUpdateTime = NOW()
         WHERE c.fUuid = ck.fCustomerUuid
         <include refid="updateCustomerKeywordsCriteria"/>
+    </update>
+
+    <update id="updCustomerKeywordFormQz">
+        UPDATE
+        t_customer_keyword
+        SET fQZSettingUuid = #{qzUuid}
+        WHERE fUuid IN
+        <foreach item="item" collection="ckUuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </update>
 
     <delete id="deleteCustomerKeywordsByUuids">

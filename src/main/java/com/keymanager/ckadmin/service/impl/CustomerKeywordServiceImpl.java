@@ -421,6 +421,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
+    public void updCustomerKeywordFormQz(List<Long> ckUuids, Long qzUuid) {
+        customerKeywordDao.updCustomerKeywordFormQz(ckUuids, qzUuid);
+    }
+
+    @Override
     public void deleteCustomerKeywordsByDeleteType(KeywordCriteria keywordCriteria) {
         switch (keywordCriteria.getDeleteType()) {
             case "byUuids":

@@ -43,6 +43,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -270,6 +271,28 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
             customerKeywordService.updateBearPawNumber(keywordCriteria);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
+    @PostMapping(value = "/updCustomerKeywordFormQz")
+    public ResultBean updCustomerKeywordFormQz(@RequestBody Map<String, Object> map) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            List<Long> ckUuids = (List<Long>) map.get("customerKeywordUuids");
+            String qzUuid = (String) map.get("qzSttingUuid");
+            if (CollectionUtils.isNotEmpty(ckUuids) && StringUtils.isNotEmpty(qzUuid)) {
+                customerKeywordService.updCustomerKeywordFormQz(ckUuids, Long.parseLong(qzUuid));
+            } else {
+                resultBean.setCode(400);
+                resultBean.setMsg("数据错误");
+            }
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
