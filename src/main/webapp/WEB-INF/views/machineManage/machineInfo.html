@@ -274,7 +274,7 @@
                 }
             }
             if (!targetTableNode) {
-                console.log('没有找到ID为：' + tableId + '的表格');
+                common.showFailMsg('没有找到ID为：' + tableId + '的表格');
                 return false;
             }
             // 开始合并单元格操作

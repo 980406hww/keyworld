@@ -78,7 +78,6 @@ layui.use(["form", "common", "jquery", "layer"], function () {
         if (!common.waitMoment()) {
             return false;
         }
-        console.log(data.field);
         $.ajax({
             url: '/internal/customer/saveCustomer2',
             type: 'post',

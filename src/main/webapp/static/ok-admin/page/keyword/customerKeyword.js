@@ -82,7 +82,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
             async: false,
             type: 'get',
             success: function (res) {
-                console.log(res);
                 if (res.code === 200) {
                     $("#qzUuid").empty();
                     $("#qzUuid").append('<option value="">请选择整站</option>');
@@ -528,7 +527,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
             btn: ['确定', '取消'],
             btn1: function (index) {
                 let v = common.formToJsonObject('justQzUuid').qzSettingUuid;
-                console.log(v);
                 if (!v) {
                     common.showFailMsg("请选择一个站点");
                     return false;
