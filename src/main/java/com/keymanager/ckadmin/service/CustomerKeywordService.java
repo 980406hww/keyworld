@@ -13,6 +13,7 @@ import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.vo.CodeNameVo;
+import com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
@@ -139,4 +140,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime, String ip, String city);
 
     void updateCustomerKeywordQueryTime(Long customerKeywordUuid, Date date);
+
+    List<CustomerKeyWordCrawlRankVO> getCrawlRankKeyword();
 }

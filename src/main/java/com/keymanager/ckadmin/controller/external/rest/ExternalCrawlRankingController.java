@@ -5,6 +5,8 @@ import com.keymanager.ckadmin.criteria.CaptureRankJobCriteria;
 import com.keymanager.ckadmin.criteria.ExternalCaptureJobCriteria;
 import com.keymanager.ckadmin.entity.CaptureRankJob;
 import com.keymanager.ckadmin.service.CaptureRankJobService;
+import com.keymanager.ckadmin.service.CustomerKeywordService;
+import java.util.Map;
 import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,9 @@ public class ExternalCrawlRankingController extends SpringMVCBaseController {
 
     @Resource(name = "captureRankJobService2")
     private CaptureRankJobService captureRankJobService;
+
+    @Resource(name = "customerKeywordService2")
+    private CustomerKeywordService customerKeywordService;
 
     @RequestMapping(value = "/getCaptureRankJobTemp2", method = RequestMethod.POST)
     public synchronized ResponseEntity<?> getCaptureRankJobTemp(@RequestBody ExternalCaptureJobCriteria captureJobCriteria) {
@@ -59,6 +64,22 @@ public class ExternalCrawlRankingController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/getCrawlRankKeyword2", method = RequestMethod.POST)
+    public ResponseEntity<?> getCrawlRankKeyword(@RequestBody Map<String, Object> requestMap) {
+        try {
+            String userName = (String) requestMap.get("userName");
+            String password = (String) requestMap.get("password");
+            if (validUser(userName, password)) {
+                return new ResponseEntity<Object>(customerKeywordService.getCrawlRankKeyword(), HttpStatus.OK);
+            }
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.error("getNoEnteredKeyword:  " + ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }

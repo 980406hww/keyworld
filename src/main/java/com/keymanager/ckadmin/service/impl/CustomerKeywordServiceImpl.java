@@ -31,6 +31,7 @@ import com.keymanager.ckadmin.util.Constants;
 import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.CodeNameVo;
+import com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
@@ -53,6 +54,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import javax.annotation.Resource;
 import org.apache.commons.beanutils.ConvertUtils;
@@ -96,6 +98,10 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     private CustomerKeywordPositionSummaryService ckPositionSummaryService;
 
     private final static Map<String, LinkedBlockingQueue> machineGroupQueueMap = new HashMap<>();
+
+    private final static ArrayBlockingQueue customerKeywordCrawlPTRankQueue = new ArrayBlockingQueue(24000);
+
+    private final static ArrayBlockingQueue customerKeywordCrawlQZRankQueue = new ArrayBlockingQueue(30000);
 
     @Override
     public void cacheCustomerKeywords() {
@@ -875,6 +881,24 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public void updateCustomerKeywordQueryTime(Long customerKeywordUuid, Date date) {
         customerKeywordDao.updateCustomerKeywordQueryTime(customerKeywordUuid, DateUtils.addMinutes(date, -3));
+    }
+
+    @Override
+    public synchronized List<CustomerKeyWordCrawlRankVO> getCrawlRankKeyword() {
+        List<CustomerKeyWordCrawlRankVO> rankVos = new ArrayList<>();
+        if (customerKeywordCrawlPTRankQueue.size() > 0) {
+            do {
+                rankVos.add((CustomerKeyWordCrawlRankVO) customerKeywordCrawlPTRankQueue.poll());
+            } while (customerKeywordCrawlPTRankQueue.size() > 0 && rankVos.size() < 10);
+            return rankVos;
+        }
+        if (customerKeywordCrawlQZRankQueue.size() > 0) {
+            do {
+                rankVos.add((CustomerKeyWordCrawlRankVO) customerKeywordCrawlQZRankQueue.poll());
+            } while (customerKeywordCrawlQZRankQueue.size() > 0 && rankVos.size() < 10);
+            return rankVos;
+        }
+        return null;
     }
 }
 
