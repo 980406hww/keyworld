@@ -29,7 +29,6 @@
         </div>
     </form>
 </div>
-
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
 <script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
@@ -40,10 +39,12 @@
         document.getElementById('terminalType').value = data.terminalType;
         document.getElementById('excelType').value = data.excelType;
     }
-    layui.use(["jquery", "layer", "upload", 'common'], function () {
+
+    layui.use(["jquery", "layer", "upload", 'common', 'layer'], function () {
         var $ = layui.jquery;
         var upload = layui.upload;
         var common = layui.common;
+        var layer = layui.layer;
 
         //选完文件后不自动上传
         upload.render({
@@ -52,37 +53,40 @@
             auto: false,
             accept: 'file',
             exts: 'xls|xlsx',
-            acceptMime: 'application/vnd.ms-excel, ,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            done: function (res) {
-                common.showSuccessMsg("上传成功", function () {
-                    // parent.window.sign = true;
-                    // parent.layer.close(parent.layer.getFrameIndex(window.name));
-                });
-            }
+            acceptMime: 'application/vnd.ms-excel, ,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         });
 
         $('#upload').click(function () {
             var fs1 = new FormData($('#uploadForm')[0]);
-            $.ajax({
-                url: '/internal/customerKeyword/uploadCustomerKeywords2',
-                type: 'post',
-                data: fs1,
-                async: false,
-                contentType: false,   //jax 中 contentType 设置为 false 是为了避免 JQuery 对其操作，从而失去分界符，而使服务器不能正常解析文件
-                processData: false,
-                dataType: 'json',
-                success: function (res) {
-                    if (res.code === 200) {
-                        common.showSuccessMsg("保存成功", function () {
-                            parent.window.sign = true;
-                            parent.layer.close(parent.layer.getFrameIndex(window.name));
-                        });
-                    } else {
-                        common.showFailMsg(res.msg);
-                    }
-
-                }
+            var index = layer.msg('正在上传，请勿其他操作', {
+                icon: 16,
+                time: 0
             });
+            setTimeout(function () {
+                $.ajax({
+                    url: '/internal/customerKeyword/uploadCustomerKeywords2',
+                    type: 'post',
+                    data: fs1,
+                    async: false,
+                    contentType: false,   //jax 中 contentType 设置为 false 是为了避免 JQuery 对其操作，从而失去分界符，而使服务器不能正常解析文件
+                    processData: false,
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.code === 200) {
+                            common.showSuccessMsg("保存成功", function () {
+                                parent.window.sign = true;
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            });
+                        } else {
+                            common.showFailMsg(res.msg);
+                        }
+
+                    },
+                    complete: function () {
+                        layer.close(index);
+                    }
+                });
+            }, 10);
             return false;
         });
 
