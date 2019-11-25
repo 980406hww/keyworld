@@ -21,8 +21,10 @@ import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
+import com.keymanager.value.CustomerKeywordForCapturePosition;
 import java.io.InputStream;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -125,10 +127,12 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void updateSelectFailReason(KeywordCriteria keywordCriteria);
 
     Integer getMaxInvalidCountByMachineGroup(String machineGroup);
-    
+
     Page<QZRateKeywordCountVO> getQZRateKeywordCountList(Page<QZRateKeywordCountVO> page, QZRateKewordCountCriteria qzRateKewordCountCriteria) throws CloneNotSupportedException;
-    
+
     void addCustomerKeywordsFromSimpleUI(List<CustomerKeyword> customerKeywords, String terminalType, String entryType, String userName);
 
     Map<String, Object> getCustomerKeywordStatusCount();
+
+    List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePositionTemp(Long qzSettingUuid, String terminalType, String groupName, Long customerUuid, Date startTime, Long captureRankJobUuid,Boolean saveTopThree);
 }

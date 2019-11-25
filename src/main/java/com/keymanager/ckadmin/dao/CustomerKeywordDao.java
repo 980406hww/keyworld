@@ -18,7 +18,9 @@ import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
+import com.keymanager.value.CustomerKeywordForCapturePosition;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.annotations.Param;
@@ -146,4 +148,10 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<CustomerKeyword> searchSameCustomerKeywords(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String keyword, @Param("searchEngine") String searchEngine);
     
     Map<String, Object> getCustomerKeywordStatusCount();
+
+    List<Long> getCustomerKeywordUuidForCapturePositionTemp(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType, @Param("groupName") String groupName, @Param("customerUuid") Long customerUuid, @Param("startTime") Date startTime, @Param("captureStatus") Integer captureStatus, @Param("saveTopThree") Boolean saveTopThree);
+
+    List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePositionTemp(@Param("uuids") List uuids);
+
+    void updateCapturePositionQueryTimeAndCaptureStatusTemp(@Param("uuids") List uuids);
 }

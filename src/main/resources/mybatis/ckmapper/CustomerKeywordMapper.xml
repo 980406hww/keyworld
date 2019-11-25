@@ -1253,4 +1253,61 @@
         COUNT(ck.fStatus = 3 OR NULL)  AS 'obtainedCount'
         FROM t_customer_keyword ck
     </select>
+
+
+    <select id="getCustomerKeywordUuidForCapturePositionTemp" resultType="Long">
+        SELECT
+        ck.fUuid AS 'uuid'
+        FROM t_customer_keyword ck
+        WHERE ck.fTerminalType = #{terminalType}
+        AND ck.fStatus = 1
+        AND fCaptureStatus = #{captureStatus}
+        <if test="startTime != null and captureStatus == 0">
+            AND ck.fCapturePositionQueryTime &lt; #{startTime}
+            <if test="saveTopThree == true">
+                AND !(ck.fCapturePositionQueryTime &gt; CURRENT_DATE() AND ck.fCurrentPosition &lt; 4 AND ck.fCurrentPosition &gt; 0)
+            </if>
+        </if>
+        <if test="startTime != null and captureStatus == 1">
+            AND ck.fCapturePositionQueryTime &lt;&gt; DATE_SUB( NOW(), INTERVAL 3 MINUTE )
+        </if>
+        <if test="customerUuid != null">
+            AND ck.fCustomerUuid = #{customerUuid}
+        </if>
+        <if test="groupName != null">
+            AND ck.fOptimizeGroupName = #{groupName}
+        </if>
+        LIMIT 10
+    </select>
+
+    <select id="getCustomerKeywordForCapturePositionTemp" resultType="com.keymanager.value.CustomerKeywordForCapturePosition">
+        SELECT
+        ck.fUuid AS 'uuid',
+        ck.fTerminalType AS 'terminalType',
+        ck.fKeyword AS 'keyword',
+        ck.fUrl AS 'url',
+        ck.fTitle AS 'title',
+        ck.fSearchEngine AS 'searchEngine',
+        ck.fBearPawNumber AS 'bearPawNumber'
+        FROM
+        t_customer_keyword ck
+        WHERE
+        ck.fUuid IN
+        <foreach item="uuid" collection="uuids" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </select>
+
+    <update id="updateCapturePositionQueryTimeAndCaptureStatusTemp">
+        UPDATE
+        t_customer_keyword
+        SET
+        fCaptureStatus = 1,
+        fCapturePositionQueryTime = NOW()
+        WHERE
+        fUuid IN
+        <foreach item="uuid" collection="uuids" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
 </mapper>

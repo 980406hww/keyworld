@@ -18,6 +18,7 @@ import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.EntryTypeEnum;
 import com.keymanager.ckadmin.enums.KeywordEffectEnum;
 import com.keymanager.ckadmin.excel.operator.AbstractExcelReader;
+import com.keymanager.ckadmin.service.CaptureRankJobService;
 import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.CustomerExcludeKeywordService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
@@ -38,6 +39,7 @@ import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
 import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
+import com.keymanager.value.CustomerKeywordForCapturePosition;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -85,6 +87,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     @Resource(name = "qzRateStatisticsService2")
     private QZRateStatisticsService qzRateStatisticsService;
+
+    @Resource(name = "captureRankJobService2")
+    private CaptureRankJobService captureRankJobService;
 
     private final static Map<String, LinkedBlockingQueue> machineGroupQueueMap = new HashMap<>();
 
@@ -817,6 +822,25 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public Map<String, Object> getCustomerKeywordStatusCount() {
         return customerKeywordDao.getCustomerKeywordStatusCount();
+    }
+
+    @Override
+    public List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePositionTemp(Long qzSettingUuid, String terminalType, String groupName, Long customerUuid, Date startTime, Long captureRankJobUuid, Boolean saveTopThree) {
+        List<CustomerKeywordForCapturePosition> customerKeywordForCapturePositions = new ArrayList<>();
+        synchronized (CustomerKeywordService.class) {
+            Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
+            if (captureRankJobStatus) {
+                List<Long> customerKeywordUuids = customerKeywordDao.getCustomerKeywordUuidForCapturePositionTemp(qzSettingUuid, terminalType, groupName, customerUuid, startTime, 0, saveTopThree);
+                if (null == customerKeywordUuids || customerKeywordUuids.size() == 0) {
+                    customerKeywordUuids = customerKeywordDao.getCustomerKeywordUuidForCapturePositionTemp(qzSettingUuid, terminalType, groupName, customerUuid, startTime, 1, saveTopThree);
+                }
+                if (null != customerKeywordUuids && customerKeywordUuids.size() != 0) {
+                    customerKeywordForCapturePositions = customerKeywordDao.getCustomerKeywordForCapturePositionTemp(customerKeywordUuids);
+                    customerKeywordDao.updateCapturePositionQueryTimeAndCaptureStatusTemp(customerKeywordUuids);
+                }
+            }
+        }
+        return customerKeywordForCapturePositions;
     }
 }
 
