@@ -2,14 +2,12 @@
 <application generated-by="intellij" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.zeroturnaround.com" xsi:schemaLocation="http://www.zeroturnaround.com http://update.zeroturnaround.com/jrebel/rebel-2_1.xsd">
 
 	<classpath>
-		<dir name="D:\githome\keyword-management-new/target/classes">
-		</dir>
+		<dir name="E:\Work\Java\keyword-management-new/target/classes" />
 	</classpath>
 
 	<web>
 		<link target="/">
-			<dir name="D:\githome\keyword-management-new/src/main/webapp">
-			</dir>
+			<dir name="E:\Work\Java\keyword-management-new/src/main/webapp" />
 		</link>
 	</web>
 
