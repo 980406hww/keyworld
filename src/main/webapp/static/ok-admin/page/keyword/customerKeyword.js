@@ -52,6 +52,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     laydate.render({
         elem: '#ltCreateTime',
     });
+    laydate.render({
+        elem: '#gtStartOptimizedTime',
+    });
+    laydate.render({
+        elem: '#ltStartOptimizedTime',
+    });
     init_search();
 
     function init_search() {
@@ -132,11 +138,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
             page: true,
             size: 'sm',
             id: 'keywordTable',
-            even: true,//隔行背景
-            // toolbar: true,
+            even: true,
             where: whereCondition,
             toolbar: "#toolbarTpl",
-            // defaultToolbar: ['filter', 'print', 'exports'], 对应列筛选 打印 导出
             defaultToolbar: ['filter'],
             contentType: 'application/json',
             cols: [[
@@ -153,7 +157,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
                 {field: 'optimizePlanCount', title: '要刷', align: 'left', width: '80'},
                 {field: 'optimizedCount', title: '已刷', sort: true, align: 'left', width: '80'},
                 {field: 'invalidRefreshCount', title: '无效', sort: true, align: 'left', width: '60', hide: true},
-                {field: 'startOptimizedTime', title: '开始优化日期', align: 'center', width: '100', hide: true},
+                {field: 'startOptimizedTime', title: '开始优化日期', sort: true, align: 'center', width: '120', hide: true},
                 {
                     field: 'lastOptimizeDateTime', title: '最后优化时间', align: 'center', width: '100', hide: true, templet: function (d) {
                         if (d.lastOptimizeDateTime) {
@@ -174,8 +178,25 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
                 jz();
             }
         });
-
     }
+
+    /**
+     * 监听表格排序
+     */
+    table.on('sort(tableFilter)', function(obj){
+        let postData = common.formToJsonObject('searchForm');
+        postData.orderBy = obj.field;
+        $("#downloadKeywordForm").find("#orderByHidden").val(postData.orderBy);
+        postData.orderMode = obj.type === 'desc' ? '0' : '1';
+        $("#downloadKeywordForm").find("#orderModeHidden").val(postData.orderMode);
+        if (!postData.optimizeGroupNameLike) {
+            postData.optimizeGroupNameLike = '';
+        }
+        table.reload('keywordTable', {
+            initSort: obj,
+            where: postData
+        });
+    });
 
     function jz() {
         let tables = document.getElementsByTagName('table');
@@ -487,7 +508,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         $.each(searchCriteriaArray, function (idx, val) {
             downloadKeywordForm.find("#"+val.name+"Hidden").val(val.value === '' ? null : val.value);
         });
-
         $("#downloadKeywordForm").submit();
     }
 

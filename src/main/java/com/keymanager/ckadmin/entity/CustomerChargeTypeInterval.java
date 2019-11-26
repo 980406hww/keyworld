@@ -10,7 +10,7 @@ public class CustomerChargeTypeInterval extends BaseEntity {
     protected static final long serialVersionUID = -1101942701283949852L;
 
     @TableField(value = "fCustomerChargeTypeUuid")
-    private int customerChargeTypeUuid;
+    private long customerChargeTypeUuid;
 
     @TableField(value = "fOperationType")
     private String operationType;
@@ -24,11 +24,11 @@ public class CustomerChargeTypeInterval extends BaseEntity {
     @TableField(value = "fPrice")
     private BigDecimal price;
 
-    public int getCustomerChargeTypeUuid() {
+    public long getCustomerChargeTypeUuid() {
         return customerChargeTypeUuid;
     }
 
-    public void setCustomerChargeTypeUuid(int customerChargeTypeUuid) {
+    public void setCustomerChargeTypeUuid(long customerChargeTypeUuid) {
         this.customerChargeTypeUuid = customerChargeTypeUuid;
     }
 

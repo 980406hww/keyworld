@@ -72,7 +72,7 @@ public class ScreenedWebsiteController2 {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -96,7 +96,7 @@ public class ScreenedWebsiteController2 {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -113,7 +113,7 @@ public class ScreenedWebsiteController2 {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -132,7 +132,7 @@ public class ScreenedWebsiteController2 {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -152,7 +152,7 @@ public class ScreenedWebsiteController2 {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;

@@ -92,7 +92,7 @@ public class CustomerController extends SpringMVCBaseController {
             }
             String loginName = (String) session.getAttribute("username");
             boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(loginName));
-            if(!isDepartmentManager) {
+            if (!isDepartmentManager) {
                 customerCriteria.setLoginName(loginName);
             }
             page = customerService.searchCustomers(page, customerCriteria);
@@ -104,7 +104,7 @@ public class CustomerController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -124,8 +124,6 @@ public class CustomerController extends SpringMVCBaseController {
 
     /**
      * 跳转添加或修改用户页面
-     *
-     * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @GetMapping(value = "/toCustomersAdd")
@@ -150,10 +148,6 @@ public class CustomerController extends SpringMVCBaseController {
 
     /**
      * 获得用户信息
-     *
-     * @param uuid
-     * @param request
-     * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @GetMapping(value = "/getCustomersMsgById/{uuid}")
@@ -175,7 +169,7 @@ public class CustomerController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -183,10 +177,6 @@ public class CustomerController extends SpringMVCBaseController {
 
     /**
      * 添加用户
-     * @param customer
-     * @param result
-     * @param session
-     * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @PostMapping(value = "/saveCustomer2")
@@ -205,7 +195,7 @@ public class CustomerController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         resultBean.setMsg("添加成功");
@@ -214,8 +204,6 @@ public class CustomerController extends SpringMVCBaseController {
 
     /**
      * 批量删除客户
-     * @param requestMap
-     * @return
      */
     @RequiresPermissions("/internal/customer/deleteCustomers")
     @PostMapping(value = "/deleteCustomers2")
@@ -226,15 +214,12 @@ public class CustomerController extends SpringMVCBaseController {
             return new ResultBean(200, "删除成功");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "删除失败");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
     /**
      * 更新客户日报表
-     *
-     * @param requestMap
-     * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @PostMapping(value = "/updateCustomerDailyReportIdentify2")
@@ -245,7 +230,7 @@ public class CustomerController extends SpringMVCBaseController {
             return new ResultBean(200, "更新成功");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "更新失败");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -263,15 +248,12 @@ public class CustomerController extends SpringMVCBaseController {
             return new ResultBean(200, "更新成功");
         } catch (NumberFormatException e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "更新失败");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
     /**
      * 改变客户是否产生日报表标志位值
-     *
-     * @param requestMap
-     * @return
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @PostMapping(value = "/changeCustomerDailyReportIdentify2")
@@ -283,7 +265,7 @@ public class CustomerController extends SpringMVCBaseController {
             return new ResultBean(200, "更新成功");
         } catch (NumberFormatException e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "更新失败");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -303,7 +285,7 @@ public class CustomerController extends SpringMVCBaseController {
         } catch (Exception e) {
             e.printStackTrace();
             resultBean.setCode(400);
-            resultBean.setMsg("error");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }
@@ -322,7 +304,7 @@ public class CustomerController extends SpringMVCBaseController {
             return new ResultBean(200, "更新成功");
         } catch (NumberFormatException e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "更新失败");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -339,7 +321,7 @@ public class CustomerController extends SpringMVCBaseController {
             return new ResultBean(200, "更新成功");
         } catch (NumberFormatException e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "更新失败");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -353,7 +335,7 @@ public class CustomerController extends SpringMVCBaseController {
             return new ResultBean(200, "更新成功");
         } catch (NumberFormatException e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "更新失败");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -367,7 +349,7 @@ public class CustomerController extends SpringMVCBaseController {
             return new ResultBean(200, "更新成功");
         } catch (NumberFormatException e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "更新失败");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -378,7 +360,7 @@ public class CustomerController extends SpringMVCBaseController {
         try {
             String loginName = (String) session.getAttribute("username");
             boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(loginName));
-            if(!isDepartmentManager) {
+            if (!isDepartmentManager) {
                 customerTypeCriteria.setLoginName(loginName);
             }
             List<CustomerTypeVO> customerTypeVOList = customerService.searchCustomerTypeCount(customerTypeCriteria);
@@ -416,8 +398,8 @@ public class CustomerController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customer/saveCustomer")
-    @RequestMapping(value = "/updateCustomerUserID2" , method = RequestMethod.POST)
-    public ResultBean updateCustomerUserID2(@RequestBody Map<String, Object> requestMap){
+    @RequestMapping(value = "/updateCustomerUserID2", method = RequestMethod.POST)
+    public ResultBean updateCustomerUserID2(@RequestBody Map<String, Object> requestMap) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
             List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
@@ -432,7 +414,7 @@ public class CustomerController extends SpringMVCBaseController {
     }
 
     @PostMapping("/getActiveUsersForChangeBelong")
-    public ResultBean getActiveUsersForChangeBelong(){
+    public ResultBean getActiveUsersForChangeBelong() {
         ResultBean resultBean = new ResultBean();
         try {
             List<UserInfo> activeUsers = userInfoService.findActiveUsers();
@@ -442,21 +424,21 @@ public class CustomerController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
     }
 
     @PostMapping("/getTargetCustomers/{entryType}")
-    public ResultBean getTargetCustomers(@PathVariable(name = "entryType")String entryType, HttpSession session){
+    public ResultBean getTargetCustomers(@PathVariable(name = "entryType") String entryType, HttpSession session) {
         ResultBean resultBean = new ResultBean();
         try {
             String loginName = (String) session.getAttribute("username");
-            String  accountName=null;
+            String accountName = null;
             Set<String> roles = getCurrentUser().getRoles();
-            if(!roles.contains("DepartmentManager")) {
-                accountName=loginName;
+            if (!roles.contains("DepartmentManager")) {
+                accountName = loginName;
             }
             List<Customer> customerList = customerService.searchTargetCustomers(entryType, accountName);
             resultBean.setCode(200);
@@ -465,8 +447,23 @@ public class CustomerController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
-            return resultBean;
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    @PostMapping("/getCustomerUuidByName")
+    public ResultBean getCustomerUuidByName(@RequestBody Map<String, String> map) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            Customer customer = customerService.selectByName(map.get("name"));
+            if (null != customer && null != customer.getUuid()) {
+                resultBean.setData(customer.getUuid());
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
         }
         return resultBean;
     }

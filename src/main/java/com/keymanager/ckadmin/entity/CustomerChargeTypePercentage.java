@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 public class CustomerChargeTypePercentage extends BaseEntity {
 
     @TableField(value = "fCustomerChargeTypeUuid")
-    private int customerChargeTypeUuid;
+    private long customerChargeTypeUuid;
 
     @TableField(value = "fOperationType")
     private String operationType;
@@ -30,11 +30,11 @@ public class CustomerChargeTypePercentage extends BaseEntity {
     @TableField(value = "fFirstPageChargePercentage")
     private int firstPageChargePercentage;
 
-    public int getCustomerChargeTypeUuid() {
+    public long getCustomerChargeTypeUuid() {
         return customerChargeTypeUuid;
     }
 
-    public void setCustomerChargeTypeUuid(int customerChargeTypeUuid) {
+    public void setCustomerChargeTypeUuid(long customerChargeTypeUuid) {
         this.customerChargeTypeUuid = customerChargeTypeUuid;
     }
 

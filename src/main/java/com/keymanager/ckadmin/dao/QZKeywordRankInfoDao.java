@@ -32,4 +32,8 @@ public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
     QZKeywordRankInfo selectByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType);
 
     List<QZKeywordRankInfo> searchExistingExtraQZKeywordRankInfo(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType);
+
+    List<QZKeywordRankInfo> getXTRankInfos();
+
+    void updateRankDateWithYear(@Param("uuid") Long uuid,@Param("yearRankDate") String yearRankDate);
 }

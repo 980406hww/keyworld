@@ -45,8 +45,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/external/customerkeyword")
 public class ExternalCustomerKeywordRestController extends SpringMVCBaseController {
 
-    private static Logger logger = LoggerFactory
-        .getLogger(ExternalCustomerKeywordRestController.class);
+    private static Logger logger = LoggerFactory.getLogger(ExternalCustomerKeywordRestController.class);
 
     @Autowired
     private CustomerKeywordService customerKeywordService;
@@ -372,14 +371,14 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         String password = request.getParameter("password");
         String version = request.getParameter("version");
         StringBuilder errorFlag = new StringBuilder("");
-        List<OptimizationMachineVO> machineVOList=null;
+        List<OptimizationMachineVO> machineVOList = null;
         try {
             if (validUser(userName, password)) {
                 MachineInfo machineInfo = machineInfoService.selectById(clientID);
                 if (machineInfo != null) {
                     String terminalType = machineInfo.getTerminalType();
                     errorFlag.append("1");
-                    machineVOList= customerKeywordService.fetchCustomerKeywordForOptimizationList(machineInfo);
+                    machineVOList = customerKeywordService.fetchCustomerKeywordForOptimizationList(machineInfo);
                     errorFlag.append("2");
                     if (!CollectionUtils.isEmpty(machineVOList)) {
                         machineInfoService.updateMachineInfoVersion(clientID, version, !CollectionUtils.isEmpty(machineVOList));
@@ -498,7 +497,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
                 } else {
                     customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
                 }
-                if (StringUtil.isNotNullNorEmpty(clientID)) {
+                    if (StringUtil.isNotNullNorEmpty(clientID)) {
                     machineInfoService.updateMachineInfoForCapturePosition(clientID);
                 }
                 return new ResponseEntity<Object>(true, HttpStatus.OK);
@@ -786,5 +785,4 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
-
 }

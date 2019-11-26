@@ -1,7 +1,5 @@
 package com.keymanager.ckadmin.service.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
@@ -40,9 +38,7 @@ public class CustomerExcludeKeywordServiceImpl extends ServiceImpl<CustomerExclu
                 customerExcludeKeywordDao.updateById(customerExcludeKeyword);
             }
         } else {
-            Wrapper<CustomerExcludeKeyword> wrapper = new EntityWrapper<>();
-            wrapper.eq("fQZSettingUuid", qzSettingExcludeCustomerKeywordsCriteria.getQzSettingUuid());
-            customerExcludeKeywordDao.delete(wrapper);
+            customerExcludeKeywordDao.deleteByQZSettingUuid(qzSettingExcludeCustomerKeywordsCriteria.getQzSettingUuid());
         }
     }
 

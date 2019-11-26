@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.QZRateStatisticsDao">
+
+
+    <select id="insertOrUpdateQZRateStatistics">
+        REPLACE INTO t_qz_rate_statistics(fQZSettingUuid, fTerminalType,fRate,fRateDate,fRateFullDate) VALUES
+        <foreach collection="qzRateStatisticsList" item="qzRateStatistics" separator=",">
+            (#{qzRateStatistics.qzSettingUuid},
+            #{qzRateStatistics.terminalType},
+            #{qzRateStatistics.rate},
+            #{qzRateStatistics.rateDate},
+            #{qzRateStatistics.rateFullDate})
+        </foreach>
+    </select>
+
+    <select id="getQZRateStatisticCount" resultType="com.keymanager.ckadmin.vo.QZRateStatisticsCountVO">
+        SELECT
+            qrs.fRateDate AS 'rateDate',
+            COUNT(1) AS 'totalCount',
+            SUM(IF(qrs.fRate &gt; 0, 1, 0)) AS 'riseCount',
+            SUM(IF(qrs.fRate = 0, 1, 0)) AS 'unchangedCount',
+            SUM(IF(qrs.fRate &lt; 0, 1, 0)) AS 'fallCount'
+        FROM t_qz_rate_statistics qrs
+        LEFT JOIN t_qz_setting qs
+        ON qrs.fQZSettingUuid = qs.fUuid
+        WHERE qrs.fRateFullDate BETWEEN #{qzRateStatisticsCountCriteria.ltRateFullDate} AND #{qzRateStatisticsCountCriteria.gtRateFullDate}
+        <if test="qzRateStatisticsCountCriteria.searchEngine != null and qzRateStatisticsCountCriteria.searchEngine != ''">
+            AND qs.fSearchEngine = #{qzRateStatisticsCountCriteria.searchEngine}
+        </if>
+        <choose>
+            <when test="qzRateStatisticsCountCriteria.terminalType == 'PC'">
+                AND qs.fPcGroup &gt; ''
+                AND qrs.fTerminalType = 'PC'
+            </when>
+            <when test="qzRateStatisticsCountCriteria.terminalType == 'Phone'">
+                AND qs.fPhoneGroup &gt; ''
+                AND qrs.fTerminalType = 'Phone'
+            </when>
+            <otherwise></otherwise>
+        </choose>
+        GROUP BY qrs.fRateDate
+        ORDER BY qrs.fRateDate
+    </select>
+
+    <select id="getRate" resultType="java.lang.Integer">
+        SELECT
+            fRate AS 'rate'
+        FROM t_qz_rate_statistics
+        WHERE fQZSettingUuid = #{qzUuid}
+          AND fTerminalType = #{terminalType}
+          AND fRateFullDate = #{rateFullDate}
+    </select>
+
+    <select id="getQzRateHistory" resultType="java.util.HashMap">
+        SELECT
+            GROUP_CONCAT(fRate) AS totalRate,
+            GROUP_CONCAT(fRateDate) AS totalRateDate
+        FROM t_qz_rate_statistics
+        WHERE fQZSettingUuid = #{qzUuid}
+        AND fTerminalType = #{terminalType}
+        AND fRateFullDate BETWEEN #{threeMonAgo} AND #{today}
+        GROUP BY fQZSettingUuid
+    </select>
+</mapper>

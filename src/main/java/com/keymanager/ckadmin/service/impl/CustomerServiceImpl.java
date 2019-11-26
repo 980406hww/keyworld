@@ -241,4 +241,9 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
         List<Customer> customers = customerDao.searchTargetCustomers(entryType, accountName);
         return customers;
     }
+
+    @Override
+    public Customer selectByName(String name) {
+        return customerDao.selectByName(name);
+    }
 }

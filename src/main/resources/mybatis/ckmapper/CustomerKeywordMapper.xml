@@ -350,7 +350,7 @@
     <select id="getCustomerKeywordsCountByCustomerUuid" resultType="com.keymanager.ckadmin.vo.KeywordCountVO">
         SELECT
             ck.fTerminalType AS 'terminalType',
-            COUNT(1)      		AS 'totalCount',
+            COUNT(1)         AS 'totalCount',
             SUM(IF(ck.fStatus = 1, 1, 0)) AS 'activeCount'
         FROM t_customer_keyword ck
         WHERE ck.fCustomerUuid = #{customerUuid}
@@ -512,6 +512,18 @@
         <if test="keywordCriteria.keywordEffect != null and keywordCriteria.keywordEffect != ''">
             AND ck.fKeywordEffect = #{keywordCriteria.keywordEffect}
         </if>
+        <if test="keywordCriteria.capturePositionFailIdentify != null">
+            AND ck.fCapturePositionFailIdentify = #{keywordCriteria.capturePositionFailIdentify}
+        </if>
+        <if test="keywordCriteria.gtStartOptimizedTime != null and keywordCriteria.gtStartOptimizedTime != ''">
+            AND ck.fStartOptimizedTime &gt;= #{keywordCriteria.gtStartOptimizedTime}
+        </if>
+        <if test="keywordCriteria.ltStartOptimizedTime != null and keywordCriteria.ltStartOptimizedTime != ''">
+            AND ck.fStartOptimizedTime &lt;= #{keywordCriteria.ltStartOptimizedTime}
+        </if>
+        <if test="keywordCriteria.orderingElement != null and keywordCriteria.orderingElement != ''">
+            ORDER BY ${keywordCriteria.orderingElement}
+        </if>
     </sql>
 
     <sql id="updateCustomerKeywordsCriteria">
@@ -622,9 +634,18 @@
         <if test="keywordCriteria.keywordEffect != null and keywordCriteria.keywordEffect != ''">
             AND ck.fKeywordEffect = #{keywordCriteria.keywordEffect}
         </if>
+        <if test="keywordCriteria.capturePositionFailIdentify != null">
+            AND ck.fCapturePositionFailIdentify = #{keywordCriteria.capturePositionFailIdentify}
+        </if>
+        <if test="keywordCriteria.gtStartOptimizedTime != null and keywordCriteria.gtStartOptimizedTime != ''">
+            AND ck.fStartOptimizedTime &gt;= #{keywordCriteria.gtStartOptimizedTime}
+        </if>
+        <if test="keywordCriteria.ltStartOptimizedTime != null and keywordCriteria.ltStartOptimizedTime != ''">
+            AND ck.fStartOptimizedTime &lt;= #{keywordCriteria.ltStartOptimizedTime}
+        </if>
     </sql>
 
-    <select id="searchKeywords" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
+    <select id="searchKeywords" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
         SELECT
         ck.fUuid AS 'uuid',
         c.fUserID AS 'userID',
@@ -655,7 +676,8 @@
         ck.fFailedCause AS 'failedCause',
         ck.fCapturePositionQueryTime AS 'capturePositionQueryTime',
         ck.fOptimizeGroupName AS 'optimizeGroupName',
-        ck.fMachineGroup AS 'machineGroup'
+        ck.fMachineGroup AS 'machineGroup',
+        ck.fCapturePositionFailIdentify AS 'capturePositionFailIdentify'
         FROM
         t_customer_keyword ck,
         t_customer c
@@ -818,8 +840,7 @@
         AND ck.fStatus = 1
     </select>
 
-    <select id="searchCustomerKeywordInfo" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria"
-            resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
+    <select id="searchCustomerKeywordInfo" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
         SELECT
         ck.fKeyword AS 'keyword',
         ck.fUrl AS 'url',
@@ -889,6 +910,17 @@
         </if>
     </update>
 
+    <update id="updCKStatusFromQZ" parameterType="java.util.HashMap">
+        UPDATE t_customer_keyword ck
+        SET ck.fStatus = #{condition.newStatus}
+        WHERE ck.fCustomerUuid = #{condition.customerUuid}
+        AND ck.fOptimizeGroupName = #{condition.optimizeGroupName}
+        AND ck.fSearchEngine = #{condition.searchEngine}
+        AND ck.fStatus = #{condition.status}
+        AND ck.fTerminalType = #{condition.terminalType}
+        AND ck.fType = #{condition.type}
+    </update>
+    
     <update id="cleanSelectedCustomerKeywordTitle">
         UPDATE t_customer_keyword
         SET fTitle = NULL ,
@@ -898,7 +930,7 @@
             #{item}
         </foreach>
     </update>
-
+    
     <update id="cleanCustomerTitle">
         UPDATE t_customer_keyword
         SET fTitle = NULL,
@@ -1129,18 +1161,18 @@
     </update>
 
     <update id="updateSelectFailReason" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria">
-        UPDATE
-        t_customer_keyword ck,t_customer c
-        SET
-        ck.fFailedCause = null,
-        ck.fUpdateTime = NOW()
+        UPDATE t_customer_keyword ck, t_customer c
+        SET ck.fFailedCause = null, ck.fUpdateTime = NOW()
         WHERE c.fUuid = ck.fCustomerUuid
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
 
     <select id="getMaxSequence" resultType="java.lang.Integer">
-        select max(fSequence) from t_customer_keyword where fTerminalType = #{terminalType} and fType = #{entryType} and fCustomerUuid =
-        #{customerUuid};
+        select max(fSequence)
+        from t_customer_keyword
+        where fTerminalType = #{terminalType}
+        and fType = #{entryType}
+        and fCustomerUuid = #{customerUuid}
     </select>
 
     <select id="searchSameCustomerKeywords" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
@@ -1156,8 +1188,11 @@
         ck.fPositionFifthFee	AS	'positionFifthFee',
         ck.fPositionFirstPageFee	AS	'positionFirstPageFee'
         FROM t_customer_keyword ck
-        WHERE ck.fKeyword = #{keyword} and ck.fTerminalType = #{terminalType} and ck.fCustomerUuid = #{customerUuid} and ck.fSearchEngine = #{searchEngine}
-        order by ck.fCreateTime ASC
+        WHERE ck.fKeyword = #{keyword}
+        AND ck.fTerminalType = #{terminalType}
+        AND ck.fCustomerUuid = #{customerUuid}
+        AND ck.fSearchEngine = #{searchEngine}
+        ORDER BY ck.fCreateTime
     </select>
     
      <select id="getMaxInvalidCountByMachineGroup" resultType="java.lang.Integer">
@@ -1171,4 +1206,269 @@
         GROUP BY ck.fOptimizeGroupName
         LIMIT 1
     </select>
+    
+    <select id="getQZRateKeywordCount" resultType="com.keymanager.ckadmin.vo.QZRateKeywordCountVO">
+        SELECT
+            c.fUuid AS customerUuid,
+            c.fContactPerson AS customerName,
+            ck.fQZSettingUuid AS qzUuid,
+            qz.fDomain AS qzDomain,
+            <if test="qzRateKewordCountCriteria.terminalType == null or qzRateKewordCountCriteria.terminalType == ''">
+                IF(qz.fPcGroup > '', 1, 0) AS hasPC,
+                IF(qz.fPhoneGroup > '', 1, 0) AS hasPhone,
+            </if>
+            COUNT(1) AS totalKeywordCount,
+            SUM(IF(ck.fCurrentPosition BETWEEN 1 AND 10, 1, 0)) AS topTenKeywordCount
+        FROM t_customer_keyword ck
+        LEFT JOIN t_qz_setting qz on ck.fQZSettingUuid = qz.fUuid
+        LEFT JOIN t_customer c on c.fUuid = qz.fCustomerUuid
+        WHERE 1 = 1
+        <if test="qzRateKewordCountCriteria.searchEngine != null and qzRateKewordCountCriteria.searchEngine != ''">
+            AND ck.fSearchEngine = #{qzRateKewordCountCriteria.searchEngine}
+        </if>
+        <if test="qzRateKewordCountCriteria.terminalType != null and qzRateKewordCountCriteria.terminalType != ''">
+            AND ck.fTerminalType = #{qzRateKewordCountCriteria.terminalType}
+        </if>
+        <if test="qzRateKewordCountCriteria.customerUuid != null and qzRateKewordCountCriteria.customerUuid != ''">
+            AND c.fUuid = #{qzRateKewordCountCriteria.customerUuid}
+        </if>
+        <if test="qzRateKewordCountCriteria.domain != null and qzRateKewordCountCriteria.domain != ''">
+            AND qz.fDomain LIKE CONCAT(#{qzRateKewordCountCriteria.domain},'%')
+        </if>
+        <if test="qzRateKewordCountCriteria.qzUuids != null">
+            AND ck.fQZSettingUuid IN
+            <foreach item="qzUuid"  collection="qzRateKewordCountCriteria.qzUuids" open="(" separator="," close=")">
+                #{qzUuid}
+            </foreach>
+        </if>
+        GROUP BY ck.fQZSettingUuid
+    </select>
+
+    <select id="getQZRateKeywordCountByCriteria" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM (
+        SELECT
+        ck.fQZSettingUuid
+        FROM t_customer_keyword ck
+        LEFT JOIN t_qz_setting qz on ck.fQZSettingUuid = qz.fUuid
+        LEFT JOIN t_customer c on c.fUuid = qz.fCustomerUuid
+        WHERE 1 = 1
+        <if test="criteria.searchEngine != null and criteria.searchEngine != ''">
+            AND ck.fSearchEngine = #{criteria.searchEngine}
+        </if>
+        <if test="criteria.terminalType != null and criteria.terminalType != ''">
+            AND ck.fTerminalType = #{criteria.terminalType}
+        </if>
+        <if test="criteria.customerUuid != null and criteria.customerUuid != ''">
+            AND c.fUuid = #{criteria.customerUuid}
+        </if>
+        <if test="criteria.domain != null and criteria.domain != ''">
+            AND qz.fDomain LIKE CONCAT(#{criteria.domain},'%')
+        </if>
+        <if test="criteria.qzUuids != null">
+            AND ck.fQZSettingUuid IN
+            <foreach item="qzUuid" collection="criteria.qzUuids" open="(" separator="," close=")">
+                #{qzUuid}
+            </foreach>
+        </if>
+        GROUP BY ck.fQZSettingUuid
+        ) T
+    </select>
+    
+    <select id="getCustomerKeywordStatusCount" resultType="java.util.Map">
+        SELECT
+        COUNT(ck.fStatus = 2 OR NULL)  AS 'addCount',
+        COUNT(ck.fStatus = 1 OR NULL)  AS 'operatorCount',
+        COUNT(ck.fStatus = 0 OR NULL)  AS 'stopCount',
+        COUNT(ck.fStatus = 3 OR NULL)  AS 'obtainedCount'
+        FROM t_customer_keyword ck
+    </select>
+
+
+    <select id="getCustomerKeywordUuidForCapturePositionTemp" resultType="Long">
+        SELECT
+        ck.fUuid AS 'uuid'
+        FROM t_customer_keyword ck
+        WHERE ck.fTerminalType = #{terminalType}
+        AND ck.fStatus = 1
+        AND fCaptureStatus = #{captureStatus}
+        <if test="startTime != null and captureStatus == 0">
+            AND ck.fCapturePositionQueryTime &lt; #{startTime}
+            <if test="saveTopThree == true">
+                AND !(ck.fCapturePositionQueryTime &gt; CURRENT_DATE() AND ck.fCurrentPosition &lt; 4 AND ck.fCurrentPosition &gt; 0)
+            </if>
+        </if>
+        <if test="startTime != null and captureStatus == 1">
+            AND ck.fCapturePositionQueryTime &lt;&gt; DATE_SUB( NOW(), INTERVAL 3 MINUTE )
+        </if>
+        <if test="customerUuid != null">
+            AND ck.fCustomerUuid = #{customerUuid}
+        </if>
+        <if test="groupName != null">
+            AND ck.fOptimizeGroupName = #{groupName}
+        </if>
+        LIMIT 10
+    </select>
+
+    <select id="getCustomerKeywordForCapturePositionTemp" resultType="com.keymanager.value.CustomerKeywordForCapturePosition">
+        SELECT
+        ck.fUuid AS 'uuid',
+        ck.fTerminalType AS 'terminalType',
+        ck.fKeyword AS 'keyword',
+        ck.fUrl AS 'url',
+        ck.fTitle AS 'title',
+        ck.fSearchEngine AS 'searchEngine',
+        ck.fBearPawNumber AS 'bearPawNumber'
+        FROM
+        t_customer_keyword ck
+        WHERE
+        ck.fUuid IN
+        <foreach item="uuid" collection="uuids" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </select>
+
+    <update id="updateCapturePositionQueryTimeAndCaptureStatusTemp">
+        UPDATE
+        t_customer_keyword
+        SET
+        fCaptureStatus = 1,
+        fCapturePositionQueryTime = NOW()
+        WHERE
+        fUuid IN
+        <foreach item="uuid" collection="uuids" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
+
+    <select id="getCustomerKeywordFee" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
+        SELECT
+          ck.fUuid                 AS 'uuid',
+          ck.fPositionFirstFee     AS 'positionFirstFee',
+          ck.fPositionSecondFee    AS 'positionSecondFee',
+          ck.fPositionThirdFee     AS 'positionThirdFee',
+          ck.fPositionForthFee     AS 'positionForthFee',
+          ck.fPositionFifthFee     AS 'positionFifthFee',
+          ck.fPositionFirstPageFee AS 'positionFirstPageFee'
+        FROM t_customer_keyword ck
+        WHERE ck.fUuid = #{uuid}
+    </select>
+
+    <update id="updatePosition">
+        UPDATE
+        t_customer_keyword
+        SET
+        fCurrentPosition = IF(fLastReachStandardDate = CURRENT_DATE(),IF(#{position} > 0 AND #{position} &lt; fCurrentPosition, #{position}, fCurrentPosition),
+        #{position}),
+        fInitialPosition = IFNULL(fInitialPosition, #{position}),
+        fCapturePositionQueryTime = IFNULL(#{capturePositionQueryTime}, fCapturePositionQueryTime),
+        fTodayFee = if(fLastReachStandardDate = CURRENT_DATE(), if(fTodayFee > #{todayFee} OR #{todayFee} is null, fTodayFee, #{todayFee}), #{todayFee}),
+        fCapturePositionIP = #{ip}, fCapturePositionCity = #{city},
+        <if test="todayFee != null">
+            fLastReachStandardDate = CURRENT_DATE(),
+        </if>
+        fCaptureStatus = 0,
+        fUpdateTime = NOW()
+        WHERE fUuid = #{uuid}
+    </update>
+
+    <update id="updateCustomerKeywordQueryTime">
+        UPDATE t_customer_keyword
+        SET fCaptureStatus = 0,
+        fCapturePositionQueryTime = #{capturePositionQueryTime}
+        <if test="capturePositionFailIdentify != null">
+            , fCapturePositionFailIdentify = #{capturePositionFailIdentify}
+        </if>
+        WHERE fUuid = #{customerKeywordUuid}
+    </update>
+
+    <select id="getCrawlRankKeywords" resultType="com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO">
+        (SELECT
+        ck.fUuid AS 'uuid',
+        ck.fTerminalType AS 'terminalType',
+        ck.fType AS 'type',
+        ck.fCity AS 'city',
+        ck.fTitle AS 'title',
+        ck.fKeyword AS 'keyword',
+        ck.fUrl AS 'url',
+        ck.fSearchEngine AS 'searchEngine',
+        ck.fBearPawNumber AS 'bearPawNumber'
+        FROM t_customer_keyword ck
+        WHERE ck.fType = #{type}
+        AND ck.fSearchEngine = '百度'
+        <choose>
+            <when test="captureStatus == 1">
+                AND ck.fCaptureStatus = 1
+                AND ck.fCapturePositionQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+            </when>
+            <otherwise>
+                AND ck.fCaptureStatus = 0
+                AND ck.fCapturePositionQueryTime &lt; CURRENT_DATE()
+            </otherwise>
+        </choose>
+        LIMIT 3000 )
+        UNION ALL
+        (SELECT
+        ck.fUuid AS 'uuid',
+        ck.fTerminalType AS 'terminalType',
+        ck.fType AS 'type',
+        ck.fCity AS 'city',
+        ck.fTitle AS 'title',
+        ck.fKeyword AS 'keyword',
+        ck.fUrl AS 'url',
+        ck.fSearchEngine AS 'searchEngine',
+        ck.fBearPawNumber AS 'bearPawNumber'
+        FROM t_customer_keyword ck
+        WHERE ck.fType = #{type}
+        AND ck.fSearchEngine = '搜狗'
+        <choose>
+            <when test="captureStatus == 1">
+                AND ck.fCaptureStatus = 1
+                AND ck.fCapturePositionQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+            </when>
+            <otherwise>
+                AND ck.fCaptureStatus = 0
+                AND ck.fCapturePositionQueryTime &lt; CURRENT_DATE()
+            </otherwise>
+        </choose>
+        LIMIT 3000)
+        UNION ALL
+        (SELECT
+        ck.fUuid AS 'uuid',
+        ck.fTerminalType AS 'terminalType',
+        ck.fType AS 'type',
+        ck.fCity AS 'city',
+        ck.fTitle AS 'title',
+        ck.fKeyword AS 'keyword',
+        ck.fUrl AS 'url',
+        ck.fSearchEngine AS 'searchEngine',
+        ck.fBearPawNumber AS 'bearPawNumber'
+        FROM t_customer_keyword ck
+        WHERE ck.fType = #{type}
+        AND ck.fSearchEngine = '360'
+        <choose>
+            <when test="captureStatus == 1">
+                AND ck.fCaptureStatus = 1
+                AND ck.fCapturePositionQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+            </when>
+            <otherwise>
+                AND ck.fCaptureStatus = 0
+                AND ck.fCapturePositionQueryTime &lt; CURRENT_DATE()
+            </otherwise>
+        </choose>
+        LIMIT 3000
+        )
+        LIMIT 3000
+    </select>
+
+    <update id="updateCrawlRankKeywordTimeByUuids">
+        UPDATE t_customer_keyword
+        SET
+        fCapturePositionQueryTime = NOW(),
+        fCaptureStatus = 1
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
 </mapper>

@@ -201,7 +201,7 @@
                         let res = JSON.parse(res_);
                         customerInfo.append('<option value="">用户名称</option>');
                         if (res.data != null) {
-                            let customerList = res.data
+                            let customerList = res.data;
                             $.each(customerList, function (idx, val) {
                                 if(customerUuid_ === val.uuid){
                                     customerInfo.append('<option value="' + val.contactPerson + '_' + val.uuid + '" selected>' + val.contactPerson + '_' + val.uuid + '</option>')

@@ -40,11 +40,11 @@ public interface QZSettingService extends IService<QZSetting> {
 
     void saveQZSettingCustomerKeywords(QZSettingSaveCustomerKeywordsCriteria qzSettingSaveCustomerKeywordsCriteria, String userName);
 
-    Long saveQZSetting(QZSetting qzSetting, String userName);
+    void saveQZSetting(QZSetting qzSetting, String userName);
 
-    void deleteOne(Long uuid);
+    void deleteOne(Long uuid, String username);
 
-    void deleteAll(List<Integer> uuids);
+    void deleteAll(List<Integer> uuids, String username);
 
     QZSetting getQZSetting(Long uuid);
 
@@ -77,4 +77,9 @@ public interface QZSettingService extends IService<QZSetting> {
     void updateQZSettingFrom(Long customerUuid, List<Long> uuids);
 
     Long getExistingQzSettingUuid(Long customerUuid, String domain, String searchEngine);
+    List<QZSetting> selectByUuids(List uuids);
+
+    List<Long> getQZUuidsByUserID(String userID, String searchEngine, String terminalType);
+
+    Map<String, Object> getQzSettingRenewalStatusCount();
 }

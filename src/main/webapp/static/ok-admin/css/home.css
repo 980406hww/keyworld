@@ -2,13 +2,14 @@
 @import "../lib/layui/css/layui.css";
 
 .yskj-card-body{
-    padding: 20px;
+    padding: 10px;
     position: relative;
     width: 100%;
     box-sizing: border-box;
 }
+
 .yskj-card-body-tb{
-    padding: 20px 0;
+    padding: 15px 0;
     position: relative;
     width: 100%;
     box-sizing: border-box;
@@ -20,8 +21,9 @@
 }
 .cart-data .stat-text{
     color: #455a64;
-    font-size: 24px;
-    padding-bottom: 5px;
+    font-size: 16px;
+    height: 30px;
+    padding-top: 10px;
 }
 .cart-data .stat-heading{
     color: #99abb4;
@@ -29,14 +31,21 @@
 .cart-data .img-box{
     display: inline-block;
     vertical-align: middle;
-    padding-right: 20px;
 }
+
 .cart-data .img-box img{
     width: 60px;
 }
 .cart-data .cart-r{
     display: inline-block;
     vertical-align: middle;
+    width: 75px;
+}
+
+.cart-data .cart-r-qz{
+    display: inline-block;
+    vertical-align: middle;
+    width: 60px;
 }
 
 .my-card-title{

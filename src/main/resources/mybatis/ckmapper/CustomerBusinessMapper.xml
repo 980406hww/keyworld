@@ -55,4 +55,13 @@
         INSERT INTO t_customer_business(fCustomerUuid,fType)
         VALUE(#{customerBusiness.customerUuid},#{customerBusiness.type})
     </insert>
+
+    <select id="getCustomerBusinessCount" resultType="java.util.Map">
+        SELECT
+            COUNT(fType = 'keyword' OR NULL) AS 'keyword',
+            COUNT(fType = 'qzsetting' OR NULL) AS 'qzsetting',
+            COUNT(fType = 'fm' OR NULL) AS 'fm',
+            COUNT(fType = 'qt' OR NULL) AS 'qt'
+        FROM t_customer_business
+    </select>
 </mapper>

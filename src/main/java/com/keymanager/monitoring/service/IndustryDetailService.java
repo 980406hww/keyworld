@@ -33,11 +33,11 @@ public class IndustryDetailService extends ServiceImpl<IndustryDetailDao, Indust
 
     public Page<IndustryDetail> searchIndustryDetails(Page<IndustryDetail> page, IndustryDetailCriteria industryDetailCriteria) {
         page.setRecords(industryDetailDao.searchIndustryDetails(page, industryDetailCriteria));
-        this.wrapperForIndustryDetail(page);
+        this.dealWithIndustryDetail(page);
         return page;
     }
 
-    private void wrapperForIndustryDetail(Page<IndustryDetail> page) {
+    private void dealWithIndustryDetail(Page<IndustryDetail> page) {
         for (IndustryDetail industryDetail : page.getRecords()) {
             if (null != industryDetail.getQq() && !"".equals(industryDetail.getQq())) {
                 industryDetail.setQq(industryDetail.getQq().replaceAll(",", "<br>"));

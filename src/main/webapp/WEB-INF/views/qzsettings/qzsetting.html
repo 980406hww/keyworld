@@ -628,6 +628,18 @@
         .table-tips .my-padding {
             padding: 2px 10px;
         }
+
+        .count-show{
+            margin-top: 2px !important;
+            line-height: 18px !important;
+        }
+
+        .count-show > div div {
+            height: 18px;
+            line-height: 18px;
+            text-align: left;
+            text-indent: 36px;
+        }
     </style>
     <script>
         Date.prototype.format = function (fmt) {
@@ -675,7 +687,7 @@
                                     <div class="layui-inline">
                                         <input type="text" name="domain" id="domain" placeholder="请输入域名"
                                                autocomplete="off" onblur="checkDomain()" style="width: 150px;height: 30px"
-                                               onmouseleave="checkDomain()" class="layui-input">
+                                               onmouseleave="checkDomain()" class="layui-input" value="<#if domain?exists>${domain}</#if>">
                                     </div>
                                     <div class="layui-inline">
                                         <button class="layui-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
@@ -1042,7 +1054,6 @@
                     height: 'full-105',
                     loading: true,
                     done: function (res, curr, count) {
-                        console.log(res);
                         successTable(res, whereCondition);
                         initSortRadio(whereCondition);
                     }
@@ -1318,10 +1329,10 @@
                         }
                     },
                     grid: {
-                        left: '0%',
-                        right: '1%',
-                        top: '3%',
-                        bottom: '0%',
+                        x: 6,
+                        y: 15,
+                        x2: 6,
+                        y2: 4,
                         containLabel: true
                     },
                     toolbox: {
@@ -1511,10 +1522,10 @@
                         }
                     },
                     grid: {
-                        left: '0%',
-                        right: '1%',
-                        top: '3%',
-                        bottom: '0%',
+                        x: 6,
+                        y: 15,
+                        x2: 6,
+                        y2: 4,
                         containLabel: true
                     },
                     toolbox: {
@@ -1712,10 +1723,10 @@
                     }
                 },
                 grid: {
-                    left: '0%',
-                    right: '1%',
-                    top: '3%',
-                    bottom: '0%',
+                    x: 6,
+                    y: 15,
+                    x2: 6,
+                    y2: 4,
                     containLabel: true
                 },
                 toolbox: {
@@ -1863,10 +1874,10 @@
                     }
                 },
                 grid: {
-                    left: '0%',
-                    right: '1%',
-                    top: '3%',
-                    bottom: '0%',
+                    x: 6,
+                    y: 15,
+                    x2: 6,
+                    y2: 4,
                     containLabel: true
                 },
                 xAxis: [
@@ -2033,6 +2044,7 @@
 
         function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames, operationCombineName) {
             if (customerKeywordCount) {
+                div.parent().find(".other-rank .line1").find("div[name='newCount'] a").text(customerKeywordCount["newCount"]);
                 div.parent().find(".other-rank .line1").find("div[name='activeCount'] a").text(customerKeywordCount["activeCount"]);
                 div.parent().find(".other-rank .line1").find("div[name='stopCount'] a").text(customerKeywordCount["stopCount"]);
             }
@@ -3154,12 +3166,78 @@
          * 点击操作词数，跳转到关键字列表
          */
         window.searchCustomerKeywords = function (customerUuid, pcGroup, phoneGroup, searchEngine, status) {
-            let group = pcGroup === 'null' ? phoneGroup : pcGroup;
+            let group = phoneGroup && phoneGroup !== 'null' ? phoneGroup : pcGroup;
             let terminalType = document.getElementById('terminalType').value;
             let url = '/internal/customerKeyword/toKeywordsWithQZ/qz/' + terminalType + '/' + customerUuid + '/' + group + '/' + searchEngine + '/' + status;
             let tit = group + '--关键字列表';
             let id = customerUuid + "-" + (status === 0 ? "暂停" : "激活");
             common.updateOrNewTab(url, tit, id);
+        };
+
+        window.updCKStatusFromQZ = function (customerUuid, pcGroup, phoneGroup, searchEngine, oldStatus, newStatus, ele) {
+            let msg = '';
+            switch (newStatus) {
+                case 0:
+                    msg = '是否暂停关键字';
+                    break;
+                case 1:
+                    msg = '是否激活关键字';
+                    break;
+                default:
+                    return;
+            }
+            layer.confirm(msg, {icon: 3, title: '更新关键字状态'}, function (index) {
+                let postData = {};
+                postData.customerUuid = customerUuid;
+                postData.optimizeGroupName = phoneGroup && phoneGroup !== 'null' ? phoneGroup : pcGroup;
+                postData.searchEngine = searchEngine;
+                postData.status = oldStatus;
+                postData.terminalType = document.getElementById('terminalType').value;
+                postData.type = 'qz';
+                postData.newStatus = newStatus;
+                $.ajax({
+                    url: '/internal/customerKeyword/updCKStatusFromQZ',
+                    data: JSON.stringify(postData),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            let obj, content, objContent;
+                            switch (oldStatus) {
+                                case 0:
+                                    obj = ele.parentElement.previousElementSibling.children[1];
+                                    break;
+                                case 1:
+                                    obj =  ele.parentElement.nextElementSibling.children[1];
+                                    break;
+                                case 2:
+                                    if (newStatus === 1){
+                                        obj =  ele.parentElement.nextElementSibling.children[1];
+                                    }else{
+                                        obj =  ele.parentElement.nextElementSibling.nextElementSibling.children[1];
+                                    }
+                                    break;
+                            }
+                            content = parseInt(ele.previousElementSibling.innerHTML);
+                            objContent = parseInt(obj.innerHTML);
+                            obj.innerHTML = content + objContent;
+                            ele.previousElementSibling.innerHTML = 0;
+                        } else {
+                            common.showFailMsg('操作失败');
+                        }
+                    },
+                    error: function () {
+                        common.showFailMsg('网络错误请稍后再试');
+                    },
+                    complete: function () {
+                        layer.close(index);
+                    }
+                });
+            });
         };
 
         window.toCustomerKeywordFromQZ = function (customerUuid, pcGroup, phoneGroup) {
@@ -3436,61 +3514,82 @@
             </div>
         </div>
 
-        <div class="layui-col-md2 standard-info">
-            <div class="layui-col-md12 line1">
-                <div class="layui-col-md12">
-                    <span class="show-table">
-                        <a href="javascript:;" qzsettinguuid="{{d.uuid}}">
-                        {{#  if(d.organizationName !== '优化部') { }}
-                            <font  onmouseover="showTableTip(this,'{{d.uuid}}')" onmouseout="closeTableTip()"
-                                   style="background-color: palevioletred;font-size: 14px;">￥ 0</font>
-                        {{#  } }}
-                        </a>
-                    </span>
-                </div>
-                <div class="layui-col-md12">
-                    <span>达标信息</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="layui-col-md3 other-rank">
-            <div class="layui-col-md12 line1">
-                <div class="layui-col-md12">
-                    <span>
+        <div class="layui-col-md5" style="width: 164px">
+            <div class="layui-col-md12 other-rank" style="width: 164px">
+                <div class="layui-col-md12 line1 count-show" style="height: 73px !important;">
+                    <div class="layui-col-md12">
                         <input type="hidden" id="cus_uuid" value="{{d.customerUuid}}">
-                        <div name="activeCount">
-                            <label>激活: </label>
-                            <a href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 1);">0</a>
-                        </div>
-                        <div name="stopCount">
-                            <label>暂停: </label>
-                            <a href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 0);">0</a>
-                        </div>
-                     </span>
-                </div>
-                <div class="layui-col-md12">
-                    <span class="click-czcs" onclick="toCustomerKeywordFromQZ('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">操作词数</span>
+                        <span>
+                            <div name="newCount">
+                                <label>新增: </label>
+                                <a href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 2);">0</a>
+                                <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+                                <span style="color: green;cursor: pointer" onclick="updCKStatusFromQZ('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 2, 1,this)">激活</span>
+                                </@shiro.hasPermission>
+                                <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
+                                <span style="color: red;cursor: pointer" onclick="updCKStatusFromQZ('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 2, 0,this)">暂停</span>
+                                </@shiro.hasPermission>
+                            </div>
+                            <div name="activeCount">
+                                <label>激活: </label>
+                                <a href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 1);">0</a>
+                                <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
+                                <span style="color: red;cursor: pointer" onclick="updCKStatusFromQZ('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 1, 0,this)">暂停</span>
+                                </@shiro.hasPermission>
+                            </div>
+                            <div name="stopCount">
+                                <label>暂停: </label>
+                                <a href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 0);">0</a>
+                                <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+                                <span style="color: green;cursor: pointer" onclick="updCKStatusFromQZ('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 0, 1,this)">激活</span>
+                                </@shiro.hasPermission>
+                            </div>
+                         </span>
+                    </div>
+                    <div class="layui-col-md12">
+                        <span class="click-czcs" onclick="toCustomerKeywordFromQZ('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">操作词数</span>
+                    </div>
                 </div>
             </div>
-            <div class="layui-col-md12 line1">
-                <div class="layui-col-md12">
-                    <span style="cursor: pointer" onmouseover="showTip(this,'{{d.chargeStatusUuid}}')" onmouseout="closeTip()">
-                        {{#  if(d.renewalStatus === 1) { }}
-                            <span style="color: green;">续费中</span>
-                        {{# }else if(d.renewalStatus === 0) { }}
-                            <span style="color: palevioletred;">暂停续费</span>
-                        {{# }else if(d.renewalStatus === 2) { }}
-                            <span style="color: mediumseagreen;">首次收费</span>
-                        {{# }else if(d.renewalStatus === 3) { }}
-                            <span style="color: red;">下架</span>
-                        {{# }else if(d.renewalStatus === 4) { }}
-                            <span style="color: mediumseagreen;">其他</span>
-                        {{# } }}
-                    </span>
+            <div class="layui-col-md12">
+                <div class="lyui-col-md6 other-rank" style="width: 80px;border-right: 1px solid #e6e6e6">
+                    <div class="layui-col-md12 line1" style="border-bottom:none">
+                        <div class="layui-col-md12" style="height: 26px">
+                            <span class="show-table">
+                                <a href="javascript:;" qzsettinguuid="{{d.uuid}}">
+                                {{#  if(d.organizationName !== '优化部') { }}
+                                    <font  onmouseover="showTableTip(this,'{{d.uuid}}')" onmouseout="closeTableTip()"
+                                           style="background-color: palevioletred;font-size: 14px;">￥ 0</font>
+                                {{#  } }}
+                                </a>
+                            </span>
+                        </div>
+                        <div class="layui-col-md12">
+                            <span>达标信息</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="layui-col-md12">
-                    <span>续费状态</span>
+                <div class="lyui-col-md6 other-rank">
+                    <div class="layui-col-md12 line1" style="border-bottom:none">
+                        <div class="layui-col-md12" style="height: 26px">
+                            <span style="cursor: pointer" onmouseover="showTip(this,'{{d.chargeStatusUuid}}')" onmouseout="closeTip()">
+                                {{#  if(d.renewalStatus === 1) { }}
+                                    <span style="color: green;">续费中</span>
+                                {{# }else if(d.renewalStatus === 0) { }}
+                                    <span style="color: palevioletred;">暂停续费</span>
+                                {{# }else if(d.renewalStatus === 2) { }}
+                                    <span style="color: mediumseagreen;">首次收费</span>
+                                {{# }else if(d.renewalStatus === 3) { }}
+                                    <span style="color: red;">下架</span>
+                                {{# }else if(d.renewalStatus === 4) { }}
+                                    <span style="color: mediumseagreen;">其他</span>
+                                {{# } }}
+                            </span>
+                        </div>
+                        <div class="layui-col-md12">
+                            <span>续费状态</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

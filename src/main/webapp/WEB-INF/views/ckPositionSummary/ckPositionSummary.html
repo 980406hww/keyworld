@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>排名涨幅详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="/static/ok-admin/css/home.css" media="all"/>
+    <script type="text/javascript" src="/static/ok-admin/lib/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="/static/ok-admin/lib/echarts/echarts.theme.js"></script>
+    <style>
+        .layui-linline {
+            width: 120px;
+        }
+
+        .layui-select-title input {
+            height: 30px !important;
+        }
+
+        .layui-form-select dl {
+            top: 31px !important;
+            padding: 2px 0 !important;
+        }
+
+        .layui-form-select dl dd {
+            line-height: 30px !important;
+        }
+
+        .layui-form-radio {
+            margin: 0 !important;
+            padding-right: 6px;
+        }
+
+        .layui-form-radio > i {
+            margin-right: 4px !important;
+        }
+
+        .yskj-card-body {
+            padding: 10px 20px;
+        }
+
+        .layui-inline {
+            height: 30px;
+        }
+
+        .layui-inline input {
+            width: 120px;
+            height: 30px;
+        }
+
+        .layui-inline .layui-form-label {
+            padding: 0;
+            width: 100px;
+            height: 30px;
+            line-height: 28px;
+        }
+
+        .layui-inline .layui-input-block {
+            margin-left: 100px;
+        }
+
+        .layui-btn {
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .layui-table-body .layui-table-cell {
+            height: 50px !important;
+            line-height: 50px !important;
+        }
+
+        .layui-table-col-special {
+            padding: 0 !important;
+        }
+
+        .layui-table-body .laytable-cell-1-0-2 {
+            padding: 0 !important;
+            height: 60px !important;
+            line-height: 60px !important;
+        }
+
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 184px;
+        }
+
+        .layui-table, .layui-table-view{
+            margin-top: 0 !important;
+        }
+
+        .layui-inline .layui-form-label {
+            padding: 0;
+            width: 100px;
+            height: 30px;
+            line-height: 28px;
+        }
+
+        .layui-inline .layui-input-block {
+            margin-left: 100px;
+        }
+
+        .layui-btn {
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .layui-inline {
+            height: 30px;
+        }
+
+        .layui-inline input {
+            width: 150px;
+            height: 30px;
+        }
+
+        .search-form {
+            height: 30px;
+            padding: 10px 15px;
+            background-color: #f2f2f2;
+            border-top: #e6e6e6 solid 1px;
+            border-left: #e6e6e6 solid 1px;
+            border-right: #e6e6e6 solid 1px;
+            line-height: 30px;
+        }
+    </style>
+</head>
+<body class="childrenBody home" style="padding-bottom: 0">
+<div class="layui-row layui-col-space15">
+    <div class="layui-col-md1"></div>
+    <div class="layui-col-md10">
+        <div class="layui-card">
+            <div class="yskj-card-body" style="position:relative;">
+                <div style="position: absolute;top: 15px;left: 0;z-index: 9999;width: 100%;">
+                    <form class="layui-form layui-form-pane" id="keywordFrom">
+                        <div style="float: right; width: 120px;margin: 0 6% 0 6px">
+                            <select name="terminal" id="terminal" lay-filter="terminal">
+                                <option value="" selected>电脑+手机</option>
+                                <option value="PC">电脑</option>
+                                <option value="Phone">手机</option>
+                            </select>
+                        </div>
+                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
+                            <select name="searchEngine" id="searchEngine" lay-filter="searchEngine">
+                                <option value="">搜索引擎</option>
+                            </select>
+                        </div>
+                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
+                            <select name="customer" id="customer" lay-filter="customer" lay-search>
+                                <option value="">请选择客户</option>
+                            </select>
+                        </div>
+                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
+                            <select name="type" id="type" lay-filter="type">
+                                <option value="">类型</option>
+                            </select>
+                        </div>
+                        <div style="float: right;position: relative;top: 2px;">
+                            <input type="radio" name="time" value="-30" title="30天" lay-filter="keywordTime">
+                            <input type="radio" name="time" value="-90" title="3个月" lay-filter="keywordTime" checked>
+                            <input type="radio" name="time" value="-365" title="1年" lay-filter="keywordTime">
+                        </div>
+                    </form>
+                </div>
+                <div style="height: 300px;" id="keywordLogShow"></div>
+            </div>
+            <div class="yskj-card-body clearfix" style="padding: 0 20px 10px 20px;">
+                <div class="search-form">
+                    <form class="layui-form layui-form-pane" lay-filter="searchForm" id="searchForm">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">关键字</label>
+                            <div class="layui-input-block">
+                                <input type="text" autocomplete="off" name="keyword" class="layui-input" placeholder="请输入关键字">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">统计时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" autocomplete="off" name="dateStart" id="dateStart" class="layui-input" style="width: 100px;" placeholder=">=">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-block" style="margin-left: 0;">
+                                <input type="text" autocomplete="off" name="dateEnd" id="dateEnd" class="layui-input" style="width: 100px;" placeholder="<=">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-btn" style="position: relative;top: -2px;" onclick="searchTable()">搜索</div>
+                        </div>
+                        <div class="layui-inline">
+                            <button style="background: #897c00;color: #ffffff;position: relative;top:-2px;" class="layui-btn" type="reset">
+                                重置
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <table id="table" lay-filter="table"></table>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-md1"></div>
+</div>
+
+</body>
+<script>
+    var terminal = '<#if terminal?exists>${terminal}</#if>';
+    var search = '<#if search?exists>${search}</#if>';
+    var time = '<#if time?exists>${time}</#if>';
+    var condition = {
+        searchEngine: search,
+        terminal: terminal,
+        time: time
+    };
+</script>
+<script type="text/javascript" src="/static/ok-admin/lib/layui/layui.js"></script>
+<script type="text/javascript" src="/static/ok-admin/page/keyword/ckPositionSummary.js"></script>
+<script>
+    layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
+        var $ = layui.jquery;
+        var form = layui.form;
+        var common = layui.common;
+        var laydate = layui.laydate;
+
+        initCustomer();
+        initKeywordType();
+
+        laydate.render({elem: '#dateStart', value: layui.util.toDateString(new Date(), 'yyyy-MM-dd')});
+        laydate.render({elem: '#dateEnd', value: layui.util.toDateString(new Date(), 'yyyy-MM-dd')});
+
+        function initCustomer() {
+            $.ajax({
+                url: "/internal/customer/getActiveCustomers2",
+                type: "GET",
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        var customer = $("#customer");
+                        customer.empty();
+                        customer.append('<option value="">请选择客户</option>');
+                        if (res.data != null) {
+                            $.each(res.data, function (idx, val) {
+                                customer.append('<option value="' + val.uuid + '" >' + val.contactPerson.trim() + '</option>')
+                            });
+                        }
+                        form.render('select')
+                    } else {
+                        common.showFailMsg("数据获取失败");
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络错误请稍后再试");
+                }
+            });
+        }
+
+        function initKeywordType() {
+            $.ajax({
+                url: '/internal/common/getBusinessTypeByUserRole',
+                dataType: 'json',
+                async: false,
+                type: 'get',
+                success: function (res) {
+                    if (res.code === 200) {
+                        let type = $("#type");
+                        type.empty();
+                        type.append('<option value="">类型</option>');
+                        if (res.data != null) {
+                            $.each(res.data, function (idx, val) {
+                                var v = val.split('#');
+                                type.append('<option value="' + v[0] + '" >' + v[1] + '</option>')
+                            });
+                        }
+                        form.render('select')
+                    } else {
+                        common.showFailMsg("数据获取失败");
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络错误请稍后再试");
+                }
+            });
+        }
+    });
+</script>
+</html>

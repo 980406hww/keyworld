@@ -15,13 +15,13 @@ import com.keymanager.ckadmin.enums.KeywordEffectEnum;
 import com.keymanager.ckadmin.vo.QZChargeRuleStandardInfoVO;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
-import com.keymanager.ckadmin.vo.QZSettingCountVO;
 import com.keymanager.util.TerminalTypeMapping;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -55,9 +55,6 @@ public class QZSettingController extends SpringMVCBaseController {
 
     @Resource(name = "qzCategoryTagService2")
     private QZCategoryTagService qzCategoryTagService;
-
-    @Resource(name = "qzChargeLogService2")
-    private QZChargeLogService qzChargeLogService;
 
     @Resource(name = "qzChargeRuleService2")
     private QZChargeRuleService qzChargeRuleService;
@@ -114,6 +111,31 @@ public class QZSettingController extends SpringMVCBaseController {
         mv.setViewName("qzsettings/qzsetting");
         int isSEOSales = 0;
         if (getCurrentUser().getRoles().contains("SEOSales") || getCurrentUser().getRoles().contains("DepartmentManager")) {
+            isSEOSales = 1;
+        }
+        mv.addObject("isSEOSales", isSEOSales);
+        return mv;
+    }
+
+    /**
+     * 跳转整站
+     */
+    @RequiresPermissions("/internal/qzsetting/searchQZSettings")
+    @GetMapping(value = "/toQzSetting/{domain}/{terminal}/{customerUuidTmp}")
+    public ModelAndView toQzSetting(@PathVariable String domain, @PathVariable String terminal, @PathVariable String customerUuidTmp) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("qzsettings/qzsetting");
+        try {
+            domain = URLDecoder.decode(domain, "UTF-8");
+            mv.addObject("domain", domain);
+            mv.addObject("terminal", terminal);
+            mv.addObject("customerUuidTmp", customerUuidTmp);
+        } catch (UnsupportedEncodingException e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+        }
+        int isSEOSales = 0;
+        if (getCurrentUser().getRoles().contains("SEOSales")) {
             isSEOSales = 1;
         }
         mv.addObject("isSEOSales", isSEOSales);
@@ -328,10 +350,10 @@ public class QZSettingController extends SpringMVCBaseController {
      */
     @RequiresPermissions("/internal/qzsetting/delete")
     @PostMapping(value = "/delete2/{uuid}")
-    public ResultBean deleteQZSetting(@PathVariable("uuid") Long uuid) {
+    public ResultBean deleteQZSetting(@PathVariable("uuid") Long uuid, HttpSession session) {
         ResultBean resultBean = new ResultBean();
         try {
-            qzSettingService.deleteOne(uuid);
+            qzSettingService.deleteOne(uuid, (String) session.getAttribute("username"));
             resultBean.setCode(200);
             resultBean.setMsg("删除站点成功");
         } catch (Exception e) {
@@ -347,11 +369,11 @@ public class QZSettingController extends SpringMVCBaseController {
      */
     @RequiresPermissions("/internal/qzsetting/deleteQZSettings")
     @PostMapping(value = "/deleteQZSettings2")
-    public ResultBean deleteQZSettings(@RequestBody Map<String, Object> requestMap) {
+    public ResultBean deleteQZSettings(@RequestBody Map<String, Object> requestMap, HttpSession session) {
         ResultBean resultBean = new ResultBean();
         try {
             List<Integer> uuids = (List<Integer>) requestMap.get("uuids");
-            qzSettingService.deleteAll(uuids);
+            qzSettingService.deleteAll(uuids, (String) session.getAttribute("username"));
             resultBean.setCode(200);
             resultBean.setMsg("删除站点成功");
         } catch (Exception e) {
@@ -400,6 +422,7 @@ public class QZSettingController extends SpringMVCBaseController {
     public ResultBean saveQZSetting(@RequestBody QZSetting qzSetting, HttpSession session) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
+        String userName = (String) session.getAttribute("username");
         try {
             if (qzSetting.getUuid() == null) {
                 if (getCurrentUser().getRoles().contains("DepartmentManager")) {
@@ -408,12 +431,7 @@ public class QZSettingController extends SpringMVCBaseController {
                     qzSetting.setStatus(2);
                 }
             }
-            String userName = (String) session.getAttribute("username");
-            Long uuid = qzSettingService.saveQZSetting(qzSetting, userName);
-            if (null != uuid) {
-                resultBean.setData(qzChargeLogService.getQZChargeLog(uuid));
-            }
-            return resultBean;
+            qzSettingService.saveQZSetting(qzSetting, userName);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
@@ -635,6 +653,21 @@ public class QZSettingController extends SpringMVCBaseController {
             logger.error(ex.getMessage());
             resultBean.setMsg(ex.getMessage());
             resultBean.setCode(400);
+        }
+        return resultBean;
+    }
+
+    @PostMapping("/getQzSettingRenewalStatusCount")
+    public ResultBean getQzSettingRenewalStatusCount() {
+        ResultBean resultBean = new ResultBean(200, "获取站点各续费状态下的数量成功");
+        try {
+            resultBean.setData(qzSettingService.getQzSettingRenewalStatusCount());
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            resultBean.setMsg(e.getMessage());
+            resultBean.setCode(400);
+            return resultBean;
         }
         return resultBean;
     }

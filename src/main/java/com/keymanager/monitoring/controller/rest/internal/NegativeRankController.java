@@ -60,7 +60,6 @@ public class NegativeRankController {
         return modelAndView;
     }
 
-//    @RequiresPermissions("/internal/negativeRank/updateNegativeRankKeyword")
     @RequestMapping(value = "updateNegativeRankKeyword",method = RequestMethod.POST)
     public ResponseEntity<?> updateNegativeRankKeyword(@RequestBody NegativeRank negativeRank){
        try {

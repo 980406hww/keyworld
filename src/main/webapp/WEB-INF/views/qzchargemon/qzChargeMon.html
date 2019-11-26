@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>站点监控详情</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="/static/ok-admin/css/home.css" media="all"/>
+    <script type="text/javascript" src="/static/ok-admin/lib/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="/static/ok-admin/lib/echarts/echarts.theme.js"></script>
+    <style>
+        .layui-linline {
+            width: 120px;
+        }
+
+        .layui-select-title input {
+            height: 30px !important;
+        }
+
+        .layui-form-select dl {
+            top: 31px !important;
+            padding: 2px 0 !important;
+        }
+
+        .layui-form-select dl dd {
+            line-height: 30px !important;
+        }
+
+        .layui-form-radio {
+            margin: 0 !important;
+            padding-right: 6px;
+        }
+
+        .layui-form-radio > i {
+            margin-right: 4px !important;
+        }
+
+        .yskj-card-body {
+            padding: 10px 20px;
+        }
+
+        .layui-inline {
+            height: 30px;
+        }
+
+        .layui-inline input {
+            width: 150px;
+            height: 30px;
+        }
+
+        .layui-inline .layui-form-label {
+            padding: 0;
+            width: 100px;
+            height: 30px;
+            line-height: 28px;
+        }
+
+        .layui-inline .layui-input-block {
+            margin-left: 100px;
+        }
+
+        .layui-btn {
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 184px;
+        }
+    </style>
+</head>
+<body class="childrenBody home">
+<div class="layui-row layui-col-space15">
+    <div class="layui-col-md1"></div>
+    <div class="layui-col-md10">
+        <div class="layui-card">
+            <div class="yskj-card-body" style="position:relative;">
+                <div style="position: absolute;top: 15px;left: 0;z-index: 9999;width: 100%;">
+                    <form class="layui-form layui-form-pane" id="form">
+                        <div style="float: right; width: 120px;margin: 0 6% 0 6px">
+                            <select name="qzTerminal" id="qzTerminal" lay-filter="qzTerminal">
+                                <option value="" selected>电脑+手机</option>
+                                <option value="PC">电脑</option>
+                                <option value="Phone">手机</option>
+                            </select>
+                        </div>
+                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
+                            <select name="searchEngines" id="searchEngines" lay-filter="searchEngines">
+                                <option value="">搜索引擎</option>
+                            </select>
+                        </div>
+                        <div style="float: right;position: relative;top: 2px;">
+                            <input type="radio" name="time" value="-30" title="30天" lay-filter="time">
+                            <input type="radio" name="time" value="1" title="1年" lay-filter="time" checked>
+                            <input type="radio" name="time" value="2" title="3年" lay-filter="time">
+                        </div>
+                    </form>
+                </div>
+                <div style="height: 300px;" id="chargeLogShow"></div>
+            </div>
+            <div class="yskj-card-body clearfix" style="padding: 0 20px 10px 20px;">
+                <table id="table" lay-filter="table"></table>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-md1"></div>
+</div>
+
+</body>
+<!-- 头工具栏模板 -->
+<script type="text/html" id="toolbarTpl">
+    <div>
+        <form class="layui-form layui-form-pane" lay-filter="searchForm" id="searchForm">
+            <div class="layui-inline">
+                <label class="layui-form-label">域名</label>
+                <div class="layui-input-block">
+                    <input type="text" autocomplete="off" name="qzDomain" id="qzDomain" class="layui-input" style="width: 100px;" placeholder="请输入域名">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">客户名称</label>
+                <div class="layui-input-block">
+                    <select name="customerUuid" id="customerUuid">
+                        <option value="" selected>请选择客户名称</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">操作类型</label>
+                <div class="layui-input-block">
+                    <select name="operationType" id="operationType">
+                        <option value="">请选择操作类型</option>
+                        <option value="2">新增</option>
+                        <option value="1">续费</option>
+                        <option value="0">暂停</option>
+                        <option value="3">下架</option>
+                        <option value="4">删除</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">操作时间</label>
+                <div class="layui-input-block">
+                    <input type="text" autocomplete="off" name="dateStart" id="dateStart" value="<#if dateStart?exists>${dateStart}</#if>" class="layui-input" style="width: 100px;" placeholder=">=">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-block" style="margin-left: 0;">
+                    <input type="text" autocomplete="off" name="dateEnd" id="dateEnd" value="<#if dateStart?exists>${dateStart}</#if>" class="layui-input" style="width: 100px;" placeholder="<=">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-btn" id="search" style="position: relative;top: -2px;" onclick="getManyData()">搜索</div>
+            </div>
+            <div class="layui-inline">
+                <button style="background: #897c00;color: #ffffff;position: relative;top:-2px;" class="layui-btn" type="reset" onclick="resetForm()">
+                    重置
+                </button>
+            </div>
+        </form>
+    </div>
+</script>
+<script>
+    var terminal = '<#if terminal?exists>${terminal}</#if>';
+    var search = '<#if search?exists>${search}</#if>';
+    var time = '<#if time?exists>${time}</#if>';
+    var dateStart = '<#if dateStart?exists>${dateStart}</#if>';
+    var condition = {
+        searchEngines: search,
+        qzTerminal: terminal,
+        time: time,
+        dateStart: dateStart,
+        dateEnd: dateStart
+    };
+</script>
+<script type="text/javascript" src="/static/ok-admin/lib/layui/layui.js"></script>
+<script type="text/javascript" src="/static/ok-admin/page/qzsetting/qzChargeMon.js"></script>
+<script>
+    layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
+        var $ = layui.jquery;
+        var form = layui.form;
+        var common = layui.common;
+        var table = layui.table;
+        var laydate = layui.laydate;
+
+        function initFrom() {
+            if (condition.operationType) {
+                switch (condition.operationType) {
+                    case '1':
+                        document.getElementById('operationType').children[2].setAttribute('selected', '');
+                        break;
+                    case '2':
+                        document.getElementById('operationType').children[1].setAttribute('selected', '');
+                        break;
+                    case '0':
+                        document.getElementById('operationType').children[3].setAttribute('selected', '');
+                        break;
+                    case '3':
+                        document.getElementById('operationType').children[4].setAttribute('selected', '');
+                        break;
+                    case '4':
+                        document.getElementById('operationType').children[5].setAttribute('selected', '');
+                        break;
+                    default:
+                        break;
+                }
+            }
+            document.getElementById('dateStart').value = condition.dateStart;
+            document.getElementById('dateEnd').value = condition.dateEnd;
+            form.render('select');
+        }
+
+        initCustomer();
+
+        function initCustomer() {
+            $.ajax({
+                url: "/internal/customer/getActiveCustomers2",
+                type: "GET",
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        var customer = $("#customerUuid");
+                        customer.empty();
+                        customer.append('<option value="">请选择客户</option>');
+                        if (res.data != null) {
+                            let customerList = res.data;
+                            $.each(customerList, function (idx, val) {
+                                customer.append('<option value="' + val.contactPerson + '_' + val.uuid + '" >' + val.contactPerson + '_' + val.uuid + '</option>')
+                            });
+                        }
+                        form.render('select');
+                    } else {
+                        common.showFailMsg("数据获取失败");
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络错误请稍后再试");
+                }
+            });
+        }
+
+        window.resetForm = function () {
+            let terminals = document.getElementById('qzTerminal').children;
+            for (let i = 0; i < terminals.length; i++) {
+                terminals[i].removeAttribute('selected');
+            }
+            terminals[1].setAttribute('selected', '');
+            let operationTypes = document.getElementById('operationType').children;
+            for (let i = 0; i < operationTypes.length; i++) {
+                operationTypes[i].removeAttribute('selected');
+            }
+            qz_handle('searchEngine', searchEngine);
+        };
+
+        window.getManyData = function () {
+            condition = common.formToJsonObject('searchForm');
+            table.reload('table', {
+                where: condition,
+                page: {
+                    curr: 1
+                },
+                done: function (res, curr, count) {
+                    laydate.render({elem: '#dateStart'});
+                    laydate.render({elem: '#dateEnd'});
+                    if (condition) {
+                        initFrom();
+                    }
+                }
+            });
+        };
+
+        table.on('tool(table)', function (obj) {
+            let data = obj.data, event = obj.event;
+            if (event === 'toQzSetting') {
+                $.ajax({
+                    url: '/internal/customer/getCustomerUuidByName',
+                    type: 'post',
+                    data: JSON.stringify({name: data.qzCustomer}),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    dataType: 'json'
+                    , success: function (res) {
+                        if (res.code === 200) {
+                            let url = '/internal/qzsetting/toQzSetting/' + data.qzDomain + '/' + data.terminalType.split(',')[0] + '/';
+                            url += res.data ? res.data : '';
+                            url = encodeURI(encodeURI(url));
+                            common.updateOrNewTab(url, data.qzCustomer + '整站信息', data.qzCustomer + '整站信息');
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+</html>

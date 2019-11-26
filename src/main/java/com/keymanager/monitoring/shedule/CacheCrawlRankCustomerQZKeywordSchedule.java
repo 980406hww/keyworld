@@ -1,9 +1,9 @@
 package com.keymanager.monitoring.shedule;
 
-import com.keymanager.monitoring.service.CustomerKeywordService;
+import com.keymanager.ckadmin.service.CustomerKeywordService;
+import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,7 +11,7 @@ public class CacheCrawlRankCustomerQZKeywordSchedule {
 
     private static Logger logger = LoggerFactory.getLogger(CacheCrawlRankCustomerQZKeywordSchedule.class);
 
-    @Autowired
+    @Resource(name = "customerKeywordService2")
     private CustomerKeywordService customerKeywordService;
 
     public void runTask() {

@@ -134,7 +134,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public void updateMachineInfoForCapturePosition(String clientID) {
-
+        machineInfoDao.updateMachineInfoForCapturePosition(clientID);
     }
 
     @Override
@@ -591,6 +591,11 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
         data.put("data", machineInfos);
         data.put("total", map);
         return data;
+    }
+
+    @Override
+    public Map<String, String> getMachineStatusCount() {
+        return machineInfoDao.getMachineStatusCount();
     }
 
     private Map<String, Object> getCityMap(String cityName) {

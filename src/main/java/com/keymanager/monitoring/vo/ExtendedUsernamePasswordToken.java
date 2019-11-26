@@ -7,6 +7,15 @@ public class ExtendedUsernamePasswordToken extends UsernamePasswordToken {
     private String entryType;
     private String terminalType;
     private String version;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getVersion() {
         return version;

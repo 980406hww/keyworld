@@ -24,4 +24,8 @@ public interface QZOperationTypeService extends IService<QZOperationType> {
     void updateQZOperationTypeStandardTime(long uuid, int isStandardFlag);
 
     String findQZChargeRuleStandardSpecies(long qzSettingUuid, String terminalType);
+
+    QZOperationType searchQZOperationTypeByQZSettingAndTerminalType(long qzSettingUuid, String operationType);
+
+    void updateStandardTimeByUuid(Long uuid, int updateFlag, int lastAchieve);
 }

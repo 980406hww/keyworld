@@ -248,16 +248,13 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     CustomerKeywordRankingCountVO getCustomerKeywordRankingCount(@Param("customerUuid") int customerUuid, @Param("groupName") String groupName);
 
-    List<CustomerKeyWordCrawlRankVO> getCrawlRankKeywords(@Param("type") String type,
-        @Param("captureStatus") int captureStatus, @Param("city") String city);
+    List<CustomerKeyWordCrawlRankVO> getCrawlRankKeywords(@Param("type") String type, @Param("captureStatus") int captureStatus);
 
     void updateCrawlRankKeywordTimeByUuids(@Param("uuids") List<Long> uuids);
 
     int getQZSettingKeywordCount(@Param("customerUuid") int customerUuid, @Param("groupName") String groupName);
 
     List<keywordAmountCountVo> searchKeywordAmountCountList(Page<keywordAmountCountVo> customerKeywordPage, @Param("keywordAmountCountCriteria") KeywordAmountCountCriteria keywordAmountCountCriteria);
-
-    List<String> getCities();
 
     List<ExternalCustomerKeywordVO> getTenCustomerKeywordsForCaptureIndex();
 

@@ -891,12 +891,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	private void generateRankingCurveRankInfo(QZSetting qzSetting, String terminalType) {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
 
-		CustomerKeywordRankingCountVO countVo = customerKeywordService
-			.getCustomerKeywordRankingCount(qzSetting.getCustomerUuid(),
-				"PC".equals(terminalType) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup());
-		List<QZKeywordRankInfo> rankInfos = qzKeywordRankInfoService
-			.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "xt");
+		CustomerKeywordRankingCountVO countVo = customerKeywordService.getCustomerKeywordRankingCount(qzSetting.getCustomerUuid(),
+			"PC".equals(terminalType) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup());
+		List<QZKeywordRankInfo> rankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "xt");
 
 		if (CollectionUtils.isNotEmpty(rankInfos)) {
 			if (rankInfos.size() > 1) {
@@ -908,6 +907,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				if (StringUtil.isNullOrEmpty(dateStr)) {
 					fillRankInfo(rankInfo, countVo, 1);
 					rankInfo.setDate("['" + sdf.format(date) + "']");
+					rankInfo.setFullDate("['" + sdf2.format(date) + "']");
 				} else {
 					String[] dateStrings = dateStr.substring(1, dateStr.length() - 1).split(", ");
 					String nowDate = dateStrings[0];
@@ -925,8 +925,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 					} else {
 						// 不为当天, 添加数据
 						fillRankInfo(rankInfo, countVo, 1);
-						rankInfo
-							.setDate(fillData(rankInfo.getDate(), "'" + sdf.format(date) + "'", 1));
+						rankInfo.setDate(fillData(rankInfo.getDate(), "'" + sdf.format(date) + "'", 1));
+						rankInfo.setFullDate(fillData(rankInfo.getDate(), "'" + sdf2.format(date) + "'", 1));
 					}
 				}
 				qzKeywordRankInfoService.saveQZKeywordRankInfo(rankInfo);

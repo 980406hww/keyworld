@@ -8,10 +8,12 @@ import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
 import com.keymanager.ckadmin.criteria.PTKeywordCountCriteria;
+import com.keymanager.ckadmin.criteria.QZRateKewordCountCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.vo.CodeNameVo;
+import com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
@@ -19,8 +21,11 @@ import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
+import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
+import com.keymanager.value.CustomerKeywordForCapturePosition;
 import java.io.InputStream;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -96,6 +101,8 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     void changeCustomerKeywordStatusInCKPage(CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria);
 
+    void updCKStatusFromQZ(Map<String, Object> condition);
+
     void cleanTitle(CustomerKeywordCleanTitleCriteria customerKeywordCleanTitleCriteria);
 
     void deleteDuplicateKeywords(CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria);
@@ -123,6 +130,22 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void updateSelectFailReason(KeywordCriteria keywordCriteria);
 
     Integer getMaxInvalidCountByMachineGroup(String machineGroup);
-    
+
+    Page<QZRateKeywordCountVO> getQZRateKeywordCountList(Page<QZRateKeywordCountVO> page, QZRateKewordCountCriteria qzRateKewordCountCriteria) throws CloneNotSupportedException;
+
     void addCustomerKeywordsFromSimpleUI(List<CustomerKeyword> customerKeywords, String terminalType, String entryType, String userName);
+
+    Map<String, Object> getCustomerKeywordStatusCount();
+
+    List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePositionTemp(Long qzSettingUuid, String terminalType, String groupName, Long customerUuid, Date startTime, Long captureRankJobUuid,Boolean saveTopThree);
+
+    void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime, String ip, String city);
+
+    void updateCustomerKeywordQueryTime(Long customerKeywordUuid, Integer capturePositionFailIdentify, Date date);
+
+    void cacheCrawlRankCustomerQZKeywords();
+
+    void cacheCrawlRankCustomerPTKeywords();
+
+    List<CustomerKeyWordCrawlRankVO> getCrawlRankKeyword();
 }

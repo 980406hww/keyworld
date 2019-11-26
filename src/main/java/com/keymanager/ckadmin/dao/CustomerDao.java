@@ -23,13 +23,11 @@ import org.springframework.stereotype.Repository;
 @Repository("customerDao2")
 public interface CustomerDao extends BaseMapper<Customer> {
 
-    List<Customer> searchCustomers(Page<Customer> page,
-        @Param("customerCriteria") CustomerCriteria customerCriteria);
+    List<Customer> searchCustomers(Page<Customer> page, @Param("customerCriteria") CustomerCriteria customerCriteria);
 
     void updateCustomerDailyReportIdentify(@Param("uuids") List<Integer> uuids);
 
-    List<Customer> getActiveCustomerSimpleInfo(
-        @Param("customerCriteria") CustomerCriteria customerCriteria);
+    List<Customer> getActiveCustomerSimpleInfo(@Param("customerCriteria") CustomerCriteria customerCriteria);
 
     Long lastInsertID();
 
@@ -49,11 +47,13 @@ public interface CustomerDao extends BaseMapper<Customer> {
 
     List<CustomerTypeVO> searchCustomerTypes(@Param("customerTypeCriteria") CustomerTypeCriteria customerTypeCriteria);
 
-    List<Customer> searchCustomerWithKeyword(@Param("groupNames") List<String> groupNames,@Param("terminalType") String terminalType);
+    List<Customer> searchCustomerWithKeyword(@Param("groupNames") List<String> groupNames, @Param("terminalType") String terminalType);
 
     void saveExternalCustomer(Customer customer);
 
     void updateCustomerUserID(@Param("uuids") List<Integer> uuids, @Param("userID") String userID);
 
-    List<Customer> searchTargetCustomers(@Param("entryType")String entryType,@Param("loginName")String loginName);
+    List<Customer> searchTargetCustomers(@Param("entryType") String entryType, @Param("loginName") String loginName);
+
+    Customer selectByName(@Param("name") String name);
 }

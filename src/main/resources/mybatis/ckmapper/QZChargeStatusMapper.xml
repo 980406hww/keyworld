@@ -26,4 +26,11 @@
         fLoginName AS loginName
     </sql>
 
+    <select id="getQzChargeStatus" resultType="com.keymanager.ckadmin.entity.QZChargeStatus">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_qz_charge_status
+        WHERE fQZSettingUuid = #{qzSettingUuid}
+        ORDER BY fCreateTime DESC
+    </select>
 </mapper>

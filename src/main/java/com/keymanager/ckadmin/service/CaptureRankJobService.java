@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.keymanager.ckadmin.criteria.CaptureRankJobSearchCriteria;
+import com.keymanager.ckadmin.criteria.ExternalCaptureJobCriteria;
 import com.keymanager.ckadmin.entity.CaptureRankJob;
 import java.util.List;
 import java.util.Map;
@@ -32,4 +33,14 @@ public interface CaptureRankJobService extends IService<CaptureRankJob> {
     List<Long> getCaptureRankJobUuids(List<Long> uuids);
 
     void updateCaptureRankJobCustomerUuids(List<Long> jobUuids, Long customerUuid);
+
+    void searchFiveMiniSetCheckingJobs();
+
+    CaptureRankJob provideCaptureRankJob(ExternalCaptureJobCriteria captureJobCriteria);
+
+    Boolean getCaptureRankJobStatus(Long captureRankJobUuid);
+
+    void completeCaptureRankJobTempTwo(CaptureRankJob captureRankJob);
+
+    CaptureRankJob checkingCaptureRankJobCompleted(ExternalCaptureJobCriteria captureJobCriteria);
 }

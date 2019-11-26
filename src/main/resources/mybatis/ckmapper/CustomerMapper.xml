@@ -221,4 +221,10 @@
         <if test="loginName != null and loginName != ''">AND c.fUserID = #{loginName}</if>
         order by c.fUpdateTime DESC
     </select>
+
+    <select id="selectByName" parameterType="java.lang.String" resultType="com.keymanager.ckadmin.entity.Customer">
+        SELECT <include refid="colID"/>
+        FROM t_customer c
+        WHERE c.fContactPerson = #{name}
+    </select>
 </mapper>

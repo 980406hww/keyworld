@@ -7,16 +7,21 @@ import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
 import com.keymanager.ckadmin.criteria.PTKeywordCountCriteria;
+import com.keymanager.ckadmin.criteria.QZRateKewordCountCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.vo.CodeNameVo;
+import com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
+import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
+import com.keymanager.value.CustomerKeywordForCapturePosition;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.annotations.Param;
@@ -103,6 +108,8 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void changeCustomerKeywordStatusInCKPage(@Param("customerKeywordUpdateStatusCriteria") CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria);
 
+    void updCKStatusFromQZ(@Param("condition") Map<String, Object> condition);
+
     void cleanSelectedCustomerKeywordTitle(@Param("uuids") List<Long> uuids);
 
     void cleanCustomerTitle(@Param("terminalType") String terminalType, @Param("type") String type, @Param("customerUuid") Long customerUuid);
@@ -135,7 +142,29 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     Integer getMaxInvalidCountByMachineGroup(@Param("machineGroup") String machineGroup);
     
+    List<QZRateKeywordCountVO> getQZRateKeywordCount(Page<QZRateKeywordCountVO> page, @Param("qzRateKewordCountCriteria") QZRateKewordCountCriteria qzRateKewordCountCriteria);
+    
     Integer getMaxSequence(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
 
+    int getQZRateKeywordCountByCriteria(@Param("criteria") QZRateKewordCountCriteria criteria);
+    
     List<CustomerKeyword> searchSameCustomerKeywords(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String keyword, @Param("searchEngine") String searchEngine);
+    
+    Map<String, Object> getCustomerKeywordStatusCount();
+
+    List<Long> getCustomerKeywordUuidForCapturePositionTemp(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType, @Param("groupName") String groupName, @Param("customerUuid") Long customerUuid, @Param("startTime") Date startTime, @Param("captureStatus") Integer captureStatus, @Param("saveTopThree") Boolean saveTopThree);
+
+    List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePositionTemp(@Param("uuids") List uuids);
+
+    void updateCapturePositionQueryTimeAndCaptureStatusTemp(@Param("uuids") List uuids);
+
+    CustomerKeyword getCustomerKeywordFee(@Param("uuid") Long uuid);
+
+    void updatePosition(@Param("uuid") Long uuid, @Param("position") Integer position, @Param("capturePositionQueryTime") Date capturePositionQueryTime, @Param("todayFee") Double todayFee, @Param("ip") String ip, @Param("city") String city);
+
+    void updateCustomerKeywordQueryTime(@Param("customerKeywordUuid") Long customerKeywordUuid, @Param("capturePositionFailIdentify") Integer capturePositionFailIdentify, @Param("capturePositionQueryTime") Date capturePositionQueryTime);
+
+    List<CustomerKeyWordCrawlRankVO> getCrawlRankKeywords(@Param("type") String type, @Param("captureStatus") int captureStatus);
+
+    void updateCrawlRankKeywordTimeByUuids(@Param("uuids") List<Long> uuids);
 }

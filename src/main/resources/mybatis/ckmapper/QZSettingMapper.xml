@@ -191,12 +191,14 @@
 
     <select id="getQZSettingGroupInfo" resultType="java.util.Map">
         SELECT
+        COUNT(ck.fStatus = 2 OR NULL) AS 'newCount',
         COUNT(ck.fStatus = 1 OR NULL) AS 'activeCount',
         COUNT(ck.fStatus = 0 OR NULL) AS 'stopCount'
         FROM t_customer_keyword ck
-        WHERE ck.fOptimizeGroupName = #{optimizeGroupName}
-        AND ck.fType = 'qz'
+        WHERE ck.fCustomerUuid = #{customerUuid}
         AND ck.fTerminalType = #{terminalType}
+        AND ck.fOptimizeGroupName = #{optimizeGroupName}
+        AND ck.fType = 'qz'
     </select>
 
     <select id="findQZCustomer" resultType="java.lang.String">
@@ -383,5 +385,53 @@
         WHERE fCustomerUuid = #{customerUuid}
         AND fDomain = #{domain}
         AND fSearchEngine = #{searchEngine}
+    </select>
+    <select id="selectByUuids" parameterType="java.util.ArrayList" resultType="com.keymanager.ckadmin.entity.QZSetting">
+        SELECT qz.fRenewalStatus AS 'renewalStatus',qz.fUuid AS 'uuid',
+        qz.fSearchEngine AS 'searchEngine',qz.fPcGroup AS 'pcGroup',
+        qz.fPhoneGroup AS 'phoneGroup',qz.fDomain AS 'domain',
+        c.fContactPerson AS 'contactPerson'
+        FROM t_qz_setting qz
+        LEFT JOIN t_customer c
+        ON qz.fCustomerUuid = c.fUuid
+        WHERE qz.fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </select>
+
+
+    <select id="getQZUuidsByUserID" resultType="java.lang.Long">
+        SELECT fUuid
+        FROM t_qz_setting qs
+        WHERE EXISTS (
+            SELECT 1
+            FROM t_customer
+            WHERE fUuid = qs.fCustomerUuid
+            AND fUserID = #{userID}
+        )
+        <if test="searchEngine!=null and searchEngine!=''">
+            AND qs.fSearchEngine = #{searchEngine}
+        </if>
+        <choose>
+            <when test="terminalType == 'PC'">
+                AND qs.fPcGroup &gt; ''
+            </when>
+            <when test="terminalType == 'Phone'">
+                AND qs.fPhoneGroup &gt; ''
+            </when>
+            <otherwise></otherwise>
+        </choose>
+    </select>
+
+    <select id="getQzSettingRenewalStatusCount" resultType="java.util.Map">
+        SELECT
+            COUNT(qs.fRenewalStatus = 2 OR NULL) AS 'addCount',
+            COUNT(qs.fRenewalStatus = 1 OR NULL) AS 'operatorCount',
+            COUNT(qs.fRenewalStatus = 0 OR NULL) AS 'stopCount',
+            COUNT(qs.fRenewalStatus = 3 OR NULL) AS 'obtainedCount',
+            COUNT(qs.fRenewalStatus = 4 OR NULL) AS 'otherCount'
+        FROM t_qz_setting qs
+        WHERE EXISTS(SELECT 1 FROM t_qz_operation_type qot WHERE qot.fQZSettingUuid = qs.fUuid AND fIsDeleted = 0 LIMIT 1)
     </select>
 </mapper>

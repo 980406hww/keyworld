@@ -131,8 +131,7 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
             String userName = (String) requestMap.get("userName");
             String password = (String) requestMap.get("password");
             if (validUser(userName, password)) {
-                String city = (String) requestMap.get("city");
-                return new ResponseEntity<Object>(customerKeywordService.getCrawlRankKeyword(city), HttpStatus.OK);
+                return new ResponseEntity<Object>(customerKeywordService.getCrawlRankKeyword(), HttpStatus.OK);
             }
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         } catch (Exception ex) {

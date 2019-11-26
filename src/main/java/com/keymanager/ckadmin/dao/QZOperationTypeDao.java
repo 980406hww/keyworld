@@ -42,9 +42,8 @@ public interface QZOperationTypeDao extends BaseMapper<QZOperationType> {
 
     /**
      * 获取站点达标类别和限制词数
-     * @param qzSettingUuid
-     * @param terminalType
-     * @return
      */
     String getQZStandardSpecieAndMaxKeywordCount(@Param("qzSettingUuid") long qzSettingUuid, @Param("terminalType") String terminalType);
+
+    QZOperationType searchQZOperationTypeByQZSettingAndTerminalType(@Param("qzSettingUuid") long qzSettingUuid, @Param("operationType") String operationType);
 }

@@ -1,8 +1,8 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.keymanager.ckadmin.common.result.Menu;
+import com.keymanager.ckadmin.service.QZRateStatisticsService;
 import com.keymanager.ckadmin.service.ResourceService;
-
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +32,9 @@ public class LayerUIAdminTestController {
 
     @Resource(name = "resourceService2")
     private ResourceService resourceService;
+
+    @Resource(name = "qzRateStatisticsService2")
+    private QZRateStatisticsService qzRateStatisticsService;
 
     @GetMapping("/index")
     public ModelAndView index(@RequestParam(required = false) String url, @RequestParam(required = false) String tit, HttpSession session) {

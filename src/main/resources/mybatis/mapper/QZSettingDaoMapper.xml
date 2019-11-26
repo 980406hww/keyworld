@@ -491,7 +491,7 @@
             qs.fPhoneGroup   AS 'phoneGroup'
         FROM t_qz_setting qs
         WHERE EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = qs.fCustomerUuid)
-        AND qs.fSearchEngine = '百度'
+        AND qs.fSearchEngine IN ('百度', '搜狗', '360')
     </select>
     
     <select id="selectQZSettingForAutoOperate" resultType="com.keymanager.monitoring.vo.ExternalQzSettingVO">

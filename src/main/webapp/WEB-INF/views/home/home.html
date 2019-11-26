@@ -1,9 +1,8 @@
-<#import "/commons/global.html" as ctx>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
     <meta charset="utf-8">
-    <title>ok-admin v2.0 | 很赞的后台模版</title>
+    <title>主页</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="keywords" content="ok-admin v2.0,ok-admin网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
     <meta name="description" content="ok-admin v2.0，顾名思义，很赞的后台模版，它是一款基于Layui框架的轻量级扁平化且完全免费开源的网站后台管理系统模板，适合中小型CMS后台系统。">
@@ -12,10 +11,60 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/home.css" media="all"/>
-    <script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.min.js"></script>
-    <script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/echarts.theme.js"></script>
-    <script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/echarts/world/js/china.js"></script>
+    <link rel="stylesheet" href="/static/ok-admin/css/home.css" media="all"/>
+    <script type="text/javascript" src="/static/ok-admin/lib/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="/static/ok-admin/lib/echarts/echarts.theme.js"></script>
+    <script type="text/javascript" src="/static/ok-admin/lib/echarts/world/js/china.js"></script>
+    <style>
+        .layui-linline {
+            width: 120px;
+        }
+
+        .layui-select-title input {
+            height: 30px !important;
+        }
+
+        .layui-form-select dl {
+            top: 31px !important;
+            padding: 2px 0 !important;
+        }
+
+        .layui-form-select dl dd {
+            line-height: 30px !important;
+        }
+
+        .layui-form-radio {
+            margin: 0 !important;
+            padding-right: 6px;
+        }
+
+        .layui-form-radio > i {
+            margin-right: 4px !important;
+        }
+
+        .my-btn {
+            height: 30px !important;
+            line-height: 30px !important;
+            padding: 0 8px;
+            background-color: #45a3c2;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .my-btn:hover {
+            opacity: .8;
+            transition: opacity 0.5s;
+        }
+
+        .yskj-card-body div{
+            text-align: center;
+        }
+    </style>
 </head>
 <body class="childrenBody home">
 <div class="layui-row layui-col-space15">
@@ -23,11 +72,24 @@
         <div class="layui-card">
             <div class="yskj-card-body clearfix cart-data">
                 <div class="img-box" ok-pc-in-show>
-                    <img src="${ctx.basePath}/static/ok-admin/images/home-01.png" alt="none"/>
+                    <img src="${ctx.basePath}/static/ok-admin/images/home-04.png" alt="none"/>
+                    <div class="stat-heading" style="text-align: center">客户业务</div>
                 </div>
                 <div class="cart-r">
-                    <div class="stat-text incomes-num">0</div>
-                    <div class="stat-heading">收入</div>
+                    <div class="stat-text" id="keyword_customer_business">10000000</div>
+                    <div class="stat-heading">单词业务</div>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text" id="qzsetting_customer_business">10000000</div>
+                    <div class="stat-heading">全站业务</div>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text" id="fm_customer_business">10000000</div>
+                    <div class="stat-heading">负面业务</div>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text" id="qt_customer_business">10000000</div>
+                    <div class="stat-heading">其他业务</div>
                 </div>
             </div>
         </div>
@@ -38,10 +100,54 @@
             <div class="yskj-card-body clearfix cart-data">
                 <div class="img-box" ok-pc-in-show>
                     <img src="${ctx.basePath}/static/ok-admin/images/home-02.png" alt="none"/>
+                    <div class="stat-heading" style="text-align: center">站点</div>
+                </div>
+                <div class="cart-r-qz">
+                    <div class="stat-text" id="qz_addCount">10000</div>
+                    <div class="stat-heading">新增</div>
+                </div>
+                <div class="cart-r-qz">
+                    <div class="stat-text" id="qz_operatorCount">10000</div>
+                    <div class="stat-heading">续费</div>
+                </div>
+                <div class="cart-r-qz">
+                    <div class="stat-text" id="qz_stopCount">10000</div>
+                    <div class="stat-heading">暂停</div>
+                </div>
+                <div class="cart-r-qz">
+                    <div class="stat-text" id="qz_obtainedCount">10000</div>
+                    <div class="stat-heading">下架</div>
+                </div>
+                <div class="cart-r-qz">
+                    <div class="stat-text" id="qz_otherCount">10000</div>
+                    <div class="stat-heading">其他</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-col-xs6 layui-col-md3">
+        <div class="layui-card">
+            <div class="yskj-card-body clearfix cart-data">
+                <div class="img-box img-box" ok-pc-in-show>
+                    <img src="${ctx.basePath}/static/ok-admin/images/home-01.png" alt="none"/>
+                    <div class="stat-heading" style="text-align: center">关键词</div>
                 </div>
                 <div class="cart-r">
-                    <div class="stat-text goods-num">0</div>
-                    <div class="stat-heading">商品</div>
+                    <div class="stat-text" id="customer_keyword_addCount">10000000</div>
+                    <div class="stat-heading">新增</div>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text" id="customer_keyword_operatorCount">10000000</div>
+                    <div class="stat-heading">激活</div>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text" id="customer_keyword_stopCount">10000000</div>
+                    <div class="stat-heading">暂停</div>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text" id="customer_keyword_obtainedCount">10000000</div>
+                    <div class="stat-heading">下架</div>
                 </div>
             </div>
         </div>
@@ -52,144 +158,447 @@
             <div class="yskj-card-body clearfix cart-data">
                 <div class="img-box" ok-pc-in-show>
                     <img src="${ctx.basePath}/static/ok-admin/images/home-03.png" alt="none"/>
+                    <div class="stat-heading" style="text-align: center">机器</div>
                 </div>
                 <div class="cart-r">
-                    <div class="stat-text blogs-num">0</div>
-                    <div class="stat-heading">博客</div>
+                    <div class="stat-text" id="machine_pc_active">10000</div>
+                    <div class="stat-heading">电脑端</div>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text" id="machine_pc_stop">10000</div>
+                    <div class="stat-heading">死亡数</div>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text" id="machine_phone_active">10000</div>
+                    <div class="stat-heading">移动端</div>
+                </div>
+                <div class="cart-r">
+                    <div class="stat-text" id="machine_phone_stop">10000</div>
+                    <div class="stat-heading">死亡数</div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="layui-col-xs6 layui-col-md3">
+    </div>
+</div>
+
+<div class="layui-row layui-col-space15">
+    <!--每日排名趋势-->
+    <div class="layui-col-md6">
         <div class="layui-card">
-            <div class="yskj-card-body clearfix cart-data">
-                <div class="img-box" ok-pc-in-show>
-                    <img src="${ctx.basePath}/static/ok-admin/images/home-04.png" alt="none"/>
+            <div class="yskj-card-body clearfix" style="position:relative;height: 360px;">
+                <div style="position: absolute;top: 18px;left: 0;z-index: 9999;width: 100%;">
+                    <form class="layui-form layui-form-pane" id="keywordFrom">
+                        <div style="float: right; width: 100px;margin: 0 16px 0 6px">
+                            <div class="my-btn" onclick="toCKPositionSummary()">数据详情</div>
+                        </div>
+                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
+                            <select name="terminal" id="terminal" lay-filter="terminal">
+                                <option value="" selected>电脑+手机</option>
+                                <option value="PC">电脑</option>
+                                <option value="Phone">手机</option>
+                            </select>
+                        </div>
+                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
+                            <select name="searchEngine" id="searchEngine" lay-filter="searchEngine">
+                                <option value="">搜索引擎</option>
+                            </select>
+                        </div>
+                        <div style="float: right;position: relative;top: 2px;">
+                            <input type="radio" name="time" value="-7" title="7天" lay-filter="keywordTime">
+                            <input type="radio" name="time" value="-30" title="30天" lay-filter="keywordTime">
+                            <input type="radio" name="time" value="-90" title="3个月" lay-filter="keywordTime" checked>
+                        </div>
+                    </form>
                 </div>
-                <div class="cart-r">
-                    <div class="stat-text fans-num">0</div>
-                    <div class="stat-heading">用户</div>
+                <div style="height: 100%;" id="keywordLogShow"></div>
+            </div>
+        </div>
+    </div>
+    <!--每日站点趋势-->
+    <div class="layui-col-md6">
+        <div class="layui-card">
+            <div class="yskj-card-body map-body" style="position:relative;">
+                <div style="position: absolute;top: 18px;left: 0;z-index: 9999;width: 100%;">
+                    <form class="layui-form layui-form-pane" id="qzRateSearchForm">
+                        <div style="float: right; width: 100px;margin: 0 16px 0 6px">
+                            <div class="my-btn" onclick="qzRateDetail()">数据详情</div>
+                        </div>
+                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
+                            <select name="terminalType" id="qzRateTerminalType" lay-filter="qzRateTerminalType">
+                                <option value="" selected>电脑+手机</option>
+                                <option value="PC">电脑</option>
+                                <option value="Phone">手机</option>
+                            </select>
+                        </div>
+                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
+                            <select name="searchEngine" id="qzRateSearchEngine" lay-filter="qzRateSearchEngine">
+                                <option value="">搜索引擎</option>
+                            </select>
+                        </div>
+                        <div style="float: right;position: relative;top: 2px;" id="qzRangeDiv">
+                            <input type="radio" name="qzRateRange" value="-7" title="7天" lay-filter="qzRateRange">
+                            <input type="radio" name="qzRateRange" value="-30" title="30天" lay-filter="qzRateRange">
+                            <input type="radio" name="qzRateRange" value="-90" title="3个月" lay-filter="qzRateRange" checked>
+                        </div>
+                    </form>
                 </div>
+                <div style="height: 100%;" id="qzDailyStatistics"></div>
             </div>
         </div>
     </div>
 </div>
 
 <div class="layui-row layui-col-space15">
-    <div class="layui-col-md8">
-        <div class="layui-card">
-            <div class="yskj-card-body map-body">
-                <div style="height: 100%;" id="mapOne"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="layui-col-md4">
-        <div class="layui-card">
-            <div class="yskj-card-body map-body">
-                <h4 class="my-card-title">用户排行榜</h4>
-
-                <div class="progress-box clearfix">
-                    <div class="pro-head">
-                        <img src="${ctx.basePath}/static/ok-admin/images/face.jpg" alt="none"/>
-                    </div>
-                    <div class="pro-data">
-                        <h4 class="por-title">Visits</h4>
-                        <div class="por-txt pro-a">用户比例</div>
-                        <div class="layui-progress" lay-filter="pro-a">
-                            <div class="layui-progress-bar per-bg-a" lay-percent="35%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="progress-box clearfix">
-                    <div class="pro-head">
-                        <img src="${ctx.basePath}/static/ok-admin/images/face.jpg" alt="none"/>
-                    </div>
-                    <div class="pro-data">
-                        <h4 class="por-title">Visits</h4>
-                        <div class="por-txt pro-a">用户比例</div>
-                        <div class="layui-progress" lay-filter="pro-b">
-                            <div class="layui-progress-bar per-bg-b" lay-percent="15%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="progress-box clearfix">
-                    <div class="pro-head">
-                        <img src="${ctx.basePath}/static/ok-admin/images/face.jpg" alt="none"/>
-                    </div>
-                    <div class="pro-data">
-                        <h4 class="por-title">Visits</h4>
-                        <div class="por-txt pro-c">用户比例</div>
-                        <div class="layui-progress" lay-filter="pro-c">
-                            <div class="layui-progress-bar per-bg-c" lay-percent="20%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="progress-box clearfix">
-                    <div class="pro-head">
-                        <img src="${ctx.basePath}/static/ok-admin/images/face.jpg" alt="none"/>
-                    </div>
-                    <div class="pro-data">
-                        <h4 class="por-title">Visits</h4>
-                        <div class="por-txt pro-d">用户比例</div>
-                        <div class="layui-progress" lay-filter="pro-d">
-                            <div class="layui-progress-bar per-bg-d" lay-percent="30%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="layui-row layui-col-space15">
+    <!--每月站点监控-->
     <div class="layui-col-md6">
         <div class="layui-card">
-            <div class="yskj-card-body clearfix">
-                <table id="userData" lay-filter="userdata"></table>
+            <div class="yskj-card-body map-body" style="position:relative;">
+                <div style="position: absolute;top: 18px;left: 0;z-index: 9999;width: 100%;">
+                    <form class="layui-form layui-form-pane" id="form">
+                        <div style="float: right; width: 100px;margin: 0 16px 0 6px">
+                            <div class="my-btn" onclick="toChargeMon()">数据详情</div>
+                        </div>
+                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
+                            <select name="qzTerminal" id="qzTerminal" lay-filter="qzTerminal">
+                                <option value="" selected>电脑+手机</option>
+                                <option value="PC">电脑</option>
+                                <option value="Phone">手机</option>
+                            </select>
+                        </div>
+                        <div style="float: right; width: 120px;margin: 0 0 0 6px">
+                            <select name="searchEngines" id="searchEngines" lay-filter="searchEngines">
+                                <option value="">搜索引擎</option>
+                            </select>
+                        </div>
+                        <div style="float: right;position: relative;top: 2px;">
+                            <input type="radio" name="time" value="-30" title="30天" lay-filter="time">
+                            <input type="radio" name="time" value="1" title="1年" lay-filter="time" checked>
+                            <input type="radio" name="time" value="2" title="3年" lay-filter="time">
+                        </div>
+                    </form>
+                </div>
+                <div style="height: 100%;" id="chargeLogShow"></div>
             </div>
         </div>
     </div>
-    <div class="layui-col-md6">
+    <!--<div class="layui-col-md6">
         <div class="layui-card">
             <div class="yskj-card-body clearfix">
-                <div class="map-china" id="mapChina"></div>
             </div>
         </div>
-    </div>
+    </div>-->
 </div>
-
-<!--日历-->
-<!--<div class="layui-row layui-col-space15">-->
-<!--<div class="clearfix">-->
-<!--<div id="calendar"></div>-->
-<!--</div>-->
-<!--</div>-->
 </body>
-</html>
-<script type="text/javascript" src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script>var condition;</script>
+<script type="text/javascript" src="/static/ok-admin/lib/layui/layui.js"></script>
 <script src="/static/ok-admin/js/somePublic.js"></script>
-<script type="text/javascript" src="${ctx.basePath}/static/ok-admin/js/home.js"></script>
+<script type="text/javascript" src="/static/ok-admin/js/home.js"></script>
+<script type="text/javascript" src="/static/ok-admin/page/keyword/ckPositionSummary.js"></script>
+<script type="text/javascript" src="/static/ok-admin/page/qzsetting/qzChargeMon.js"></script>
+<script>
+    layui.use(['jquery', 'form', 'common'], function () {
+        var $ = layui.jquery;
+        var form = layui.form;
+        var common = layui.common;
 
+        init_searchEngine();
 
+        let postData = common.formToJsonObject('qzRateSearchForm');
 
+        function init_searchEngine() {
+            $.ajax({
+                url: '/internal/common/getSearchEngines',
+                dataType: 'json',
+                type: 'post',
+                async: false,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify({'terminalType': 'All'}),
+                success: function (data) {
+                    $("#qzRateSearchEngine").empty();
+                    $("#qzRateSearchEngine").append('<option value="">搜索引擎</option>');
+                    $.each(data.data, function (index, item) {
+                        $('#qzRateSearchEngine').append('<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
+                    });
+                    form.render("select");
+                }
+            });
+        }
 
+        var qzDailyStatistics = echarts.init(document.getElementById("qzDailyStatistics"));
+        qzDailyStatistics.showLoading({text: '数据加载中'});
 
+        init_qz_rate_statistics(postData);
 
+        function init_qz_rate_statistics(condition) {
+            $.ajax({
+                url: '/internal/qzRateStatistics/generateQZRateStatisticsDataMap',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(condition),
+                timeout: 10000,
+                type: 'POST',
+                success: function (res) {
+                    qzDailyStatistics.hideLoading();
+                    if (res.code === 200) {
+                        if (res.data != null) {
+                            var qzDailyStatisticsData = res.data;
+                            var qzDailyStatisticsOption = {
+                                color: ['#1fd5e5', '#51d02e', '#a951ec', '#ff3701'],
+                                title: {
+                                    text: '每日站点趋势',
+                                    subtext: '',
+                                    y: '10',
+                                    x: '10'
+                                },
+                                tooltip: {
+                                    trigger: "axis"
+                                },
+                                legend: {
+                                    orient: 'horizontal',
+                                    icon: "rect",
+                                    top: '40',
+                                    x: 'center',
+                                    data: [
+                                        "站点总数",
+                                        "上涨个数",
+                                        "不变个数",
+                                        "下降个数"
+                                    ]
+                                },
+                                grid: {
+                                    x: 40,
+                                    y: 70,
+                                    x2: 20,
+                                    y2: 20,
+                                },
+                                xAxis: {
+                                    type: "category",
+                                    boundaryGap: false,
+                                    data: qzDailyStatisticsData.date,
+                                    axisLabel: {
+                                        interval: 10
+                                    }
+                                },
+                                yAxis: {
+                                    type: "value"
+                                },
+                                series:
+                                    [
+                                        {
+                                            name: "站点总数",
+                                            type: "line",
+                                            smooth: true,
+                                            symbolSize: 1,
+                                            symbol: 'none',
+                                            lineStyle: {
+                                                type: "solid",
+                                                width: 1
+                                            },
+                                            data: qzDailyStatisticsData.totalCount,
 
+                                        },
+                                        {
+                                            name: "上涨个数",
+                                            type: "line",
+                                            smooth: true,
+                                            symbolSize: 1,
+                                            symbol: 'none',
+                                            lineStyle: {
+                                                type: "solid",
+                                                width: 1
+                                            },
+                                            data: qzDailyStatisticsData.riseCount
+                                        },
+                                        {
+                                            name: "不变个数",
+                                            type: "line",
+                                            smooth: true,
+                                            symbolSize: 1,
+                                            symbol: 'none',
+                                            lineStyle: {
+                                                type: "solid",
+                                                width: 1
+                                            },
+                                            data: qzDailyStatisticsData.unchangedCount
+                                        },
+                                        {
+                                            name: "下降个数",
+                                            type: "line",
+                                            smooth: true,
+                                            symbolSize: 1,
+                                            symbol: 'none',
+                                            lineStyle: {
+                                                type: "solid",
+                                                width: 1
+                                            },
+                                            data: qzDailyStatisticsData.fallCount
+                                        }
+                                    ]
+                            };
+                            switch (condition.qzRateRange) {
+                                case '-7':
+                                    qzDailyStatisticsOption.xAxis.axisLabel.interval = 0;
+                                    break;
+                                case '-30':
+                                    qzDailyStatisticsOption.xAxis.axisLabel.interval = 3;
+                                    break;
+                                default:
+                                    qzDailyStatisticsOption.xAxis.axisLabel.interval = 6;
+                                    break;
+                            }
+                            qzDailyStatistics.setOption(qzDailyStatisticsOption, true);
+                        }
+                    } else {
+                        common.showFailMsg("每日站点趋势数据获取失败")
+                    }
+                },
+                error: function () {
+                    qzDailyStatistics.hideLoading();
+                    common.showFailMsg("网络异常请稍后再试")
+                }
+            });
+        }
 
+        form.on('select(qzRateTerminalType)', function (data) {
+            let postData = common.formToJsonObject('qzRateSearchForm');
+            init_qz_rate_statistics(postData);
+        });
 
+        form.on('select(qzRateSearchEngine)', function (data) {
+            let postData = common.formToJsonObject('qzRateSearchForm');
+            init_qz_rate_statistics(postData);
+        });
 
+        form.on('radio(qzRateRange)', function (data) {
+            let postData = common.formToJsonObject('qzRateSearchForm');
+            init_qz_rate_statistics(postData);
+        });
 
+        getCustomerBusinessCount();
 
+        /**
+         * 获取各业务下的客户数
+         */
+        function getCustomerBusinessCount() {
+            $.ajax({
+                url: '/internal/customerbusiness/getCustomerBusinessCount',
+                dataType: 'json',
+                timeout: 10000,
+                type: 'POST',
+                success: function (res) {
+                    if (res.code === 200) {
+                        if (res.data != null) {
+                            let data = res.data;
+                            $("#keyword_customer_business").html(data.keyword);
+                            $("#qzsetting_customer_business").html(data.qzsetting);
+                            $("#fm_customer_business").html(data.fm);
+                            $("#qt_customer_business").html(data.qt); // 是否与pt的相加
+                        }
+                    } else {
+                        common.showFailMsg(res.msg);
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络异常请稍后再试")
+                }
+            });
+        }
 
+        getQzSettingRenewalStatusCount();
 
+        /**
+         * 获取站点各续费状态下的数量
+         */
+        function getQzSettingRenewalStatusCount() {
+            $.ajax({
+                url: '/internal/qzsetting/getQzSettingRenewalStatusCount',
+                dataType: 'json',
+                timeout: 10000,
+                type: 'POST',
+                success: function (res) {
+                    if (res.code === 200) {
+                        if (res.data != null) {
+                            let data = res.data;
+                            $("#qz_addCount").html(data.addCount);
+                            $("#qz_operatorCount").html(data.operatorCount);
+                            $("#qz_stopCount").html(data.stopCount);
+                            $("#qz_obtainedCount").html(data.obtainedCount);
+                            $("#qz_otherCount").html(data.otherCount);
+                        }
+                    } else {
+                        common.showFailMsg(res.msg);
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络异常请稍后再试")
+                }
+            });
+        }
 
+        getCustomerKeywordStatusCount();
 
+        /**
+         * 获取关键词各状态下的数量
+         */
+        function getCustomerKeywordStatusCount() {
+            $.ajax({
+                url: '/internal/customerKeyword/getCustomerKeywordStatusCount',
+                dataType: 'json',
+                timeout: 10000,
+                type: 'POST',
+                success: function (res) {
+                    if (res.code === 200) {
+                        if (res.data != null) {
+                            let data = res.data;
+                            $("#customer_keyword_addCount").html(data.addCount);
+                            $("#customer_keyword_operatorCount").html(data.operatorCount);
+                            $("#customer_keyword_stopCount").html(data.stopCount);
+                            $("#customer_keyword_obtainedCount").html(data.obtainedCount);
+                        }
+                    } else {
+                        common.showFailMsg(res.msg);
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络异常请稍后再试")
+                }
+            });
+        }
 
+        getMachineStatusCount();
 
-
+        /**
+         * 获取机器各状态下的数量
+         */
+        function getMachineStatusCount() {
+            $.ajax({
+                url: '/internal/machineManage/getMachineStatusCount',
+                dataType: 'json',
+                timeout: 5000,
+                type: 'get',
+                success: function (res) {
+                    if (res.code === 200) {
+                        if (res.data != null) {
+                            let data = res.data;
+                            $("#machine_pc_active").html(data.pcAll);
+                            $("#machine_pc_stop").html(data.pcDie);
+                            $("#machine_phone_active").html(data.phoneAll);
+                            $("#machine_phone_stop").html(data.phoneDie);
+                        }
+                    } else {
+                        common.showFailMsg(res.msg);
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络异常请稍后再试")
+                }
+            });
+        }
+    });
+</script>

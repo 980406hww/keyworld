@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CustomerKeywordPositionSummaryService extends ServiceImpl<CustomerKeywordPositionSummaryDao, CustomerKeywordPositionSummary> {
+
     private static Logger logger = LoggerFactory.getLogger(CustomerKeywordPositionSummaryService.class);
 
     @Autowired
@@ -19,7 +20,9 @@ public class CustomerKeywordPositionSummaryService extends ServiceImpl<CustomerK
         try {
             CustomerKeywordPositionSummary positionSummary = customerKeywordPositionSummaryDao.getTodayPositionSummary(customerKeywordUuid);
             if (positionSummary != null) {
-                if ((positionSummary.getPosition() == null || positionSummary.getPosition() <= 0) || (position > 0 && positionSummary.getPosition() > position)) {
+                boolean updFlag =
+                    (positionSummary.getPosition() == null || positionSummary.getPosition() <= 0) || (position > 0 && positionSummary.getPosition() > position);
+                if (updFlag) {
                     positionSummary.setPosition(position);
                     customerKeywordPositionSummaryDao.updateById(positionSummary);
                 }
@@ -29,12 +32,12 @@ public class CustomerKeywordPositionSummaryService extends ServiceImpl<CustomerK
                 positionSummary.setCustomerKeywordUuid(customerKeywordUuid);
                 customerKeywordPositionSummaryDao.addPositionSummary(positionSummary);
             }
-        }catch (Exception ex){
-
+        } catch (Exception ex) {
+            logger.error("savePositionSummary error: " + ex.getMessage());
         }
     }
 
-    public void deletePositionSummaryFromAWeekAgo() {
-        customerKeywordPositionSummaryDao.deletePositionSummaryFromAWeekAgo();
+    public void deletePositionSummaryFromOneYearAgo() {
+        customerKeywordPositionSummaryDao.deletePositionSummaryFromOneYearAgo();
     }
 }

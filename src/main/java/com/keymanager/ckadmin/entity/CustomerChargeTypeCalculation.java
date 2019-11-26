@@ -10,7 +10,7 @@ public class CustomerChargeTypeCalculation extends BaseEntity {
     protected static final long serialVersionUID = -1101942701283949852L;
 
     @TableField(value = "fCustomerChargeTypeUuid")
-    private int customerChargeTypeUuid;
+    private long customerChargeTypeUuid;
 
     @TableField(value = "fChargeDataType")
     private String chargeDataType;
@@ -39,11 +39,11 @@ public class CustomerChargeTypeCalculation extends BaseEntity {
     @TableField(value = "fMaxPrice")
     private Double maxPrice;
 
-    public int getCustomerChargeTypeUuid() {
+    public long getCustomerChargeTypeUuid() {
         return customerChargeTypeUuid;
     }
 
-    public void setCustomerChargeTypeUuid(int customerChargeTypeUuid) {
+    public void setCustomerChargeTypeUuid(long customerChargeTypeUuid) {
         this.customerChargeTypeUuid = customerChargeTypeUuid;
     }
 

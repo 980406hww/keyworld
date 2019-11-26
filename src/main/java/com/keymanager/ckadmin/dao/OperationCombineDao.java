@@ -26,15 +26,11 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
 
     long lastInsertID();
 
-    void updateOperationCombineRemainingAccount(
-        @Param("operationCombineUuid") long operationCombineUuid,
-        @Param("remainingAccount") int remainingAccount);
+    void updateOperationCombineRemainingAccount(@Param("operationCombineUuid") long operationCombineUuid, @Param("remainingAccount") int remainingAccount);
 
-    OperationCombine getOperationCombine(@Param("groupName") String groupName,
-        @Param("terminalType") String terminalType);
+    OperationCombine getOperationCombine(@Param("groupName") String groupName, @Param("terminalType") String terminalType);
 
-    void updateMaxInvalidCount(@Param("uuid") long uuid,
-        @Param("maxInvalidCount") int maxInvalidCount);
+    void updateMaxInvalidCount(@Param("uuid") long uuid, @Param("maxInvalidCount") int maxInvalidCount);
 
     /**
      * 获取操作组合
@@ -43,9 +39,7 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
      */
     String getOperationCombineName(@Param("optimizeGroupName") String optimizeGroupName);
 
-    List<OperationCombine> searchOperationCombines(@Param("page") Page<OperationCombine> page,
-        @Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
+    List<OperationCombine> searchOperationCombines(Page<OperationCombine> page, @Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 
-    void updateOperationCombineName(@Param("uuid") long uuid,
-        @Param("operationCombineName") String operationCombineName);
+    void updateOperationCombineName(@Param("uuid") long uuid, @Param("operationCombineName") String operationCombineName);
 }

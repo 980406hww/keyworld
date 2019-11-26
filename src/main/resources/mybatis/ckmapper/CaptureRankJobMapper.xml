@@ -100,4 +100,174 @@
             #{uuid}
         </foreach>
     </update>
+
+    <select id="selectPageByCriteria" resultType="com.keymanager.ckadmin.entity.CaptureRankJob">
+        SELECT
+        <include refid="colID"/>
+        FROM t_capture_rank_job c
+        WHERE 1 = 1
+        <if test="criteria.init != null and criteria.init == 'init'">
+            AND 1 != 1
+        </if>
+        <if test="criteria.groupNames != null and criteria.groupNames != ''">
+            AND c.fGroupNames LIKE CONCAT(#{criteria.groupNames}, '%')
+        </if>
+        <if test="criteria.customerUuid != null and criteria.customerUuid != ''">
+            AND c.fCustomerUuid = #{criteria.customerUuid}
+        </if>
+        <if test="criteria.operationType != null and criteria.operationType != ''">
+            AND c.fOperationType = #{criteria.operationType}
+        </if>
+        <if test="criteria.exectionType != null and criteria.exectionType != ''">
+            AND c.fExectionType = #{criteria.exectionType}
+        </if>
+        <if test="criteria.exectionStatus != null and criteria.exectionStatus != ''">
+            AND c.fExectionStatus = #{criteria.exectionStatus}
+        </if>
+        <choose>
+            <when test="criteria.rankJobType == 'Common'">
+                AND c.fRankJobType = #{criteria.rankJobType}
+                AND c.fQZSettingUuid IS NULL
+            </when>
+            <when test="criteria.rankJobType == 'Station'">
+                AND c.fQZSettingUuid > ''
+            </when>
+            <otherwise>
+                AND c.fRankJobType = #{criteria.rankJobType}
+            </otherwise>
+        </choose>
+        <if test="criteria.rankJobArea != null and criteria.rankJobArea != ''">
+            AND c.fRankJobArea = #{criteria.rankJobArea}
+        </if>
+        <if test="criteria.rankJobCity != null and criteria.rankJobCity != ''">
+            AND c.fRankJobCity = #{criteria.rankJobCity}
+        </if>
+    </select>
+
+    <select id="searchFiveMiniSetCheckingJobs" resultType="com.keymanager.ckadmin.entity.CaptureRankJob">
+        SELECT
+            c.fUuid as `uuid`,
+            c.fCustomerUuid as `customerUuid`,
+            c.fQZSettingUuid as `qzSettingUuid`,
+            c.fOperationType as `operationType`,
+            c.fGroupNames as `groupNames`,
+            c.fStartTime as `startTime`
+        FROM
+            t_capture_rank_job c
+        WHERE
+            c.fExectionStatus = 'Checking'
+        AND
+            c.fEndTime &lt; DATE_SUB(NOW(),INTERVAL 5 MINUTE)
+    </select>
+
+    <select id="searchThreeMiniStatusEqualsOne" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM
+        t_customer_keyword
+        WHERE
+        fTerminalType = #{captureRankJob.operationType}
+        AND
+        fOptimizeGroupName = #{captureRankJob.groupNames}
+        <if test="captureRankJob.customerUuid != null and captureRankJob.customerUuid != ''">
+            AND fCustomerUuid = #{captureRankJob.customerUuid}
+        </if>
+        AND
+        fStatus = 1
+        AND
+        fCaptureStatus = 1
+        AND
+        fCapturePositionQueryTime &lt; DATE_SUB(NOW(),INTERVAL 2 MINUTE)
+    </select>
+
+    <select id="searchCountByPosition" resultType="java.util.Map">
+        SELECT
+        COUNT((ck.fCurrentPosition BETWEEN 1 AND 10) OR NULL)  AS 'topTenNum',
+        COUNT((ck.fCurrentPosition BETWEEN 1 AND 20) OR NULL)  AS 'topTwentyNum',
+        COUNT((ck.fCurrentPosition BETWEEN 1 AND 30) OR NULL)  AS 'topThirtyNum',
+        COUNT((ck.fCurrentPosition BETWEEN 1 AND 40) OR NULL)  AS 'topFortyNum',
+        COUNT((ck.fCurrentPosition BETWEEN 1 AND 50) OR NULL)  AS 'topFiftyNum'
+        FROM t_customer_keyword ck
+        WHERE ck.fTerminalType = #{captureRankJob.operationType}
+        AND ck.fOptimizeGroupName = #{captureRankJob.groupNames}
+        AND ck.fStatus = 1
+        <if test="captureRankJob.customerUuid != null and captureRankJob.customerUuid != ''">
+            AND fCustomerUuid = #{captureRankJob.customerUuid}
+        </if>
+    </select>
+
+    <select id="getProcessingJob" resultType="com.keymanager.ckadmin.entity.CaptureRankJob">
+        select
+        <include refid="colID"/>
+        from t_capture_rank_job c
+        where
+        c.fExectionStatus='Processing'
+        AND
+        c.fCaptureRankJobStatus = 1
+        <if test="captureJobCriteria.rankJobType != null and captureJobCriteria.rankJobType != ''">
+            AND c.fRankJobType = #{captureJobCriteria.rankJobType}
+        </if>
+        <if test="captureJobCriteria.rankJobArea != null and captureJobCriteria.rankJobArea != ''">
+            AND c.fRankJobArea = #{captureJobCriteria.rankJobArea}
+        </if>
+        <choose>
+            <when test="captureJobCriteria.rankJobCity != null and captureJobCriteria.rankJobCity != ''">
+                AND c.fRankJobCity = #{captureJobCriteria.rankJobCity}
+            </when>
+            <otherwise>
+                AND c.fRankJobCity IS NULL
+            </otherwise>
+        </choose>
+        order By c.fExectionTime
+        limit 1
+    </select>
+
+    <select id="provideCaptureRankJob" resultType="com.keymanager.ckadmin.entity.CaptureRankJob">
+        SELECT
+        <include refid="colID"/>
+        FROM
+        t_capture_rank_job c
+        WHERE
+        (
+        c.fExectionStatus='New' OR
+        (
+        c.fExectionStatus='Complete'
+        AND c.fExectionType='Everyday'
+        AND (c.fLastExecutionDate &lt; curdate() OR c.fLastExecutionDate IS NULL)
+        AND DATEDIFF(NOW(),fLastExecutionDate) &gt;= fCaptureDaysInterval
+        )
+        )
+        AND c.fExectionTime &lt;= curtime()
+        AND c.fCaptureRankJobStatus = 1
+        <if test="captureJobCriteria.rankJobType != null and captureJobCriteria.rankJobType != ''">
+            AND c.fRankJobType = #{captureJobCriteria.rankJobType}
+        </if>
+        <if test="jobType != null and jobType == 0">
+            AND fQZSettingUuid IS NULL
+        </if>
+        <if test="jobType != null and jobType == 1">
+            AND fQZSettingUuid IS NOT NULL
+        </if>
+        <if test="captureJobCriteria.rankJobArea != null and captureJobCriteria.rankJobArea != ''">
+            AND c.fRankJobArea = #{captureJobCriteria.rankJobArea}
+        </if>
+        <choose>
+            <when test="captureJobCriteria.rankJobCity != null and captureJobCriteria.rankJobCity != ''">
+                AND c.fRankJobCity = #{captureJobCriteria.rankJobCity}
+            </when>
+            <otherwise>
+                AND c.fRankJobCity IS NULL
+            </otherwise>
+        </choose>
+        ORDER BY c.fExectionTime
+        limit 1
+    </select>
+
+    <select id="getCaptureRankJobStatus" resultType="java.lang.Boolean">
+        select
+        c.fCaptureRankJobStatus
+        from t_capture_rank_job c
+        where
+        c.fUuid=#{captureRankJobUuid}
+    </select>
 </mapper>

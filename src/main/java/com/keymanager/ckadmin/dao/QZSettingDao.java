@@ -54,5 +54,10 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     void updateCustomerUuidByQzUuids(@Param("customerUuid") Long customerUuid, @Param("qzUuids") List<Long> qzUuids);
 
     Long getExistingQzSettingUuid(@Param("customerUuid") Long customerUuid, @Param("domain") String domain, @Param("searchEngine") String searchEngine);
+    List<QZSetting> selectByUuids(@Param("uuids") List uuids);
+
+    List<Long> getQZUuidsByUserID(@Param("userID") String userID,@Param("searchEngine")String searchEngine, @Param("terminalType")String terminalType);
+
+    Map<String, Object> getQzSettingRenewalStatusCount();
 }
 

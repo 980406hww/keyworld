@@ -23,7 +23,6 @@ import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.ReflectUtils;
 import com.keymanager.ckadmin.util.Utils;
-import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
@@ -31,8 +30,6 @@ import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.webDo.KeywordCountDO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.util.TerminalTypeMapping;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -43,6 +40,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -151,7 +149,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -169,7 +167,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             return new ResultBean(200, "success");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "error");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -184,7 +182,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -218,7 +216,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -238,7 +236,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -258,7 +256,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -273,7 +271,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -288,7 +286,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -313,7 +311,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -337,7 +335,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     @RequiresPermissions("/internal/customerKeyword/toKeywords")
     @PostMapping(value = "/getCustomerKeywords")
     public ResultBean searchCustomerKeywords(@RequestBody KeywordCriteria keywordCriteria) {
-        ResultBean resultBean = new ResultBean();
+        ResultBean resultBean = new ResultBean(0, "success");
         try {
             Page<CustomerKeyword> page = new Page<>(keywordCriteria.getPage(), keywordCriteria.getLimit());
             String orderByField = ReflectUtils.getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
@@ -349,14 +347,12 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             }
             page = customerKeywordService.searchCustomerKeywords(page, keywordCriteria);
             List<CustomerKeyword> keywords = page.getRecords();
-            resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("success");
             resultBean.setData(keywords);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -404,7 +400,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -452,7 +448,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }
@@ -460,9 +456,18 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     //导出成Excel文件
     @RequiresPermissions("/internal/customerKeyword/downloadCustomerKeywordInfo")
     @PostMapping(value = "/downloadCustomerKeywordInfo2")
-    public ResultBean downloadCustomerKeywordInfo(HttpServletRequest request, HttpServletResponse response, KeywordCriteria keywordCriteria) {
+    public ResultBean downloadCustomerKeywordInfo(HttpServletResponse response, KeywordCriteria keywordCriteria) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
+            String orderByField = ReflectUtils.getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
+            if (StringUtils.isNotEmpty(orderByField)) {
+                keywordCriteria.setOrderingElement(orderByField);
+                if (keywordCriteria.getOrderMode() != null && keywordCriteria.getOrderMode() == 0) {
+                    keywordCriteria.setOrderingElement(orderByField + " DESC");
+                }
+            } else {
+                keywordCriteria.setOrderingElement("fKeyword DESC");
+            }
             List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywordInfo(keywordCriteria);
             if (!Utils.isEmpty(customerKeywords)) {
                 CustomerKeywordInfoExcelWriter excelWriter = new CustomerKeywordInfoExcelWriter();
@@ -476,7 +481,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -495,7 +500,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }
@@ -517,7 +522,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -533,7 +538,19 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             return new ResultBean(200, "success");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "error");
+            return new ResultBean(400, e.getMessage());
+        }
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordStatus")
+    @PostMapping(value = "/updCKStatusFromQZ")
+    public ResultBean updCKStatusFromQZ(@RequestBody Map<String, Object> condition) {
+        try {
+            customerKeywordService.updCKStatusFromQZ(condition);
+            return new ResultBean(200, "success");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -546,7 +563,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             return new ResultBean(200, "success");
         } catch (Exception ex) {
             logger.error(ex.getMessage());
-            return new ResultBean(400, "error");
+            return new ResultBean(400, ex.getMessage());
         }
     }
 
@@ -558,7 +575,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             return new ResultBean(200, "success");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "error");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -573,7 +590,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
     }
@@ -594,7 +611,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             return new ResultBean(200, "success");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResultBean(400, "error");
+            return new ResultBean(400, e.getMessage());
         }
     }
 
@@ -635,20 +652,20 @@ public class CustomerKeywordController extends SpringMVCBaseController {
                 ptKeywordCriteria.setTerminalType(TerminalTypeMapping.getTerminalType(request));
             }
             Map<String, String> searchEngineMap = configService.getSearchEngineMap(ptKeywordCriteria.getTerminalType());
-            Map<String, Object> data = new HashMap<>();
+            Map<String, Object> data = new HashMap<>(3);
             data.put("user", user);
             data.put("activeUsers", activeUsers);
             data.put("searchEngineMap", searchEngineMap);
             resultBean.setCode(200);
             resultBean.setMsg("success");
             resultBean.setData(data);
+            return resultBean;
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
-        return resultBean;
     }
 
     @PostMapping(value = "/getPTKeywords")
@@ -672,7 +689,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -815,19 +832,21 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     public ResultBean clearFailReason(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
+            if (CollectionUtils.isNotEmpty(keywordCriteria.getUuids()) && keywordCriteria.getCustomerUuid() == null) {
+                resultBean.setCode(400);
+                resultBean.setMsg(null);
+                return resultBean;
+            }
             String userName = (String) request.getSession().getAttribute("username");
             boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
             if (!isDepartmentManager) {
                 keywordCriteria.setUserName(userName);
             }
-            if ((keywordCriteria.getUuids() == null || keywordCriteria.getUuids().isEmpty()) && (keywordCriteria.getCustomerUuid() == null)) {
-                return resultBean;
-            }
             customerKeywordService.updateSelectFailReason(keywordCriteria);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
         }
         return resultBean;
     }
@@ -895,5 +914,20 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             logger.error(e.getMessage());
         }
         return mv;
+    }
+
+    @PostMapping("/getCustomerKeywordStatusCount")
+    public ResultBean getCustomerKeywordStatusCount() {
+        ResultBean resultBean = new ResultBean(200, "获取关键词各状态下的数量成功");
+        try {
+            resultBean.setData(customerKeywordService.getCustomerKeywordStatusCount());
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            resultBean.setMsg(e.getMessage());
+            resultBean.setCode(400);
+            return resultBean;
+        }
+        return resultBean;
     }
 }

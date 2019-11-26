@@ -261,4 +261,14 @@ public class QZKeywordRankInfoServiceImpl extends
         qzSetting.setCrawlerTime(new Date());
         return qzSetting;
     }
+
+    @Override
+    public List<QZKeywordRankInfo> getXTRankInfos() {
+        return qzKeywordRankInfoDao.getXTRankInfos();
+    }
+
+    @Override
+    public void fixQZXTRankDate(Long uuid, String yearRankDate) {
+        qzKeywordRankInfoDao.updateRankDateWithYear(uuid, yearRankDate);
+    }
 }

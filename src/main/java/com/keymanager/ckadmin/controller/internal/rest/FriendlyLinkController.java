@@ -49,7 +49,7 @@ public class FriendlyLinkController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -65,7 +65,7 @@ public class FriendlyLinkController {
         }catch (Exception e){
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -81,7 +81,7 @@ public class FriendlyLinkController {
         }catch (Exception e){
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -98,7 +98,7 @@ public class FriendlyLinkController {
         }catch (Exception e){
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -114,7 +114,7 @@ public class FriendlyLinkController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -131,7 +131,7 @@ public class FriendlyLinkController {
         }catch (Exception e){
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
@@ -149,13 +149,12 @@ public class FriendlyLinkController {
         }catch (Exception e){
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;
     }
 
-//    @RequiresPermissions("/internal/friendlyLink/saveFriendlyLink")
     @RequestMapping(value = "/searchFriendlyLinkTypeList/{websiteUuid}", method = RequestMethod.GET)
     public ResultBean  searchFriendlyLinkTypeList(@PathVariable Long websiteUuid) {
         ResultBean resultBean = new ResultBean();
@@ -166,7 +165,7 @@ public class FriendlyLinkController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
-            resultBean.setMsg("未知错误");
+            resultBean.setMsg(e.getMessage());
             return resultBean;
         }
         return resultBean;

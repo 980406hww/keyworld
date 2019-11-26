@@ -81,4 +81,14 @@ public class QZOperationTypeServiceImpl extends ServiceImpl<QZOperationTypeDao, 
     public String findQZChargeRuleStandardSpecies(long qzSettingUuid, String terminalType) {
         return qzOperationTypeDao.getQZSettingStandardSpecie(qzSettingUuid, terminalType);
     }
+
+    @Override
+    public QZOperationType searchQZOperationTypeByQZSettingAndTerminalType(long qzSettingUuid, String operationType) {
+        return qzOperationTypeDao.searchQZOperationTypeByQZSettingAndTerminalType(qzSettingUuid, operationType);
+    }
+
+    @Override
+    public void updateStandardTimeByUuid(Long uuid, int updateFlag, int lastAchieve) {
+        qzOperationTypeDao.updateStandardTimeByUuid(uuid, updateFlag, lastAchieve);
+    }
 }

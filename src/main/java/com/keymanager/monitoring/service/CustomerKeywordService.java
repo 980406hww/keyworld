@@ -119,7 +119,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     private final static ArrayBlockingQueue customerKeywordCrawlQZRankQueue = new ArrayBlockingQueue(30000);
 
-    private final static Map<String, ArrayBlockingQueue> customerKeywordCrawlPTRankQueueMap = new HashMap<String, ArrayBlockingQueue>();
+    private final static ArrayBlockingQueue customerKeywordCrawlPTRankQueue = new ArrayBlockingQueue(24000);
 
     private final static ArrayBlockingQueue checkingEnteredKeywordQueue = new ArrayBlockingQueue<>(5000);
 
@@ -278,7 +278,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void cacheCheckingEnteredCustomerKeywords() {
         if (checkingEnteredKeywordQueue.size() < 4000) {
-            List<CustomerKeywordEnteredVO> checkEnteredKeywords = null;
+            List<CustomerKeywordEnteredVO> checkEnteredKeywords;
             do {
                 checkEnteredKeywords = customerKeywordDao.getCheckEnteredKeywords();
                 if (CollectionUtils.isNotEmpty(checkEnteredKeywords)) {
@@ -304,13 +304,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         CaptureRankJob captureRankJob = captureRankJobService.checkingCaptureRankJobCompleted(captureJobCriteria);
         if (null == captureRankJob) {
             if (customerKeywordCrawlQZRankQueue.size() < 15000) {
-                List<CustomerKeyWordCrawlRankVO> customerKeyWordCrawlRankVos = null;
+                List<CustomerKeyWordCrawlRankVO> customerKeyWordCrawlRankVos;
                 do {
-                    customerKeyWordCrawlRankVos = customerKeywordDao
-                        .getCrawlRankKeywords("qz", 1, null);
+                    customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords("qz", 1);
                     if (CollectionUtils.isEmpty(customerKeyWordCrawlRankVos)) {
-                        customerKeyWordCrawlRankVos = customerKeywordDao
-                            .getCrawlRankKeywords("qz", 0, null);
+                        customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords("qz", 0);
                     }
                     if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos)) {
                         List<Long> customerKeywordUuids = new ArrayList<>();
@@ -324,8 +322,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                         customerKeywordDao.updateCrawlRankKeywordTimeByUuids(customerKeywordUuids);
                     }
                 }
-                while (customerKeywordCrawlQZRankQueue.size() < 30000 && CollectionUtils
-                    .isNotEmpty(customerKeyWordCrawlRankVos));
+                while (customerKeywordCrawlQZRankQueue.size() < 30000 && CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos));
             }
         }
     }
@@ -337,43 +334,29 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         captureJobCriteria.setRankJobType("Common");
         CaptureRankJob captureRankJob = captureRankJobService.checkingCaptureRankJobCompleted(captureJobCriteria);
         if (null == captureRankJob) {
-            List<String> cities = customerKeywordDao.getCities();
-            if (CollectionUtils.isNotEmpty(cities)) {
-                for (String city : cities) {
-                    ArrayBlockingQueue blockingQueue = customerKeywordCrawlPTRankQueueMap.get(city);
-                    if (blockingQueue == null) {
-                        blockingQueue = new ArrayBlockingQueue(10000);
-                        customerKeywordCrawlPTRankQueueMap.put(city, blockingQueue);
+            int currentSize = customerKeywordCrawlPTRankQueue.size();
+            int offerSize = 0;
+            if (currentSize < 12000) {
+                List<CustomerKeyWordCrawlRankVO> customerKeyWordCrawlRankVos;
+                do {
+                    customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords("pt", 1);
+                    if (CollectionUtils.isEmpty(customerKeyWordCrawlRankVos)) {
+                        customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords("pt", 0);
                     }
-                    int currentSize = blockingQueue.size();
-                    int offerSize = 0;
-                    if (currentSize < 5000) {
-                        List<CustomerKeyWordCrawlRankVO> customerKeyWordCrawlRankVos = null;
-                        do {
-                            customerKeyWordCrawlRankVos = customerKeywordDao
-                                .getCrawlRankKeywords("pt", 1, city);
-                            if (CollectionUtils.isEmpty(customerKeyWordCrawlRankVos)) {
-                                customerKeyWordCrawlRankVos = customerKeywordDao
-                                    .getCrawlRankKeywords("pt", 0, city);
-                            }
-                            if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos)) {
-                                List<Long> customerKeywordUuids = new ArrayList<>();
-                                for (CustomerKeyWordCrawlRankVO customerKeyWordCrawlRankVo : customerKeyWordCrawlRankVos) {
-                                    if (blockingQueue.offer(customerKeyWordCrawlRankVo)) {
-                                        offerSize++;
-                                        customerKeywordUuids
-                                            .add(customerKeyWordCrawlRankVo.getUuid());
-                                    } else {
-                                        break;
-                                    }
-                                }
-                                customerKeywordDao.updateCrawlRankKeywordTimeByUuids(customerKeywordUuids);
+                    if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos)) {
+                        List<Long> customerKeywordUuids = new ArrayList<>();
+                        for (CustomerKeyWordCrawlRankVO customerKeyWordCrawlRankVo : customerKeyWordCrawlRankVos) {
+                            if (customerKeywordCrawlPTRankQueue.offer(customerKeyWordCrawlRankVo)) {
+                                customerKeywordUuids.add(customerKeyWordCrawlRankVo.getUuid());
+                                offerSize++;
+                            } else {
+                                break;
                             }
                         }
-                        while (currentSize + offerSize < 10000 && CollectionUtils
-                            .isNotEmpty(customerKeyWordCrawlRankVos));
+                        customerKeywordDao.updateCrawlRankKeywordTimeByUuids(customerKeywordUuids);
                     }
                 }
+                while (currentSize + offerSize < 24000 && CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos));
             }
         }
     }
@@ -1916,7 +1899,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     public void cleanCKLogFromAWeekAgo() {
         customerKeywordInvalidCountLogService.deleteInvalidCountLogFromAWeekAgo();
-        customerKeywordPositionSummaryService.deletePositionSummaryFromAWeekAgo();
+        // TODO 清空一年前的关键词排名
+        customerKeywordPositionSummaryService.deletePositionSummaryFromOneYearAgo();
         dailyReportService.deleteDailyReportFromAWeekAgo();
         dailyReportItemService.deleteDailyReportItemFromAWeekAgo();
     }
@@ -2101,20 +2085,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return machineGroupQueueVOS;
     }
 
-    public synchronized List<CustomerKeyWordCrawlRankVO> getCrawlRankKeyword(String city) {
+    public synchronized List<CustomerKeyWordCrawlRankVO> getCrawlRankKeyword() {
         List<CustomerKeyWordCrawlRankVO> rankVos = new ArrayList<>();
-        ArrayBlockingQueue blockingQueue = customerKeywordCrawlPTRankQueueMap.get(city);
-        if (blockingQueue != null && blockingQueue.size() > 0) {
+        if (customerKeywordCrawlPTRankQueue.size() > 0) {
             do {
-                rankVos.add((CustomerKeyWordCrawlRankVO) blockingQueue.poll());
-            } while (blockingQueue.size() > 0 && rankVos.size() < 10);
-            return rankVos;
-        }
-        blockingQueue = customerKeywordCrawlPTRankQueueMap.get(null);
-        if (blockingQueue != null && blockingQueue.size() > 0) {
-            do {
-                rankVos.add((CustomerKeyWordCrawlRankVO) blockingQueue.poll());
-            } while (blockingQueue.size() > 0 && rankVos.size() < 10);
+                rankVos.add((CustomerKeyWordCrawlRankVO) customerKeywordCrawlPTRankQueue.poll());
+            } while (customerKeywordCrawlPTRankQueue.size() > 0 && rankVos.size() < 10);
             return rankVos;
         }
         if (customerKeywordCrawlQZRankQueue.size() > 0) {

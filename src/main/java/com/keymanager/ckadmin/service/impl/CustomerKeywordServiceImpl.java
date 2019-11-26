@@ -4,48 +4,59 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.CustomerKeywordCleanTitleCriteria;
 import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
+import com.keymanager.ckadmin.criteria.ExternalCaptureJobCriteria;
 import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
 import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
 import com.keymanager.ckadmin.criteria.PTKeywordCountCriteria;
+import com.keymanager.ckadmin.criteria.QZRateKewordCountCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.dao.CustomerKeywordDao;
+import com.keymanager.ckadmin.entity.CaptureRankJob;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.enums.CollectMethod;
 import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.EntryTypeEnum;
 import com.keymanager.ckadmin.enums.KeywordEffectEnum;
 import com.keymanager.ckadmin.excel.operator.AbstractExcelReader;
+import com.keymanager.ckadmin.service.CaptureRankJobService;
 import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.CustomerExcludeKeywordService;
+import com.keymanager.ckadmin.service.CustomerKeywordPositionSummaryService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
+import com.keymanager.ckadmin.service.QZRateStatisticsService;
+import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.Constants;
 import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.CodeNameVo;
+import com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
-import com.keymanager.ckadmin.vo.PTkeywordCountVO;
-import com.keymanager.monitoring.vo.keywordAmountCountVo;
-import java.io.InputStream;
-import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
+import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
+import com.keymanager.ckadmin.vo.PTkeywordCountVO;
+import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
+import com.keymanager.value.CustomerKeywordForCapturePosition;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import javax.annotation.Resource;
 import org.apache.commons.beanutils.ConvertUtils;
@@ -76,7 +87,23 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Resource(name = "configService2")
     private ConfigService configService;
 
+    @Resource(name = "qzSettingService2")
+    private QZSettingService qzSettingService;
+
+    @Resource(name = "qzRateStatisticsService2")
+    private QZRateStatisticsService qzRateStatisticsService;
+
+    @Resource(name = "captureRankJobService2")
+    private CaptureRankJobService captureRankJobService;
+
+    @Resource(name = "ckPositionSummaryService2")
+    private CustomerKeywordPositionSummaryService ckPositionSummaryService;
+
     private final static Map<String, LinkedBlockingQueue> machineGroupQueueMap = new HashMap<>();
+
+    private final static ArrayBlockingQueue<CustomerKeyWordCrawlRankVO> customerKeywordCrawlPTRankQueue = new ArrayBlockingQueue<>(24000);
+
+    private final static ArrayBlockingQueue<CustomerKeyWordCrawlRankVO> customerKeywordCrawlQZRankQueue = new ArrayBlockingQueue<>(30000);
 
     @Override
     public void cacheCustomerKeywords() {
@@ -599,6 +626,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
+    public void updCKStatusFromQZ(Map<String, Object> condition) {
+        customerKeywordDao.updCKStatusFromQZ(condition);
+    }
+
+    @Override
     public void cleanTitle(CustomerKeywordCleanTitleCriteria customerKeywordCleanTitleCriteria) {
         switch (customerKeywordCleanTitleCriteria.getCleanType()) {
             case "recollectAll":
@@ -700,6 +732,47 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
+    public Page<QZRateKeywordCountVO> getQZRateKeywordCountList(Page<QZRateKeywordCountVO> page, QZRateKewordCountCriteria qzRateKewordCountCriteria) {
+        List<Long> qzUuids = qzSettingService.getQZUuidsByUserID(qzRateKewordCountCriteria.getUserID(), qzRateKewordCountCriteria.getSearchEngine(), qzRateKewordCountCriteria.getTerminalType());
+        if (null == qzUuids || qzUuids.isEmpty()) {
+            return page;
+        }
+        qzRateKewordCountCriteria.setQzUuids(qzUuids);
+        // 不使用mp自带分页查询，解决count慢问题
+        page.setSearchCount(false);
+        page.setTotal(customerKeywordDao.getQZRateKeywordCountByCriteria(qzRateKewordCountCriteria));
+        List<QZRateKeywordCountVO> qzRateKeywordCountVos = customerKeywordDao.getQZRateKeywordCount(page, qzRateKewordCountCriteria);
+        if (CollectionUtils.isNotEmpty(qzRateKeywordCountVos)) {
+            SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+            String todayDate = f.format(new Date());
+            // 当不传入终端类型时，需要判断当前站点是否包含pc、phone终端类型
+            if (("").equals(qzRateKewordCountCriteria.getTerminalType())) {
+                List<QZRateKeywordCountVO> qzRateKeywordCountVoList = new ArrayList<>();
+                for (QZRateKeywordCountVO qzRateKeywordCountVo : qzRateKeywordCountVos) {
+                    if (qzRateKeywordCountVo.getHasPC() == 1) {
+                        qzRateKeywordCountVo.setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVo.getQzUuid(), "PC", todayDate));
+                        qzRateKeywordCountVo.setTerminalType("PC");
+                        qzRateKeywordCountVoList.add(qzRateKeywordCountVo);
+                    }
+                    if (qzRateKeywordCountVo.getHasPhone() == 1) {
+                        qzRateKeywordCountVo.setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVo.getQzUuid(), "Phone", todayDate));
+                        qzRateKeywordCountVo.setTerminalType("Phone");
+                        qzRateKeywordCountVoList.add(qzRateKeywordCountVo);
+                    }
+                }
+                qzRateKeywordCountVos = qzRateKeywordCountVoList;
+            } else {
+                for (QZRateKeywordCountVO qzRateKeywordCountVo : qzRateKeywordCountVos) {
+                    qzRateKeywordCountVo.setRate(qzRateStatisticsService.getRate(qzRateKeywordCountVo.getQzUuid(), qzRateKewordCountCriteria.getTerminalType(), todayDate));
+                    qzRateKeywordCountVo.setTerminalType(qzRateKewordCountCriteria.getTerminalType());
+                }
+            }
+        }
+        page.setRecords(qzRateKeywordCountVos);
+        return page;
+    }
+    
+    @Override
     public void updateSelectFailReason(KeywordCriteria keywordCriteria) {
         customerKeywordDao.updateSelectFailReason(keywordCriteria);
     }
@@ -761,6 +834,145 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public Integer getMaxInvalidCountByMachineGroup(String machineGroup) {
         return customerKeywordDao.getMaxInvalidCountByMachineGroup(machineGroup);
+    }
+
+    @Override
+    public Map<String, Object> getCustomerKeywordStatusCount() {
+        return customerKeywordDao.getCustomerKeywordStatusCount();
+    }
+
+    @Override
+    public List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePositionTemp(Long qzSettingUuid, String terminalType, String groupName, Long customerUuid, Date startTime, Long captureRankJobUuid, Boolean saveTopThree) {
+        List<CustomerKeywordForCapturePosition> customerKeywordForCapturePositions = new ArrayList<>();
+        synchronized (CustomerKeywordService.class) {
+            Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
+            if (captureRankJobStatus) {
+                List<Long> customerKeywordUuids = customerKeywordDao.getCustomerKeywordUuidForCapturePositionTemp(qzSettingUuid, terminalType, groupName, customerUuid, startTime, 0, saveTopThree);
+                if (null == customerKeywordUuids || customerKeywordUuids.size() == 0) {
+                    customerKeywordUuids = customerKeywordDao.getCustomerKeywordUuidForCapturePositionTemp(qzSettingUuid, terminalType, groupName, customerUuid, startTime, 1, saveTopThree);
+                }
+                if (null != customerKeywordUuids && customerKeywordUuids.size() != 0) {
+                    customerKeywordForCapturePositions = customerKeywordDao.getCustomerKeywordForCapturePositionTemp(customerKeywordUuids);
+                    customerKeywordDao.updateCapturePositionQueryTimeAndCaptureStatusTemp(customerKeywordUuids);
+                }
+            }
+        }
+        return customerKeywordForCapturePositions;
+    }
+
+    @Override
+    public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime, String ip, String city) {
+        Double todayFee = null;
+        if (position > 0 && position <= 10) {
+            CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordFee(customerKeywordUuid);
+            if (customerKeyword.getPositionFirstFee() != null && customerKeyword.getPositionFirstFee() > 0 && position == 1) {
+                todayFee = customerKeyword.getPositionFirstFee();
+            } else if (customerKeyword.getPositionSecondFee() != null && customerKeyword.getPositionSecondFee() > 0 && position == 2) {
+                todayFee = customerKeyword.getPositionSecondFee();
+            } else if (customerKeyword.getPositionThirdFee() != null && customerKeyword.getPositionThirdFee() > 0 && position == 3) {
+                todayFee = customerKeyword.getPositionThirdFee();
+            } else if (customerKeyword.getPositionForthFee() != null && customerKeyword.getPositionForthFee() > 0 && position == 4) {
+                todayFee = customerKeyword.getPositionForthFee();
+            } else if (customerKeyword.getPositionFifthFee() != null && customerKeyword.getPositionFifthFee() > 0 && position == 5) {
+                todayFee = customerKeyword.getPositionFifthFee();
+            } else if (customerKeyword.getPositionFirstPageFee() != null && customerKeyword.getPositionFirstPageFee() > 0) {
+                todayFee = customerKeyword.getPositionFirstPageFee();
+            }
+        }
+        customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee, ip, city);
+        if (capturePositionQueryTime != null) {
+            ckPositionSummaryService.savePositionSummary(customerKeywordUuid, position);
+        }
+    }
+
+    @Override
+    public void updateCustomerKeywordQueryTime(Long customerKeywordUuid, Integer capturePositionFailIdentify, Date date) {
+        customerKeywordDao.updateCustomerKeywordQueryTime(customerKeywordUuid, capturePositionFailIdentify, DateUtils.addMinutes(date, -3));
+    }
+
+    @Override
+    public void cacheCrawlRankCustomerQZKeywords() {
+        // 检查普通任务是否爬取完成
+        ExternalCaptureJobCriteria captureJobCriteria = new ExternalCaptureJobCriteria();
+        captureJobCriteria.setRankJobArea("China");
+        captureJobCriteria.setRankJobType("Common");
+        CaptureRankJob captureRankJob = captureRankJobService.checkingCaptureRankJobCompleted(captureJobCriteria);
+        if (null == captureRankJob) {
+            if (customerKeywordCrawlQZRankQueue.size() < 15000) {
+                List<CustomerKeyWordCrawlRankVO> customerKeyWordCrawlRankVos;
+                do {
+                    customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords("qz", 1);
+                    if (CollectionUtils.isEmpty(customerKeyWordCrawlRankVos)) {
+                        customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords("qz", 0);
+                    }
+                    if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos)) {
+                        List<Long> customerKeywordUuids = new ArrayList<>();
+                        for (CustomerKeyWordCrawlRankVO customerKeyWordCrawlRankVo : customerKeyWordCrawlRankVos) {
+                            if (customerKeywordCrawlQZRankQueue.offer(customerKeyWordCrawlRankVo)) {
+                                customerKeywordUuids.add(customerKeyWordCrawlRankVo.getUuid());
+                            } else {
+                                break;
+                            }
+                        }
+                        customerKeywordDao.updateCrawlRankKeywordTimeByUuids(customerKeywordUuids);
+                    }
+                }
+                while (customerKeywordCrawlQZRankQueue.size() < 30000 && CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos));
+            }
+        }
+    }
+
+    @Override
+    public void cacheCrawlRankCustomerPTKeywords() {
+        // 检查普通任务是否爬取完成
+        ExternalCaptureJobCriteria captureJobCriteria = new ExternalCaptureJobCriteria();
+        captureJobCriteria.setRankJobArea("China");
+        captureJobCriteria.setRankJobType("Common");
+        CaptureRankJob captureRankJob = captureRankJobService.checkingCaptureRankJobCompleted(captureJobCriteria);
+        if (null == captureRankJob) {
+            int currentSize = customerKeywordCrawlPTRankQueue.size();
+            int offerSize = 0;
+            if (currentSize < 12000) {
+                List<CustomerKeyWordCrawlRankVO> customerKeyWordCrawlRankVos;
+                do {
+                    customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords("pt", 1);
+                    if (CollectionUtils.isEmpty(customerKeyWordCrawlRankVos)) {
+                        customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords("pt", 0);
+                    }
+                    if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos)) {
+                        List<Long> customerKeywordUuids = new ArrayList<>();
+                        for (CustomerKeyWordCrawlRankVO customerKeyWordCrawlRankVo : customerKeyWordCrawlRankVos) {
+                            if (customerKeywordCrawlPTRankQueue.offer(customerKeyWordCrawlRankVo)) {
+                                customerKeywordUuids.add(customerKeyWordCrawlRankVo.getUuid());
+                                offerSize++;
+                            } else {
+                                break;
+                            }
+                        }
+                        customerKeywordDao.updateCrawlRankKeywordTimeByUuids(customerKeywordUuids);
+                    }
+                }
+                while (currentSize + offerSize < 24000 && CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos));
+            }
+        }
+    }
+
+    @Override
+    public synchronized List<CustomerKeyWordCrawlRankVO> getCrawlRankKeyword() {
+        List<CustomerKeyWordCrawlRankVO> rankVos = new ArrayList<>();
+        if (customerKeywordCrawlPTRankQueue.size() > 0) {
+            do {
+                rankVos.add(customerKeywordCrawlPTRankQueue.poll());
+            } while (customerKeywordCrawlPTRankQueue.size() > 0 && rankVos.size() < 10);
+            return rankVos;
+        }
+        if (customerKeywordCrawlQZRankQueue.size() > 0) {
+            do {
+                rankVos.add(customerKeywordCrawlQZRankQueue.poll());
+            } while (customerKeywordCrawlQZRankQueue.size() > 0 && rankVos.size() < 10);
+            return rankVos;
+        }
+        return null;
     }
 }
 
