@@ -3165,10 +3165,10 @@
         /**
          * 点击操作词数，跳转到关键字列表
          */
-        window.searchCustomerKeywords = function (customerUuid, pcGroup, phoneGroup, searchEngine, status) {
+        window.searchCustomerKeywords = function (customerUuid, pcGroup, phoneGroup, searchEngine, status, uuid) {
             let group = phoneGroup && phoneGroup !== 'null' ? phoneGroup : pcGroup;
             let terminalType = document.getElementById('terminalType').value;
-            let url = '/internal/customerKeyword/toKeywordsWithQZ/qz/' + terminalType + '/' + customerUuid + '/' + group + '/' + searchEngine + '/' + status;
+            let url = '/internal/customerKeyword/toKeywordsWithQZ/qz/' + terminalType + '/' + customerUuid + '/' + group + '/' + searchEngine + '/' + status + '/' + uuid;
             let tit = group + '--关键字列表';
             let id = customerUuid + "-" + (status === 0 ? "暂停" : "激活");
             common.updateOrNewTab(url, tit, id);
@@ -3243,7 +3243,7 @@
         window.toCustomerKeywordFromQZ = function (customerUuid, pcGroup, phoneGroup) {
             let group = pcGroup === 'null' ? phoneGroup : pcGroup;
             let terminalType = document.getElementById('terminalType').value;
-            let url = '/internal/customerKeyword/toCustomerKeywordFromQZ/qz/' + terminalType + '/' + customerUuid + '/' + group;
+            let url = '/internal/customerKeyword/toCustomerKeywordFromQZ/qz/' + terminalType + '/' + customerUuid + '/' + group + '/' + uuid;
             let tit = group + '--关键字列表';
             let id = customerUuid + '-czcs';
             common.updateOrNewTab(url, tit, id);
@@ -3532,14 +3532,14 @@
                             </div>
                             <div name="activeCount">
                                 <label>激活: </label>
-                                <a href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 1);">0</a>
+                            <a href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 1 ,'{{d.uuid}}');">0</a>
                                 <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
                                 <span style="color: red;cursor: pointer" onclick="updCKStatusFromQZ('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 1, 0,this)">暂停</span>
                                 </@shiro.hasPermission>
                             </div>
                             <div name="stopCount">
                                 <label>暂停: </label>
-                                <a href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 0);">0</a>
+                            <a href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 0 ,'{{d.uuid}}');">0</a>
                                 <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
                                 <span style="color: green;cursor: pointer" onclick="updCKStatusFromQZ('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 0, 1,this)">激活</span>
                                 </@shiro.hasPermission>
@@ -3547,7 +3547,7 @@
                          </span>
                     </div>
                     <div class="layui-col-md12">
-                        <span class="click-czcs" onclick="toCustomerKeywordFromQZ('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}')">操作词数</span>
+                    <span class="click-czcs" onclick="toCustomerKeywordFromQZ('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.uuid}}')">操作词数</span>
                     </div>
                 </div>
             </div>

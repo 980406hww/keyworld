@@ -13,6 +13,7 @@ import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.criteria.base.BaseCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.entity.UserInfo;
 import com.keymanager.ckadmin.excel.operator.CustomerKeywordAndUrlCvsExportWriter;
 import com.keymanager.ckadmin.excel.operator.CustomerKeywordInfoExcelWriter;
@@ -20,6 +21,7 @@ import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.PerformanceService;
+import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.ReflectUtils;
@@ -28,8 +30,9 @@ import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
-import com.keymanager.ckadmin.webDo.KeywordCountDO;
+import com.keymanager.ckadmin.vo.CustomerKeywordUploadVO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
+import com.keymanager.monitoring.enums.EntryTypeEnum;
 import com.keymanager.util.TerminalTypeMapping;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,6 +90,9 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 
     @Resource(name = "performanceService2")
     private PerformanceService performanceService;
+
+    @Resource(name = "qzSettingService2")
+    private QZSettingService qzSettingService;
 
     @RequestMapping(value = "/toMachineGroupAndSize", method = RequestMethod.GET)
     public ModelAndView toSearchWarnLists() {
@@ -280,6 +286,28 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         return resultBean;
     }
 
+    @RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
+    @PostMapping(value = "/updCustomerKeywordFormQz")
+    public ResultBean updCustomerKeywordFormQz(@RequestBody Map<String, Object> map) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            List<Long> ckUuids = (List<Long>) map.get("customerKeywordUuids");
+            String qzUuid = (String) map.get("qzSttingUuid");
+            if (CollectionUtils.isNotEmpty(ckUuids) && StringUtils.isNotEmpty(qzUuid)) {
+                customerKeywordService.updCustomerKeywordFormQz(ckUuids, Long.parseLong(qzUuid));
+            } else {
+                resultBean.setCode(400);
+                resultBean.setMsg("数据错误");
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg("未知错误");
+            return resultBean;
+        }
+        return resultBean;
+    }
+
     @RequiresPermissions("/internal/customerKeyword/deleteCustomerKeywords")
     @PostMapping(value = "/deleteCustomerKeywords2")
     public ResultBean deleteCustomerKeywords(@RequestBody KeywordCriteria keywordCriteria) {
@@ -422,13 +450,12 @@ public class CustomerKeywordController extends SpringMVCBaseController {
      */
     @RequiresPermissions("/internal/customerKeyword/uploadCustomerKeywords")
     @PostMapping(value = "/uploadCustomerKeywords2")
-    public ResultBean uploadCustomerKeywords(KeywordCountDO keywordCountDO, HttpServletRequest request) {
+    public ResultBean uploadCustomerKeywords(CustomerKeywordUploadVO customerKeywordUploadVo, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200, "success");
         String userName = (String) request.getSession().getAttribute("username");
         try {
-            boolean uploaded = customerKeywordService
-                .handleExcel(keywordCountDO.getFile().getInputStream(), keywordCountDO.getExcelType(), keywordCountDO.getCustomerUuid(),
-                    keywordCountDO.getEntryType(), keywordCountDO.getTerminalType(), userName);
+            boolean uploaded = customerKeywordService.handleExcel(customerKeywordUploadVo.getFile().getInputStream(), customerKeywordUploadVo.getExcelType(),
+                customerKeywordUploadVo.getCustomerUuid(), customerKeywordUploadVo.getQzUuid(), customerKeywordUploadVo.getEntryType(), customerKeywordUploadVo.getTerminalType(), userName);
             if (uploaded) {
                 resultBean.setMsg("文件上传成功");
             } else {
@@ -458,7 +485,9 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         }
     }
 
-    //导出成Excel文件
+    /**
+     * 导出成Excel文件
+     */
     @RequiresPermissions("/internal/customerKeyword/downloadCustomerKeywordInfo")
     @PostMapping(value = "/downloadCustomerKeywordInfo2")
     public ResultBean downloadCustomerKeywordInfo(HttpServletResponse response, KeywordCriteria keywordCriteria) {
@@ -478,7 +507,13 @@ public class CustomerKeywordController extends SpringMVCBaseController {
                 CustomerKeywordInfoExcelWriter excelWriter = new CustomerKeywordInfoExcelWriter();
                 excelWriter.writeDataToExcel(customerKeywords);
                 Customer customer = customerService.selectById(keywordCriteria.getCustomerUuid());
-                String fileName = customer.getContactPerson() + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
+                String fileName;
+                if (EntryTypeEnum.qz.name().equals(keywordCriteria.getType()) && null != keywordCriteria.getQzUuid() && keywordCriteria.getQzUuid() > 0) {
+                    QZSetting qzSetting = qzSettingService.selectById(keywordCriteria.getQzUuid());
+                    fileName = customer.getContactPerson() + "_" + qzSetting.getDomain() + "_" + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
+                } else {
+                    fileName = customer.getContactPerson() + "_" + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
+                }
                 fileName = new String(fileName.getBytes("gb2312"), "ISO8859-1");
                 byte[] buffer = excelWriter.getExcelContentBytes();
                 downExcelFile(response, fileName, buffer);
@@ -758,10 +793,10 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toKeywordsWithQZ/{businessType}/{terminalType}/{customerUuid}/{group}/{searchEngine}/{status}")
+    @GetMapping(value = "/toKeywordsWithQZ/{businessType}/{terminalType}/{customerUuid}/{group}/{searchEngine}/{status}/{qzUuid}")
     public ModelAndView toKeywordsWithQZ(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
         @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "group") String group,
-        @PathVariable(name = "searchEngine") String searchEngine,
+        @PathVariable(name = "searchEngine") String searchEngine, @PathVariable(name = "qzUuid") String qzUuid,
         @PathVariable(name = "status") int status) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/customerKeyword");
@@ -771,6 +806,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         mv.addObject("group", group);
         mv.addObject("status", status);
         mv.addObject("searchEngine", searchEngine);
+        mv.addObject("qzUuid", qzUuid);
         return mv;
     }
 
@@ -858,16 +894,17 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toCustomerKeywordFromQZ/{businessType}/{terminalType}/{customerUuid}/{group}")
+    @GetMapping(value = "/toCustomerKeywordFromQZ/{businessType}/{terminalType}/{customerUuid}/{group}/{qzUuid}")
     public ModelAndView toCustomerKeywordFromQZ(@PathVariable(name = "businessType") String businessType,
         @PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "customerUuid") Long customerUuid,
-        @PathVariable(name = "group") String group) {
+        @PathVariable(name = "group") String group, @PathVariable(name = "qzUuid") String qzUuid) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/customerKeyword");
         mv.addObject("businessType", businessType);
         mv.addObject("terminalType2", terminalType);
         mv.addObject("customerUuid", customerUuid);
         mv.addObject("group", group);
+        mv.addObject("qzUuid", qzUuid);
         return mv;
     }
 

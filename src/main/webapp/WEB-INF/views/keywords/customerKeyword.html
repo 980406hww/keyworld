@@ -47,6 +47,21 @@
         .layui-table-body .laytable-cell-5-0-14, .layui-table-body .laytable-cell-10-0-14, .layui-table-body .laytable-cell-15-0-14 {
             padding: 0 9px !important;
         }
+
+        .update-qz-from{
+            margin: 10px;
+        }
+
+
+        .update-qz-from .layui-input-block input{
+            height: 38px !important;
+            line-height: 38px !important;
+        }
+
+        .update-qz-from dl {
+            padding: 0 !important;
+            max-height: 340px !important;
+        }
     </style>
 </head>
 <body>
@@ -67,13 +82,18 @@
                                     <input type="hidden" name="type" id="type" value="<#if businessType?exists>${businessType}<#else>pt</#if>">
                                     <input type="hidden" name="terminalType" id="terminalType" value="<#if terminalType2?exists>${terminalType2}<#else>PC</#if>">
 
-                                    <div class="layui-inline" style="width: 140px">
+                                    <div class="layui-inline" style="width: 100px">
                                         <select name="searchEngine" id="searchEngine">
                                             <option value=''>搜索引擎</option>
                                         </select>
                                     </div>
-
-                                    <div class="layui-inline" style="width: 140px">
+                                    <div class="layui-inline" style="width: 180px;display: none">
+                                        <select name="qzUuid" id="qzUuid">
+                                            <option value=''>请选择整站</option>
+                                            <option value='-1'>未关联整站数据</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-inline" style="width: 130px">
                                         <input type="text" name="keyword" id="keyword" placeholder="请输入关键字" class="layui-input"
                                                onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                     </div>
@@ -85,7 +105,7 @@
                                     <div class="layui-inline one-special">
                                         <input type="checkbox" name="optimizeGroupNameLike" value="on" title="模糊搜索">
                                     </div>
-                                    <div class="layui-inline" style="width: 140px">
+                                    <div class="layui-inline" style="width: 130px">
                                         <input type="text" name="url" id="url" placeholder="请输入域名" autocomplete="off" class="layui-input"
                                                onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');" />
                                     </div>
@@ -100,7 +120,7 @@
                                                    onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');">
                                         </div>
                                     </div>
-                                    <div class="layui-inline" style="width: 140px">
+                                    <div class="layui-inline" style="width: 120px">
                                         <div class="layui-input-inline">
                                             <select name="status" id="status">
                                                 <option value=''>关键字状态</option>
@@ -111,7 +131,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="layui-inline" style="width: 140px">
+                                    <div class="layui-inline" style="width: 120px">
                                         <div class="layui-input-inline">
                                             <select name="customerKeywordSource" id="customerKeywordSource">
                                                 <option value="">关键字来源</option>
@@ -277,6 +297,7 @@
 <script>
     let qzBusiness = '<#if businessType?exists>${businessType}</#if>';
     let searchEngine = '<#if searchEngine?exists>${searchEngine}</#if>';
+    let qzUuid = '<#if qzUuid?exists>${qzUuid}</#if>';
 
     function if_from_qz(l) {
         let status = '<#if status?exists>${status}</#if>';
@@ -293,6 +314,7 @@
 <script src="/static/ok-admin/page/keyword/customerKeyword.js"></script>
 <#include "./customerKeywordTpl.html"/>
 <form id="downloadKeywordForm" hidden lay-filter="downloadKeywordForm" method="post" action="/internal/customerKeyword/downloadCustomerKeywordInfo2">
+    <input type="hidden"  name="qzUuid" id="qzUuidHidden" value=""/>
     <input type="hidden"  name="customerUuid" id="customerUuidHidden" value=""/>
     <input type="hidden"  name="type" id="typeHidden" value=""/>
     <input type="hidden"  name="terminalType" id="terminalTypeHidden" value=""/>

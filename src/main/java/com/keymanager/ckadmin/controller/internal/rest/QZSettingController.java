@@ -659,6 +659,24 @@ public class QZSettingController extends SpringMVCBaseController {
         return resultBean;
     }
 
+    @RequestMapping(value = "/getQzSettingByCustomer/{customerUuid}", method = RequestMethod.GET)
+    public ResultBean getQzSettingByCustomer(@PathVariable Long customerUuid) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            List<QZSetting> qzSettings = qzSettingService.getQzSettingByCustomer(customerUuid);
+            if (null == qzSettings || qzSettings.isEmpty()) {
+                resultBean.setCode(300);
+                return resultBean;
+            }
+            resultBean.setData(qzSettings);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+            resultBean.setMsg(ex.getMessage());
+            resultBean.setCode(400);
+        }
+        return resultBean;
+    }
+
     @PostMapping("/getQzSettingRenewalStatusCount")
     public ResultBean getQzSettingRenewalStatusCount(HttpSession session) {
         ResultBean resultBean = new ResultBean(200, "获取站点各续费状态下的数量成功");

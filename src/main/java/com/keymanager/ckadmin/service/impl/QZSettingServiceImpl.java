@@ -976,4 +976,9 @@ public class QZSettingServiceImpl extends
     public Long getExistingQzSettingUuid(Long customerUuid, String domain, String searchEngine) {
         return qzSettingDao.getExistingQzSettingUuid(customerUuid, domain, searchEngine);
     }
+
+    @Override
+    public List<QZSetting> getQzSettingByCustomer(Long customerUuid) {
+        return qzSettingDao.getQzSettingByCustomer(customerUuid);
+    }
 }

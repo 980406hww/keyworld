@@ -509,6 +509,16 @@
         <if test="keywordCriteria.keywordEffect != null and keywordCriteria.keywordEffect != ''">
             AND ck.fKeywordEffect = #{keywordCriteria.keywordEffect}
         </if>
+        <if test="keywordCriteria.type == 'qz' and keywordCriteria.qzUuid != null and keywordCriteria.qzUuid != ''">
+            <choose>
+                <when test="keywordCriteria.qzUuid == -1">
+                    AND ck.fQZSettingUuid IS NULL
+                </when>
+                <otherwise>
+                    AND ck.fQZSettingUuid = #{keywordCriteria.qzUuid}
+                </otherwise>
+            </choose>
+        </if>
         <if test="keywordCriteria.capturePositionFailIdentify != null">
             AND ck.fCapturePositionFailIdentify = #{keywordCriteria.capturePositionFailIdentify}
         </if>
@@ -569,9 +579,6 @@
         <if test="keywordCriteria.customerKeywordSource != null and keywordCriteria.customerKeywordSource != ''">
             AND ck.fCustomerKeywordSource = #{keywordCriteria.customerKeywordSource}
         </if>
-        <if test="keywordCriteria.status != null and keywordCriteria.status != ''">
-            AND ck.fStatus = #{keywordCriteria.status}
-        </if>
         <if test="keywordCriteria.gtOptimizePlanCount != null">
             AND ck.fOptimizePlanCount &gt;= #{keywordCriteria.gtOptimizePlanCount}
         </if>
@@ -630,6 +637,16 @@
         </if>
         <if test="keywordCriteria.keywordEffect != null and keywordCriteria.keywordEffect != ''">
             AND ck.fKeywordEffect = #{keywordCriteria.keywordEffect}
+        </if>
+        <if test="keywordCriteria.type == 'qz' and keywordCriteria.qzUuid != null and keywordCriteria.qzUuid != ''">
+            <choose>
+                <when test="keywordCriteria.qzUuid == -1">
+                    AND ck.fQZSettingUuid IS NULL
+                </when>
+                <otherwise>
+                    AND ck.fQZSettingUuid = #{keywordCriteria.qzUuid}
+                </otherwise>
+            </choose>
         </if>
         <if test="keywordCriteria.capturePositionFailIdentify != null">
             AND ck.fCapturePositionFailIdentify = #{keywordCriteria.capturePositionFailIdentify}
@@ -728,6 +745,16 @@
         ck.fUpdateTime = NOW()
         WHERE c.fUuid = ck.fCustomerUuid
         <include refid="updateCustomerKeywordsCriteria"/>
+    </update>
+
+    <update id="updCustomerKeywordFormQz">
+        UPDATE
+        t_customer_keyword
+        SET fQZSettingUuid = #{qzUuid}
+        WHERE fUuid IN
+        <foreach item="item" collection="ckUuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </update>
 
     <delete id="deleteCustomerKeywordsByUuids">
@@ -860,6 +887,7 @@
         t_customer_keyword ck
         WHERE 1 = 1
         <include refid="searchCustomerKeywordsCriteria"/>
+        ORDER BY ck.fKeyword
     </select>
 
     <select id="selectAllKeywordAndUrl" resultType="java.util.Map">

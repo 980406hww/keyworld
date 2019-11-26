@@ -15,10 +15,11 @@
         <input type="text" hidden value="" id="entryType" name="entryType"/>
         <input type="text" hidden value="" id="terminalType" name="terminalType"/>
         <input type="text" hidden value="" id="excelType" name="excelType"/>
+        <input type="text" hidden value="" id="qzUuid" name="qzUuid"/>
 
         <div class="layui-form-item">
             <div class="layui-upload">
-                <button type="button" class="layui-btn layui-btn-normal" id="test8">选择文件</button>
+                <button type="button" class="layui-btn layui-btn-normal" id="upload_excel">选择文件</button>
             </div>
         </div>
         <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
@@ -38,6 +39,7 @@
         document.getElementById('entryType').value = data.type;
         document.getElementById('terminalType').value = data.terminalType;
         document.getElementById('excelType').value = data.excelType;
+        document.getElementById('qzUuid').value = data.qzUuid;
     }
 
     layui.use(["jquery", "layer", "upload", 'common', 'layer'], function () {
@@ -48,7 +50,7 @@
 
         //选完文件后不自动上传
         upload.render({
-            elem: '#test8',
+            elem: '#upload_excel',
             url: '/internal/customerKeyword/uploadCustomerKeywords',
             auto: false,
             accept: 'file',
@@ -68,7 +70,7 @@
                     type: 'post',
                     data: fs1,
                     async: false,
-                    contentType: false,   //jax 中 contentType 设置为 false 是为了避免 JQuery 对其操作，从而失去分界符，而使服务器不能正常解析文件
+                contentType: false,   //ajax 中 contentType 设置为 false 是为了避免 JQuery 对其操作，从而失去分界符，而使服务器不能正常解析文件
                     processData: false,
                     dataType: 'json',
                     success: function (res) {

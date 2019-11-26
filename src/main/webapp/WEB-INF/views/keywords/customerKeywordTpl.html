@@ -8,7 +8,11 @@
             <button class="layui-btn layui-btn-sm" id="add_customer_keyword" lay-event="add_customer_keyword">
                 添加
             </button>
-        {{#  }  }}
+        {{#  } else {  }}
+            <button class="layui-btn layui-btn-sm" lay-event="upd_customer_keyword_form_qz">
+                更改整站关联
+            </button>
+        {{# } }}
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customerKeyword/editOptimizePlanCount">
         <button class="layui-btn layui-btn-sm" id="change_select_optimizePlanCount" lay-event="change_select_optimizePlanCount">

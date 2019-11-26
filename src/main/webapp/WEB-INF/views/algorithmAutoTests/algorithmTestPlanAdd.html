@@ -216,8 +216,6 @@
                 common.showFailMsg("测试词排名起始不能大于或等于结束！");
                 return false;
             }
-            debugger;
-            // console.log("添加的值为：" + JSON.stringify(data.field));
             $.ajax({
                 url: '/internal/algorithmAutoTest/postAlgorithmTestPlanAddData',
                 type: 'post',

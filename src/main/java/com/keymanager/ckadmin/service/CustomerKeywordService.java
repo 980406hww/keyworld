@@ -28,6 +28,7 @@ import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import sun.rmi.runtime.Log;
 
 /**
  * <p>
@@ -75,6 +76,8 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     void updateBearPawNumber(KeywordCriteria keywordCriteria);
 
+    void updCustomerKeywordFormQz(List<Long> ckUuids, Long qzUuid);
+
     void deleteCustomerKeywordsByDeleteType(KeywordCriteria keywordCriteria);
 
     Page<CustomerKeyword> searchCustomerKeywords(Page<CustomerKeyword> page, KeywordCriteria keywordCriteria);
@@ -85,7 +88,7 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     void updateOptimizePlanCount(KeywordCriteria keywordCriteria);
 
-    boolean handleExcel(InputStream inputStream, String excelType, int parseInt, String entry, String terminalType, String userName) throws Exception;
+    boolean handleExcel(InputStream inputStream, String excelType, long customerUuid, long qzUuid, String entry, String terminalType, String userName) throws Exception;
 
     List<CustomerKeyword> searchCustomerKeywordsForDailyReport(KeywordCriteria keywordCriteria);
 

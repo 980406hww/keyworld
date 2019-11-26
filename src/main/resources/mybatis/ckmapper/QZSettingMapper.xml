@@ -379,12 +379,19 @@
         </foreach>
     </update>
 
+    <select id="getQzSettingByCustomer" resultType="com.keymanager.ckadmin.entity.QZSetting">
+        SELECT fUuid AS 'uuid',fDomain AS 'domain'
+        FROM t_qz_setting
+        WHERE fCustomerUuid = #{customerUuid}
+    </select>
+    
     <select id="getExistingQzSettingUuid" resultType="java.lang.Long">
         SELECT fUuid FROM t_qz_setting
         WHERE fCustomerUuid = #{customerUuid}
         AND fDomain = #{domain}
         AND fSearchEngine = #{searchEngine}
     </select>
+    
     <select id="selectByUuids" parameterType="java.util.ArrayList" resultType="com.keymanager.ckadmin.entity.QZSetting">
         SELECT qz.fRenewalStatus AS 'renewalStatus',qz.fUuid AS 'uuid',
         qz.fSearchEngine AS 'searchEngine',qz.fPcGroup AS 'pcGroup',
