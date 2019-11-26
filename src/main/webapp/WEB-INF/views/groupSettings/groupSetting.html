@@ -108,6 +108,7 @@
 <script>
     getHeight();
     var sign = false;
+    var searchOpen = false;
     function getHeight(){
         let b = document.getElementById('groupSettingBody');
         let h = window.innerHeight || document.body.offsetHeight;
@@ -138,7 +139,9 @@
             }else{
                 pageConf.hasRemainingAccount = false;
             }
-            initLayPage(pageConf);
+            if (searchOpen === true) {
+                initLayPage(pageConf);
+            }
         });
 
         $(window).resize(function(){
@@ -183,6 +186,7 @@
         });
 
         form.on('submit(search)', function (data) {
+            searchOpen = true;
             var pageConf = data.field;
             if (pageConf.hasRemainingAccount) {
                 pageConf.hasRemainingAccount = true;
