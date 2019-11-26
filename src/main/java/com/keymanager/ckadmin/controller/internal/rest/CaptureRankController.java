@@ -50,8 +50,10 @@ public class CaptureRankController {
     @RequiresPermissions("/internal/captureRanks/toCaptureRank")
     @RequestMapping(value = "/getCaptureRankJobs", method = RequestMethod.POST)
     public ResultBean searchCaptureRankingJobs(@RequestBody CaptureRankJobSearchCriteria criteria) {
-        ResultBean resultBean = new ResultBean();
-        resultBean.setCode(0);
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(criteria.getInit())) {
+            return resultBean;
+        }
         criteria.setRankJobType(null == criteria.getRankJobType() || "".equals(criteria.getRankJobType()) ? "Common" : criteria.getRankJobType());
         try {
             Page<CaptureRankJob> page = captureRankJobService.selectPageByCriteria(criteria);

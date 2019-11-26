@@ -45,15 +45,16 @@ public class PositiveListController {
 
     @RequiresPermissions("/internal/positivelists/toSearchPositiveLists")
     @RequestMapping(value = "/searchPositiveLists", method = RequestMethod.POST)
-    public ResultBean searchPositiveListsPost(HttpServletRequest request, @RequestBody PositiveListCriteria positiveListCriteria) {
-        ResultBean resultBean = new ResultBean();
+    public ResultBean searchPositiveListsPost(@RequestBody PositiveListCriteria positiveListCriteria) {
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(positiveListCriteria.getInit())) {
+            return resultBean;
+        }
         try {
             Page<PositiveList> page = new Page<>(positiveListCriteria.getPage(), positiveListCriteria.getLimit());
             page = positiveListService.searchPositiveLists(page, positiveListCriteria);
             List<PositiveList> positiveLists = page.getRecords();
-            resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("success");
             resultBean.setData(positiveLists);
         } catch (Exception e) {
             logger.error(e.getMessage());

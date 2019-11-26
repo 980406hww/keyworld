@@ -12,7 +12,6 @@
         fUpdateTime AS 'updateTime'
         FROM t_screened_website
         WHERE 1=1
-        <if test="screenedWebsiteCriteria.init != null and screenedWebsiteCriteria.init == 'init'">AND 1 != 1</if>
         <if test="screenedWebsiteCriteria.optimizeGroupName != null and screenedWebsiteCriteria.optimizeGroupName != ''">
             AND fOptimizeGroupName LIKE CONCAT (#{screenedWebsiteCriteria.optimizeGroupName},'%')
         </if>

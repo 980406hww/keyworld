@@ -79,7 +79,6 @@
         FROM
         t_machine_info mi
         WHERE mi.fTerminalType = #{machineInfoCriteria.terminalType}
-        <if test="machineInfoCriteria.init != null and machineInfoCriteria.init == 'init'">AND 1 != 1</if>
         <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''">AND
             mi.fClientID like '${machineInfoCriteria.clientID}%'
         </if>
@@ -485,7 +484,6 @@
             cs.fSwitchGroupName as 'switchGroupName'
         FROM t_machine_info cs
         <where> cs.fValid = 1
-            <if test="init != null and init == 'init'">AND 1 != 1</if>
             <if test="clientIDPrefix!=null and clientIDPrefix!=''">AND cs.fClientIDPrefix LIKE '%${clientIDPrefix}%'</if>
             <if test="city!=null and city!=''">AND cs.fCity LIKE '%${city}%'</if>
             <if test="switchGroupName!=null and switchGroupName!=''">AND cs.fSwitchGroupName LIKE '%${switchGroupName}%'</if>
@@ -498,7 +496,6 @@
         SELECT cs.fGroup as 'group', cs.fTerminalType as terminalType, COUNT(1) AS 'count' FROM
         t_machine_info cs
         <where>
-            <if test="machineInfoGroupStatCriteria.init != null and machineInfoGroupStatCriteria.init == 'init'">AND 1 != 1</if>
             <if test="machineInfoGroupStatCriteria.groupName!=null and machineInfoGroupStatCriteria.groupName!=''">and cs.fGroup LIKE
                 '%${machineInfoGroupStatCriteria.groupName}%'
             </if>
@@ -670,7 +667,6 @@
         COUNT(1) AS 'totalMachineCount'
         FROM t_machine_info cs
         WHERE cs.fValid = 1
-        <if test="machineGroupWorkInfoCriteria.init != null and machineGroupWorkInfoCriteria.init == 'init'">AND 1 != 1</if>
         <if test="machineGroupWorkInfoCriteria.terminalType!=null and machineGroupWorkInfoCriteria.terminalType!=''">
             AND cs.fTerminalType = #{machineGroupWorkInfoCriteria.terminalType}
         </if>

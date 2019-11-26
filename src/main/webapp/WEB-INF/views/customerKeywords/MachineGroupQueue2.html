@@ -6,19 +6,39 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+    <link rel="stylesheet" href="/static/ok-admin/page/base/searchForm.css">
     <style>
-        .layui-table-tool {
-            min-height: 40px;
-            padding: 6px 5px;
+        .layui-tab-content {
+            padding: 0px;
         }
 
-        .layui-table-tool-self{
-            top: 0;
+        .layui-card-body {
+            padding: 10px 0 0 0;
+        }
+
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 0px;
         }
     </style>
 </head>
 <body>
 <div class="ok-body">
+    <div class="layui-card ">
+        <div class="layui-card-body ">
+            <form class="layui-form layui-form-pane" id="searchForm">
+                <div class="my-collapse">
+                    <div class="out-condition">
+                        <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
+                        <div class="layui-inline">
+                            <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索</button>
+                        </div>
+                        </@shiro.hasPermission>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     <table class="layui-hide" id="machineGroupAndSizeTable" lay-filter="tableFilter"></table>
 </div>
 <script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
@@ -35,61 +55,37 @@
     layui.use(['table', 'form', 'jquery', 'layer'], function () {
         var table = layui.table;
         var form = layui.form;
-        var $ = layui.jquery;
-        var layer = layui.layer;
 
-        searchMachineGroupAndSize();
+        searchMachineGroupAndSize({init: 'init'});
 
         form.on("submit(search)", function (data) {
-            var postData = data.field;
-            searchMachineGroupAndSize(postData);
-            return false
+            searchMachineGroupAndSize({});
+            return false;
         });
 
-        function searchMachineGroupAndSize(){
+        function searchMachineGroupAndSize(condition) {
             table.render({
                 elem: '#machineGroupAndSizeTable',
                 method: 'post',
                 url: '${ctx.path}/internal/customerKeyword/searchMachineGroupAndSize',
-                limit: 50,
-                limits: [25, 50, 100, 500, 1000],
-                page: true,
+                page: false,
                 autoSort: false,
                 size: 'sm',
                 id: 'machineGroupAndSizeTable',
                 even: true,
-                toolbar: "#toolbarTpl",
+                where: condition,
                 defaultToolbar: [],
                 contentType: 'application/json',
                 cols: [[
                     {field: 'machineGroupName', title: '机器分组', width: '50%', align: 'center'},
                     {field: 'size', title: '数量', width: '50%', align: 'center'},
                 ]],
-                height: 'full-25',
+                height: 'full-65',
                 done: function (res, curr, count) {
                 }
             });
         }
-
-        table.on('toolbar(tableFilter)',function(obj){
-            var data = obj.data,event = obj.event;
-            if (event === 'searchMachineGroupAndSize') {
-                searchMachineGroupAndSize();
-            } else {
-            }
-        });
-
     });
-
 </script>
-
-<script type="text/html" id="toolbarTpl">
-    <div class="layui-btn-container">
-        <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
-            <button class="layui-btn layui-btn-sm" lay-event="searchMachineGroupAndSize">查询</button>
-        </@shiro.hasPermission>
-    </div>
-</script>
-
 </body>
 </html>

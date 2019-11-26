@@ -36,6 +36,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping("/internal/industryList")
 public class IndustryInfoController {
+
     private static final Logger logger = LoggerFactory.getLogger(IndustryInfoController.class);
 
     @Resource(name = "industryInfoService2")
@@ -85,7 +86,7 @@ public class IndustryInfoController {
     @RequiresPermissions("/internal/industry/uploadIndustryInfos")
     @PostMapping("/uploadIndustryInfos")
     public ResultBean uploadIndustryInfos(@RequestParam(value = "file", required = false) MultipartFile file,
-            @RequestParam(name = "terminalType") String terminalType, @RequestParam(name = "excelType") String excelType, HttpServletRequest request) {
+        @RequestParam(name = "terminalType") String terminalType, @RequestParam(name = "excelType") String excelType, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         String userName = (String) request.getSession().getAttribute("username");
         try {
@@ -104,7 +105,7 @@ public class IndustryInfoController {
 
     @RequiresPermissions("/internal/industry/saveIndustry")
     @PostMapping("/downloadIndustryInfo")
-    public ResultBean downloadIndustryInfo(@RequestParam("industryUuids") String industryUuids,  HttpServletResponse response) {
+    public ResultBean downloadIndustryInfo(@RequestParam("industryUuids") String industryUuids, HttpServletResponse response) {
         ResultBean resultBean = new ResultBean();
         try {
             List<String> uuids = Arrays.asList(industryUuids.split(","));
@@ -114,7 +115,7 @@ public class IndustryInfoController {
                 IndustryDetailInfoCsvExportWriter.downloadZip(response);
             }
             resultBean.setCode(200);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
@@ -131,7 +132,7 @@ public class IndustryInfoController {
             List<String> uuids = (List<String>) requestMap.get("uuids");
             industryInfoService.updateIndustryStatus(uuids);
             resultBean.setCode(200);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
@@ -149,7 +150,7 @@ public class IndustryInfoController {
             String userID = (String) requestMap.get("userID");
             industryInfoService.updateIndustryUserID(uuids, userID);
             resultBean.setCode(200);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
@@ -228,7 +229,10 @@ public class IndustryInfoController {
     @RequiresPermissions("/internal/industry/searchIndustries")
     @PostMapping("/searchIndustries")
     public ResultBean searchIndustriesPost(HttpServletRequest request, @RequestBody IndustryCriteria industryCriteria) {
-        ResultBean resultBean = new ResultBean();
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(industryCriteria.getInit())) {
+            return resultBean;
+        }
         try {
             HttpSession session = request.getSession();
             String loginName = (String) session.getAttribute("username");
@@ -242,9 +246,7 @@ public class IndustryInfoController {
             Page<IndustryInfo> page = new Page<>(industryCriteria.getPage(), industryCriteria.getLimit());
             page = industryInfoService.searchIndustries(page, industryCriteria);
             List<IndustryInfo> industryInfoList = page.getRecords();
-            resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("success");
             resultBean.setData(industryInfoList);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -256,7 +258,7 @@ public class IndustryInfoController {
     }
 
     @PostMapping("/returnSelectData")
-    public ResultBean returnSelectData(HttpServletRequest request, @RequestBody IndustryCriteria industryCriteria){
+    public ResultBean returnSelectData(HttpServletRequest request, @RequestBody IndustryCriteria industryCriteria) {
         ResultBean resultBean = new ResultBean();
         try {
             HttpSession session = request.getSession();

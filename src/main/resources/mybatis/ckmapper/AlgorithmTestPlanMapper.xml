@@ -74,7 +74,6 @@
         t_algorithm_test_plan atp
         LEFT JOIN t_operation_combine oc ON atp.fOperationCombineId = oc.fUuid
         <where>
-            <if test="algorithmTestCriteria.init != null and algorithmTestCriteria.init == 'init'">AND 1 != 1</if>
             <if test="algorithmTestCriteria.algorithmTestPlanName!=null and algorithmTestCriteria.algorithmTestPlanName!=''">
                 AND atp.fAlgorithmTestPlanName LIKE concat(#{algorithmTestCriteria.algorithmTestPlanName},'%')
             </if>

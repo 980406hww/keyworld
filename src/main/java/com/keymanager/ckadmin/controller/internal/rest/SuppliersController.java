@@ -43,13 +43,14 @@ public class SuppliersController {
     @RequiresPermissions("/internal/supplier/searchSuppliers")
     @RequestMapping(value = "/getSuppliersData", method = RequestMethod.POST)
     public ResultBean getSuppliersData(@RequestBody SupplierCriteria criteria) {
-        ResultBean resultBean = new ResultBean();
-        resultBean.setCode(0);
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(criteria.getInit())) {
+            return resultBean;
+        }
         try {
             Page<Supplier> page = supplierService.searchSuppliers(criteria);
             resultBean.setData(page.getRecords());
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("success");
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

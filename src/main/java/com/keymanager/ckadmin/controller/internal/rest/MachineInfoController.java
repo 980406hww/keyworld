@@ -497,8 +497,7 @@ public class MachineInfoController extends SpringMVCBaseController {
         String clientID = (String) requestMap.get("clientID");
         String terminalType = (String) requestMap.get("terminalType");
         try {
-            machineInfoService
-                .changeTerminalType(clientID, TerminalTypeEnum.PC.name().equals(terminalType) ? TerminalTypeEnum.Phone.name() : TerminalTypeEnum.PC.name());
+            machineInfoService.changeTerminalType(clientID, TerminalTypeEnum.PC.name().equals(terminalType) ? TerminalTypeEnum.Phone.name() : TerminalTypeEnum.PC.name());
             resultBean.setCode(200);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -529,7 +528,10 @@ public class MachineInfoController extends SpringMVCBaseController {
     @RequiresPermissions("/internal/machineInfo/searchMachineInfos")
     @RequestMapping(value = "/getMachineInfos", method = RequestMethod.POST)
     public ResultBean getMachineInfos(HttpServletRequest request, @RequestBody MachineInfoCriteria machineInfoCriteria) {
-        ResultBean resultBean = new ResultBean();
+        ResultBean resultBean = new ResultBean(0,"success");
+        if ("init".equals(machineInfoCriteria.getInit())) {
+            return resultBean;
+        }
         try {
             String loginName = getCurrentUser().getLoginName();
             String requestURI = request.getRequestURI();
@@ -549,9 +551,7 @@ public class MachineInfoController extends SpringMVCBaseController {
                 .addPerformanceLog(machineInfoCriteria.getTerminalType() + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
             page = machineInfoService.searchMachineInfos(page, machineInfoCriteria, true);
             List<MachineInfo> machineInfos = page.getRecords();
-            resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("success");
             resultBean.setData(machineInfos);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -678,15 +678,16 @@ public class MachineInfoController extends SpringMVCBaseController {
     @RequiresPermissions("/internal/machineInfo/machineInfoGroupStat")
     @PostMapping(value = "/machineInfoGroupStat")
     public ResultBean machineInfoGroupStat(@RequestBody MachineInfoGroupStatCriteria machineInfoGroupStatCriteria) {
-        ResultBean resultBean = new ResultBean();
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(machineInfoGroupStatCriteria.getInit())) {
+            return resultBean;
+        }
         try {
             Page<MachineInfoGroupSummaryVO> page = new Page<>(machineInfoGroupStatCriteria.getPage(), machineInfoGroupStatCriteria.getLimit());
             page = machineInfoService.searchMachineInfoGroupSummaryVO(page, machineInfoGroupStatCriteria);
             List<MachineInfoGroupSummaryVO> machineInfoGroupSummaryVOs = page.getRecords();
             resultBean.setData(machineInfoGroupSummaryVOs);
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("success");
-            resultBean.setCode(0);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
@@ -699,12 +700,14 @@ public class MachineInfoController extends SpringMVCBaseController {
     @RequestMapping(value = "/machineInfoStat", method = RequestMethod.POST)
     public ResultBean machineInfoStat(@RequestBody Map<String, String> map) {
         ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(map.get("init"))) {
+            return resultBean;
+        }
         try {
             String clientIDPrefix = map.get("clientIDPrefix");
             String city = map.get("city");
             String switchGroupName = map.get("switchGroupName");
-            String init = map.get("init");
-            resultBean.setData(machineInfoService.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName, init));
+            resultBean.setData(machineInfoService.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName));
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

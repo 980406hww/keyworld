@@ -9,13 +9,13 @@ import java.util.List;
 
 public interface ClientUpgradeService extends IService<ClientUpgrade> {
 
-    public Page<ClientUpgrade> searchClientUpgrades(Page<ClientUpgrade> page, String terminalType);
+    Page<ClientUpgrade> searchClientUpgrades(Page<ClientUpgrade> page, String terminalType);
 
-    public void saveClientUpgrade(String terminalType, ClientUpgrade clientUpgrade);
+    void saveClientUpgrade(String terminalType, ClientUpgrade clientUpgrade);
 
-    public void clientAutoUpgrade();
+    void clientAutoUpgrade();
 
-    public void updateClientUpgradeStatus(Long uuid, Boolean status);
+    void updateClientUpgradeStatus(Long uuid, Boolean status);
 
-    public void batchDeleteClientUpgrade(List<Integer> uuids);
+    void batchDeleteClientUpgrade(List<Integer> uuids);
 }

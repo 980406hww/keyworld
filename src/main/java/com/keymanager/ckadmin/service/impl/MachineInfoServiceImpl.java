@@ -442,10 +442,9 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     }
 
     @Override
-    public List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(String clientIDPrefix, String city, String switchGroupName, String init) {
-        List<MachineInfoSummaryVO> pcMachineInfoSummaryVos = machineInfoDao.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName, init);
+    public List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(String clientIDPrefix, String city, String switchGroupName) {
+        List<MachineInfoSummaryVO> pcMachineInfoSummaryVos = machineInfoDao.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName);
         Collections.sort(pcMachineInfoSummaryVos);
-
         MachineInfoSummaryVO previousClientIDPrefix = null;
         MachineInfoSummaryVO previousType = null;
         for (MachineInfoSummaryVO machineInfoSummaryVo : pcMachineInfoSummaryVos) {

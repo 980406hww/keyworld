@@ -35,13 +35,14 @@ public class KeywordsInfoController {
 
     @RequestMapping(value = "/getKeywordsInfoData", method = RequestMethod.POST)
     public ResultBean getKeywordsInfoData(@RequestBody KeywordInfoCriteria criteria) {
-        ResultBean resultBean = new ResultBean();
-        resultBean.setCode(0);
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(criteria.getInit())) {
+            return resultBean;
+        }
         try {
             Page<KeywordInfo> page = keywordInfoService.searchKeywordInfos(criteria);
             resultBean.setData(page.getRecords());
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("success");
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

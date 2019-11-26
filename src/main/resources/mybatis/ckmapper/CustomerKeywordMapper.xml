@@ -396,9 +396,6 @@
     </update>
 
     <sql id="searchCustomerKeywordsCriteria">
-        <if test="keywordCriteria.init != null and keywordCriteria.init == 'init'">
-            AND 1 != 1
-        </if>
         <if test="keywordCriteria.customerUuid != null and keywordCriteria.customerUuid != ''">
             AND ck.fCustomerUuid = #{keywordCriteria.customerUuid}
         </if>
@@ -1089,9 +1086,6 @@
         WHERE c.fUuid = ck.fCustomerUuid
         AND ck.fType IN ('pt', 'qt')
         AND ck.fTerminalType = #{keywordCriteria.terminalType}
-        <if test="keywordCriteria.init != null and keywordCriteria.init == 'init'">
-            AND 1 != 1
-        </if>
         <if test="keywordCriteria.keyword != null and keywordCriteria.keyword != ''">
             AND ck.fKeyword like concat(#{keywordCriteria.keyword}, '%')
         </if>

@@ -277,14 +277,15 @@ public class WebsiteController {
     @RequiresPermissions("/internal/websites/toWebSiteList")
     @PostMapping(value = "/searchWebsites")
     public ResultBean searchWebsitesPost(@RequestBody WebsiteCriteria websiteCriteria) {
-        ResultBean resultBean = new ResultBean();
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(websiteCriteria.getInit())) {
+            return resultBean;
+        }
         try {
             Page<WebsiteVO> page = new Page<>(websiteCriteria.getPage(), websiteCriteria.getLimit());
             page = websiteService.searchWebsites(page, websiteCriteria);
             List<WebsiteVO> websiteVos = page.getRecords();
-            resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("success");
             resultBean.setData(websiteVos);
         } catch (Exception e) {
             logger.error(e.getMessage());

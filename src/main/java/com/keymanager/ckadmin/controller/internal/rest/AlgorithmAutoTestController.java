@@ -127,16 +127,17 @@ public class AlgorithmAutoTestController {
     @RequiresPermissions("/internal/algorithmAutoTest/toAlgorithmTestPlans")
     @RequestMapping(value = "getAlgorithmTestPlans")
     public ResultBean getAlgorithmTestPlans(@RequestBody AlgorithmTestCriteria algorithmTestCriteria) {
-        ResultBean resultBean = new ResultBean();
-        try{
+        ResultBean resultBean = new ResultBean(0,"success");
+        if ("init".equals(algorithmTestCriteria.getInit())) {
+            return resultBean;
+        }
+        try {
             Page<AlgorithmTestPlan> page = new Page<>(algorithmTestCriteria.getPage(), algorithmTestCriteria.getLimit());
             page = algorithmTestPlanService.searchAlgorithmTestPlans(page, algorithmTestCriteria);
             List<AlgorithmTestPlan> algorithmTestPlans = page.getRecords();
-            resultBean.setCode(0);
             resultBean.setCount(algorithmTestPlans.size());
-            resultBean.setMsg("");
             resultBean.setData(algorithmTestPlans);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());

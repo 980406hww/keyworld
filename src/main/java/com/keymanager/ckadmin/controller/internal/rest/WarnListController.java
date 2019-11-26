@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping(value = "/internal/warnlists")
 public class WarnListController {
+
     private static Logger logger = LoggerFactory.getLogger(WarnListController.class);
 
     @Resource(name = "warnListService2")
@@ -45,14 +46,15 @@ public class WarnListController {
     @RequiresPermissions("/internal/warnlists/toSearchWarnLists")
     @RequestMapping(value = "/searchWarnLists", method = RequestMethod.POST)
     public ResultBean searchWarnLists(@RequestBody WarnListCriteria warnListCriteria) {
-        ResultBean resultBean = new ResultBean();
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(warnListCriteria.getInit())) {
+            return resultBean;
+        }
         try {
             Page<WarnList> page = new Page<>(warnListCriteria.getPage(), warnListCriteria.getLimit());
             page = warnListService.searchWarnLists(page, warnListCriteria);
             List<WarnList> warnLists = page.getRecords();
-            resultBean.setCode(0);
             resultBean.setCount(page.getTotal());
-            resultBean.setMsg("success");
             resultBean.setData(warnLists);
         } catch (Exception e) {
             logger.error(e.getMessage());

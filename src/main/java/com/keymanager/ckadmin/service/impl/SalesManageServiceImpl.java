@@ -45,7 +45,7 @@ public class SalesManageServiceImpl extends ServiceImpl<SalesManageDao, SalesMan
     public Page<SalesManage> SearchSalesManages(SalesInfoCriteria salesInfoCriteria, Page<SalesManage> page) {
         List<SalesManage> salesManages = salesManageDao.getSalesManages(page, salesInfoCriteria);
         List<SalesManage> sms = new ArrayList<>();
-        for(SalesManage s : salesManages){
+        for (SalesManage s : salesManages) {
             sms.add(parseManagePart(s));
         }
         page.setRecords(sms);
