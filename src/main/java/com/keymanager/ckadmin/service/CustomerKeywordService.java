@@ -139,7 +139,7 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime, String ip, String city);
 
-    void updateCustomerKeywordQueryTime(Long customerKeywordUuid, Date date);
+    void updateCustomerKeywordQueryTime(Long customerKeywordUuid, Integer capturePositionFailIdentify, Date date);
 
     void cacheCrawlRankCustomerQZKeywords();
 

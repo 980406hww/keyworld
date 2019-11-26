@@ -40,6 +40,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -639,20 +640,20 @@ public class CustomerKeywordController extends SpringMVCBaseController {
                 ptKeywordCriteria.setTerminalType(TerminalTypeMapping.getTerminalType(request));
             }
             Map<String, String> searchEngineMap = configService.getSearchEngineMap(ptKeywordCriteria.getTerminalType());
-            Map<String, Object> data = new HashMap<>();
+            Map<String, Object> data = new HashMap<>(3);
             data.put("user", user);
             data.put("activeUsers", activeUsers);
             data.put("searchEngineMap", searchEngineMap);
             resultBean.setCode(200);
             resultBean.setMsg("success");
             resultBean.setData(data);
+            return resultBean;
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
             return resultBean;
         }
-        return resultBean;
     }
 
     @PostMapping(value = "/getPTKeywords")
@@ -819,13 +820,15 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     public ResultBean clearFailReason(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
+            if (CollectionUtils.isNotEmpty(keywordCriteria.getUuids()) && keywordCriteria.getCustomerUuid() == null) {
+                resultBean.setCode(400);
+                resultBean.setMsg(null);
+                return resultBean;
+            }
             String userName = (String) request.getSession().getAttribute("username");
             boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
             if (!isDepartmentManager) {
                 keywordCriteria.setUserName(userName);
-            }
-            if ((keywordCriteria.getUuids() == null || keywordCriteria.getUuids().isEmpty()) && (keywordCriteria.getCustomerUuid() == null)) {
-                return resultBean;
             }
             customerKeywordService.updateSelectFailReason(keywordCriteria);
         } catch (Exception e) {

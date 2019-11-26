@@ -186,6 +186,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fCaptureIndexQueryTime")
     private Date captureIndexQueryTime;
 
+    @TableField(value = "fCapturePositionFailIdentify")
+    private Date capturePositionFailIdentify;
+
     @TableField(value = "fCollectMethod", strategy = FieldStrategy.IGNORED)
     private String collectMethod;
 
@@ -736,6 +739,14 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setCaptureIndexQueryTime(Date captureIndexQueryTime) {
         this.captureIndexQueryTime = captureIndexQueryTime;
+    }
+
+    public Date getCapturePositionFailIdentify() {
+        return capturePositionFailIdentify;
+    }
+
+    public void setCapturePositionFailIdentify(Date capturePositionFailIdentify) {
+        this.capturePositionFailIdentify = capturePositionFailIdentify;
     }
 
     public String getCollectMethod() {

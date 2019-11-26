@@ -1346,6 +1346,9 @@
         UPDATE t_customer_keyword
         SET fCaptureStatus = 0,
         fCapturePositionQueryTime = #{capturePositionQueryTime}
+        <if test="capturePositionFailIdentify != null">
+            , fCapturePositionFailIdentify = #{capturePositionFailIdentify}
+        </if>
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 
