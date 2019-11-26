@@ -893,11 +893,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
 		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
 
-		CustomerKeywordRankingCountVO countVo = customerKeywordService
-			.getCustomerKeywordRankingCount(qzSetting.getCustomerUuid(),
-				"PC".equals(terminalType) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup());
-		List<QZKeywordRankInfo> rankInfos = qzKeywordRankInfoService
-			.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "xt");
+		CustomerKeywordRankingCountVO countVo = customerKeywordService.getCustomerKeywordRankingCount(qzSetting.getCustomerUuid(),
+			"PC".equals(terminalType) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup());
+		List<QZKeywordRankInfo> rankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "xt");
 
 		if (CollectionUtils.isNotEmpty(rankInfos)) {
 			if (rankInfos.size() > 1) {
