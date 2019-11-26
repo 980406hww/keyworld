@@ -62,19 +62,19 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
     public ResponseEntity<?> updateCustomerKeywordPosition(@RequestBody Map<String, Object> requestMap) throws Exception {
         String userName = (String) requestMap.get("userName");
         String password = (String) requestMap.get("password");
-
-        Long customerKeywordUuid = Long.parseLong(requestMap.get("customerKeywordUuid").toString());
-        int position = (Integer) requestMap.get("position");
-        String ip = (String) requestMap.get("capturePositionIP");
-        String clientID = (String) requestMap.get("clientID");
-        String city = (String) requestMap.get("capturePositionCity");
-        Date startTime = new Date((Long) requestMap.get("startTime"));
         try {
             if (validUser(userName, password)) {
-                if (position > -1) {
+                Integer capturePositionFailIdentify = (Integer) requestMap.get("capturePositionFailIdentify");
+                Long customerKeywordUuid = Long.parseLong(requestMap.get("customerKeywordUuid").toString());
+                Integer position = (Integer) requestMap.get("position");
+                String ip = (String) requestMap.get("capturePositionIP");
+                String clientID = (String) requestMap.get("clientID");
+                String city = (String) requestMap.get("capturePositionCity");
+                Date startTime = new Date((Long) requestMap.get("startTime"));
+                if (null != position && position > -1) {
                     customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp(), ip, city);
                 } else {
-                    customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, startTime);
+                    customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, capturePositionFailIdentify, startTime);
                 }
                 if (StringUtil.isNotNullNorEmpty(clientID)) {
                     machineInfoService.updateMachineInfoForCapturePosition(clientID);

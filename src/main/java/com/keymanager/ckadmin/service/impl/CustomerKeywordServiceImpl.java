@@ -881,8 +881,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public void updateCustomerKeywordQueryTime(Long customerKeywordUuid, Date date) {
-        customerKeywordDao.updateCustomerKeywordQueryTime(customerKeywordUuid, DateUtils.addMinutes(date, -3));
+    public void updateCustomerKeywordQueryTime(Long customerKeywordUuid, Integer capturePositionFailIdentify, Date date) {
+        customerKeywordDao.updateCustomerKeywordQueryTime(customerKeywordUuid, capturePositionFailIdentify, DateUtils.addMinutes(date, -3));
     }
 
     @Override
