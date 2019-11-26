@@ -365,27 +365,36 @@
                     let p_d = new FormData();
                     p_d.append('group', groupFileName);
                     p_d.append('file', file.files[0]);
-                    $.ajax({
-                        url: '/internal/negativeKeywords/postNegativeExcel',
-                        type: 'post',
-                        data: p_d,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'json',
-                        success: function (res) {
-                            if (res.code === 200) {
-                                layer.close(index);
-                                common.showSuccessMsg('上传成功', function () {
-                                    active['reload'].call(this);
-                                });
-                            } else {
-                                common.showFailMsg('上传失败');
-                            }
-                        },
-                        error: function () {
-                            common.showFailMsg('网络异常请稍后再试');
-                        }
+                    var index___ = layer.msg('正在上传，请勿其他操作', {
+                        icon: 16,
+                        time: 0
                     });
+                    setTimeout(function () {
+                        $.ajax({
+                            url: '/internal/negativeKeywords/postNegativeExcel',
+                            type: 'post',
+                            data: p_d,
+                            processData: false,
+                            contentType: false,
+                            dataType: 'json',
+                            success: function (res) {
+                                if (res.code === 200) {
+                                    layer.close(index);
+                                    common.showSuccessMsg('上传成功', function () {
+                                        active['reload'].call(this);
+                                    });
+                                } else {
+                                    common.showFailMsg('上传失败');
+                                }
+                            },
+                            error: function () {
+                                common.showFailMsg('网络异常请稍后再试');
+                            },
+                            complete: function () {
+                                layer.close(index___);
+                            }
+                        });
+                    }, 10);
                 },
                 btn2: function (index) {
                     layer.close(index);

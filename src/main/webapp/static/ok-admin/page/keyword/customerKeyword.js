@@ -499,7 +499,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
                 active['reload'].call(this);
                 sign = false;
             }
-        })
+        }, '100px')
     }
 
     function download_keyword_info() {

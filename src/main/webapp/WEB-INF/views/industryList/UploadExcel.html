@@ -7,17 +7,18 @@
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
     <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
     <style>
-        #fileName{
-            height: 38px;
-            width: 300px;
+        #fileName {
+            height: 20px;
+            max-width: 256px;
             text-align: left;
-            line-height: 38px;
-            display: inline;
+            display: inline-block;
             box-sizing: border-box;
-            padding-left: 20px;
+            padding-left: 10px;
             overflow: hidden;
-            text-overflow:ellipsis;
+            text-overflow: ellipsis;
             white-space: nowrap;
+            position: relative;
+            top: 6px;
         }
     </style>
 </head>
@@ -66,21 +67,20 @@
         let common = layui.common;
         let $ = layui.jquery;
         let upload = layui.upload;
+        let layer = layui.layer;
 
-        $("#uploadBtn").click(function(){
+        $("#uploadBtn").click(function () {
             upload.render({
                 elem: '#upload',
                 url: '/internal/industryList/uploadIndustryInfos',
                 accept: 'file',
-                auto: false,
-                done: function(res){
-                }
+                auto: false
             });
         });
 
         form.on("submit(commit)", function () {
             let fileValue = $('#uploadForm').find("#upload").val();
-            if(fileValue === ""){
+            if (fileValue === "") {
                 common.showFailMsg("请选择要上传的Excel文件!");
                 return false;
             }
@@ -94,26 +94,35 @@
             postData.append('file', $("#uploadForm").find("#upload")[0].files[0]);
             postData.append('excelType', excelType);
             postData.append('terminalType', terminalType);
-            $.ajax({
-                url: '/internal/industryList/uploadIndustryInfos',
-                type: 'post',
-                cache: false,
-                data: postData,
-                async: false,
-                processData: false,
-                contentType: false,
-                success: function (res) {
-                    let data = JSON.parse(res);
-                    if (data.code === 200) {
-                        common.showSuccessMsg("上传成功", function () {
-                            parent.window.sign = true;
-                            parent.layer.close(parent.layer.getFrameIndex(window.name));
-                        });
-                    } else {
-                        common.showFailMsg(res.msg);
-                    }
-                }
+            var index = layer.msg('正在上传，请勿其他操作', {
+                icon: 16,
+                time: 0
             });
+            setTimeout(function () {
+                $.ajax({
+                    url: '/internal/industryList/uploadIndustryInfos',
+                    type: 'post',
+                    cache: false,
+                    data: postData,
+                    async: false,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.code === 200) {
+                            common.showSuccessMsg("上传成功", function () {
+                                parent.window.sign = true;
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            });
+                        } else {
+                            common.showFailMsg(res.msg);
+                        }
+                    },
+                    complete: function () {
+                        layer.close(index);
+                    }
+                });
+            }, 10);
             return false;
         });
 
