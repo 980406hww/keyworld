@@ -149,10 +149,12 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     int getQZRateKeywordCountByCriteria(@Param("criteria") QZRateKewordCountCriteria criteria);
     
     List<CustomerKeyword> searchSameCustomerKeywords(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid, @Param("keyword") String keyword, @Param("searchEngine") String searchEngine);
-    
-    Map<String, Object> getCustomerKeywordStatusCount();
 
-    List<Long> getCustomerKeywordUuidForCapturePositionTemp(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType, @Param("groupName") String groupName, @Param("customerUuid") Long customerUuid, @Param("startTime") Date startTime, @Param("captureStatus") Integer captureStatus, @Param("saveTopThree") Boolean saveTopThree);
+    Map<String, Object> getCustomerKeywordStatusCount(@Param("loginName") String loginName);
+
+    Map<String, Object> getUseMachineProportion(@Param("username") String username);
+    
+    List<Long> getCustomerKeywordUuidForCapturePositionTemp(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType, @Param("groupName") String groupName, @Param("customerUuid") Long customerUuid, @Param("startTime") Date startTime, @Param("captureStatus") Integer captureStatus, @Param("saveTopThree") Boolean saveTopThree);    
 
     List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePositionTemp(@Param("uuids") List uuids);
 

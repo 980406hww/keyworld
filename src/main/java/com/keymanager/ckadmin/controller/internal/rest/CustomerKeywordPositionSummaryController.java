@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.service.CustomerKeywordPositionSummaryService;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import javafx.beans.binding.ObjectExpression;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -26,7 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @RestController
 @RequestMapping("/internal/ckpositionsummary")
-public class CustomerKeywordPositionSummaryController {
+public class CustomerKeywordPositionSummaryController extends SpringMVCBaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerKeywordPositionSummaryController.class);
 
@@ -35,12 +37,16 @@ public class CustomerKeywordPositionSummaryController {
 
     @RequiresPermissions("/internal/ckpositionsummary/toCustomerKeywordPositionSummary")
     @PostMapping(value = "/getCustomerKeywordPositionSummaryData")
-    public ResultBean getCustomerKeywordPositionSummaryData(@RequestBody Map<String, Object> condition) {
+    public ResultBean getCustomerKeywordPositionSummaryData(@RequestBody Map<String, Object> condition, HttpSession session) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
+            if (!getCurrentUser().getRoles().contains("DepartmentManager")) {
+                condition.put("loginName", session.getAttribute("username"));
+            }
             Map<String, Object> data = customerKeywordPositionSummaryService.getCustomerKeywordPositionSummaryData(condition);
             if (null == data || data.isEmpty()) {
                 resultBean.setCode(300);
+                resultBean.setMsg("暂无关键字排名趋势图");
             } else {
                 resultBean.setData(data);
             }
@@ -55,9 +61,12 @@ public class CustomerKeywordPositionSummaryController {
 
     @RequiresPermissions("/internal/ckpositionsummary/toCustomerKeywordPositionSummary")
     @PostMapping(value = "/getCKPositionSummaryDataInitTable")
-    public ResultBean getCKPositionSummaryDataInitTable(@RequestBody Map<String, Object> condition) {
+    public ResultBean getCKPositionSummaryDataInitTable(@RequestBody Map<String, Object> condition, HttpSession session) {
         ResultBean resultBean = new ResultBean(0, "success");
         try {
+            if (!getCurrentUser().getRoles().contains("DepartmentManager")) {
+                condition.put("loginName", session.getAttribute("username"));
+            }
             Page<Map<String, Object>> page = customerKeywordPositionSummaryService.getCKPositionSummaryDataInitTable(condition);
             if (CollectionUtils.isEmpty(page.getRecords())) {
                 resultBean.setCode(300);

@@ -44,7 +44,7 @@
 		WHERE n.fKeyword = #{keyword}
 	</select>
 
-	<select id="selectLastId" resultType="int">
+	<select id="selectLastId" resultType="long">
 		select LAST_INSERT_ID()
 	</select>
 

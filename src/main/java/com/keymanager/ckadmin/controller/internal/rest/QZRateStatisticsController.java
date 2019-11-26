@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.QZRateKewordCountCriteria;
 import com.keymanager.ckadmin.criteria.QZRateStatisticsCountCriteria;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
@@ -13,6 +14,7 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -31,7 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @RestController
 @RequestMapping("/internal/qzRateStatistics")
-public class QZRateStatisticsController {
+public class QZRateStatisticsController extends SpringMVCBaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(QZRateStatisticsController.class);
 
@@ -46,7 +48,10 @@ public class QZRateStatisticsController {
     public ResultBean generateQZRateStatisticsDataMap(@RequestBody QZRateStatisticsCountCriteria qzRateStatisticsCountCriteria, HttpSession session) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
-            qzRateStatisticsCountCriteria.setUserID((String) session.getAttribute("username"));
+            Set<String> roles = getCurrentUser().getRoles();
+            if (!roles.contains("DepartmentManager")) {
+                qzRateStatisticsCountCriteria.setUserID((String) session.getAttribute("username"));
+            }
             List<QZRateStatisticsCountVO> qzRateStatisticsCountVos = qzRateStatisticsService.getQZRateStatisticCount(qzRateStatisticsCountCriteria);
             resultBean.setData(qzRateStatisticsService.generateEchartsData(qzRateStatisticsCountVos));
             return resultBean;
@@ -93,7 +98,10 @@ public class QZRateStatisticsController {
     public ResultBean getQZRateKeywordCountList(@RequestBody QZRateKewordCountCriteria qzRateKewordCountCriteria, HttpSession session){
         ResultBean resultBean = new ResultBean(0,"success");
         try {
-            qzRateKewordCountCriteria.setUserID((String) session.getAttribute("username"));
+            Set<String> roles = getCurrentUser().getRoles();
+            if (!roles.contains("DepartmentManager")) {
+                qzRateKewordCountCriteria.setUserID((String) session.getAttribute("username"));
+            }
             Page<QZRateKeywordCountVO> page = new Page<>(qzRateKewordCountCriteria.getPage(), qzRateKewordCountCriteria.getLimit());
             page = customerKeywordService.getQZRateKeywordCountList(page, qzRateKewordCountCriteria);
             resultBean.setData(page.getRecords());
@@ -106,16 +114,6 @@ public class QZRateStatisticsController {
             resultBean.setMsg(e.getMessage());
             return resultBean;
         }
-    }
-
-    @RequiresPermissions("/internal/qzRateStatistics/toQZRateStatisticsDetail")
-    @GetMapping("/toQZRateHistory/{terminalType}/{qzUuid}")
-    public ModelAndView toQZRateHistory(@PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "qzUuid") Long qzUuid) {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("statistics/qzRateHistoryDetail");
-        mv.addObject("qzRateTerminalType", terminalType);
-        mv.addObject("qzUuid", qzUuid);
-        return mv;
     }
 
     /**

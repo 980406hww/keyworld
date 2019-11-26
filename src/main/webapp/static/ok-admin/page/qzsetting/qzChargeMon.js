@@ -135,14 +135,15 @@ layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
                     chargeOption.series[2].data = res.data.stopQzDataCount; // 暂停
                     chargeOption.series[3].data = res.data.obtainedQzDataCount;  // 下架
                     chargeOption.series[4].data = res.data.deleteQzDataCount;  // 删除
-                    chargeLogShow.setOption(chargeOption, true); //数据图
+                    chargeLogShow.setOption(chargeOption); //数据图
                 } else if (res.code === 300) {
                     chargeOption.series[0].data = [];
                     chargeOption.series[1].data = [];
                     chargeOption.series[2].data = [];
                     chargeOption.series[3].data = [];
                     chargeOption.series[4].data = [];
-                    chargeLogShow.setOption(chargeOption, true);
+                    chargeLogShow.setOption(chargeOption);
+                    common.showFailMsg('暂无数据');
                 } else {
                     common.showFailMsg('每月站点监控数据获取失败');
                 }

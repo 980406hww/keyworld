@@ -100,14 +100,12 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
 
     if (condition) {
         getCustomerKeywordPositionSummaryData(condition);
-        condition.dateStart = layui.util.toDateString(new Date(), 'yyyy-MM-dd');
-        condition.dateEnd = condition.dateStart + ' 23:59:59';
         tableInit(condition);
     } else {
-        getCustomerKeywordPositionSummaryData({searchEngine: '', terminal: '', time: '-90'});
+        getCustomerKeywordPositionSummaryData({searchEngine: '百度', terminal: 'PC', time: '-90'});
         tableInit({
-            searchEngine: '',
-            terminal: '',
+            searchEngine: '百度',
+            terminal: 'PC',
             dateStart: layui.util.toDateString(new Date(), 'yyyy-MM-dd'),
             dateEnd: layui.util.toDateString(new Date(), 'yyyy-MM-dd') + ' 23:59:59'
         });
@@ -133,11 +131,13 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                     keywordOption.series[3].data = res.data.topFifthData;
                     keywordLogShow.setOption(keywordOption);
                 } else if (res.code === 300) {
+                    keywordOption.xAxis.data = [];
                     keywordOption.series[0].data = [];
                     keywordOption.series[1].data = [];
                     keywordOption.series[2].data = [];
                     keywordOption.series[3].data = [];
                     keywordLogShow.setOption(keywordOption);
+                    common.showFailMsg(res.msg);
                 } else {
                     common.showFailMsg('每日排名趋势数据获取失败');
                 }
@@ -195,7 +195,6 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
 
     window.handle = function (name, data, searchEngine) {
         $("#" + name).empty();
-        $('#' + name).append('<option value>搜索引擎</option>');// 下拉菜单里添加元素
         $.each(data, function (index, item) {
             if (searchEngine === item) {
                 $('#' + name).append('<option value="' + item + '" selected>' + item + '</option>');// 下拉菜单里添加元素
@@ -227,7 +226,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
     if (condition) {
         let options = document.getElementById('terminal').children;
         let radios = document.getElementsByName('time');
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 2; i++) {
             options[i].removeAttribute('selected');
             if (options[i].value === condition.terminal) {
                 options[i].setAttribute('selected', '');
@@ -240,7 +239,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
         if (searchEngine) {
             handle('searchEngine', searchEngine);
         } else {
-            getSeData('searchEngine');
+            getSeData('searchEngine', '百度');
         }
         form.render('select');
     }
@@ -364,13 +363,15 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                                 return '全站';
                             case 'fm':
                                 return '负面';
+                            case 'qt':
+                                return '其他';
                             default:
                                 return '未知';
                         }
                     }
                 },
                 {
-                    field: 'date', title: '统计时间', width: '15%', align: 'center', templet: function (d) {
+                    field: 'date', title: '抓取时间', width: '15%', align: 'center', templet: function (d) {
                         return layui.util.toDateString(d.date, 'yyyy-MM-dd HH:mm:ss');
                     }
                 }
@@ -378,11 +379,15 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
             height: 'full-425',
             loading: true,
             done: function (res, curr, count) {
+                console.log(res);
                 showLogData(res.data);
             }
         });
     }
 
+    /**
+     * 一周的数据
+     */
     function showLogData(data) {
         var boxes = document.getElementsByClassName('layui-table-body')[0].getElementsByTagName('tr');
         for (let i = 0; i < boxes.length; i++) {
@@ -410,12 +415,8 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
 
     function reload(condition) {
         let postData = common.formToJsonObject('searchForm');
-        if (postData.dateStart) {
-            postData.dateStart += ' 00:00:00';
-        }
-        if (postData.dateEnd) {
-            postData.dateEnd += ' 23:59:59';
-        }
+        postData.dateStart = layui.util.toDateString(new Date(), 'yyyy-MM-dd');
+        postData.dateEnd = layui.util.toDateString(new Date(), 'yyyy-MM-dd') + ' 23:59:59';
         Object.assign(condition, postData);
         table.reload('table', {
             where: condition,
@@ -423,6 +424,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                 curr: 1
             },
             done: function (res, curr, count) {
+                console.log(res);
                 showLogData(res.data);
             }
         });

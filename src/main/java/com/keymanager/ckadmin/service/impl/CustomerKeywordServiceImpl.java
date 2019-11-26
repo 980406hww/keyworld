@@ -837,8 +837,13 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public Map<String, Object> getCustomerKeywordStatusCount() {
-        return customerKeywordDao.getCustomerKeywordStatusCount();
+    public Map<String, Object> getCustomerKeywordStatusCount(String loginName) {
+        return customerKeywordDao.getCustomerKeywordStatusCount(loginName);
+    }
+
+    @Override
+    public Map<String, Object> getUseMachineProportion(String username) {
+        return customerKeywordDao.getUseMachineProportion(username);
     }
 
     @Override

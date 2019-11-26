@@ -4,116 +4,96 @@
 
     <select id="getCustomerKeywordPositionSummaryData" resultType="com.keymanager.ckadmin.vo.CustomerKeywordPositionSummaryCountVO">
         SELECT
-        SUM(IF(cps.fPosition BETWEEN 1 AND 3, 1, 0)) AS 'topThreeCount',
-        SUM(IF(cps.fPosition BETWEEN 1 AND 5, 1, 0)) AS 'topFiveCount',
-        SUM(IF(cps.fPosition BETWEEN 1 AND 10, 1, 0)) AS 'topTenCount',
-        SUM(IF(cps.fPosition BETWEEN 1 AND 50, 1, 0)) AS 'topFifthCount',
-        cps.fCreateDate AS 'date'
+            SUM(IF(cps.fPosition BETWEEN 1 AND 3, 1, 0)) AS 'topThreeCount',
+            SUM(IF(cps.fPosition BETWEEN 1 AND 5, 1, 0)) AS 'topFiveCount',
+            SUM(IF(cps.fPosition BETWEEN 1 AND 10, 1, 0)) AS 'topTenCount',
+            SUM(IF(cps.fPosition BETWEEN 1 AND 50, 1, 0)) AS 'topFifthCount',
+            cps.fCreateDate AS 'date'
         FROM t_ck_position_summary cps
-        LEFT JOIN t_customer_keyword ck
-        ON cps.fCustomerKeywordUuid = ck.fUuid
-        WHERE 1 = 1
+        WHERE cps.fSearchEngine = #{condition.searchEngine}
+        AND cps.fTerminalType = #{condition.terminal}
+        AND cps.fPosition > 0
+        <if test="condition.customer != null and condition.customer != ''">
+            AND cps.fCustomerUuid = #{condition.customer}
+        </if>
+        <if test="condition.type != null and condition.type != ''">
+            AND cps.fType = #{condition.type}
+        </if>
         <if test="condition.ltDate != null and condition.ltDate != ''">
             AND cps.fCreateDate >= #{condition.ltDate}
         </if>
         <if test="condition.gtDate != null and condition.gtDate != ''">
             AND cps.fCreateDate &lt; #{condition.gtDate}
         </if>
-        <if test="condition.customer != null and condition.customer != ''">
-            AND ck.fCustomerUuid = #{condition.customer}
-        </if>
-        <if test="condition.searchEngine != null and condition.searchEngine != ''">
-            AND ck.fSearchEngine = #{condition.searchEngine}
-        </if>
-        <if test="condition.terminal != null and condition.terminal != ''">
-            AND ck.fTerminalType = #{condition.terminal}
-        </if>
-        <if test="condition.type != null and condition.type != ''">
-            AND ck.fType = #{condition.type}
+        <if test="condition.loginName != null and condition.loginName != ''">
+            AND EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = cps.fCustomerUuid AND c.fUserID = #{condition.loginName})
         </if>
         GROUP BY cps.fCreateDate
     </select>
 
     <select id="getCKPositionSummaryDataInitTable" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-        ck.fKeyword AS 'keyword',
-        c.fContactPerson AS 'customer',
-        cps.fCustomerKeywordUuid AS 'customerKeywordUuid',
-        cps.fPosition AS 'position',
-        ck.fSearchEngine AS 'searchEngine',
-        ck.fTerminalType AS 'terminal',
-        ck.fType AS 'type',
-        cps.fCreateDate AS 'date'
-        FROM t_ck_position_summary cps
-        LEFT JOIN t_customer_keyword ck
-        ON cps.fCustomerKeywordUuid = ck.fUuid
+            ck.fKeyword AS 'keyword',
+            c.fContactPerson AS 'customer',
+            ck.fUuid AS 'customerKeywordUuid',
+            ck.fCurrentPosition AS 'position',
+            ck.fSearchEngine AS 'searchEngine',
+            ck.fTerminalType AS 'terminal',
+            ck.fType AS 'type',
+            ck.fCapturePositionQueryTime AS 'date'
+        FROM t_customer_keyword ck
         LEFT JOIN t_customer c
         ON ck.fCustomerUuid = c.fUuid
         WHERE 1 = 1
-        <if test="condition.dateStart != null and condition.dateStart != ''">
-            AND cps.fCreateDate >= #{condition.dateStart}
-        </if>
-        <if test="condition.dateEnd != null and condition.dateEnd != ''">
-            AND cps.fCreateDate &lt; #{condition.dateEnd}
-        </if>
-        <if test="condition.searchEngine != null and condition.searchEngine != ''">
-            AND ck.fSearchEngine = #{condition.searchEngine}
-        </if>
-        <if test="condition.terminal != null and condition.terminal != ''">
-            AND ck.fTerminalType = #{condition.terminal}
+        <if test="condition.keyword != null and condition.keyword != ''">
+            AND ck.fKeyword LIKE CONCAT(#{condition.keyword}, '%')
         </if>
         <if test="condition.customer != null and condition.customer != ''">
             AND ck.fCustomerUuid = #{condition.customer}
         </if>
+        AND ck.fSearchEngine = #{condition.searchEngine}
+        AND ck.fTerminalType = #{condition.terminal}
+        AND ck.fStatus = 1
+        AND ck.fCurrentPosition > -1
         <if test="condition.type != null and condition.type != ''">
             AND ck.fType = #{condition.type}
         </if>
-        <if test="condition.keyword != null and condition.keyword != ''">
-            AND ck.fKeyword LIKE CONCAT(#{condition.keyword},'%')
+        <if test="condition.loginName != null and condition.loginName != ''">
+            AND EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = ck.fCustomerUuid AND c.fUserID = #{condition.loginName})
         </if>
-        GROUP BY cps.fCustomerKeywordUuid
-        LIMIT #{condition.start}, #{condition.limit};
+        GROUP BY ck.fUuid
+        LIMIT #{condition.start}, #{condition.limit}
     </select>
 
-    <select id="getCKPositionSummaryDataInitCount" parameterType="java.util.HashMap" resultType="int">
-        SELECT COUNT(1) FROM (
-        SELECT 1
-        FROM t_ck_position_summary cps
-        LEFT JOIN t_customer_keyword ck
-        ON cps.fCustomerKeywordUuid = ck.fUuid
+    <select id="getCKPositionSummaryDataInitCount" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM t_customer_keyword ck
         WHERE 1 = 1
-        <if test="condition.dateStart != null and condition.dateStart != ''">
-            AND cps.fCreateDate >= #{condition.dateStart}
-        </if>
-        <if test="condition.dateEnd != null and condition.dateEnd != ''">
-            AND cps.fCreateDate &lt; #{condition.dateEnd}
-        </if>
-        <if test="condition.searchEngine != null and condition.searchEngine != ''">
-            AND ck.fSearchEngine = #{condition.searchEngine}
-        </if>
-        <if test="condition.terminal != null and condition.terminal != ''">
-            AND ck.fTerminalType = #{condition.terminal}
+        <if test="condition.keyword != null and condition.keyword != ''">
+            AND ck.fKeyword LIKE CONCAT(#{condition.keyword}, '%')
         </if>
         <if test="condition.customer != null and condition.customer != ''">
             AND ck.fCustomerUuid = #{condition.customer}
         </if>
+        AND ck.fSearchEngine = #{condition.searchEngine}
+        AND ck.fTerminalType = #{condition.terminal}
+        AND ck.fStatus = 1
+        AND ck.fCurrentPosition > -1
         <if test="condition.type != null and condition.type != ''">
             AND ck.fType = #{condition.type}
         </if>
-        <if test="condition.keyword != null and condition.keyword != ''">
-            AND ck.fKeyword LIKE CONCAT(#{condition.keyword},'%')
+        <if test="condition.loginName != null and condition.loginName != ''">
+            AND EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = ck.fCustomerUuid AND c.fUserID = #{condition.loginName})
         </if>
-        GROUP BY cps.fCustomerKeywordUuid ) T
     </select>
 
-    <select id="getOneCKPositionSummaryData" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="getOneCKPositionSummaryData" resultType="java.util.HashMap">
         SELECT
             GROUP_CONCAT(fPosition)   AS 'hData',
             GROUP_CONCAT(fCreateDate) AS 'hDate'
         FROM t_ck_position_summary
         WHERE fCustomerKeywordUuid = #{condition.uuid}
-        AND fCreateDate >= #{condition.fifteenDayAgo}
-        AND fCreateDate &lt; #{condition.today}
+        AND fCreateDate BETWEEN #{condition.oneWeekAgo} AND #{condition.today}
         GROUP BY fCustomerKeywordUuid
     </select>
 

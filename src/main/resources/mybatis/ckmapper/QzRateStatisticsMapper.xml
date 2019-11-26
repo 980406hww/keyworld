@@ -37,8 +37,10 @@
                 AND qs.fPhoneGroup &gt; ''
                 AND qrs.fTerminalType = 'Phone'
             </when>
-            <otherwise></otherwise>
         </choose>
+        <if test="qzRateStatisticsCountCriteria.userID != null and qzRateStatisticsCountCriteria.userID != ''">
+            AND EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = qs.fCustomerUuid AND c.fUserID = #{qzRateStatisticsCountCriteria.userID})
+        </if>
         GROUP BY qrs.fRateDate
         ORDER BY qrs.fRateDate
     </select>

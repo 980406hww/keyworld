@@ -25,7 +25,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     Map getQZSettingGroupInfo(@Param("terminalType") String terminalType, @Param("optimizeGroupName") String optimizeGroupName, @Param("customerUuid") Long customerUuid);
 
-    int selectLastId();
+    long selectLastId();
 
     String findQZCustomer(@Param("domain") String domain);
 
@@ -58,6 +58,6 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     List<Long> getQZUuidsByUserID(@Param("userID") String userID,@Param("searchEngine")String searchEngine, @Param("terminalType")String terminalType);
 
-    Map<String, Object> getQzSettingRenewalStatusCount();
+    Map<String, Object> getQzSettingRenewalStatusCount(@Param("loginName") String loginName);
 }
 

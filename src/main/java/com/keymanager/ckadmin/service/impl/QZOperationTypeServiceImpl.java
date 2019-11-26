@@ -46,7 +46,7 @@ public class QZOperationTypeServiceImpl extends ServiceImpl<QZOperationTypeDao, 
     }
 
     @Override
-    public int selectLastId() {
+    public long selectLastId() {
         return qzOperationTypeDao.selectLastId();
     }
 

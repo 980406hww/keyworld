@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface QzChargeMonService extends IService<QzChargeMon> {
 
-    Map<String, Object> getQZChargeMonData(String searchEngines, String terminal, String time);
+    Map<String, Object> getQZChargeMonData(String searchEngines, String terminal, String time, String loginName);
 
     List<QzChargeMon> getMonDateByCondition(Page<QzChargeMon> page, QZChargeMonCriteria criteria);
 

@@ -17,7 +17,7 @@ public interface NegativeListDao extends BaseMapper<NegativeList> {
 
     List<NegativeList> getSpecifiedKeywordNegativeLists(@Param("keyword") String keyword);
 
-    int selectLastId();
+    long selectLastId();
 
     List<NegativeList> negativeListsSynchronizeOfDelete(@Param("negativeList") NegativeList negativeList);
 
