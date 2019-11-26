@@ -187,7 +187,7 @@ public class CustomerKeyword extends BaseEntity {
      * 抓排名失败标识 如：889
      */
     @TableField(value = "fCapturePositionFailIdentify")
-    private Date capturePositionFailIdentify;
+    private Integer capturePositionFailIdentify;
 
     @TableField(value = "fCaptureIndexQueryTime")
     private Date captureIndexQueryTime;
@@ -736,11 +736,11 @@ public class CustomerKeyword extends BaseEntity {
         this.capturePositionQueryTime = capturePositionQueryTime;
     }
 
-    public Date getCapturePositionFailIdentify() {
+    public Integer getCapturePositionFailIdentify() {
         return capturePositionFailIdentify;
     }
 
-    public void setCapturePositionFailIdentify(Date capturePositionFailIdentify) {
+    public void setCapturePositionFailIdentify(Integer capturePositionFailIdentify) {
         this.capturePositionFailIdentify = capturePositionFailIdentify;
     }
 

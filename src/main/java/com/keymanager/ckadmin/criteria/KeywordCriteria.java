@@ -51,6 +51,10 @@ public class KeywordCriteria extends BaseCriteria {
     private String targetMachineGroup;
     private String targetBearPawNumber;
     private Integer targetOptimizePlanCount;
+    /**
+     * 抓排名失败标识
+     */
+    private Integer capturePositionFailIdentify;
 
     private String targetSearchEngine;
 
@@ -354,6 +358,14 @@ public class KeywordCriteria extends BaseCriteria {
 
     public void setTargetOptimizePlanCount(Integer targetOptimizePlanCount) {
         this.targetOptimizePlanCount = targetOptimizePlanCount;
+    }
+
+    public Integer getCapturePositionFailIdentify() {
+        return capturePositionFailIdentify;
+    }
+
+    public void setCapturePositionFailIdentify(Integer capturePositionFailIdentify) {
+        this.capturePositionFailIdentify = capturePositionFailIdentify;
     }
 
     public String getTargetSearchEngine() {

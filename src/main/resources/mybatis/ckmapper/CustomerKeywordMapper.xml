@@ -512,6 +512,9 @@
         <if test="keywordCriteria.keywordEffect != null and keywordCriteria.keywordEffect != ''">
             AND ck.fKeywordEffect = #{keywordCriteria.keywordEffect}
         </if>
+        <if test="keywordCriteria.capturePositionFailIdentify != null">
+            AND ck.fCapturePositionFailIdentify = #{keywordCriteria.capturePositionFailIdentify}
+        </if>
         <if test="keywordCriteria.orderingElement != null and keywordCriteria.orderingElement != ''">
             ORDER BY ${keywordCriteria.orderingElement}
         </if>
@@ -625,6 +628,9 @@
         <if test="keywordCriteria.keywordEffect != null and keywordCriteria.keywordEffect != ''">
             AND ck.fKeywordEffect = #{keywordCriteria.keywordEffect}
         </if>
+        <if test="keywordCriteria.capturePositionFailIdentify != null">
+            AND ck.fCapturePositionFailIdentify = #{keywordCriteria.capturePositionFailIdentify}
+        </if>
     </sql>
 
     <select id="searchKeywords" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
@@ -658,7 +664,8 @@
         ck.fFailedCause AS 'failedCause',
         ck.fCapturePositionQueryTime AS 'capturePositionQueryTime',
         ck.fOptimizeGroupName AS 'optimizeGroupName',
-        ck.fMachineGroup AS 'machineGroup'
+        ck.fMachineGroup AS 'machineGroup',
+        ck.fCapturePositionFailIdentify AS 'capturePositionFailIdentify'
         FROM
         t_customer_keyword ck,
         t_customer c
