@@ -35,6 +35,8 @@ public class KeywordCriteria extends BaseCriteria {
     private Integer invalidRefreshCount;//无效点击量
     private String gtCreateTime;//创建时间起始
     private String ltCreateTime;//创建时间结束
+    private String gtStartOptimizedTime;//开始优化时间开始
+    private String ltStartOptimizedTime;//开始优化时间结束
     private String pushPay;//催缴
     private String requireDelete;//要求删除
     private String type;//词类型
@@ -386,5 +388,21 @@ public class KeywordCriteria extends BaseCriteria {
 
     public void setOrderingElement(String orderingElement) {
         this.orderingElement = orderingElement;
+    }
+
+    public String getGtStartOptimizedTime() {
+        return gtStartOptimizedTime;
+    }
+
+    public void setGtStartOptimizedTime(String gtStartOptimizedTime) {
+        this.gtStartOptimizedTime = gtStartOptimizedTime;
+    }
+
+    public String getLtStartOptimizedTime() {
+        return ltStartOptimizedTime;
+    }
+
+    public void setLtStartOptimizedTime(String ltStartOptimizedTime) {
+        this.ltStartOptimizedTime = ltStartOptimizedTime;
     }
 }
