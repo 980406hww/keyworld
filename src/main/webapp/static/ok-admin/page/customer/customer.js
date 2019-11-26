@@ -1,4 +1,5 @@
 var sign = false;
+var searchOpen = false;
 
 getHeight();
 
@@ -328,7 +329,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
     element.on('tab(customerTab)', function (data) {
         let d = data.elem.context.dataset;
         $('#entryType').val(d.entrytype);
-        initLayPage(common.formToJsonObject('searchForm'));
         if (d.entrytype === 'pt') {
             if (window.hasPer) {
                 var intervalId = setInterval(function () {
@@ -337,9 +337,12 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 window.searchCurrentDateCompletedReportsIntervalId = intervalId;
             }
         } else {
-            if (window.searchCurrentDateCompletedReportsIntervalId){
+            if (window.searchCurrentDateCompletedReportsIntervalId) {
                 window.clearInterval(window.searchCurrentDateCompletedReportsIntervalId);
             }
+        }
+        if (searchOpen === true) {
+            initLayPage(common.formToJsonObject('searchForm'));
         }
     });
 
@@ -363,6 +366,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
     });
 
     form.on("submit(search)", function (data) {
+        searchOpen = true;
         var pageConf = data.field;
         pageConf.limit = 51;
         pageConf.page = 1;
