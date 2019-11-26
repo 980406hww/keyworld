@@ -631,6 +631,12 @@
         <if test="keywordCriteria.keywordEffect != null and keywordCriteria.keywordEffect != ''">
             AND ck.fKeywordEffect = #{keywordCriteria.keywordEffect}
         </if>
+        <if test="keywordCriteria.gtStartOptimizedTime != null and keywordCriteria.gtStartOptimizedTime != ''">
+            AND ck.fStartOptimizedTime &gt;= #{keywordCriteria.gtStartOptimizedTime}
+        </if>
+        <if test="keywordCriteria.ltStartOptimizedTime != null and keywordCriteria.ltStartOptimizedTime != ''">
+            AND ck.fStartOptimizedTime &lt;= #{keywordCriteria.ltStartOptimizedTime}
+        </if>
     </sql>
 
     <select id="searchKeywords" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
