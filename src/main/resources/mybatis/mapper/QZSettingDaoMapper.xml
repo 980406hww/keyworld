@@ -484,7 +484,6 @@
     </select>
 
     <select id="searchAllQZSettingForGenerateRankingCurve" resultType="com.keymanager.monitoring.entity.QZSetting">
-        (
         SELECT
             qs.fUuid         AS 'uuid',
             qs.fCustomerUuid AS 'customerUuid',
@@ -492,30 +491,7 @@
             qs.fPhoneGroup   AS 'phoneGroup'
         FROM t_qz_setting qs
         WHERE EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = qs.fCustomerUuid)
-        AND qs.fSearchEngine = '百度'
-        )
-        UNION ALL
-        (
-         SELECT
-            qs.fUuid         AS 'uuid',
-            qs.fCustomerUuid AS 'customerUuid',
-            qs.fPcGroup      AS 'pcGroup',
-            qs.fPhoneGroup   AS 'phoneGroup'
-        FROM t_qz_setting qs
-        WHERE EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = qs.fCustomerUuid)
-        AND qs.fSearchEngine = '搜狗'
-        )
-        UNION ALL
-        (
-         SELECT
-            qs.fUuid         AS 'uuid',
-            qs.fCustomerUuid AS 'customerUuid',
-            qs.fPcGroup      AS 'pcGroup',
-            qs.fPhoneGroup   AS 'phoneGroup'
-        FROM t_qz_setting qs
-        WHERE EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = qs.fCustomerUuid)
-        AND qs.fSearchEngine = '360'
-        )
+        AND qs.fSearchEngine IN ('百度', '搜狗', '360')
     </select>
     
     <select id="selectQZSettingForAutoOperate" resultType="com.keymanager.monitoring.vo.ExternalQzSettingVO">

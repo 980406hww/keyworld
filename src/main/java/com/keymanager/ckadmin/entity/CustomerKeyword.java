@@ -183,6 +183,12 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fCapturePositionQueryTime")
     private Date capturePositionQueryTime;
 
+    /**
+     * 抓排名失败标识 如：889
+     */
+    @TableField(value = "fCapturePositionFailIdentify")
+    private Date capturePositionFailIdentify;
+
     @TableField(value = "fCaptureIndexQueryTime")
     private Date captureIndexQueryTime;
 
@@ -728,6 +734,14 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setCapturePositionQueryTime(Date capturePositionQueryTime) {
         this.capturePositionQueryTime = capturePositionQueryTime;
+    }
+
+    public Date getCapturePositionFailIdentify() {
+        return capturePositionFailIdentify;
+    }
+
+    public void setCapturePositionFailIdentify(Date capturePositionFailIdentify) {
+        this.capturePositionFailIdentify = capturePositionFailIdentify;
     }
 
     public Date getCaptureIndexQueryTime() {
