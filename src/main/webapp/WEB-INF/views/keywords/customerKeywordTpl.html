@@ -59,8 +59,32 @@
             导出结果
         </button>
         </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordMachineGroup">
+        <button class="layui-btn layui-btn-sm" id="change_current_machineGroup" lay-event="change_current_machineGroup">
+            修改当前机器分组
+        </button>
+        <button class="layui-btn layui-btn-sm" id="change_select_machineGroup" lay-event="change_select_machineGroup">
+            修改选中机器分组
+        </button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
+        <button class="layui-btn layui-btn-sm" id="pause_all_keyword" lay-event="pause_all_keyword">
+            暂停所有关键字
+        </button>
+        <button class="layui-btn layui-btn-sm" id="pause_select_keyword" lay-event="pause_select_keyword">
+            暂停选中关键字
+        </button>
+        </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
+        <button class="layui-btn layui-btn-sm" id="active_all_keyword" lay-event="active_all_keyword">
+            激活所有关键字
+        </button>
+        <button class="layui-btn layui-btn-sm" id="active_select_keyword" lay-event="active_select_keyword">
+            激活选中关键字
+        </button>
+        </@shiro.hasPermission>
         <button class="layui-btn layui-btn-sm" id="more_operation" lay-event="more_operation">
-            更多功能
+            <span style="position: relative;top: -1.5px">更多功能</span>
             <span id="rightDirection" style="display: inline-block;"><i class="layui-icon layui-icon-right"></i></span>
             <span id="downDirection" style="display: none;"><i class="layui-icon layui-icon-down"></i></span>
         </button>
@@ -74,18 +98,6 @@
                 </button>
             </div>
         </@shiro.hasPermission>
-        <div class="layui-btn-group">
-            <@shiro.hasPermission name="/SuperUserSimpleKeywordList.xls">
-            <a class="layui-btn layui-btn-sm" href="/SuperUserSimpleKeywordList.xls">
-                Excel简化版下载
-            </a>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/SuperUserFullKeywordList.xls">
-            <a class="layui-btn layui-btn-sm" href="/SuperUserFullKeywordList.xls">
-                Excel完整版下载
-            </a>
-        </@shiro.hasPermission>
-        </div>
         <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
             <div class="layui-btn-group">
                 <button class="layui-btn layui-btn-sm" id="change_current_bearPawNumber" lay-event="change_current_bearPawNumber">
@@ -126,40 +138,6 @@
                 </button>
             </div>
         </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordMachineGroup">
-            <div class="layui-btn-group">
-                <button class="layui-btn layui-btn-sm" id="change_current_machineGroup" lay-event="change_current_machineGroup">
-                    修改当前机器分组
-                </button>
-                <button class="layui-btn layui-btn-sm" id="change_select_machineGroup" lay-event="change_select_machineGroup">
-                    修改选中机器分组
-                </button>
-            </div>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
-            <div class="layui-btn-group">
-                <button class="layui-btn layui-btn-sm" id="down_off_all_keyword" lay-event="down_off_all_keyword">
-                    下架所有关键字
-                </button>
-                <button class="layui-btn layui-btn-sm" id="down_off_select_keyword" lay-event="down_off_select_keyword">
-                    下架选中关键字
-                </button>
-                <button class="layui-btn layui-btn-sm" id="pause_all_keyword" lay-event="pause_all_keyword">
-                    暂停所有关键字
-                </button>
-                <button class="layui-btn layui-btn-sm" id="pause_select_keyword" lay-event="pause_select_keyword">
-                    暂停选中关键字
-                </button>
-                </@shiro.hasPermission>
-                <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                <button class="layui-btn layui-btn-sm" id="active_all_keyword" lay-event="active_all_keyword">
-                    激活所有关键字
-                </button>
-                <button class="layui-btn layui-btn-sm" id="active_select_keyword" lay-event="active_select_keyword">
-                    激活选中关键字
-                </button>
-            </div>
-        </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/customerKeyword/cleanTitle">
             <div class="layui-btn-group">
                 <button class="layui-btn layui-btn-sm" id="recollect_customer_keyword_title" lay-event="recollect_customer_keyword_title">
@@ -176,6 +154,16 @@
                 </button>
             </div>
         </@shiro.hasPermission>
+        <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
+            <div class="layui-btn-group">
+                <button class="layui-btn layui-btn-sm" id="down_off_all_keyword" lay-event="down_off_all_keyword">
+                    下架所有关键字
+                </button>
+                <button class="layui-btn layui-btn-sm" id="down_off_select_keyword" lay-event="down_off_select_keyword">
+                    下架选中关键字
+                </button>
+            </div>
+        </@shiro.hasPermission>
         <@shiro.hasRole name="Operation">
             <div class="layui-btn-group">
                 <button class="layui-btn layui-btn-sm" lay-event="clear_all_by_condition_fail_reason">
@@ -186,6 +174,18 @@
                 </button>
             </div>
         </@shiro.hasRole>
+        <div class="layui-btn-group">
+            <@shiro.hasPermission name="/SuperUserSimpleKeywordList.xls">
+                <a class="layui-btn layui-btn-sm" href="/SuperUserSimpleKeywordList.xls">
+                    Excel简化版下载
+                </a>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="/SuperUserFullKeywordList.xls">
+                <a class="layui-btn layui-btn-sm" href="/SuperUserFullKeywordList.xls">
+                    Excel完整版下载
+                </a>
+            </@shiro.hasPermission>
+        </div>
     </div>
 </script>
 <!--模板-->

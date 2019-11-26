@@ -105,7 +105,7 @@
                                             <select name="status" id="status">
                                                 <option value=''>关键字状态</option>
                                                 <option value='1' id="activeStatus">激活</option>
-                                                <option value='2'>新增</option>
+                                                <option value='2' id="newStatus" >新增</option>
                                                 <option value='0' id="stopStatus">暂不操作</option>
                                                 <option value='3'>下架</option>
                                             </select>
@@ -247,6 +247,17 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">开始优化时间</label>
+                                            <div class="layui-input-inline" style="width: 90.5px;">
+                                                <input type="text" id="gtStartOptimizedTime" name="gtStartOptimizedTime" placeholder=">=" autocomplete="off"
+                                                       class="layui-input layui-input-text"/>
+                                            </div>
+                                            <div class="layui-input-inline" style="width: 90.5px;">
+                                                <input type="text" id="ltStartOptimizedTime" name="ltStartOptimizedTime" placeholder="<=" autocomplete="off"
+                                                       class="layui-input layui-input-text"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -273,6 +284,8 @@
             document.getElementById("activeStatus").setAttribute('selected', '');
         } else if (status === '0') {
             document.getElementById("stopStatus").setAttribute('selected', '');
+        } else if (status === '2'){
+            document.getElementById("newStatus").setAttribute('selected', '');
         }
         l.form.render('select');
     }

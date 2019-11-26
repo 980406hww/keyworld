@@ -52,6 +52,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     laydate.render({
         elem: '#ltCreateTime',
     });
+    laydate.render({
+        elem: '#gtStartOptimizedTime',
+    });
+    laydate.render({
+        elem: '#ltStartOptimizedTime',
+    });
     init_search();
 
     function init_search() {
@@ -151,7 +157,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
                 {field: 'optimizePlanCount', title: '要刷', align: 'left', width: '80'},
                 {field: 'optimizedCount', title: '已刷', sort: true, align: 'left', width: '80'},
                 {field: 'invalidRefreshCount', title: '无效', sort: true, align: 'left', width: '60', hide: true},
-                {field: 'startOptimizedTime', title: '开始优化日期', sort: true, align: 'center', width: '100', hide: true},
+                {field: 'startOptimizedTime', title: '开始优化日期', sort: true, align: 'center', width: '120', hide: true},
                 {
                     field: 'lastOptimizeDateTime', title: '最后优化时间', align: 'center', width: '100', hide: true, templet: function (d) {
                         if (d.lastOptimizeDateTime) {

@@ -626,6 +626,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
+    public void updCKStatusFromQZ(Map<String, Object> condition) {
+        customerKeywordDao.updCKStatusFromQZ(condition);
+    }
+
+    @Override
     public void cleanTitle(CustomerKeywordCleanTitleCriteria customerKeywordCleanTitleCriteria) {
         switch (customerKeywordCleanTitleCriteria.getCleanType()) {
             case "recollectAll":

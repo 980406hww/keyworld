@@ -108,6 +108,8 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void changeCustomerKeywordStatusInCKPage(@Param("customerKeywordUpdateStatusCriteria") CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria);
 
+    void updCKStatusFromQZ(@Param("condition") Map<String, Object> condition);
+
     void cleanSelectedCustomerKeywordTitle(@Param("uuids") List<Long> uuids);
 
     void cleanCustomerTitle(@Param("terminalType") String terminalType, @Param("type") String type, @Param("customerUuid") Long customerUuid);

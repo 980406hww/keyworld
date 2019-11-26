@@ -512,6 +512,15 @@
         <if test="keywordCriteria.keywordEffect != null and keywordCriteria.keywordEffect != ''">
             AND ck.fKeywordEffect = #{keywordCriteria.keywordEffect}
         </if>
+        <if test="keywordCriteria.capturePositionFailIdentify != null">
+            AND ck.fCapturePositionFailIdentify = #{keywordCriteria.capturePositionFailIdentify}
+        </if>
+        <if test="keywordCriteria.gtStartOptimizedTime != null and keywordCriteria.gtStartOptimizedTime != ''">
+            AND ck.fStartOptimizedTime &gt;= #{keywordCriteria.gtStartOptimizedTime}
+        </if>
+        <if test="keywordCriteria.ltStartOptimizedTime != null and keywordCriteria.ltStartOptimizedTime != ''">
+            AND ck.fStartOptimizedTime &lt;= #{keywordCriteria.ltStartOptimizedTime}
+        </if>
         <if test="keywordCriteria.orderingElement != null and keywordCriteria.orderingElement != ''">
             ORDER BY ${keywordCriteria.orderingElement}
         </if>
@@ -625,6 +634,15 @@
         <if test="keywordCriteria.keywordEffect != null and keywordCriteria.keywordEffect != ''">
             AND ck.fKeywordEffect = #{keywordCriteria.keywordEffect}
         </if>
+        <if test="keywordCriteria.capturePositionFailIdentify != null">
+            AND ck.fCapturePositionFailIdentify = #{keywordCriteria.capturePositionFailIdentify}
+        </if>
+        <if test="keywordCriteria.gtStartOptimizedTime != null and keywordCriteria.gtStartOptimizedTime != ''">
+            AND ck.fStartOptimizedTime &gt;= #{keywordCriteria.gtStartOptimizedTime}
+        </if>
+        <if test="keywordCriteria.ltStartOptimizedTime != null and keywordCriteria.ltStartOptimizedTime != ''">
+            AND ck.fStartOptimizedTime &lt;= #{keywordCriteria.ltStartOptimizedTime}
+        </if>
     </sql>
 
     <select id="searchKeywords" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
@@ -658,7 +676,8 @@
         ck.fFailedCause AS 'failedCause',
         ck.fCapturePositionQueryTime AS 'capturePositionQueryTime',
         ck.fOptimizeGroupName AS 'optimizeGroupName',
-        ck.fMachineGroup AS 'machineGroup'
+        ck.fMachineGroup AS 'machineGroup',
+        ck.fCapturePositionFailIdentify AS 'capturePositionFailIdentify'
         FROM
         t_customer_keyword ck,
         t_customer c
@@ -891,6 +910,17 @@
         </if>
     </update>
 
+    <update id="updCKStatusFromQZ" parameterType="java.util.HashMap">
+        UPDATE t_customer_keyword ck
+        SET ck.fStatus = #{condition.newStatus}
+        WHERE ck.fCustomerUuid = #{condition.customerUuid}
+        AND ck.fOptimizeGroupName = #{condition.optimizeGroupName}
+        AND ck.fSearchEngine = #{condition.searchEngine}
+        AND ck.fStatus = #{condition.status}
+        AND ck.fTerminalType = #{condition.terminalType}
+        AND ck.fType = #{condition.type}
+    </update>
+    
     <update id="cleanSelectedCustomerKeywordTitle">
         UPDATE t_customer_keyword
         SET fTitle = NULL ,
@@ -900,7 +930,7 @@
             #{item}
         </foreach>
     </update>
-
+    
     <update id="cleanCustomerTitle">
         UPDATE t_customer_keyword
         SET fTitle = NULL,

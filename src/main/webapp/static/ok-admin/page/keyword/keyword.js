@@ -34,17 +34,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
         elem: '#ltCreateTime',
     });
 
-    // TODO
     init_search(dataTmp);
     init_belong_user();
     init_searchEngine();
 
     function init_search(d) {
-        // let this_ = window.parent.document.getElementsByTagName('iframe');
-        // this_ = this_[this_.length - 1];
         if (d.type && d.terminal && d.status) {
-            // document.getElementById('type').value = d.type;
-            // document.getElementById('terminalType').value = d.terminal;
             let statuses = document.getElementById('status').children;
             for (let i = 0; i < statuses.length; i++) {
                 if (statuses[i].value === d.status) {
@@ -55,14 +50,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
         } else {
             init_keyword_type();
         }
-        // if (d.group) {
-        //     // document.getElementById('optimizeGroupName').value = d.group;
-        // } else if (d.machineGroup) {
-        //     // document.getElementById('machineGroup').value = d.machineGroup;
-        // }
-        // if (d.irc) {
-        //     // document.getElementById('invalidRefreshCount').value = d.irc;
-        // }
     }
 
     function init_keyword_type(data) {
@@ -196,6 +183,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                 {field: 'paymentStatus', title: '付费状态', width: '80', hide: true },
                 {field: 'remarks', title: '备注', width: '100', hide: true, templet: '#remarksTpl'},
                 {field: 'failedCause', title: '失败原因', width: '80', hide: true},
+                {field: 'capturePositionFailIdentify', title: '抓排名失败标识', width: '100', hide: true}
             ]],
             height: 'full-110',
             done: function (res, curr, count) {

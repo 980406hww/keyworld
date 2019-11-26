@@ -32,14 +32,14 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
         var load_index = layer.load(2, {shade: false}); //添加laoding 0-2
         if (!pageConf) {
             pageConf = {};
-            pageConf.limit = 30;
+            pageConf.limit = 51;
             pageConf.page = 1;
         }
         if(!pageConf.page){
             pageConf.page = 1;
         }
         if (!pageConf.limit) {
-            pageConf.limit = 30;
+            pageConf.limit = 51;
         }
         $.ajax({
             url: '/internal/customer/getCustomers',
@@ -56,7 +56,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                     count: result.count,
                     curr: pageConf.page,
                     limit: pageConf.limit,
-                    limits: [10, 30, 50, 100, 500, 1000],
+                    limits: [12, 30, 51, 99, 300, 999],
                     first: '首页',
                     last: '尾页',
                     layout: ['prev', 'page', 'next', 'count', 'limit'],
@@ -132,7 +132,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
             if (customerBusinessList !== null && customerBusinessList.length > 0) {
                 $.each(obj.customerBusinessList, function (index, tmp) {
                     if (tmp === 'keyword') {
-                        item += '<div class="layadmin-address">' +
+                        item += '<div class="layadmin-address" id="customQT' + obj.uuid + '">' +
                             '<strong>' +
                             '单词业务' +
                             '</strong>' +
@@ -364,7 +364,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
 
     form.on("submit(search)", function (data) {
         var pageConf = data.field;
-        pageConf.limit = 50;
+        pageConf.limit = 51;
         pageConf.page = 1;
         $.each(pageConf,function(idx,item){
             pageConf[idx] = $.trim(item)
@@ -692,7 +692,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
     };
 
     //更新关键字状态
-    window.changeCustomerKeywordStatus = function (customerUuid, status, entryType, terminalType) {
+    window.changeCustomerKeywordStatus = function (customerUuid, status, entryType, terminalType, ele) {
         if (status === '0') {
             msg = "确定暂停所有关键字吗?"
         } else if (status === '1') {
@@ -716,8 +716,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 success: function (result) {
                     if (result.code === 200) {
                         common.showSuccessMsg('操作成功', function () {
-                            let pageConf = common.formToJsonObject('searchForm');
-                            initLayPage(pageConf);
+                            ele.parentElement.innerHTML = getNewHtml(customerUuid, status, entryType, terminalType);
                         });
                     } else {
                         common.showFailMsg('操作失败');
@@ -730,6 +729,16 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
             layer.close(index);
         });
     };
+
+    function getNewHtml(customerUuid, status, entryType, terminalType){
+        if (status === '0') {
+            return '(<span style="color: red;">暂停</span>|<a href="javascript:void(0)" '
+                + 'onclick=changeCustomerKeywordStatus("' + customerUuid + '","1","' + entryType + '","' + terminalType + '",this)>激活关键字</a>)';
+        } else {
+            return '(<span style="color: green;">激活</span>|<a href="javascript:void(0)" '
+                + 'onclick=changeCustomerKeywordStatus("' + customerUuid + '","0","' + entryType + '","' + terminalType + '",this)>暂停关键字</a>)';
+        }
+    }
 
     // 改变客户状态
     window.changeCustomerStatus = function (uuid, ele) {
@@ -1180,19 +1189,19 @@ function generate_customer_info(contactPerson, data, terminalType, type, custome
     let terminalTypeName = terminalType === 'PC' ? "电脑端" : "移动端";
     if (data !== null) {
         if (data.totalCount > 0) {
-            htm += '<span>' + terminalTypeName + ' : <a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>' + data.totalCount + '</a></span>(';
+            htm += '<span>' + terminalTypeName + ' : <a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>' + data.totalCount + '</a></span><span>(';
             if (data.totalCount === data.activeCount) {
                 htm += '<span style="color: green;">激活</span>' +
-                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","0","' + type + '","' + terminalType + '")>暂停关键字</a>'
+                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","0","' + type + '","' + terminalType + '",this)>暂停关键字</a>'
             } else if (data.totalCount > 0 && data.activeCount > 0) {
                 htm += '<span style="color: yellowgreen;">部分暂停</span>' +
-                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","0","' + type + '","' + terminalType + '")>暂停关键字</a>' +
-                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","1","' + type + '","' + terminalType + '")>激活关键字</a>'
+                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","0","' + type + '","' + terminalType + '",this)>暂停关键字</a>' +
+                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","1","' + type + '","' + terminalType + '",this)>激活关键字</a>'
             } else {
                 htm += '<span style="color: red;">暂停</span>' +
-                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","1","' + type + '","' + terminalType + '")>激活关键字</a>'
+                    '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","1","' + type + '","' + terminalType + '",this)>激活关键字</a>'
             }
-            htm += ')';
+            htm += ')</span>';
         } else {
             htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>查看' + terminalTypeName + '关键字</span></a>';
         }
