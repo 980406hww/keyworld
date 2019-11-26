@@ -1348,4 +1348,94 @@
         fCapturePositionQueryTime = #{capturePositionQueryTime}
         WHERE fUuid = #{customerKeywordUuid}
     </update>
+
+    <select id="getCrawlRankKeywords" resultType="com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO">
+        (SELECT
+        ck.fUuid AS 'uuid',
+        ck.fTerminalType AS 'terminalType',
+        ck.fType AS 'type',
+        ck.fCity AS 'city',
+        ck.fTitle AS 'title',
+        ck.fKeyword AS 'keyword',
+        ck.fUrl AS 'url',
+        ck.fSearchEngine AS 'searchEngine',
+        ck.fBearPawNumber AS 'bearPawNumber'
+        FROM t_customer_keyword ck
+        WHERE ck.fType = #{type}
+        AND ck.fSearchEngine = '百度'
+        <choose>
+            <when test="captureStatus == 1">
+                AND ck.fCaptureStatus = 1
+                AND ck.fCapturePositionQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+            </when>
+            <otherwise>
+                AND ck.fCaptureStatus = 0
+                AND ck.fCapturePositionQueryTime &lt; CURRENT_DATE()
+            </otherwise>
+        </choose>
+        LIMIT 3000 )
+        UNION ALL
+        (SELECT
+        ck.fUuid AS 'uuid',
+        ck.fTerminalType AS 'terminalType',
+        ck.fType AS 'type',
+        ck.fCity AS 'city',
+        ck.fTitle AS 'title',
+        ck.fKeyword AS 'keyword',
+        ck.fUrl AS 'url',
+        ck.fSearchEngine AS 'searchEngine',
+        ck.fBearPawNumber AS 'bearPawNumber'
+        FROM t_customer_keyword ck
+        WHERE ck.fType = #{type}
+        AND ck.fSearchEngine = '搜狗'
+        <choose>
+            <when test="captureStatus == 1">
+                AND ck.fCaptureStatus = 1
+                AND ck.fCapturePositionQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+            </when>
+            <otherwise>
+                AND ck.fCaptureStatus = 0
+                AND ck.fCapturePositionQueryTime &lt; CURRENT_DATE()
+            </otherwise>
+        </choose>
+        LIMIT 3000)
+        UNION ALL
+        (SELECT
+        ck.fUuid AS 'uuid',
+        ck.fTerminalType AS 'terminalType',
+        ck.fType AS 'type',
+        ck.fCity AS 'city',
+        ck.fTitle AS 'title',
+        ck.fKeyword AS 'keyword',
+        ck.fUrl AS 'url',
+        ck.fSearchEngine AS 'searchEngine',
+        ck.fBearPawNumber AS 'bearPawNumber'
+        FROM t_customer_keyword ck
+        WHERE ck.fType = #{type}
+        AND ck.fSearchEngine = '360'
+        <choose>
+            <when test="captureStatus == 1">
+                AND ck.fCaptureStatus = 1
+                AND ck.fCapturePositionQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+            </when>
+            <otherwise>
+                AND ck.fCaptureStatus = 0
+                AND ck.fCapturePositionQueryTime &lt; CURRENT_DATE()
+            </otherwise>
+        </choose>
+        LIMIT 3000
+        )
+        LIMIT 3000
+    </select>
+
+    <update id="updateCrawlRankKeywordTimeByUuids">
+        UPDATE t_customer_keyword
+        SET
+        fCapturePositionQueryTime = NOW(),
+        fCaptureStatus = 1
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
 </mapper>

@@ -226,6 +226,11 @@ public class CaptureRankJobServiceImpl extends ServiceImpl<CaptureRankJobDao, Ca
         captureRankJobDao.updateById(captureRankJob);
     }
 
+    @Override
+    public CaptureRankJob checkingCaptureRankJobCompleted(ExternalCaptureJobCriteria captureJobCriteria) {
+        return captureRankJobDao.provideCaptureRankJob(1, captureJobCriteria);
+    }
+
     private void updateGenerationCurve(CaptureRankJob captureRankJob) {
         QZKeywordRankInfo qzKeywordRankInfo = qzKeywordRankInfoDao.selectByQZSettingUuid(captureRankJob.getQzSettingUuid(), captureRankJob.getOperationType());
         if (qzKeywordRankInfo == null) {

@@ -141,5 +141,9 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     void updateCustomerKeywordQueryTime(Long customerKeywordUuid, Date date);
 
+    void cacheCrawlRankCustomerQZKeywords();
+
+    void cacheCrawlRankCustomerPTKeywords();
+
     List<CustomerKeyWordCrawlRankVO> getCrawlRankKeyword();
 }
