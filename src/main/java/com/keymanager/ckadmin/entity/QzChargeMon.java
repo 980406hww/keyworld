@@ -3,12 +3,13 @@ package com.keymanager.ckadmin.entity;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 import java.util.Date;
 
 @TableName("t_qz_charge_mon")
 public class QzChargeMon {
 
-    @TableId("fUuid")
+    @TableId(value = "fUuid", type= IdType.AUTO)
     private Long uuid;
 
     @TableField("fQzSettingUuid")
