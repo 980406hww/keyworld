@@ -735,16 +735,13 @@
     </select>
 
     <select id="getMachineInfoBody" parameterType="java.lang.String" resultType="com.keymanager.ckadmin.vo.MachineInfoSummaryVO">
-        SELECT cs.fClientIDPrefix as clientIDPrefix,
-            cs.fTerminalType as type,
-            cs.fCity as city,
-            COUNT(1) as 'count',
-            cs.fSwitchGroupName as 'switchGroupName'
+        SELECT cs.fTerminalType as type,
+        cs.fCity as city,
+        COUNT(1) as 'count'
         FROM t_machine_info cs
         WHERE cs.fValid = 1
         <if test="city!=null and city!=''">AND cs.fCity LIKE '%${city}%'</if>
-        GROUP BY cs.fClientIDPrefix, cs.fTerminalType, cs.fCity, cs.fSwitchGroupName
-        ORDER BY cs.fClientIDPrefix
+        GROUP BY cs.fTerminalType, cs.fCity
     </select>
 
     <select id="getMachineStatusCount" resultType="java.util.HashMap">
