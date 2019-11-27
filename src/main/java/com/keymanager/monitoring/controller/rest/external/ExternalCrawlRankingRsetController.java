@@ -52,7 +52,7 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/getCaptureRankJobTemp", method = RequestMethod.POST)
+    @RequestMapping(value = "/getCaptureRankJobTemp2", method = RequestMethod.POST)
     public synchronized ResponseEntity<?> getCaptureRankJobTemp(@RequestBody ExternalCaptureJobCriteria captureJobCriteria) {
         String userName = captureJobCriteria.getUserName();
         String password = captureJobCriteria.getPassword();
@@ -108,7 +108,7 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/updateCaptureRankJobTempTwo", method = RequestMethod.POST)
+    @RequestMapping(value = "/updateCaptureRankJobTempTwo2", method = RequestMethod.POST)
     public ResponseEntity<?> updateCaptureRankJobTempTwo(@RequestBody CaptureRankJobCriteria captureRankJobCriteria) {
         String userName = captureRankJobCriteria.getUserName();
         String password = captureRankJobCriteria.getPassword();
@@ -125,7 +125,7 @@ public class ExternalCrawlRankingRsetController extends SpringMVCBaseController 
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/getCrawlRankKeyword", method = RequestMethod.POST)
+    @RequestMapping(value = "/getCrawlRankKeyword2", method = RequestMethod.POST)
     public ResponseEntity<?> getCrawlRankKeyword(@RequestBody Map<String, Object> requestMap) {
         try {
             String userName = (String) requestMap.get("userName");

@@ -34,7 +34,7 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
     @Resource(name = "machineInfoService2")
     private MachineInfoService machineInfoService;
 
-    @RequestMapping(value = "/getCustomerKeywordForCapturePositionTemp2", method = RequestMethod.POST)
+    @RequestMapping(value = "/getCustomerKeywordForCapturePositionTemp", method = RequestMethod.POST)
     public ResponseEntity<?> getCustomerKeywordForCapturePositionTemp(@RequestBody Map<String, Object> requestMap) {
         String userName = (String) requestMap.get("userName");
         String password = (String) requestMap.get("password");
@@ -64,7 +64,7 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/updateCustomerKeywordPosition2", method = RequestMethod.POST)
+    @RequestMapping(value = "/updateCustomerKeywordPosition", method = RequestMethod.POST)
     public ResponseEntity<?> updateCustomerKeywordPosition(@RequestBody Map<String, Object> requestMap) throws Exception {
         String userName = (String) requestMap.get("userName");
         String password = (String) requestMap.get("password");
