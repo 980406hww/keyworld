@@ -88,17 +88,32 @@ public class MachineInfoSummaryVO implements Comparable {
 
     @Override
     public int compareTo(Object o) {
-        int result = this.getClientIDPrefix().compareTo(((com.keymanager.ckadmin.vo.MachineInfoSummaryVO) o).getClientIDPrefix());
+        int result = this.getClientIDPrefix().compareTo(((MachineInfoSummaryVO) o).getClientIDPrefix());
         if (result == 0) {
-            result = this.getType().compareTo(((com.keymanager.ckadmin.vo.MachineInfoSummaryVO) o).getType());
+            result = this.getType().compareTo(((MachineInfoSummaryVO) o).getType());
             if (result == 0) {
-                if (this.getCity() != null && ((com.keymanager.ckadmin.vo.MachineInfoSummaryVO) o).getCity() != null) {
-                    result = this.getCity().compareTo(((com.keymanager.ckadmin.vo.MachineInfoSummaryVO) o).getCity());
+                if (this.getCity() != null && ((MachineInfoSummaryVO) o).getCity() != null) {
+                    result = this.getCity().compareTo(((MachineInfoSummaryVO) o).getCity());
                 } else {
                     result = -1;
                 }
             }
         }
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "MachineInfoSummaryVO{" +
+            "clientIDPrefix='" + clientIDPrefix + '\'' +
+            ", clientIDPrefixCount=" + clientIDPrefixCount +
+            ", clientIDPrefixTotalCount=" + clientIDPrefixTotalCount +
+            ", type='" + type + '\'' +
+            ", typeCount=" + typeCount +
+            ", typeTotalCount=" + typeTotalCount +
+            ", city='" + city + '\'' +
+            ", switchGroupName='" + switchGroupName + '\'' +
+            ", count=" + count +
+            '}';
     }
 }

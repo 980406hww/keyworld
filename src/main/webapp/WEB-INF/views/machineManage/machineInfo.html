@@ -135,7 +135,7 @@
             position: absolute;
             top: 65px;
             right: 24px;
-            width: 35%;
+            width: 25%;
             border-radius: 5px;
             padding: 20px 20px 10px 20px;
             border: #ccc solid 1px;
@@ -152,7 +152,7 @@
         }
 
         .show .layui-table-main {
-            max-height: 415px;
+            max-height: 365px;
         }
 
         .layui-table tbody tr:hover {
@@ -444,29 +444,30 @@
         }
 
         function showHide(value, data) {
+            console.log(data);
             let show = document.getElementById('showData');
             let html = '<div>总机器数：' + value + ' 联通机器数：' + data.total.unicom + ' 电信机器数：' + data.total.telecom + ' 其他：' + data.total.other + '</div>';
             html += '<div><table lay-filter="machineInfoTable">'
                 + '  <thead>'
                 + '    <tr>'
-                + '      <th lay-data="{field:\'a\', width:\'22%\', align: \'center\'}">客户端ID前缀</th>'
+                // + '      <th lay-data="{field:\'a\', width:\'22%\', align: \'center\'}">客户端ID前缀</th>'
                 // + '      <th lay-data="{field:\'b\', width:\'8%\', align: \'center\'}">总数</th>'
-                + '      <th lay-data="{field:\'c\', width:\'12%\', align: \'center\'}">类型</th>'
+                + '      <th lay-data="{field:\'c\', width:\'20%\', align: \'center\'}">类型</th>'
                 // + '      <th lay-data="{field:\'d\', width:\'8%\', align: \'center\'}">小计</th>'
-                + '      <th lay-data="{field:\'e\', width:\'34%\', align: \'center\'}">城市</th>'
-                + '      <th lay-data="{field:\'f\', width:\'21%\', align: \'center\'}">流转分组</th>'
-                + '      <th lay-data="{field:\'g\', width:\'11%\', align: \'center\'}">数量</th>'
+                + '      <th lay-data="{field:\'e\', width:\'60%\', align: \'center\'}">城市</th>'
+                // + '      <th lay-data="{field:\'f\', width:\'21%\', align: \'center\'}">流转分组</th>'
+                + '      <th lay-data="{field:\'g\', width:\'20%\', align: \'center\'}">数量</th>'
                 + '    </tr>'
                 + '  </thead>'
                 + '  <tbody>';
             for (let i = 0; i < data.data.length; i++) {
                 html += '  <tr>'
-                    + '      <td>' + data.data[i].clientIDPrefix + '</td>'
+                    // + '      <td>' + data.data[i].clientIDPrefix + '</td>'
                     // + '      <td>' + data.data[i].clientIDPrefixTotalCount + '</td>'
                     + '      <td>' + data.data[i].type + '</td>'
                     // + '      <td>' + data.data[i].typeTotalCount + '</td>'
                     + '      <td>' + data.data[i].city + '</td>'
-                    + '      <td>' + data.data[i].switchGroupName + '</td>'
+                    // + '      <td>' + data.data[i].switchGroupName + '</td>'
                     + '      <td>' + data.data[i].count + '</td>'
                     + '    </tr>'
             }

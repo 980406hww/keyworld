@@ -568,9 +568,8 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
         int unicom = 0, telecom = 0, other = 0;
         for (MachineInfoSummaryVO machineInfo : machineInfos) {
             if (null == machineInfo.getCity()) {
-                continue;
-            }
-            if (machineInfo.getCity().contains("联通")) {
+                other += machineInfo.getCount();
+            } else if (machineInfo.getCity().contains("联通")) {
                 unicom += machineInfo.getCount();
             } else if (machineInfo.getCity().contains("电信")) {
                 telecom += machineInfo.getCount();
