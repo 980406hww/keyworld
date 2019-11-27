@@ -2,15 +2,10 @@
 <script type="text/html" id="toolbarTpl">
     <div class="layui-btn-group">
     <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
-        {{#
-            var businessType = document.getElementById('type').value;
+        {{# var businessType = document.getElementById('type').value;
             if(businessType !=='qz'){  }}
             <button class="layui-btn layui-btn-sm" id="add_customer_keyword" lay-event="add_customer_keyword">
                 添加
-            </button>
-        {{#  } else {  }}
-            <button class="layui-btn layui-btn-sm" lay-event="upd_customer_keyword_form_qz">
-                更改整站关联
             </button>
         {{# } }}
     </@shiro.hasPermission>
@@ -102,6 +97,14 @@
                 </button>
             </div>
         </@shiro.hasPermission>
+        {{# var businessType = document.getElementById('type').value;
+            if(businessType ==='qz'){  }}
+            <div class="layui-btn-group">
+                <button class="layui-btn layui-btn-sm" lay-event="upd_customer_keyword_form_qz">
+                    更改整站关联
+                </button>
+            </div>
+        {{# } }}
         <@shiro.hasPermission name="/internal/customerKeyword/saveCustomerKeyword">
             <div class="layui-btn-group">
                 <button class="layui-btn layui-btn-sm" id="change_current_bearPawNumber" lay-event="change_current_bearPawNumber">

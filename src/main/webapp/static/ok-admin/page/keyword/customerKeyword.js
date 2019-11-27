@@ -529,7 +529,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     let html = '                                    <div><form class="layui-form layui-form-pane" id="justQzUuid"><div class="update-qz-from">'
         + '                                            <label class="layui-form-label">客户整站列表</label>'
         + '                                            <div class="layui-input-block">'
-        + '                                                <select name="qzSettingUuid" id="qzSettingUuid">'
+        + '                                                <select name="qzSettingUuid" id="qzSettingUuid" lay-search>'
         + '                                                 {0}'
         + '                                                </select>'
         + '                                            </div>'
