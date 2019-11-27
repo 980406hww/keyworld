@@ -887,7 +887,6 @@
         t_customer_keyword ck
         WHERE 1 = 1
         <include refid="searchCustomerKeywordsCriteria"/>
-        ORDER BY ck.fKeyword
     </select>
 
     <select id="selectAllKeywordAndUrl" resultType="java.util.Map">
