@@ -1,8 +1,12 @@
 package com.keymanager.ckadmin.controller.external.rest;
 
+import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
+import com.keymanager.ckadmin.criteria.base.ExternalBaseCriteria;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.MachineInfoService;
+import com.keymanager.ckadmin.service.UserInfoService;
+import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
@@ -19,9 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * @author yq
- */
 @RestController
 @RequestMapping("/external/customerkeyword")
 public class ExternalCustomerKeywordController extends SpringMVCBaseController {
@@ -33,6 +34,12 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
 
     @Resource(name = "machineInfoService2")
     private MachineInfoService machineInfoService;
+
+    @Resource(name = "userRoleService2")
+    private UserRoleService userRoleService;
+
+    @Resource(name = "userInfoService2")
+    private UserInfoService userInfoService;
 
     @RequestMapping(value = "/getCustomerKeywordForCapturePositionTemp", method = RequestMethod.POST)
     public ResponseEntity<?> getCustomerKeywordForCapturePositionTemp(@RequestBody Map<String, Object> requestMap) {
@@ -65,7 +72,7 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequestMapping(value = "/updateCustomerKeywordPosition", method = RequestMethod.POST)
-    public ResponseEntity<?> updateCustomerKeywordPosition(@RequestBody Map<String, Object> requestMap) throws Exception {
+    public ResponseEntity<?> updateCustomerKeywordPosition(@RequestBody Map<String, Object> requestMap) {
         String userName = (String) requestMap.get("userName");
         String password = (String) requestMap.get("password");
         try {
@@ -92,5 +99,33 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
             logger.error("updateCustomerKeywordPosition:        " + ex.getMessage());
         }
         return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * 获得优化分组
+     *
+     * @param baseCriteria 账号密码
+     * @return .data [String] 类型
+     */
+    @RequestMapping(value = "/getGroups2", method = RequestMethod.POST)
+    public ResultBean getGroups(@RequestBody ExternalBaseCriteria baseCriteria) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            if (validUser(baseCriteria.getUserName(), baseCriteria.getPassword())) {
+                boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(baseCriteria.getUserName()));
+                if (isDepartmentManager) {
+                    baseCriteria.setUserName(null);
+                }
+                resultBean.setData(customerKeywordService.getGroupsByUser(baseCriteria.getUserName(), "fm"));
+            } else {
+                resultBean.setCode(400);
+                resultBean.setMsg("账号密码无效");
+            }
+        } catch (Exception e) {
+            logger.error("ExternalCustomerKeywordController.getGroups()" + e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
     }
 }

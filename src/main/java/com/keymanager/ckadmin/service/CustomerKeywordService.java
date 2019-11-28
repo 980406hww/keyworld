@@ -22,6 +22,7 @@ import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
+import com.keymanager.util.common.StringUtil;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import java.io.InputStream;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
@@ -153,4 +154,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void cacheCrawlRankCustomerPTKeywords();
 
     List<CustomerKeyWordCrawlRankVO> getCrawlRankKeyword();
+
+    List<String> getGroupsByUser(String username, String type);
 }

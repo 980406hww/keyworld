@@ -143,6 +143,11 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     }
 
     @Override
+    public List<Customer> getCustomerListByUser(String username, String type) {
+        return customerDao.getCustomerListByUser(username, type);
+    }
+
+    @Override
     public void changeCustomerDailyReportIdentify(long uuid, int identify) {
         Customer customer = customerDao.selectById(uuid);
         customer.setDailyReportIdentify(identify);

@@ -984,6 +984,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         }
         return null;
     }
+
+    @Override
+    public List<String> getGroupsByUser(String username, String type) {
+        return customerKeywordDao.getGroupsByUser(username, type);
+    }
 }
 
 
