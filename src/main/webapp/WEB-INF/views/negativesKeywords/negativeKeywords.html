@@ -370,38 +370,38 @@
                         content: "上传中...",
                         success: function (layero) {
                             layero.find('.layui-layer-content').css({
-                                'width': '60px'
+                                'width': '100px',
+                                'line-height': '32px',
+                                'text-indent': '32px'
                             });
                         }
                     });
-                    setTimeout(function () {
-                        $.ajax({
-                            url: '/internal/negativeKeywords/postNegativeExcel',
-                            type: 'post',
-                            data: p_d,
-                            cache: false,
-                            async: true,
-                            processData: false,
-                            contentType: false,
-                            dataType: 'json',
-                            success: function (res) {
-                                if (res.code === 200) {
-                                    layer.close(index);
-                                    common.showSuccessMsg('上传成功', function () {
-                                        active['reload'].call(this);
-                                    });
-                                } else {
-                                    common.showFailMsg('上传失败');
-                                }
-                            },
-                            error: function () {
-                                common.showFailMsg('网络异常请稍后再试');
-                            },
-                            complete: function () {
-                                layer.close(index___);
+                    $.ajax({
+                        url: '/internal/negativeKeywords/postNegativeExcel',
+                        type: 'post',
+                        data: p_d,
+                        cache: false,
+                        async: true,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'json',
+                        success: function (res) {
+                            if (res.code === 200) {
+                                layer.close(index);
+                                common.showSuccessMsg('上传成功', function () {
+                                    active['reload'].call(this);
+                                });
+                            } else {
+                                common.showFailMsg('上传失败');
                             }
-                        });
-                    }, 10);
+                        },
+                        error: function () {
+                            common.showFailMsg('网络异常请稍后再试');
+                        },
+                        complete: function () {
+                            layer.close(index___);
+                        }
+                    });
                 },
                 btn2: function (index) {
                     layer.close(index);

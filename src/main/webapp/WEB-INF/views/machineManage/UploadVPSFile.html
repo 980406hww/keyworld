@@ -113,35 +113,35 @@
                 content: "上传中...",
                 success: function (layero) {
                     layero.find('.layui-layer-content').css({
-                        'width': '60px'
+                        'width': '100px',
+                        'line-height': '32px',
+                        'text-indent': '32px'
                     });
                 }
             });
-            setTimeout(function () {
-                $.ajax({
-                    url: '/internal/machineManage/uploadVPSFile',
-                    type: 'post',
-                    cache: false,
-                    async: true,
-                    data: postData,
-                    processData: false,
-                    contentType: false,
-                    success: function (res) {
-                        let data = JSON.parse(res);
-                        if (data.code === 200) {
-                            common.showSuccessMsg("上传成功", function () {
-                                parent.window.sign = true;
-                                parent.layer.close(parent.layer.getFrameIndex(window.name));
-                            });
-                        } else {
-                            common.showFailMsg(res.msg);
-                        }
-                    },
-                    complete: function () {
-                        layer.close(index);
+            $.ajax({
+                url: '/internal/machineManage/uploadVPSFile',
+                type: 'post',
+                cache: false,
+                async: true,
+                data: postData,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    let data = JSON.parse(res);
+                    if (data.code === 200) {
+                        common.showSuccessMsg("上传成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        common.showFailMsg(res.msg);
                     }
-                });
-            }, 10);
+                },
+                complete: function () {
+                    layer.close(index);
+                }
+            });
             return false;
         });
 

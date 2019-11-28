@@ -64,36 +64,36 @@
                 content: "上传中...",
                 success: function (layero) {
                     layero.find('.layui-layer-content').css({
-                        'width': '60px'
+                        'width': '100px',
+                        'line-height': '32px',
+                        'text-indent': '32px'
                     });
                 }
             });
-            setTimeout(function () {
-                var fs1 = new FormData($('#uploadForm')[0]);
-                $.ajax({
-                    url: '/internal/customerKeyword/uploadCustomerKeywords2',
-                    type: 'post',
-                    data: fs1,
-                    cache: false,
-                    async: true,
-                    contentType: false,   //ajax 中 contentType 设置为 false 是为了避免 JQuery 对其操作，从而失去分界符，而使服务器不能正常解析文件
-                    processData: false,
-                    dataType: 'json',
-                    success: function (res) {
-                        if (res.code === 200) {
-                            common.showSuccessMsg("保存成功", function () {
-                                parent.window.sign = true;
-                                parent.layer.close(parent.layer.getFrameIndex(window.name));
-                            });
-                        } else {
-                            common.showFailMsg(res.msg);
-                        }
-                    },
-                    complete: function () {
-                        layer.close(index);
+            var fs1 = new FormData($('#uploadForm')[0]);
+            $.ajax({
+                url: '/internal/customerKeyword/uploadCustomerKeywords2',
+                type: 'post',
+                data: fs1,
+                cache: false,
+                async: true,
+                contentType: false,   //ajax 中 contentType 设置为 false 是为了避免 JQuery 对其操作，从而失去分界符，而使服务器不能正常解析文件
+                processData: false,
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        common.showSuccessMsg("保存成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        common.showFailMsg(res.msg);
                     }
-                });
-            }, 10);
+                },
+                complete: function () {
+                    layer.close(index);
+                }
+            });
             return false;
         });
 
