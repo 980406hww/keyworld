@@ -590,9 +590,13 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     function upload_keyword(excelType) {
         let qzUuid = $('#qzUuid').val();
         let type = $('#type').val();
-        if (type === 'qz' && (!qzUuid || qzUuid === '-1')) {
-            common.showFailMsg("请选择要上传关键字的整站");
-            return null;
+        if (type === 'qz') {
+            if (!qzUuid || qzUuid === '-1') {
+                common.showFailMsg("请选择要上传关键字的整站");
+                return null;
+            }
+        } else {
+            qzUuid = null;
         }
         let customerUuid = $('#customerUuid').val();
         let terminalType = $('#terminalType').val();

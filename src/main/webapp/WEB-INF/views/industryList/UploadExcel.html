@@ -94,17 +94,22 @@
             postData.append('file', $("#uploadForm").find("#upload")[0].files[0]);
             postData.append('excelType', excelType);
             postData.append('terminalType', terminalType);
-            var index = layer.msg('正在上传，请勿其他操作', {
-                icon: 16,
-                time: 0
+            var index = layer.load(2, {
+                shade: [0.5, 'gray'],
+                content: "上传中...",
+                success: function (layero) {
+                    layero.find('.layui-layer-content').css({
+                        'width': '60px'
+                    });
+                }
             });
             setTimeout(function () {
                 $.ajax({
                     url: '/internal/industryList/uploadIndustryInfos',
                     type: 'post',
                     cache: false,
+                    async: true,
                     data: postData,
-                    async: false,
                     processData: false,
                     contentType: false,
                     dataType: 'json',

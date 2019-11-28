@@ -59,18 +59,24 @@
         });
 
         $('#upload').click(function () {
-            var fs1 = new FormData($('#uploadForm')[0]);
-            var index = layer.msg('正在上传，请勿其他操作', {
-                icon: 16,
-                time: 0
+            var index = layer.load(2, {
+                shade: [0.5, 'gray'],
+                content: "上传中...",
+                success: function (layero) {
+                    layero.find('.layui-layer-content').css({
+                        'width': '60px'
+                    });
+                }
             });
             setTimeout(function () {
+                var fs1 = new FormData($('#uploadForm')[0]);
                 $.ajax({
                     url: '/internal/customerKeyword/uploadCustomerKeywords2',
                     type: 'post',
                     data: fs1,
-                    async: false,
-                contentType: false,   //ajax 中 contentType 设置为 false 是为了避免 JQuery 对其操作，从而失去分界符，而使服务器不能正常解析文件
+                    cache: false,
+                    async: true,
+                    contentType: false,   //ajax 中 contentType 设置为 false 是为了避免 JQuery 对其操作，从而失去分界符，而使服务器不能正常解析文件
                     processData: false,
                     dataType: 'json',
                     success: function (res) {
@@ -82,7 +88,6 @@
                         } else {
                             common.showFailMsg(res.msg);
                         }
-
                     },
                     complete: function () {
                         layer.close(index);

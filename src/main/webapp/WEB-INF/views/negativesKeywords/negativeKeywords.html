@@ -365,15 +365,22 @@
                     let p_d = new FormData();
                     p_d.append('group', groupFileName);
                     p_d.append('file', file.files[0]);
-                    var index___ = layer.msg('正在上传，请勿其他操作', {
-                        icon: 16,
-                        time: 0
+                    var index___ = layer.load(2, {
+                        shade: [0.5, 'gray'],
+                        content: "上传中...",
+                        success: function (layero) {
+                            layero.find('.layui-layer-content').css({
+                                'width': '60px'
+                            });
+                        }
                     });
                     setTimeout(function () {
                         $.ajax({
                             url: '/internal/negativeKeywords/postNegativeExcel',
                             type: 'post',
                             data: p_d,
+                            cache: false,
+                            async: true,
                             processData: false,
                             contentType: false,
                             dataType: 'json',
