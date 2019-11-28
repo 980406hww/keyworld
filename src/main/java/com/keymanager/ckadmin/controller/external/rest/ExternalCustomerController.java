@@ -50,7 +50,7 @@ public class ExternalCustomerController extends SpringMVCBaseController {
                 resultBean.setMsg("账号密码无效");
             }
         } catch (Exception e) {
-            logger.error("ExternalCustomerKeywordController.getGroups()" + e.getMessage());
+            logger.error("ExternalCustomerController.getCustomerList()" + e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
         }
