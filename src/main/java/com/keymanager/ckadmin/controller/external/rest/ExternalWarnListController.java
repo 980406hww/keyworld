@@ -5,6 +5,7 @@ import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.WarnListCriteria;
 import com.keymanager.ckadmin.service.WarnListService;
 import javax.annotation.Resource;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,7 +57,9 @@ public class ExternalWarnListController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
             if (validUser(warnListCriteria.getUserName(), warnListCriteria.getPassword())) {
-                resultBean.setData(warnListService.getSpecifiedKeywordWarnLists(warnListCriteria.getKeyword()));
+                if (StringUtils.isNotEmpty(warnListCriteria.getKeyword())) {
+                    resultBean.setData(warnListService.getSpecifiedKeywordWarnLists(warnListCriteria.getKeyword()));
+                }
             } else {
                 resultBean.setCode(400);
                 resultBean.setMsg("账号密码无效");

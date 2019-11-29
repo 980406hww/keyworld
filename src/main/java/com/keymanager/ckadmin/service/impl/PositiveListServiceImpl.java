@@ -93,7 +93,7 @@ public class PositiveListServiceImpl extends ServiceImpl<PositiveListDao, Positi
 
     @Override
     public List<PositiveListVO> getSpecifiedKeywordPositiveLists(String keyword, String terminalType) {
-        List<PositiveListVO> positiveListVOs = new ArrayList<PositiveListVO>();
+        List<PositiveListVO> positiveListVOs = new ArrayList<>();
         List<PositiveList> positiveLists = positiveListDao.getSpecifiedKeywordPositiveLists(keyword, terminalType);
         if (CollectionUtils.isNotEmpty(positiveLists)) {
             for (PositiveList positiveList : positiveLists) {
