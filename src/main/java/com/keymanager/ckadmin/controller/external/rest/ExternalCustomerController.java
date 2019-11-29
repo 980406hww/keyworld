@@ -35,7 +35,7 @@ public class ExternalCustomerController extends SpringMVCBaseController {
      * @param baseCriteria 用户名密码
      * @return .data [CustomerObj] 数据类型
      */
-    @RequestMapping(value = "/getCustomerList2", method = RequestMethod.POST)
+    @RequestMapping(value = "/getActiveCustomerSimpleInfo2", method = RequestMethod.POST)
     public ResultBean getCustomerList(@RequestBody ExternalBaseCriteria baseCriteria) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
