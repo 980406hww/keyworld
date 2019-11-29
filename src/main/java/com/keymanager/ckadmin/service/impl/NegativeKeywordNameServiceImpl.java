@@ -53,4 +53,9 @@ public class NegativeKeywordNameServiceImpl extends ServiceImpl<NegativeKeywordN
 
         }
     }
+
+    @Override
+    public List<String> getNegativeGroup() {
+        return negativeKeywordNameDao.getNegativeGroup();
+    }
 }

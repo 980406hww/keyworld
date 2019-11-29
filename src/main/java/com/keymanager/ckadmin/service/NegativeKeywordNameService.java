@@ -16,4 +16,6 @@ public interface NegativeKeywordNameService extends IService<NegativeKeywordName
     List<NegativeKeywordName> findAllNegativeKeywordName(NegativeKeywordNameCriteria criteria);
 
     void insertBatchByTxtFile(File file, String group);
+
+    List<String> getNegativeGroup();
 }
