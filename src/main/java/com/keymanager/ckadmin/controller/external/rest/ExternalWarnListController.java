@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/external/warnlist")
+@RequestMapping("/external/warnlist")
 public class ExternalWarnListController extends SpringMVCBaseController {
 
     private static Logger logger = LoggerFactory.getLogger(ExternalWarnListController.class);
@@ -39,6 +39,30 @@ public class ExternalWarnListController extends SpringMVCBaseController {
             }
         } catch (Exception e) {
             logger.error("ExternalWarnListController.savewWarnLists()" + e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    /**
+     * 获取明确的预警列表
+     *
+     * @param warnListCriteria 参数主体
+     * @return 数据主体
+     */
+    @RequestMapping(value = "/getSpecifiedKeywordWarnLists2", method = RequestMethod.POST)
+    public ResultBean getSpecifiedKeywordWarnLists(@RequestBody WarnListCriteria warnListCriteria) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            if (validUser(warnListCriteria.getUserName(), warnListCriteria.getPassword())) {
+                resultBean.setData(warnListService.getSpecifiedKeywordWarnLists(warnListCriteria.getKeyword()));
+            } else {
+                resultBean.setCode(400);
+                resultBean.setMsg("账号密码无效");
+            }
+        } catch (Exception e) {
+            logger.error("ExternalWarnListController.getSpecifiedKeywordWarnLists()" + e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
         }

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/external/qzkeywordrank")
+@RequestMapping("/external/qzkeywordrank")
 public class ExternalQZKeywordRankController extends SpringMVCBaseController {
 
     private static Logger logger = LoggerFactory.getLogger(ExternalQZKeywordRankController.class);

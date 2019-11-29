@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/external/customer")
+@RequestMapping("/external/customer")
 public class ExternalCustomerController extends SpringMVCBaseController {
 
     private static Logger logger = LoggerFactory.getLogger(ExternalCustomerController.class);

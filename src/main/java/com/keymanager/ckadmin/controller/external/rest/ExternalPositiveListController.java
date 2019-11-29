@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/external/positivelist")
+@RequestMapping("/external/positivelist")
 public class ExternalPositiveListController extends SpringMVCBaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(ExternalPositiveListController.class);

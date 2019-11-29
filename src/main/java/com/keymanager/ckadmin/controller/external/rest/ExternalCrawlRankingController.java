@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/external/crawlRanking")
+@RequestMapping("/external/crawlRanking")
 public class ExternalCrawlRankingController extends SpringMVCBaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(ExternalCrawlRankingController.class);
