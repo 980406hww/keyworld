@@ -38,6 +38,12 @@ public class ExternalNegativeKeywordNameController extends SpringMVCBaseControll
     @Resource(name = "performanceService2")
     private PerformanceService performanceService;
 
+    /**
+     * 获得初始化数据信息
+     *
+     * @param criteria 参数主体
+     * @return 数据主体
+     */
     @RequestMapping(value = "/getNegativeSupportingData", method = RequestMethod.POST)
     public ResultBean getNegativeSupportingData(@RequestBody ExternalBaseCriteria criteria) {
         ResultBean resultBean = new ResultBean(200, "success");
