@@ -9,11 +9,14 @@ import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.util.Utils;
+import com.keymanager.ckadmin.vo.SearchEngineResultVO;
+import com.keymanager.util.TerminalTypeMapping;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -141,6 +144,33 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
         try {
             if (validUser(criteria.getUserName(), criteria.getPassword())) {
                 resultBean.setData(userInfoService.getUserInfo(criteria.getUserName()).getUserName());
+            } else {
+                resultBean.setCode(400);
+                resultBean.setMsg("账号密码无效");
+            }
+        } catch (Exception e) {
+            logger.error("ExternalCustomerKeywordController.getGroups()" + e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+
+    /**
+     * 保存 关键字
+     *
+     * @param searchEngineResultVO 数据主体
+     * @param request request
+     * @return 成功状态 200
+     */
+    @RequestMapping(value = "/saveCustomerKeywords", method = RequestMethod.POST)
+    public ResultBean saveCustomerKeywords(@RequestBody SearchEngineResultVO searchEngineResultVO, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            if (validUser(searchEngineResultVO.getUserName(), searchEngineResultVO.getPassword())) {
+                String terminalType = TerminalTypeMapping.getTerminalType(request);
+                customerKeywordService.addCustomerKeywords(searchEngineResultVO, terminalType, searchEngineResultVO.getUserName());
             } else {
                 resultBean.setCode(400);
                 resultBean.setMsg("账号密码无效");

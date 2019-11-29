@@ -43,6 +43,8 @@ import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
 import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
+import com.keymanager.ckadmin.vo.SearchEngineResultItemVO;
+import com.keymanager.ckadmin.vo.SearchEngineResultVO;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -988,6 +990,58 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public List<String> getGroupsByUser(String username, String type) {
         return customerKeywordDao.getGroupsByUser(username, type);
+    }
+
+    @Override
+    public void addCustomerKeywords(SearchEngineResultVO searchEngineResultVO, String terminalType, String userName) {
+        if (searchEngineResultVO != null) {
+            String searchEngine = searchEngineResultVO.getSearchEngine();
+            List<CustomerKeyword> customerKeywords = new ArrayList<>();
+            for (SearchEngineResultItemVO searchEngineResultItemVO : searchEngineResultVO.getSearchEngineResultItemVOs()) {
+                CustomerKeyword customerKeyword = convert(searchEngineResultItemVO, terminalType, searchEngineResultVO.getGroup(), searchEngineResultVO.getMachineGroup(), searchEngineResultVO.getCustomerUuid(), searchEngine);
+                customerKeywords.add(customerKeyword);
+            }
+            this.addCustomerKeyword(customerKeywords, userName);
+        }
+    }
+
+    private CustomerKeyword convert(SearchEngineResultItemVO searchEngineResultItemVO, String terminalType, String groupName, String machineGroupName, long customerUuid, String searchEngine) {
+        CustomerKeyword customerKeyword = new CustomerKeyword();
+        customerKeyword.setCurrentPosition(searchEngineResultItemVO.getOrder());
+        customerKeyword.setInitialPosition(searchEngineResultItemVO.getOrder());
+        customerKeyword.setOptimizeGroupName(groupName);
+        customerKeyword.setMachineGroup(machineGroupName);
+        customerKeyword.setOptimizePlanCount(searchEngineResultItemVO.getClickCount());
+        customerKeyword.setOptimizeRemainingCount(searchEngineResultItemVO.getClickCount());
+        customerKeyword.setKeyword(searchEngineResultItemVO.getKeyword());
+        customerKeyword.setTitle(searchEngineResultItemVO.getTitle());
+        customerKeyword.setBearPawNumber(searchEngineResultItemVO.getBearPawNumber());
+        customerKeyword.setType(searchEngineResultItemVO.getType());
+        customerKeyword.setTerminalType(terminalType);
+        customerKeyword.setOriginalUrl(searchEngineResultItemVO.getHref());
+        customerKeyword.setServiceProvider("baidutop123");
+        if (searchEngine.equals(Constants.SEARCH_ENGINE_BAIDU)) {
+            customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
+        }
+        if (searchEngine.equals(Constants.SEARCH_ENGINE_SOGOU)) {
+            customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_SOGOU);
+        }
+        if (searchEngine.equals(Constants.SEARCH_ENGINE_360)) {
+            customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_360);
+        }
+        if (searchEngine.equals(Constants.SEARCH_ENGINE_SM)) {
+            customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_SM);
+        }
+        customerKeyword.setUrl(searchEngineResultItemVO.getUrl());
+        customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
+        customerKeyword.setCollectMethod(CollectMethod.PerMonth.getCode());
+        customerKeyword.setCurrentIndexCount(20);
+        customerKeyword.setCustomerUuid(customerUuid);
+        customerKeyword.setAutoUpdateNegativeTime(Utils.getCurrentTimestamp());
+        customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
+        customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+        customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Plugin.name());
+        return customerKeyword;
     }
 }
 
