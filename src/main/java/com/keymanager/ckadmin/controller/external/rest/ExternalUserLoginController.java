@@ -21,30 +21,5 @@ public class ExternalUserLoginController extends SpringMVCBaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(ExternalUserLoginController.class);
 
-    @Resource(name = "userInfoService2")
-    private UserInfoService userInfoService;
 
-    /**
-     * 外部链接 登录获取用户信息
-     *
-     * @param criteria 账号密码
-     * @return 用户信息
-     */
-    @RequestMapping(value = "/getCustomerSource2", method = RequestMethod.POST)
-    public ResultBean getCustomerSource(@RequestBody ExternalBaseCriteria criteria) {
-        ResultBean resultBean = new ResultBean(200, "success");
-        try {
-            if (validUser(criteria.getUserName(), criteria.getPassword())) {
-                resultBean.setData(userInfoService.getUserInfo(criteria.getUserName()).getUserName());
-            } else {
-                resultBean.setCode(400);
-                resultBean.setMsg("账号密码无效");
-            }
-        } catch (Exception e) {
-            logger.error("ExternalUserLoginController.getCustomerSource()" + e.getMessage());
-            resultBean.setCode(400);
-            resultBean.setMsg(e.getMessage());
-        }
-        return resultBean;
-    }
 }
