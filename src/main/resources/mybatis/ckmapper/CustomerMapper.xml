@@ -227,4 +227,17 @@
         FROM t_customer c
         WHERE c.fContactPerson = #{name}
     </select>
+
+    <select id="getCustomerListByUser" resultType="com.keymanager.ckadmin.entity.Customer">
+        SELECT
+        <include refid="colID"/>
+        FROM t_customer c
+        WHERE EXISTS (
+        SELECT 1 FROM t_customer_business cb
+        WHERE cb.fCustomerUuid = c.fUuid
+        AND cb.fType = #{type})
+        <if test="username != null and username != ''">
+            AND c.fUserID = #{username}
+        </if>
+    </select>
 </mapper>

@@ -61,4 +61,6 @@ public interface CustomerService extends IService<Customer> {
     Customer selectByName(String name);
     
     void changeCustomerStatus(long uuid, int status);
+
+    List<Customer> getCustomerListByUser(String username, String type);
 }

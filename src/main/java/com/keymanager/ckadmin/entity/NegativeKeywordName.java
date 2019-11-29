@@ -2,7 +2,6 @@ package com.keymanager.ckadmin.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.keymanager.monitoring.entity.BaseEntity;
 
 /**
  * Created by shunshikj08 on 2017/10/24.

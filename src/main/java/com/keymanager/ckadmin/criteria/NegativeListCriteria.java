@@ -19,7 +19,25 @@ public class NegativeListCriteria extends BaseCriteria {
     private String originalUrl;
     private Date complainTime;
     private String TerminalType;
+    private String userName;
+    private String password;
     private List<NegativeList> negativeLists;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getTerminalType() {
         return TerminalType;

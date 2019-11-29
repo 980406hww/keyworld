@@ -48,7 +48,9 @@
         FROM
         t_positive_list n
         WHERE n.fKeyword = #{keyword}
-        <if test="terminalType != null and terminalType != ''">AND n.fTerminalType = #{terminalType}</if>
+        <if test="terminalType != null and terminalType != ''">
+            AND n.fTerminalType = #{terminalType}
+        </if>
     </select>
 
 </mapper>

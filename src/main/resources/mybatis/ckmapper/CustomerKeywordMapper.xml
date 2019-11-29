@@ -1524,4 +1524,19 @@
             #{uuid}
         </foreach>
     </update>
+
+    <select id="getGroupsByUser" resultType="java.lang.String">
+        SELECT DISTINCT
+        ck.fOptimizeGroupName as 'group'
+        FROM t_customer_keyword ck
+        WHERE ck.fStatus = 1
+        AND ck.fOptimizeGroupName &gt; ''
+        AND EXISTS(SELECT 1 FROM t_customer c,t_customer_business cb
+        WHERE c.fUuid = ck.fCustomerUuid
+        AND cb.fCustomerUuid = c.fUuid
+        <if test="username != null and username != ''">
+            AND c.fUserID = #{username}
+        </if>
+        AND cb.fType = #{type})
+    </select>
 </mapper>

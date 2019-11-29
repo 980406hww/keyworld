@@ -56,4 +56,6 @@ public interface CustomerDao extends BaseMapper<Customer> {
     List<Customer> searchTargetCustomers(@Param("entryType") String entryType, @Param("loginName") String loginName);
 
     Customer selectByName(@Param("name") String name);
+
+    List<Customer> getCustomerListByUser(@Param("username") String username, @Param("type") String type);
 }

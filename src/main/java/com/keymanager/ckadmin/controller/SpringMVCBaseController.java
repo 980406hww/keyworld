@@ -97,8 +97,7 @@ public abstract class SpringMVCBaseController {
         if (user.isAuthenticated()) {
             return true;
         } else {
-            ExtendedUsernamePasswordToken token = new ExtendedUsernamePasswordToken(userName,
-                password);
+            ExtendedUsernamePasswordToken token = new ExtendedUsernamePasswordToken(userName, password);
             token.setEntryType("External");
             try {
                 user.login(token);
@@ -108,5 +107,4 @@ public abstract class SpringMVCBaseController {
             }
         }
     }
-
 }

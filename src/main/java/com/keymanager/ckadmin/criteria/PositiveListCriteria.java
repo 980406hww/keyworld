@@ -14,7 +14,25 @@ public class PositiveListCriteria extends BaseCriteria {
     private String operationType;
     private String originalUrl;
     private String btnType;
+    private String userName;
+    private String password;
     private List<PositiveListVO> positiveListVOs;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getTerminalType () {
         return terminalType;

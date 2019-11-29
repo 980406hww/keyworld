@@ -171,4 +171,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<CustomerKeyWordCrawlRankVO> getCrawlRankKeywords(@Param("type") String type, @Param("captureStatus") int captureStatus);
 
     void updateCrawlRankKeywordTimeByUuids(@Param("uuids") List<Long> uuids);
+
+    List<String> getGroupsByUser(@Param("username") String username, @Param("type") String type);
 }

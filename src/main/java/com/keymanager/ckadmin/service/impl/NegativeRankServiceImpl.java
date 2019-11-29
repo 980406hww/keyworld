@@ -43,7 +43,7 @@ public class NegativeRankServiceImpl extends ServiceImpl<NegativeRankDao, Negati
     public Map<String, Object> findInitialNegativeRanks(NegativeRankCriteria negativeRankCriteria) {
         negativeRankCriteria.setSearchDate(DateUtils.setHours(negativeRankCriteria.getSearchDate(), 0));
         List<NegativeRank> negativeRanks = negativeRankDao.findInitialNegativeRanks(negativeRankCriteria.getSearchEngine(), negativeRankCriteria.getSearchDate());
-        Map<String, Object> initialNegativeRankMap = new HashMap<String, Object>();
+        Map<String, Object> initialNegativeRankMap = new HashMap<>();
         for (NegativeRank negativeRank : negativeRanks) {
             initialNegativeRankMap.put(negativeRank.getKeyword(), negativeRank);
         }

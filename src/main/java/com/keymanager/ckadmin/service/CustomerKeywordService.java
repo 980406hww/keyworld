@@ -16,20 +16,18 @@ import com.keymanager.ckadmin.vo.CodeNameVo;
 import com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.GroupVO;
-import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
+import com.keymanager.ckadmin.vo.SearchEngineResultVO;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
-import java.io.InputStream;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import sun.rmi.runtime.Log;
-
 /**
  * <p>
  * 关键字接口
@@ -153,4 +151,8 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void cacheCrawlRankCustomerPTKeywords();
 
     List<CustomerKeyWordCrawlRankVO> getCrawlRankKeyword();
+
+    List<String> getGroupsByUser(String username, String type);
+
+    void addCustomerKeywords(SearchEngineResultVO searchEngineResultVO, String terminalType, String userName);
 }

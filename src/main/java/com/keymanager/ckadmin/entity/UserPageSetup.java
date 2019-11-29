@@ -2,7 +2,6 @@ package com.keymanager.ckadmin.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.keymanager.monitoring.entity.BaseEntity;
 
 @TableName(value = "t_user_page_setup")
 public class UserPageSetup extends BaseEntity {
