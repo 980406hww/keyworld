@@ -25,7 +25,7 @@ public class ExternalNegativeListController extends SpringMVCBaseController {
      * 保存 负面数据
      *
      * @param negativeListCriteria .negativeLists 数据主体
-     * @return 成功状态
+     * @return 成功状态 200
      */
     @RequestMapping(value = "/saveNegativeLists", method = RequestMethod.POST)
     public ResultBean saveNegativeLists(@RequestBody NegativeListCriteria negativeListCriteria) {
