@@ -81,7 +81,6 @@ public class NegativeListServiceImpl extends ServiceImpl<NegativeListDao, Negati
     }
 
     @Override
-    @Cacheable(value = "negativeList", key = "#keyword")
     public List<NegativeList> getSpecifiedKeywordNegativeLists(String keyword) {
         return negativeListDao.getSpecifiedKeywordNegativeLists(keyword);
     }

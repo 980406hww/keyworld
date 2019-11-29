@@ -67,7 +67,9 @@ public class ExternalNegativeListController extends SpringMVCBaseController {
         try {
             if (validUser(negativeListCriteria.getUserName(), negativeListCriteria.getPassword())) {
                 long startMilleSeconds = System.currentTimeMillis();
-                resultBean.setData(negativeListService.getSpecifiedKeywordNegativeLists(negativeListCriteria.getKeyword()));
+                if (null != negativeListCriteria.getKeyword() && !"".equals(negativeListCriteria.getKeyword())) {
+                    resultBean.setData(negativeListService.getSpecifiedKeywordNegativeLists(negativeListCriteria.getKeyword()));
+                }
                 performanceService.addPerformanceLog("getSpecifiedKeywordNegativeLists", System.currentTimeMillis() - startMilleSeconds, "");
             } else {
                 resultBean.setCode(400);
