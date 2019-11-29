@@ -13,7 +13,25 @@ public class WarnListCriteria extends BaseCriteria {
     private Integer position;
     private String operationType;
     private String originalUrl;
+    private String userName;
+    private String password;
     private List<WarnList> warnLists;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public List<WarnList> getWarnLists() {
         return warnLists;

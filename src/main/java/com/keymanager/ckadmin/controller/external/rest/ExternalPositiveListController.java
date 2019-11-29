@@ -22,12 +22,12 @@ public class ExternalPositiveListController extends SpringMVCBaseController {
     private PositiveListService positiveListService;
 
     /**
-     * 保存优质接口
+     * 保存 优质接口
      *
      * @param positiveListCriteria 数据主体
      * @return 成功状态 200
      */
-    @RequestMapping(value = "/savePositiveLists", method = RequestMethod.POST)
+    @RequestMapping(value = "/savePositiveLists2", method = RequestMethod.POST)
     public ResultBean savePositiveLists(@RequestBody PositiveListCriteria positiveListCriteria) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
