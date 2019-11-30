@@ -32,7 +32,10 @@ public class ExternalIndustryRestController extends SpringMVCBaseController{
             String userName = (String) requestMap.get("username");
             String password = (String) requestMap.get("password");
             if (validUser(userName, password)) {
-                Map map = industryInfoService.getValidIndustryInfo();
+                Map map;
+                synchronized (ExternalIndustryRestController.class){
+                    map = industryInfoService.getValidIndustryInfo();
+                }
                 return new ResponseEntity<>(map, HttpStatus.OK);
             }
         } catch (Exception e) {
@@ -55,7 +58,10 @@ public class ExternalIndustryRestController extends SpringMVCBaseController{
             if (validUser(userName, password)) {
                 String customerName = requestMap.get("customer_name");
                 String industry = requestMap.get("industry");
-                Map map = industryInfoService.getValidIndustryInfo(customerName, industry);
+                Map map;
+                synchronized (ExternalIndustryRestController.class) {
+                    map = industryInfoService.getValidIndustryInfo(customerName, industry);
+                }
                 return new ResponseEntity<>(map, HttpStatus.OK);
             }
         } catch (Exception e) {

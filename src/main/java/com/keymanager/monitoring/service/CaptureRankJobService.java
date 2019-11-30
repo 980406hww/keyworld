@@ -47,7 +47,7 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
     @Autowired
     private QZChargeRuleService qzChargeRuleService;
 
-    public synchronized CaptureRankJob provideCaptureRankJob(ExternalCaptureJobCriteria captureJobCriteria) {
+    public  CaptureRankJob provideCaptureRankJob(ExternalCaptureJobCriteria captureJobCriteria) {
         if (StringUtil.isNullOrEmpty(captureJobCriteria.getRankJobArea())) {
             captureJobCriteria.setRankJobArea("China");
         }

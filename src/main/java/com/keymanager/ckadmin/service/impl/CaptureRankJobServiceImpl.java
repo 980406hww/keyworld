@@ -187,7 +187,7 @@ public class CaptureRankJobServiceImpl extends ServiceImpl<CaptureRankJobDao, Ca
     }
 
     @Override
-    public synchronized CaptureRankJob provideCaptureRankJob(ExternalCaptureJobCriteria captureJobCriteria) {
+    public CaptureRankJob provideCaptureRankJob(ExternalCaptureJobCriteria captureJobCriteria) {
         if (StringUtil.isNullOrEmpty(captureJobCriteria.getRankJobArea())) {
             captureJobCriteria.setRankJobArea("China");
         }
