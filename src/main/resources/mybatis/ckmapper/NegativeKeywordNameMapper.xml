@@ -74,4 +74,8 @@
         WHERE 1 = 1
         <include refid="selectColByCriteria"/>
     </select>
+
+    <select id="getNegativeGroup" resultType="java.lang.String">
+		select distinct fGroup from t_negative_keyword_name
+	</select>
 </mapper>
