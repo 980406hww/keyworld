@@ -14,19 +14,16 @@ public class ShiroSessionListener implements SessionListener {
 
     @Override
     public void onStart(Session session) {
-//        log.info("====创建session====");
         sessionCount.incrementAndGet();
     }
 
     @Override
     public void onStop(Session session) {
-//        log.info("====中途销毁session====");
         sessionCount.decrementAndGet();
     }
 
     @Override
     public void onExpiration(Session session) {
-//        log.info("====过期销毁session====");
         sessionCount.decrementAndGet();
     }
 }
