@@ -42,7 +42,10 @@ public class ExternalAlgorithmAutoTestController extends SpringMVCBaseController
             String userName = (String) requestMap.get("userName");
             String password = (String) requestMap.get("password");
             if (validUser(userName, password)) {
-                AlgorithmTestPlan algorithmTestPlan = algorithmTestPlanService.selectOneAvailableAlgorithmTestPlan();
+                AlgorithmTestPlan algorithmTestPlan;
+                synchronized(ExternalAlgorithmAutoTestController.class){
+                     algorithmTestPlan = algorithmTestPlanService.selectOneAvailableAlgorithmTestPlan();
+                }
                 return new ResponseEntity<Object>(algorithmTestPlan, HttpStatus.OK);
             }
         }catch (Exception ex){

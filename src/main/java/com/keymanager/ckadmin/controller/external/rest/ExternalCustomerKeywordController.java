@@ -47,15 +47,17 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
         Boolean saveTopThree = requestMap.get("saveTopThree") == null ? true : (Boolean) requestMap.get("saveTopThree");
         try {
             if (validUser(userName, password)) {
-                List<CustomerKeywordForCapturePosition> customerKeywordForCapturePositions = customerKeywordService.getCustomerKeywordForCapturePositionTemp(
-                    qzSettingUuid != null ? qzSettingUuid.longValue() : null, terminalType, groupName, customerUuid != null ? customerUuid.longValue() : null,
-                    startTime, captureRankJobUuid.longValue(), saveTopThree);
-                if (customerKeywordForCapturePositions.size() == 0) {
-                    CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
-                    customerKeywordForCapturePosition.setKeyword("end");
-                    customerKeywordForCapturePositions.add(customerKeywordForCapturePosition);
+                synchronized (ExternalCustomerKeywordController.class) {
+                    List<CustomerKeywordForCapturePosition> customerKeywordForCapturePositions = customerKeywordService.getCustomerKeywordForCapturePositionTemp(
+                            qzSettingUuid != null ? qzSettingUuid.longValue() : null, terminalType, groupName, customerUuid != null ? customerUuid.longValue() : null,
+                            startTime, captureRankJobUuid.longValue(), saveTopThree);
+                    if (customerKeywordForCapturePositions.size() == 0) {
+                        CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
+                        customerKeywordForCapturePosition.setKeyword("end");
+                        customerKeywordForCapturePositions.add(customerKeywordForCapturePosition);
+                    }
+                    return new ResponseEntity<Object>(customerKeywordForCapturePositions, HttpStatus.OK);
                 }
-                return new ResponseEntity<Object>(customerKeywordForCapturePositions, HttpStatus.OK);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
