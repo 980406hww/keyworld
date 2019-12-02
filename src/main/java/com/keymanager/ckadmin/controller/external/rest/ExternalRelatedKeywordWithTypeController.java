@@ -44,4 +44,52 @@ public class ExternalRelatedKeywordWithTypeController extends SpringMVCBaseContr
         }
         return resultBean;
     }
+
+    /**
+     * 保存相关关键词
+     *
+     * @param criteria 数据主体
+     * @return 成功状态 200
+     */
+    @RequestMapping(value = "/saveRelatedKeywordWithType2", method = RequestMethod.POST)
+    public ResultBean saveRelatedKeywordWithType(@RequestBody RelatedKeywordWithTypeCriteria criteria) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            if (validUser(criteria.getUserName(), criteria.getPassword())) {
+                relatedKeywordWithTypeService.saveRelatedKeywordWithType(criteria);
+            } else {
+                resultBean.setCode(400);
+                resultBean.setMsg("账号密码无效");
+            }
+        } catch (Exception e) {
+            logger.error("ExternalRelatedKeywordWithTypeController.saveRelatedKeywordWithType()" + e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    /**
+     * 移除相关关键词
+     *
+     * @param criteria 数据主体
+     * @return 成功状态 200
+     */
+    @RequestMapping(value = "/deleteRelatedKeywordWithType2", method = RequestMethod.POST)
+    public ResultBean deleteRelatedKeywordWithType(@RequestBody RelatedKeywordWithTypeCriteria criteria) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            if (validUser(criteria.getUserName(), criteria.getPassword())) {
+                relatedKeywordWithTypeService.deleteRelatedKeywordWithType(criteria.getMainKeyword(), criteria.getRelatedKeyword());
+            } else {
+                resultBean.setCode(400);
+                resultBean.setMsg("账号密码无效");
+            }
+        } catch (Exception e) {
+            logger.error("ExternalRelatedKeywordWithTypeController.saveRelatedKeywordWithType()" + e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
 }
