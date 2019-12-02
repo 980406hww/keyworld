@@ -106,9 +106,6 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
 
     /**
      * 外部链接 登录获取用户信息
-     *
-     * @param criteria 账号密码
-     * @return 用户信息
      */
     @RequestMapping(value = "/getCustomerSource2", method = RequestMethod.POST)
     public ResultBean getCustomerSource(@RequestBody ExternalBaseCriteria criteria) {
@@ -130,9 +127,6 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
 
     /**
      * 获得优化分组
-     *
-     * @param baseCriteria 账号密码
-     * @return .data [String] 类型
      */
     @RequestMapping(value = "/getGroups2", method = RequestMethod.POST)
     public ResultBean getGroups(@RequestBody ExternalBaseCriteria baseCriteria) {
@@ -158,18 +152,13 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
 
     /**
      * 保存 关键字
-     *
-     * @param searchEngineResultVO 数据主体
-     * @param request request
-     * @return 成功状态 200
      */
     @RequestMapping(value = "/saveCustomerKeywords2", method = RequestMethod.POST)
-    public ResultBean saveCustomerKeywords(@RequestBody SearchEngineResultVO searchEngineResultVO, HttpServletRequest request) {
+    public ResultBean saveCustomerKeywords(@RequestBody SearchEngineResultVO searchEngineResultVo) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
-            if (validUser(searchEngineResultVO.getUserName(), searchEngineResultVO.getPassword())) {
-                String terminalType = TerminalTypeMapping.getTerminalType(request);
-                customerKeywordService.addCustomerKeywords(searchEngineResultVO, terminalType, searchEngineResultVO.getUserName());
+            if (validUser(searchEngineResultVo.getUserName(), searchEngineResultVo.getPassword())) {
+                customerKeywordService.addCustomerKeywords(searchEngineResultVo, searchEngineResultVo.getUserName());
             } else {
                 resultBean.setCode(400);
                 resultBean.setMsg("账号密码无效");

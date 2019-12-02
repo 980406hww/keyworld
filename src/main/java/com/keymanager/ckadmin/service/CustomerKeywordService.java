@@ -154,5 +154,5 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     List<String> getGroupsByUser(String username, String type);
 
-    void addCustomerKeywords(SearchEngineResultVO searchEngineResultVO, String terminalType, String userName);
+    void addCustomerKeywords(SearchEngineResultVO searchEngineResultVo, String userName);
 }

@@ -6,9 +6,10 @@ import com.keymanager.ckadmin.vo.PositiveListVO;
 import java.util.List;
 
 public interface PositiveListUpdateInfoService extends IService<PositiveListUpdateInfo> {
-    void savePositiveListUpdateInfo (PositiveListVO positiveListVO, String userName);
 
-    List<PositiveListUpdateInfo> findPositiveListUpdateInfos (Long pid);
+    void savePositiveListUpdateInfo(PositiveListVO positiveListVo, String userName);
 
-    void deleteByPid (long pid);
+    List<PositiveListUpdateInfo> findPositiveListUpdateInfos(Long pid);
+
+    void deleteByPid(long pid);
 }

@@ -14,25 +14,24 @@ import org.springframework.stereotype.Service;
 
 @Service(value = "positiveListUpdateInfoService2")
 public class PositiveListUpdateInfoServiceImpl extends ServiceImpl<PositiveListUpdateInfoDao, PositiveListUpdateInfo> implements PositiveListUpdateInfoService {
-    private static Logger logger = LoggerFactory.getLogger(PositiveListUpdateInfoServiceImpl.class);
 
     @Resource(name = "positiveListUpdateInfoDao2")
     private PositiveListUpdateInfoDao positiveListUpdateInfoDao;
 
     @Override
-    public void savePositiveListUpdateInfo (PositiveListVO positiveListVO, String userName) {
-        if (positiveListVO.isHasUpdateInfo()) {
-            List<PositiveListUpdateInfo> mostRecentPositiveListUpdateInfo = positiveListUpdateInfoDao.findMostRecentPositiveListUpdateInfo(positiveListVO.getPositiveList().getUuid());
+    public void savePositiveListUpdateInfo (PositiveListVO positiveListVo, String userName) {
+        if (positiveListVo.isHasUpdateInfo()) {
+            List<PositiveListUpdateInfo> mostRecentPositiveListUpdateInfo = positiveListUpdateInfoDao.findMostRecentPositiveListUpdateInfo(positiveListVo.getPositiveList().getUuid());
             PositiveListUpdateInfo positiveListUpdateInfo = mostRecentPositiveListUpdateInfo.get(0);
             positiveListUpdateInfo.setUpdateTime(new Date());
             positiveListUpdateInfoDao.updateById(positiveListUpdateInfo);
         }
         PositiveListUpdateInfo positiveListUpdateInfo = new PositiveListUpdateInfo();
-        positiveListUpdateInfo.setPid(positiveListVO.getPositiveList().getUuid());
-        positiveListUpdateInfo.setOptimizeMethod(positiveListVO.getPositiveList().getOptimizeMethod());
+        positiveListUpdateInfo.setPid(positiveListVo.getPositiveList().getUuid());
+        positiveListUpdateInfo.setOptimizeMethod(positiveListVo.getPositiveList().getOptimizeMethod());
         positiveListUpdateInfo.setUserName(userName);
         positiveListUpdateInfo.setCreateTime(new Date());
-        positiveListUpdateInfo.setPosition(positiveListVO.getPositiveList().getPosition());
+        positiveListUpdateInfo.setPosition(positiveListVo.getPositiveList().getPosition());
         positiveListUpdateInfoDao.insert(positiveListUpdateInfo);
     }
 

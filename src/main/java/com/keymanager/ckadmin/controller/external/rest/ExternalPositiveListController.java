@@ -24,18 +24,14 @@ public class ExternalPositiveListController extends SpringMVCBaseController {
 
     /**
      * 保存 优质接口
-     *
-     * @param positiveListCriteria 数据主体
-     * @return 成功状态 200
      */
     @RequestMapping(value = "/savePositiveLists2", method = RequestMethod.POST)
     public ResultBean savePositiveLists(@RequestBody PositiveListCriteria positiveListCriteria) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
             if (validUser(positiveListCriteria.getUserName(), positiveListCriteria.getPassword())) {
-                positiveListService
-                    .savePositiveLists(positiveListCriteria.getPositiveListVOs(), positiveListCriteria.getOperationType(), positiveListCriteria.getBtnType(),
-                        positiveListCriteria.getUserName());
+                positiveListService.savePositiveLists(positiveListCriteria.getPositiveListVos(), positiveListCriteria.getOperationType(),
+                    positiveListCriteria.getBtnType(), positiveListCriteria.getUserName());
             } else {
                 resultBean.setCode(400);
                 resultBean.setMsg("账号密码无效");
@@ -50,9 +46,6 @@ public class ExternalPositiveListController extends SpringMVCBaseController {
 
     /**
      * 获取的 优质数据
-     *
-     * @param positiveListCriteria 参数主体
-     * @return 数据主体
      */
     @RequestMapping(value = "/getSpecifiedKeywordPositiveLists2", method = RequestMethod.POST)
     public ResultBean getSpecifiedKeywordPositiveLists(@RequestBody PositiveListCriteria positiveListCriteria) {

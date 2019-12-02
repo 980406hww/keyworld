@@ -993,32 +993,34 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public void addCustomerKeywords(SearchEngineResultVO searchEngineResultVO, String terminalType, String userName) {
-        if (searchEngineResultVO != null) {
-            String searchEngine = searchEngineResultVO.getSearchEngine();
+    public void addCustomerKeywords(SearchEngineResultVO searchEngineResultVo, String userName) {
+        if (searchEngineResultVo != null) {
+            String searchEngine = searchEngineResultVo.getSearchEngine();
+            String terminalType = searchEngineResultVo.getTerminalType();
             List<CustomerKeyword> customerKeywords = new ArrayList<>();
-            for (SearchEngineResultItemVO searchEngineResultItemVO : searchEngineResultVO.getSearchEngineResultItemVOs()) {
-                CustomerKeyword customerKeyword = convert(searchEngineResultItemVO, terminalType, searchEngineResultVO.getGroup(), searchEngineResultVO.getMachineGroup(), searchEngineResultVO.getCustomerUuid(), searchEngine);
+            for (SearchEngineResultItemVO searchEngineResultItemVo : searchEngineResultVo.getSearchEngineResultItemVos()) {
+                CustomerKeyword customerKeyword = convert(searchEngineResultItemVo, terminalType, searchEngineResultVo.getGroup(),
+                    searchEngineResultVo.getMachineGroup(), searchEngineResultVo.getCustomerUuid(), searchEngine);
                 customerKeywords.add(customerKeyword);
             }
             this.addCustomerKeyword(customerKeywords, userName);
         }
     }
 
-    private CustomerKeyword convert(SearchEngineResultItemVO searchEngineResultItemVO, String terminalType, String groupName, String machineGroupName, long customerUuid, String searchEngine) {
+    private CustomerKeyword convert(SearchEngineResultItemVO searchEngineResultItemVo, String terminalType, String groupName, String machineGroupName, long customerUuid, String searchEngine) {
         CustomerKeyword customerKeyword = new CustomerKeyword();
-        customerKeyword.setCurrentPosition(searchEngineResultItemVO.getOrder());
-        customerKeyword.setInitialPosition(searchEngineResultItemVO.getOrder());
+        customerKeyword.setCurrentPosition(searchEngineResultItemVo.getOrder());
+        customerKeyword.setInitialPosition(searchEngineResultItemVo.getOrder());
         customerKeyword.setOptimizeGroupName(groupName);
         customerKeyword.setMachineGroup(machineGroupName);
-        customerKeyword.setOptimizePlanCount(searchEngineResultItemVO.getClickCount());
-        customerKeyword.setOptimizeRemainingCount(searchEngineResultItemVO.getClickCount());
-        customerKeyword.setKeyword(searchEngineResultItemVO.getKeyword());
-        customerKeyword.setTitle(searchEngineResultItemVO.getTitle());
-        customerKeyword.setBearPawNumber(searchEngineResultItemVO.getBearPawNumber());
-        customerKeyword.setType(searchEngineResultItemVO.getType());
+        customerKeyword.setOptimizePlanCount(searchEngineResultItemVo.getClickCount());
+        customerKeyword.setOptimizeRemainingCount(searchEngineResultItemVo.getClickCount());
+        customerKeyword.setKeyword(searchEngineResultItemVo.getKeyword());
+        customerKeyword.setTitle(searchEngineResultItemVo.getTitle());
+        customerKeyword.setBearPawNumber(searchEngineResultItemVo.getBearPawNumber());
+        customerKeyword.setType(searchEngineResultItemVo.getType());
         customerKeyword.setTerminalType(terminalType);
-        customerKeyword.setOriginalUrl(searchEngineResultItemVO.getHref());
+        customerKeyword.setOriginalUrl(searchEngineResultItemVo.getHref());
         customerKeyword.setServiceProvider("baidutop123");
         if (searchEngine.equals(Constants.SEARCH_ENGINE_BAIDU)) {
             customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
@@ -1032,7 +1034,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         if (searchEngine.equals(Constants.SEARCH_ENGINE_SM)) {
             customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_SM);
         }
-        customerKeyword.setUrl(searchEngineResultItemVO.getUrl());
+        customerKeyword.setUrl(searchEngineResultItemVo.getUrl());
         customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
         customerKeyword.setCollectMethod(CollectMethod.PerMonth.getCode());
         customerKeyword.setCurrentIndexCount(20);

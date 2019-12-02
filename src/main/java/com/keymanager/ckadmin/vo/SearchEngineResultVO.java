@@ -6,12 +6,13 @@ import java.util.List;
 public class SearchEngineResultVO extends ExternalBaseCriteria {
 
     private String searchEngine;
+    private String terminalType;
     private String group;
     private String machineGroup;
     private String keyword;
-    private int customerUuid;
+    private Long customerUuid;
     private String entryType;
-    private List<SearchEngineResultItemVO> searchEngineResultItemVOs;
+    private List<SearchEngineResultItemVO> searchEngineResultItemVos;
 
     public String getSearchEngine() {
         return searchEngine;
@@ -19,6 +20,14 @@ public class SearchEngineResultVO extends ExternalBaseCriteria {
 
     public void setSearchEngine(String searchEngine) {
         this.searchEngine = searchEngine;
+    }
+
+    public String getTerminalType() {
+        return terminalType;
+    }
+
+    public void setTerminalType(String terminalType) {
+        this.terminalType = terminalType;
     }
 
     public String getGroup() {
@@ -45,20 +54,12 @@ public class SearchEngineResultVO extends ExternalBaseCriteria {
         this.keyword = keyword;
     }
 
-    public int getCustomerUuid() {
+    public Long getCustomerUuid() {
         return customerUuid;
     }
 
-    public void setCustomerUuid(int customerUuid) {
+    public void setCustomerUuid(Long customerUuid) {
         this.customerUuid = customerUuid;
-    }
-
-    public List<SearchEngineResultItemVO> getSearchEngineResultItemVOs() {
-        return searchEngineResultItemVOs;
-    }
-
-    public void setSearchEngineResultItemVOs(List<SearchEngineResultItemVO> searchEngineResultItemVOs) {
-        this.searchEngineResultItemVOs = searchEngineResultItemVOs;
     }
 
     public String getEntryType() {
@@ -67,5 +68,13 @@ public class SearchEngineResultVO extends ExternalBaseCriteria {
 
     public void setEntryType(String entryType) {
         this.entryType = entryType;
+    }
+
+    public List<SearchEngineResultItemVO> getSearchEngineResultItemVos() {
+        return searchEngineResultItemVos;
+    }
+
+    public void setSearchEngineResultItemVos(List<SearchEngineResultItemVO> searchEngineResultItemVos) {
+        this.searchEngineResultItemVos = searchEngineResultItemVos;
     }
 }

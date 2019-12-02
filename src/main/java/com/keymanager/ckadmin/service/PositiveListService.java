@@ -12,7 +12,7 @@ public interface PositiveListService extends IService<PositiveList> {
 
     void savePositiveList(PositiveList positiveList, String userName);
 
-    void savePositiveLists(List<PositiveListVO> positiveListVOs, String operationType, String btnType, String userName);
+    void savePositiveLists(List<PositiveListVO> positiveListVos, String operationType, String btnType, String userName);
 
     List<PositiveListVO> getSpecifiedKeywordPositiveLists(String keyword, String terminalType);
 

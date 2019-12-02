@@ -16,7 +16,7 @@ public class PositiveListCriteria extends BaseCriteria {
     private String btnType;
     private String userName;
     private String password;
-    private List<PositiveListVO> positiveListVOs;
+    private List<PositiveListVO> positiveListVos;
 
     public String getUserName() {
         return userName;
@@ -106,11 +106,11 @@ public class PositiveListCriteria extends BaseCriteria {
         this.btnType = btnType;
     }
 
-    public List<PositiveListVO> getPositiveListVOs () {
-        return positiveListVOs;
+    public List<PositiveListVO> getPositiveListVos() {
+        return positiveListVos;
     }
 
-    public void setPositiveListVOs (List<PositiveListVO> positiveListVOs) {
-        this.positiveListVOs = positiveListVOs;
+    public void setPositiveListVos(List<PositiveListVO> positiveListVos) {
+        this.positiveListVos = positiveListVos;
     }
 }
