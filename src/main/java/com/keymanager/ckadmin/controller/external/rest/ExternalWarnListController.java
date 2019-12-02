@@ -24,12 +24,9 @@ public class ExternalWarnListController extends SpringMVCBaseController {
 
     /**
      * 保存 预警清单
-     *
-     * @param warnListCriteria 数据主体
-     * @return 成功状态 200
      */
     @RequestMapping(value = "/saveWarnLists2", method = RequestMethod.POST)
-    public ResultBean savewWarnLists(@RequestBody WarnListCriteria warnListCriteria) {
+    public ResultBean saveWarnLists(@RequestBody WarnListCriteria warnListCriteria) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
             if (validUser(warnListCriteria.getUserName(), warnListCriteria.getPassword())) {
@@ -39,7 +36,7 @@ public class ExternalWarnListController extends SpringMVCBaseController {
                 resultBean.setMsg("账号密码无效");
             }
         } catch (Exception e) {
-            logger.error("ExternalWarnListController.savewWarnLists()" + e.getMessage());
+            logger.error("ExternalWarnListController.saveWarnLists()" + e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
         }
@@ -47,10 +44,7 @@ public class ExternalWarnListController extends SpringMVCBaseController {
     }
 
     /**
-     * 获取明确的预警列表
-     *
-     * @param warnListCriteria 参数主体
-     * @return 数据主体
+     * 获取 预警列表
      */
     @RequestMapping(value = "/getSpecifiedKeywordWarnLists2", method = RequestMethod.POST)
     public ResultBean getSpecifiedKeywordWarnLists(@RequestBody WarnListCriteria warnListCriteria) {

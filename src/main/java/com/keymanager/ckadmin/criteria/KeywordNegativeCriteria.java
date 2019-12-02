@@ -1,11 +1,10 @@
 package com.keymanager.ckadmin.criteria;
 
-
-import com.keymanager.ckadmin.criteria.base.BaseCriteria;
+import com.keymanager.ckadmin.criteria.base.ExternalBaseCriteria;
 import com.keymanager.ckadmin.entity.NegativeList;
 import java.util.List;
 
-public class KeywordNegativeCriteria extends BaseCriteria {
+public class KeywordNegativeCriteria extends ExternalBaseCriteria {
 
 	private NegativeList negativeList;
 

@@ -35,20 +35,14 @@
         AND fCreateTime BETWEEN #{searchDate} AND DATE_ADD(#{searchDate}, INTERVAL 1 DAY)
     </select>
 
-    <delete id="deleteNegativeRanks">
-        DELETE FROM t_negative_rank
-        WHERE fSearchEngine = #{searchEngine}
-        AND fCreateTime BETWEEN #{deleteDate} AND DATE_ADD(#{deleteDate}, INTERVAL 1 DAY)
-    </delete>
-
-    <select id="searchNegativeRanks" parameterType="com.keymanager.ckadmin.criteria.NegativeRankCriteria" resultType="com.keymanager.ckadmin.entity.NegativeRank">
+    <select id="searchNegativeRanks" resultType="com.keymanager.ckadmin.entity.NegativeRank">
         SELECT
           <include refid="negativeRankSQL"/>
         FROM t_negative_rank as tnr
         where 1 = 1
         <if test="negativeRankCriteria.keyword != null and negativeRankCriteria.keyword != ''">AND tnr.fKeyword LIKE '%${negativeRankCriteria.keyword}%'</if>
         <if test="negativeRankCriteria.searchEngine != null and negativeRankCriteria.searchEngine != ''">AND tnr.fSearchEngine = #{negativeRankCriteria.searchEngine}</if>
-        <if test="negativeRankCriteria.createTime != null and negativeRankCriteria.createTime != ''">AND DATE_FORMAT(tnr.fCreateTime,'%Y-%m-%d') = #{negativeRankCriteria.createTime}</if>
+        <if test="negativeRankCriteria.createTime != null and negativeRankCriteria.createTime != ''">AND tnr.fCreateTime = DATE_FORMAT(#{negativeRankCriteria.createTime}, '%Y-%m-%d')</if>
         ORDER BY tnr.fCreateTime DESC
     </select>
 

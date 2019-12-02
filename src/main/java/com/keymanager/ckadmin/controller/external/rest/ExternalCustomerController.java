@@ -30,10 +30,7 @@ public class ExternalCustomerController extends SpringMVCBaseController {
     private UserInfoService userInfoService;
 
     /**
-     * 获得指定客户列表
-     *
-     * @param baseCriteria 用户名密码
-     * @return .data [CustomerObj] 数据类型
+     * 获得 客户列表
      */
     @RequestMapping(value = "/getActiveCustomerSimpleInfo2", method = RequestMethod.POST)
     public ResultBean getCustomerList(@RequestBody ExternalBaseCriteria baseCriteria) {

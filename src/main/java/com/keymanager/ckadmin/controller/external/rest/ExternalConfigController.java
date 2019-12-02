@@ -23,10 +23,7 @@ public class ExternalConfigController extends SpringMVCBaseController {
     private ConfigService configService;
 
     /**
-     * 获取 信息
-     *
-     * @param criteria 参数主体
-     * @return 数据主体
+     * 获取 配置信息
      */
     @RequestMapping(value = "/getPositiveListNewsSource2", method = RequestMethod.POST)
     public ResultBean getPositiveListNewsSource(@RequestBody ExternalBaseCriteria criteria) {

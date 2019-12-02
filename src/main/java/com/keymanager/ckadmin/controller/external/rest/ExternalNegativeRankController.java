@@ -22,34 +22,7 @@ public class ExternalNegativeRankController extends SpringMVCBaseController {
     private NegativeRankService negativeRankService;
 
     /**
-     * 自动采词保存
-     *
-     * @param negativeRankCriteria 数据主体
-     * @return 成功状态 200
-     */
-    @RequestMapping(value = "/saveNegativeRanks2", method = RequestMethod.POST)
-    public ResultBean saveNegativeRanks(@RequestBody NegativeRankCriteria negativeRankCriteria) {
-        ResultBean resultBean = new ResultBean(200, "success");
-        try {
-            if (validUser(negativeRankCriteria.getUserName(), negativeRankCriteria.getPassword())) {
-                negativeRankService.saveNegativeRanks(negativeRankCriteria.getNegativeRanks());
-            } else {
-                resultBean.setCode(400);
-                resultBean.setMsg("账号密码无效");
-            }
-        } catch (Exception e) {
-            logger.error("ExternalNegativeRankController.saveNegativeRanks()" + e.getMessage());
-            resultBean.setCode(400);
-            resultBean.setMsg(e.getMessage());
-        }
-        return resultBean;
-    }
-
-    /**
-     * 查询 接口
-     *
-     * @param negativeRankCriteria 参数主体
-     * @return 数据主体
+     * 查询 负面排名
      */
     @RequestMapping(value = "/findNegativeRanks2", method = RequestMethod.POST)
     public ResultBean findNegativeRanks(@RequestBody NegativeRankCriteria negativeRankCriteria) {
@@ -70,10 +43,7 @@ public class ExternalNegativeRankController extends SpringMVCBaseController {
     }
 
     /**
-     * 查询关键字初始輿情排名
-     *
-     * @param negativeRankCriteria 参数主体
-     * @return 数据主体
+     * 查询 关键字初始輿情排名
      */
     @RequestMapping(value = "/findInitialNegativeRanks2", method = RequestMethod.POST)
     public ResultBean findInitialNegativeRanks(@RequestBody NegativeRankCriteria negativeRankCriteria) {

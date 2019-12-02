@@ -33,9 +33,6 @@ public class ExternalNegativeListController extends SpringMVCBaseController {
 
     /**
      * 保存 负面数据
-     *
-     * @param negativeListCriteria .negativeLists 数据主体
-     * @return 成功状态 200
      */
     @RequestMapping(value = "/saveNegativeLists2", method = RequestMethod.POST)
     public ResultBean saveNegativeLists(@RequestBody NegativeListCriteria negativeListCriteria) {
@@ -56,10 +53,7 @@ public class ExternalNegativeListController extends SpringMVCBaseController {
     }
 
     /**
-     * 查询明确关键字舆情列表
-     *
-     * @param negativeListCriteria 参数主体
-     * @return 数据主体
+     * 查询 关键字舆情列表 post
      */
     @RequestMapping(value = "/getSpecifiedKeywordNegativeLists2", method = RequestMethod.POST)
     public ResultBean getSpecifiedKeywordNegativeLists(@RequestBody NegativeListCriteria negativeListCriteria) {
@@ -84,10 +78,7 @@ public class ExternalNegativeListController extends SpringMVCBaseController {
     }
 
     /**
-     * 查询明确关键字舆情列表
-     *
-     * @param request 参数主体
-     * @return 数据主体
+     * 查询 关键字舆情列表 get
      */
     @RequestMapping(value = "/getSpecifiedKeywordNegativeLists2", method = RequestMethod.GET)
     public ResultBean getSpecifiedKeywordNegativeLists(HttpServletRequest request) {

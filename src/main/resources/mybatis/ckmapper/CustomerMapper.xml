@@ -233,9 +233,11 @@
         <include refid="colID"/>
         FROM t_customer c
         WHERE EXISTS (
-        SELECT 1 FROM t_customer_business cb
-        WHERE cb.fCustomerUuid = c.fUuid
-        AND cb.fType = #{type})
+            SELECT 1
+            FROM t_customer_business cb
+            WHERE cb.fCustomerUuid = c.fUuid
+            AND cb.fType = #{type}
+        )
         <if test="username != null and username != ''">
             AND c.fUserID = #{username}
         </if>

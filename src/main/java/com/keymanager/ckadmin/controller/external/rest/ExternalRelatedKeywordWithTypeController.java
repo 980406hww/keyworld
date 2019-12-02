@@ -22,10 +22,7 @@ public class ExternalRelatedKeywordWithTypeController extends SpringMVCBaseContr
     private RelatedKeywordWithTypeService relatedKeywordWithTypeService;
 
     /**
-     * 查询插件主要关键词
-     *
-     * @param criteria 条件
-     * @return 数据主体
+     * 查询 相关关键词
      */
     @RequestMapping(value = "/findRelatedKeywordWithType2", method = RequestMethod.POST)
     public ResultBean findRelatedKeywordWithType(@RequestBody RelatedKeywordWithTypeCriteria criteria) {
@@ -46,10 +43,7 @@ public class ExternalRelatedKeywordWithTypeController extends SpringMVCBaseContr
     }
 
     /**
-     * 保存相关关键词
-     *
-     * @param criteria 数据主体
-     * @return 成功状态 200
+     * 保存 相关关键词
      */
     @RequestMapping(value = "/saveRelatedKeywordWithType2", method = RequestMethod.POST)
     public ResultBean saveRelatedKeywordWithType(@RequestBody RelatedKeywordWithTypeCriteria criteria) {
@@ -70,10 +64,7 @@ public class ExternalRelatedKeywordWithTypeController extends SpringMVCBaseContr
     }
 
     /**
-     * 移除相关关键词
-     *
-     * @param criteria 数据主体
-     * @return 成功状态 200
+     * 移除 相关关键词
      */
     @RequestMapping(value = "/deleteRelatedKeywordWithType2", method = RequestMethod.POST)
     public ResultBean deleteRelatedKeywordWithType(@RequestBody RelatedKeywordWithTypeCriteria criteria) {

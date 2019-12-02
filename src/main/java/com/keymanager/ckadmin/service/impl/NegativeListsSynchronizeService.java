@@ -1,14 +1,12 @@
 package com.keymanager.ckadmin.service.impl;
 
-import com.keymanager.monitoring.criteria.KeywordNegativeCriteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.keymanager.ckadmin.criteria.KeywordNegativeCriteria;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service("negativeListsSynchronizeService2")
 public class NegativeListsSynchronizeService {
-	private static Logger logger = LoggerFactory.getLogger(NegativeListsSynchronizeService.class);
+
 	public static final RestTemplate restTemplate = new RestTemplate();
 	private String username;
 	private String password;

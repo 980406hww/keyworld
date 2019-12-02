@@ -27,19 +27,6 @@ public class NegativeRankServiceImpl extends ServiceImpl<NegativeRankDao, Negati
     private NegativeRankDao negativeRankDao;
 
     @Override
-    public void saveNegativeRanks(List<NegativeRank> negativeRanks) {
-        if(CollectionUtils.isNotEmpty(negativeRanks)) {
-            NegativeRank firstNegativeRank = negativeRanks.get(0);
-            Date date = DateUtils.setHours(new Date(), 0);
-            negativeRankDao.deleteNegativeRanks(firstNegativeRank.getSearchEngine(), date);
-            for (NegativeRank negativeRank : negativeRanks) {
-                negativeRank.setCreateTime(new Date());
-                negativeRankDao.insert(negativeRank);
-            }
-        }
-    }
-
-    @Override
     public Map<String, Object> findInitialNegativeRanks(NegativeRankCriteria negativeRankCriteria) {
         negativeRankCriteria.setSearchDate(DateUtils.setHours(negativeRankCriteria.getSearchDate(), 0));
         List<NegativeRank> negativeRanks = negativeRankDao.findInitialNegativeRanks(negativeRankCriteria.getSearchEngine(), negativeRankCriteria.getSearchDate());

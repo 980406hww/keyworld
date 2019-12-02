@@ -40,9 +40,6 @@ public class ExternalNegativeKeywordNameController extends SpringMVCBaseControll
 
     /**
      * 获得初始化数据信息
-     *
-     * @param criteria 参数主体
-     * @return 数据主体
      */
     @RequestMapping(value = "/getNegativeSupportingData2", method = RequestMethod.POST)
     public ResultBean getNegativeSupportingData(@RequestBody ExternalBaseCriteria criteria) {
@@ -50,13 +47,13 @@ public class ExternalNegativeKeywordNameController extends SpringMVCBaseControll
         try {
             if (validUser(criteria.getUserName(), criteria.getPassword())) {
                 long startMilleSeconds = System.currentTimeMillis();
-                NegativeSupportingDataVO negativeSupportingDataVO = new NegativeSupportingDataVO();
-                negativeSupportingDataVO.setContactKeywords(negativeSiteContactKeywordService.getContactKeyword());
-                negativeSupportingDataVO.setExcludeKeywords(negativeExcludeKeywordService.getNegativeExcludeKeyword());
-                negativeSupportingDataVO.setNegativeGroups(negativeKeywordNameService.getNegativeGroup());
-                negativeSupportingDataVO.setNegativeKeywords(negativeKeywordService.getNegativeKeyword());
+                NegativeSupportingDataVO negativeSupportingDataVo = new NegativeSupportingDataVO();
+                negativeSupportingDataVo.setContactKeywords(negativeSiteContactKeywordService.getContactKeyword());
+                negativeSupportingDataVo.setExcludeKeywords(negativeExcludeKeywordService.getNegativeExcludeKeyword());
+                negativeSupportingDataVo.setNegativeGroups(negativeKeywordNameService.getNegativeGroup());
+                negativeSupportingDataVo.setNegativeKeywords(negativeKeywordService.getNegativeKeyword());
                 performanceService.addPerformanceLog("getNegativeSupportingData", System.currentTimeMillis() - startMilleSeconds, "");
-                resultBean.setData(negativeSupportingDataVO);
+                resultBean.setData(negativeSupportingDataVo);
             } else {
                 resultBean.setCode(400);
                 resultBean.setMsg("账号密码无效");

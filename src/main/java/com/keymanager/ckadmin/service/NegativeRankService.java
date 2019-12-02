@@ -6,11 +6,7 @@ import com.keymanager.ckadmin.entity.NegativeRank;
 import java.util.List;
 import java.util.Map;
 
-
 public interface NegativeRankService {
-
-
-    void saveNegativeRanks(List<NegativeRank> negativeRanks);
 
     Map<String, Object> findInitialNegativeRanks(NegativeRankCriteria negativeRankCriteria);
 
