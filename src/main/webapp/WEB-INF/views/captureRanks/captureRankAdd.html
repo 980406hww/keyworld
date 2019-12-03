@@ -481,8 +481,8 @@
             crj.executionCycle = d.executionCycle;
             crj.groupNames = d.groups;
             crj.pageSize = d.pageSize;
-            crj.rankJobArea = d.rankJobArea;
-            crj.rankJobCity = d.rankJobCity;
+            crj.rankJobArea = d.rankJobArea === "" ? null : d.rankJobArea;
+            crj.rankJobCity = d.rankJobCity === "" ? null : d.rankJobCity;
             crj.rankJobType = d.rankJobType;
             crj.rowNumber = d.rowNumber;
             p_d.captureRankJob = crj;

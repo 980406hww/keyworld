@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 @Service("captureRankJobService2")
@@ -169,7 +170,7 @@ public class CaptureRankJobServiceImpl extends ServiceImpl<CaptureRankJobDao, Ca
     @Override
     public void searchFiveMiniSetCheckingJobs() {
         List<CaptureRankJob> captureRankJobs = captureRankJobDao.searchFiveMiniSetCheckingJobs();
-        if (captureRankJobs != null && captureRankJobs.size() != 0) {
+        if (CollectionUtils.isNotEmpty(captureRankJobs)) {
             for (CaptureRankJob captureRankJob : captureRankJobs) {
                 if (captureRankJobDao.searchThreeMiniStatusEqualsOne(captureRankJob) > 0) {
                     captureRankJob.setExectionStatus(CaptureRankExectionStatus.Processing.name());
@@ -194,7 +195,7 @@ public class CaptureRankJobServiceImpl extends ServiceImpl<CaptureRankJobDao, Ca
         // 取 Processing
         CaptureRankJob captureRankJob = captureRankJobDao.getProcessingJob(captureJobCriteria);
         if (captureRankJob == null) {
-            if (captureJobCriteria.getRankJobType() != null && captureJobCriteria.getRankJobType().equals("Common")) {
+            if (captureJobCriteria.getRankJobType() != null && "Common".equals(captureJobCriteria.getRankJobType())) {
                 // 先取普通
                 captureRankJob = captureRankJobDao.provideCaptureRankJob(0, captureJobCriteria);
                 if (captureRankJob == null) {

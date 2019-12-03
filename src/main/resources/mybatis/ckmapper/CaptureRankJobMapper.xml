@@ -152,6 +152,8 @@
             c.fQZSettingUuid as `qzSettingUuid`,
             c.fOperationType as `operationType`,
             c.fGroupNames as `groupNames`,
+            c.fRankJobArea as `rankJobArea`,
+            c.fRankJobCity as `rankJobCity`,
             c.fStartTime as `startTime`
         FROM
             t_capture_rank_job c
@@ -226,17 +228,16 @@
     <select id="provideCaptureRankJob" resultType="com.keymanager.ckadmin.entity.CaptureRankJob">
         SELECT
         <include refid="colID"/>
-        FROM
-        t_capture_rank_job c
+        FROM t_capture_rank_job c
         WHERE
         (
-        c.fExectionStatus='New' OR
-        (
-        c.fExectionStatus='Complete'
-        AND c.fExectionType='Everyday'
-        AND (c.fLastExecutionDate &lt; curdate() OR c.fLastExecutionDate IS NULL)
-        AND DATEDIFF(NOW(),fLastExecutionDate) &gt;= fCaptureDaysInterval
-        )
+            c.fExectionStatus='New' OR
+            (
+                c.fExectionStatus='Complete'
+                AND c.fExectionType='Everyday'
+                AND (c.fLastExecutionDate &lt; curdate() OR c.fLastExecutionDate IS NULL)
+                AND fCaptureDaysInterval &lt;= DATEDIFF(NOW(),fLastExecutionDate)
+            )
         )
         AND c.fExectionTime &lt;= curtime()
         AND c.fCaptureRankJobStatus = 1
@@ -247,7 +248,7 @@
             AND fQZSettingUuid IS NULL
         </if>
         <if test="jobType != null and jobType == 1">
-            AND fQZSettingUuid IS NOT NULL
+            AND fQZSettingUuid > ''
         </if>
         <if test="captureJobCriteria.rankJobArea != null and captureJobCriteria.rankJobArea != ''">
             AND c.fRankJobArea = #{captureJobCriteria.rankJobArea}
@@ -261,7 +262,7 @@
             </otherwise>
         </choose>
         ORDER BY c.fExectionTime
-        limit 1
+        LIMIT 1
     </select>
 
     <select id="getCaptureRankJobStatus" resultType="java.lang.Boolean">

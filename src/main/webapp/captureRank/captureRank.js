@@ -521,8 +521,8 @@ function saveData(uuid) {
     }
 
     CaptureRankJob.rankJobType = $("#rankJobType").val();
-    CaptureRankJob.rankJobArea = $("#rankJobArea").val();
-    CaptureRankJob.rankJobCity = $("#rankJobCity").val();
+    CaptureRankJob.rankJobArea = $("#rankJobArea").val() === '' ? null : $("#rankJobArea").val();
+    CaptureRankJob.rankJobCity = $("#rankJobCity").val() === '' ? null : $("#rankJobCity").val();
     CaptureRankJob.exectionType = $("#crawlRankingForm input[name=exectionType]:checked").val();
     CaptureRankJob.rowNumber = $("#crawlRankingForm #rowNumber").val();
     CaptureRankJob.captureInterval = $("#crawlRankingForm #captureInterval").val();

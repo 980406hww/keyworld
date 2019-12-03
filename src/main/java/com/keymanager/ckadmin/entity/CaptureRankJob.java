@@ -37,10 +37,10 @@ public class CaptureRankJob extends BaseEntity {
     @TableField(value = "fRankJobType")
     private String rankJobType;
 
-    @TableField(value = "fRankJobArea")
+    @TableField(value = "fRankJobArea", strategy = FieldStrategy.IGNORED)
     private String rankJobArea;
 
-    @TableField(value = "fRankJobCity")
+    @TableField(value = "fRankJobCity", strategy = FieldStrategy.IGNORED)
     private String rankJobCity;
 
     @TableField(value = "fExectionTime")
