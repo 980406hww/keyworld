@@ -17,36 +17,47 @@
 		fCreateTime AS "createTime"
 	</sql>
 
-    <select id="searchPositiveLists" parameterType="com.keymanager.ckadmin.criteria.PositiveListCriteria" resultType="com.keymanager.ckadmin.entity.PositiveList">
+    <select id="searchPositiveLists" resultType="com.keymanager.ckadmin.entity.PositiveList">
         SELECT
         <include refid="selectCol" />
-        FROM
-        t_positive_list n
+        FROM t_positive_list n
         WHERE 1 = 1
-        <if test="positiveListCriteria.keyword != null and positiveListCriteria.keyword != ''">AND n.fKeyword like '%${positiveListCriteria.keyword}%'</if>
-        <if test="positiveListCriteria.title != null and positiveListCriteria.title != ''">AND n.fTitle like '%${positiveListCriteria.title}%'</if>
-        <if test="positiveListCriteria.url != null and positiveListCriteria.url != ''">AND n.fUrl like '%${positiveListCriteria.url}%'</if>
+        <if test="positiveListCriteria.keyword != null and positiveListCriteria.keyword != ''">
+            AND n.fKeyword like '%${positiveListCriteria.keyword}'
+        </if>
+        <if test="positiveListCriteria.title != null and positiveListCriteria.title != ''">
+            AND n.fTitle like '%${positiveListCriteria.title}%'
+        </if>
+        <if test="positiveListCriteria.url != null and positiveListCriteria.url != ''">
+            AND n.fUrl like '%${positiveListCriteria.url}%'
+        </if>
         ORDER BY n.fCreateTime DESC
     </select>
 
-    <select id="searchPositiveListsFullMatching" parameterType="com.keymanager.ckadmin.criteria.PositiveListCriteria" resultType="com.keymanager.ckadmin.entity.PositiveList">
+    <select id="searchPositiveListsFullMatching" resultType="com.keymanager.ckadmin.entity.PositiveList">
         SELECT
         <include refid="selectCol" />
-        FROM
-        t_positive_list n
+        FROM t_positive_list n
         WHERE 1 = 1
-        <if test="positiveListCriteria.keyword != null and positiveListCriteria.keyword != ''">AND n.fKeyword = #{positiveListCriteria.keyword}</if>
-        <if test="positiveListCriteria.title != null and positiveListCriteria.title != ''">AND n.fTitle = #{positiveListCriteria.title}</if>
-        <if test="positiveListCriteria.position != null and positiveListCriteria.position != ''">AND n.fPosition = #{positiveListCriteria.position}</if>
-        <if test="positiveListCriteria.terminalType != null and positiveListCriteria.terminalType != ''">AND n.fTerminalType = #{positiveListCriteria.terminalType}</if>
+        <if test="positiveListCriteria.keyword != null and positiveListCriteria.keyword != ''">
+            AND n.fKeyword = #{positiveListCriteria.keyword}
+        </if>
+        <if test="positiveListCriteria.title != null and positiveListCriteria.title != ''">
+            AND n.fTitle = #{positiveListCriteria.title}
+        </if>
+        <if test="positiveListCriteria.position != null and positiveListCriteria.position != ''">
+            AND n.fPosition = #{positiveListCriteria.position}
+        </if>
+        <if test="positiveListCriteria.terminalType != null and positiveListCriteria.terminalType != ''">
+            AND n.fTerminalType = #{positiveListCriteria.terminalType}
+        </if>
         ORDER BY n.fCreateTime DESC
     </select>
 
     <select id="getSpecifiedKeywordPositiveLists" resultType="com.keymanager.ckadmin.entity.PositiveList">
         SELECT
         <include refid="selectCol" />
-        FROM
-        t_positive_list n
+        FROM t_positive_list n
         WHERE n.fKeyword = #{keyword}
         <if test="terminalType != null and terminalType != ''">
             AND n.fTerminalType = #{terminalType}

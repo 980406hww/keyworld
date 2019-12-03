@@ -14,15 +14,13 @@
     <select id="findMostRecentPositiveListUpdateInfo" resultType="com.keymanager.monitoring.entity.PositiveListUpdateInfo">
         SELECT
         <include refid="selectCol"/>
-        FROM
-        t_positive_list_update_info tplui
+        FROM t_positive_list_update_info tplui
         WHERE tplui.fPid = #{pid}
         ORDER BY tplui.fCreateTime DESC
         LIMIT 5
     </select>
 
     <delete id="deleteByPid">
-        DELETE FROM t_positive_list_update_info
-        WHERE fPid = #{pid}
+        DELETE FROM t_positive_list_update_info WHERE fPid = #{pid}
     </delete>
 </mapper>
