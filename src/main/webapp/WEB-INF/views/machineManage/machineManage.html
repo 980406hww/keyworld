@@ -77,7 +77,7 @@
 
     .my-collapse > div:first-child {
         background: #f2f2f2;
-        border: 1px solid #e6e6e6;
+        border-bottom: 1px solid #e6e6e6;
     }
 
     .my-collapse > div {
@@ -86,18 +86,21 @@
 
     .my-hide {
         padding-bottom: 1px !important;
-        display: none;
-        position: absolute;
-        top: 43px;
-        left: 0;
-        z-index: 894;
+        height: 70px;
         background: #fff;
-        border-left: 1px solid #e6e6e6;
-        border-right: 1px solid #e6e6e6;
         border-bottom: 1px solid #e6e6e6;
         border-bottom-right-radius: 2px;
         border-bottom-left-radius: 2px;
+        transition: all 0.5s;
     }
+
+    .my-hide-two{
+        padding: 0 !important;
+        margin: 0 !important;
+        height: 0 !important;
+        border: 0 solid #e6e6e6 !important;
+    }
+
     .my-collapse .my-btn {
         height: 30px !important;
         line-height: 30px !important;
@@ -144,10 +147,10 @@
         padding: 0px 15px !important;
     }
 
-    #memory input{
-        height: 30px;
-        width: 90px;
-        display: inline;
+    .memory input{
+        height: 30px !important;
+        width: 90.5px !important;
+        display: inline !important;
     }
 
     .my-height {
@@ -163,15 +166,14 @@
     .my-opration-hide {
         padding: 6px 5px;
         width: 100%;
-        display: none;
+        height: 45px;
         position: absolute;
         top: 43px;
         left: 0;
-        z-index: 894;
         background: #fff;
         border-top: 1px #e6e6e6 solid;
-        border-bottom: 1px #e6e6e6 solid;
-        transition: visibility .6s;
+        transition: all 0.5s;
+        overflow: hidden;
     }
 
     .layui-unselect{
@@ -189,6 +191,10 @@
 
     .layui-table-tool-panel li{
         padding: 2px 10px !important;
+    }
+
+    .layui-table-view, .layui-table-main {
+        transition: all 0.5s;
     }
 
     .vnc-visited{
@@ -257,7 +263,7 @@
                                         <button class="layui-collapse my-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
                                     </div>
                                     <div class="layui-inline">
-                                        <div class="layui-collapse my-btn" onclick="showCondition()">
+                                        <div class="layui-collapse my-btn" onclick="showCondition('searchContent',s_c++ % 2 === 0,78)">
                                             更多条件
                                         </div>
                                     </div>
@@ -273,18 +279,13 @@
                                         <input type="checkbox" name="noChangePassword" value="noChangePassword" title="没修改密码">
                                     </div>
                                 </div>
-                                <div class="my-hide" id="searchContent">
+                                <div class="my-hide my-hide-two" id="searchContent">
                                     <div class="layui-form-item" style="margin-bottom: 0" lay-filter="loginNameFilter">
-                                        <div class="layui-inline">
-                                            <label class="layui-form-label">版本</label>
+                                        <div class="layui-inline memory">
+                                            <label class="layui-form-label">版本/目标版本</label>
                                             <div class="layui-input-inline">
-                                                <input type="text" name="version" id="version" placeholder="请输入版本号" autocomplete="off" class="layui-input">
-                                            </div>
-                                        </div>
-                                        <div class="layui-inline">
-                                            <label class="layui-form-label">目标版本</label>
-                                            <div class="layui-input-inline">
-                                                <input type="text" name="targetVersion" id="targetVersion" placeholder="请输入目标版本" autocomplete="off" class="layui-input">
+                                                <input type="text" name="version" id="version" placeholder="版本" autocomplete="off" class="layui-input">
+                                                <input type="text" name="targetVersion" id="targetVersion" placeholder="目标版本" autocomplete="off" class="layui-input">
                                             </div>
                                         </div>
                                         <div class="layui-inline">
@@ -299,7 +300,7 @@
                                                 <input type="text" name="upgradeFailedReason" id="upgradeFailedReason" placeholder="请输入失败原因" autocomplete="off" class="layui-input">
                                             </div>
                                         </div>
-                                        <div class="layui-inline" id="memory">
+                                        <div class="layui-inline memory">
                                             <label class="layui-form-label">内存</label>
                                             <div class="layui-input-inline">
                                                 <input type="text" name="gtMemory" id="gtMemory" placeholder="≥" autocomplete="off" class="layui-input">
@@ -363,7 +364,8 @@
 <script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
     var sign = false;
-    let show = true;
+    var show = true;
+    var flag___ = false;
 
     NProgress.start();
     window.onload = function () {
@@ -374,12 +376,101 @@
 
     let hasProblemTmp = '<#if hasProblemTmp?exists>${hasProblemTmp}</#if>';
 
-    function showCondition() {
-        let searchContent = document.getElementById('searchContent');
-        if (s_c++ % 2 === 0) {
-            searchContent.style.display = 'block';
+    var bodyH = null;
+    var tableH = null;
+
+    function showCondition(s, c, h) {
+        let search = document.getElementById(s);
+        let body = document.getElementsByClassName('layui-table-view')[0];
+        let table = document.getElementsByClassName('layui-table-main')[0];
+        let bodyHeight = body.style.height;
+        let tableHeight = table.style.height;
+        if (c) {
+            delChange(search, body, table, bodyHeight, tableHeight, h);
         } else {
-            searchContent.style.display = 'none';
+            addChange(search, body, table, bodyHeight, tableHeight, h);
+        }
+    }
+
+    function showCondition2(s, c, h) {
+        let search = document.getElementById(s);
+        let height = search.nextElementSibling;
+        let table = document.getElementsByClassName('layui-table-main')[0];
+        let tableHeight = table.style.height;
+        if (c) {
+            height.style.height = h + 'px';
+            delChange2(search, table, tableHeight, h);
+        } else {
+            height.style.height = 0;
+            addChange2(search, table, tableHeight, h);
+        }
+    }
+
+    function delChange(s, b, t, bh, th, h) {
+        bodyH = parseInt(bh.replace('px', '')) - h;
+        b.style.height = bodyH + 'px';
+        tableH = parseInt(th.replace('px', '')) - h;
+        t.style.height = tableH + 'px';
+        s.classList.remove('my-hide-two');
+    }
+
+    function addChange(s, b, t, bh, th, h) {
+        bodyH = parseInt(bh.replace('px', '')) + h;
+        b.style.height = bodyH + 'px';
+        tableH = parseInt(th.replace('px', '')) + h;
+        t.style.height = tableH + 'px';
+        s.classList.add('my-hide-two');
+    }
+
+    function delChange2(s, t, th, h) {
+        tableH = parseInt(th.replace('px', '')) - h;
+        t.style.height = tableH + 'px';
+        s.classList.remove('my-hide-two');
+    }
+
+    function addChange2(s, t, th, h) {
+        tableH = parseInt(th.replace('px', '')) + h;
+        t.style.height = tableH + 'px';
+        s.classList.add('my-hide-two');
+    }
+
+    function doneChange(s, c, h) {
+        let search, height, body, table;
+        if (bodyH) {
+            body = document.getElementsByClassName('layui-table-view')[0];
+            body.style.height = bodyH + 'px';
+        }
+        if (tableH) {
+            search = document.getElementById(s);
+            height = search.nextElementSibling;
+            table = document.getElementsByClassName('layui-table-main')[0];
+            table.style.height = tableH + 'px';
+            if (c) {
+                height.style.height = h + 'px';
+                search.classList.remove('my-hide-two');
+            }
+        }
+        let ltts = document.getElementsByClassName('layui-table-tool-self')[0];
+        ltts.onclick = function () {
+            setTimeout(function () {
+                let lttp = document.getElementsByClassName('layui-table-tool-panel')[0];
+                lttp.onclick = function () {
+                    if (bodyH) {
+                        body = document.getElementsByClassName('layui-table-view')[0];
+                        body.style.height = bodyH + 'px';
+                    }
+                    if (tableH) {
+                        search = document.getElementById(s);
+                        height = search.nextElementSibling;
+                        table = document.getElementsByClassName('layui-table-main')[0];
+                        table.style.height = tableH + 'px';
+                        if (c) {
+                            height.style.height = h + 'px';
+                            search.classList.remove('my-hide-two');
+                        }
+                    }
+                }
+            }, 200);
         }
     }
 
@@ -396,13 +487,11 @@
         element.tabChange('keywordTab', ternimalType225);
 
         form.on('select(terminalTypeFilter)', function (data) {
-            let val = data.value;
-            let whereCondition = {'terminalType': val};
-            $('#terminalType').val(val);
-            searchMachine(whereCondition)
+            $('#terminalType').val(data.value);
+            active['reload'].call(this);
         });
 
-        form.on('select(orderBy)', function (data) {
+        form.on('select(orderBy)', function () {
             active['reload'].call(this);
         });
 
@@ -421,20 +510,9 @@
                     return false
                 }
             }
-            let postData = data.field;
-            let terminalType = $("#terminalType").val();
-            if(terminalType === '' || terminalType == null){
-                postData.terminalType = 'PC'
-            }
-            if(data.field.hasOrNoMachineGroup !== ""){
-                if(data.field.hasOrNoMachineGroup === "hasMachineGroup"){
-                    postData.hasMachineGroup = "hasMachineGroup"
-                }else{
-                    postData.noMachineGroup = "noMachineGroup"
-                }
-            }
-            searchMachine(postData);
-            return false
+            flag___ = true;
+            active['reload'].call(this);
+            return false;
         });
 
         if (hasProblemTmp === 'true') {
@@ -443,7 +521,7 @@
         }
 
         if (document.getElementById('machineGroup').value || hasProblemTmp === 'true') {
-            $('#searchBtn').click();
+            searchMachine(common.formToJsonObject('searchForm'));
         } else {
             searchMachine({init: 'init'});
         }
@@ -510,21 +588,55 @@
 
         var active = {
             reload: function () {
-                if (table.index >= 1) {
+                if (flag___){
                     let terminalType = $("#terminalType").val();
-                    if(terminalType === '' || terminalType == null){
+                    if (terminalType === '' || terminalType == null) {
                         terminalType = 'PC'
                     }
                     let data = common.formToJsonObject('searchForm');
                     data.terminalType = terminalType;
+                    if (data.hasOrNoMachineGroup) {
+                        if (data.hasOrNoMachineGroup === "hasMachineGroup") {
+                            data.hasMachineGroup = "hasMachineGroup"
+                            data.noMachineGroup = null;
+                        } else {
+                            data.hasMachineGroup = null;
+                            data.noMachineGroup = "noMachineGroup"
+                        }
+                    } else {
+                        data.hasMachineGroup = null;
+                        data.noMachineGroup = null;
+                    }
+                    if (!data.hasProblem){
+                        data.hasProblem = null;
+                    }
+                    if (!data.noChangePassword){
+                        data.noChangePassword = null;
+                    }
+                    if (!data.noUpgrade){
+                        data.noUpgrade = null;
+                    }
+                    if (!data.noVNC){
+                        data.noVNC = null;
+                    }
+                    data.init = null;
                     table.reload('machineManageTable', {
                         where: data,
                         page: {
                             curr: 1
+                        },
+                        done: function () {
+                            doneChange('operationContent', !show, 46);
+                            if (!show){
+                                let rightDirection = document.getElementById('rightDirection');
+                                let downDirection = document.getElementById('downDirection');
+                                downDirection.style.display = 'inline-block';
+                                rightDirection.style.display = 'none';
+                            }
                         }
                     });
                 }
-            },
+            }
         };
 
         table.on('toolbar(tableFilter)',function (obj) {
@@ -596,15 +708,13 @@
         });
 
         function more_operation() {
-            let operationContent = document.getElementById('operationContent');
             let rightDirection = document.getElementById('rightDirection');
             let downDirection = document.getElementById('downDirection');
+            showCondition2('operationContent', show, 46);
             if (show) {
-                operationContent.style.display = 'block';
                 downDirection.style.display = 'inline-block';
                 rightDirection.style.display = 'none';
             } else {
-                operationContent.style.display = 'none';
                 downDirection.style.display = 'none';
                 rightDirection.style.display = 'inline-block';
             }
@@ -1275,7 +1385,7 @@
             <span id="downDirection" style="display: none;"><i class="layui-icon layui-icon-down"></i></span>
         </button>
     </div>
-    <div class="my-opration-hide" id="operationContent">
+    <div class="my-opration-hide my-hide-two" id="operationContent">
         <div class="layui-btn-group">
             <@shiro.hasPermission name="/internal/machineInfo/saveMachineInfo">
                 <button class="layui-btn layui-btn layui-btn layui-btn-sm" lay-event="toBatchUpdateFailedReason">
@@ -1309,6 +1419,7 @@
             </@shiro.hasPermission>
         </div>
     </div>
+    <div style="height: 0;transition: height 0.5s"></div>
 </script>
 
 <script type="text/html" id="clientIDs">

@@ -86,7 +86,7 @@ public class AlgorithmTestPlanServiceImpl extends ServiceImpl<AlgorithmTestPlanD
     }
 
     @Override
-    public synchronized AlgorithmTestPlan selectOneAvailableAlgorithmTestPlan() {
+    public  AlgorithmTestPlan selectOneAvailableAlgorithmTestPlan() {
         AlgorithmTestPlan algorithmTestPlan = algorithmTestPlanDao.selectOneAvailableAlgorithmTestPlan();
         if (null != algorithmTestPlan) {
             algorithmTestPlanDao.updateExcuteQueryTimeAndExcuteCount(algorithmTestPlan.getUuid());
