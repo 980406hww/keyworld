@@ -33,8 +33,25 @@
         .my-padding {
             padding: 8px 0;
         }
+
+        #pcMsg .my-padding, #phoneMsg .my-padding {
+            padding: 0;
+        }
+
+        #pcMsg .my-label, #phoneMsg .my-label {
+            height: 30px;
+            line-height: 28px;
+            font-size: 13px;
+        }
+
+        #pcMsg .my-input, #phoneMsg .my-input {
+            height: 100%;
+            padding-left: 4px;
+            padding-right: 4px;
+        }
     </style>
 </head>
+<body>
 <div>
     <!--form表单-->
     <form class="layui-form layui-form-pane ok-form" lay-filter="addQZSetting">
@@ -122,32 +139,42 @@
                         <table style="border: 0;width: 100%;display: none">
                             <tbody id="pcMsg">
                             <tr class="my-bg">
-                                <td style="min-width: 50px">
+                                <td style="min-width: 35px">
                                     <div class="my-header-title my-label my-left my-padding">
                                         序号
                                     </div>
                                 </td>
-                                <td style="min-width: 160px">
+                                <td style="min-width: 90px;width: 140px">
                                     <div class="my-header-title my-label my-left my-padding">
                                         优化分组
                                     </div>
                                 </td>
-                                <td style="min-width: 170px">
+                                <td style="min-width: 100px;width: 150px">
                                     <div class="my-header-title my-label my-left my-padding">
                                         域名
                                     </div>
                                 </td>
-                                <td style="min-width: 100px">
+                                <td style="min-width: 62px">
                                     <div class="my-header-title my-label my-left my-padding">
-                                        初始首页词数
+                                        初始词数
                                     </div>
                                 </td>
-                                <td style="min-width: 100px">
+                                <td style="min-width: 62px">
                                     <div class="my-header-title my-label my-left my-padding">
-                                        采词词数限制
+                                        采词词数
                                     </div>
                                 </td>
-                                <td style="min-width: 100px">
+                                <td style="min-width: 50px">
+                                    <div class="my-header-title my-label my-left my-padding">
+                                        熊掌号
+                                    </div>
+                                </td>
+                                <td style="min-width: 50px">
+                                    <div class="my-header-title my-label my-left my-padding">
+                                        标签
+                                    </div>
+                                </td>
+                                <td style="min-width: 62px">
                                     <div class="my-header-title my-label my-left my-padding my-bottom">
                                         达标备注
                                     </div>
@@ -166,32 +193,42 @@
                         <table style="border: 0;width: 100%;display: none">
                             <tbody id="phoneMsg">
                             <tr class="my-bg">
-                                <td style="min-width: 50px">
+                                <td style="min-width: 35px">
                                     <div class="my-header-title my-label my-left my-padding">
                                         序号
                                     </div>
                                 </td>
-                                <td style="min-width: 160px">
+                                <td style="min-width: 90px;width: 140px">
                                     <div class="my-header-title my-label my-left my-padding">
                                         优化分组
                                     </div>
                                 </td>
-                                <td style="min-width: 170px">
+                                <td style="min-width: 100px;width: 150px">
                                     <div class="my-header-title my-label my-left my-padding">
                                         域名
                                     </div>
                                 </td>
-                                <td style="min-width: 100px">
+                                <td style="min-width: 62px">
                                     <div class="my-header-title my-label my-left my-padding">
-                                        初始首页词数
+                                        初始词数
                                     </div>
                                 </td>
-                                <td style="min-width: 100px">
+                                <td style="min-width: 62px">
                                     <div class="my-header-title my-label my-left my-padding">
-                                        采词词数限制
+                                        采词词数
                                     </div>
                                 </td>
-                                <td style="min-width: 100px">
+                                <td style="min-width: 50px">
+                                    <div class="my-header-title my-label my-left my-padding">
+                                        熊掌号
+                                    </div>
+                                </td>
+                                <td style="min-width: 50px">
+                                    <div class="my-header-title my-label my-left my-padding">
+                                        标签
+                                    </div>
+                                </td>
+                                <td style="min-width: 62px">
                                     <div class="my-header-title my-label my-left my-padding my-bottom">
                                         达标备注
                                     </div>
@@ -450,8 +487,6 @@
 
     function previous(ele) {
         switch (step) {
-            case 1:
-                break;
             case 2:
                 ele.style.display = 'none';
                 window.children[0].style.display = 'block';
@@ -507,7 +542,7 @@
         }
     }
 
-    layui.use(["form", "jquery", "common"], function () {
+    layui.use(["form", "jquery", "common"], function (count) {
         let form = layui.form;
         let $ = layui.jquery;
         let common = layui.common;
@@ -526,13 +561,14 @@
             let d = common.jsonObjectTrim(data.field);
             switch (step) {
                 case 1:
-                    if ((previousData.pcDomains || d.pcDomains) && previousData.pcDomains !== d.pcDomains) {
+                    if ((previousData.pcDomains || d.pcDomains) && (previousData.pcDomains !== d.pcDomains
+                        || previousData.bearPawNumber !== d.bearPawNumber || previousData.tagNames !== d.tagNames)) {
                         if (d.pcDomains) {
                             pcMsgShow.checked = true;
                             pcRuleShow.checked = true;
                             pcMsg.parentElement.style.display = 'table';
                             pcRuleBox.style.display = 'block';
-                            let re = toMsgTable(d.searchEngine, toList(d.pcDomains), pcMsg, 'pc');
+                            let re = toMsgTable(d.searchEngine, toList(d.pcDomains), pcMsg, 'pc', d.bearPawNumber, d.tagNames);
                             if (re === false) {
                                 return false;
                             }
@@ -544,13 +580,14 @@
                             clearTable(pcMsg);
                         }
                     }
-                    if ((previousData.phoneDomains || d.phoneDomains) && previousData.phoneDomains !== d.phoneDomains) {
+                    if ((previousData.phoneDomains || d.phoneDomains) && (previousData.phoneDomains !== d.phoneDomains
+                        || previousData.bearPawNumber !== d.bearPawNumber || previousData.tagNames !== d.tagNames)) {
                         if (d.phoneDomains) {
                             phoneMsgShow.checked = true;
                             phoneRuleShow.checked = true;
                             phoneMsg.parentElement.style.display = 'table';
                             phoneRuleBox.style.display = 'block';
-                            let re = toMsgTable(d.searchEngine, toList(d.phoneDomains), phoneMsg, 'phone');
+                            let re = toMsgTable(d.searchEngine, toList(d.phoneDomains), phoneMsg, 'phone', d.bearPawNumber, d.tagNames);
                             if (re === false) {
                                 return false;
                             }
@@ -570,6 +607,8 @@
                     step++;
                     break;
                 case 2:
+                    pcChildren = [];
+                    phoneChildren = {};
                     if (!toMsgList(pcMsg, pcChildren, 'PC')) {
                         return false;
                     }
@@ -613,8 +652,7 @@
                         common.showFailMsg("域名不允许为空");
                         return false;
                     }
-                    if (!domainReg.test(
-                        temp.subDomainName)) {
+                    if (!domainReg.test(temp.subDomainName)) {
                         common.showFailMsg("存在域名填写不正确");
                         return false;
                     }
@@ -624,7 +662,9 @@
                         common.showFailMsg("采词词数不允许为空");
                         return false;
                     }
-                    temp.monitorRemark = cc[5].firstElementChild.firstElementChild.value.trim();
+                    temp.bearPawNumber = cc[5].firstElementChild.firstElementChild.value.trim();
+                    temp.qzCategoryTags = toTags(cc[6].firstElementChild.firstElementChild.value);
+                    temp.monitorRemark = cc[7].firstElementChild.firstElementChild.value.trim();
                     temp.operationType = t;
                     temp.standardType = 'satisfyAll';
                     if (t === 'PC') {
@@ -638,11 +678,10 @@
         }
 
         function handleData(d, pcChildren, phoneChildren) {
-            let p_l = [], p_d = {}, phoneRules = toPhoneRule(d), pcRules = toPcRule(d);
+            let p_l = [], p_d = {}, pcRules = toPcRule(d), phoneRules = toPhoneRule(d);
             if (phoneRules === false || pcRules === false) {
                 return false;
             }
-            p_d.bearPawNumber = d.bearPawNumber;
             p_d.customerUuid = d.customerUuid;
             p_d.renewalStatus = d.siteStatus;
             p_d.searchEngine = d.searchEngine;
@@ -650,13 +689,14 @@
             p_d.ignoreNoIndex = false;
             p_d.ignoreNoOrder = false;
             p_d.searchEngine = d.searchEngine;
-            p_d.qzCategoryTags = toTags(d.tagNames);
             for (let i = 0; i < pcChildren.length; i++) {
                 let pc = pcChildren[i], p = Object.assign({}, p_d);
                 pc.optimizationType = d.optimizationPcType;
                 pc.qzChargeRules = pcRules;
                 p.pcGroup = pc.group;
                 p.domain = pc.subDomainName;
+                p.bearPawNumber = pc.bearPawNumber;
+                p.qzCategoryTags = pc.qzCategoryTags;
                 p.qzOperationTypes = [];
                 p.qzOperationTypes.push(pc);
                 let phone = phoneChildren[pc.subDomainName];
@@ -676,6 +716,8 @@
                     phone.qzChargeRules = phoneRules;
                     p.phoneGroup = phone.group;
                     p.domain = phone.subDomainName;
+                    p.bearPawNumber = phone.bearPawNumber;
+                    p.qzCategoryTags = phone.qzCategoryTags;
                     p.qzOperationTypes = [];
                     p.qzOperationTypes.push(phone);
                     p_l.push(p);
@@ -708,6 +750,9 @@
                 },
                 error: function () {
                     common.showFailMsg('网络异常请稍后再试');
+                },
+                complete: function () {
+                    p_d = [];
                 }
             });
         }
@@ -835,13 +880,23 @@
             + '                                    </div>'
             + '                                </td>'
             + '                                <td>'
+            + '                                    <div class="my-label my-left">'
+            + '                                        <input type="text" class="layui-input my-input" value="{3}">'
+            + '                                    </div>'
+            + '                                </td>'
+            + '                                <td>'
+            + '                                    <div class="my-label my-left">'
+            + '                                        <input type="text" class="layui-input my-input" value="{4}">'
+            + '                                    </div>'
+            + '                                </td>'
+            + '                                <td>'
             + '                                    <div class="my-label my-btn my-left my-bottom">'
             + '                                        <input type="text" class="layui-input my-input">'
             + '                                    </div>'
             + '                                </td>'
             + '                            </tr>';
 
-        function toMsgTable(se, list, table, t) {
+        function toMsgTable(se, list, table, t, n, tags) {
             clearTable(table);
             table = $(table);
             let listMap = {};
@@ -856,7 +911,7 @@
                     if (group === false) {
                         return false;
                     }
-                    table.append(msgHtml.replace('{0}', i + 1).replace('{1}', group).replace('{2}', list[i]));
+                    table.append(msgHtml.replace('{0}', i + 1).replace('{1}', group).replace('{2}', list[i]).replace('{3}', n).replace('{4}', tags));
                 }
             }
         }
@@ -1097,7 +1152,7 @@
             + '                                    </tr>';
         let k = 2, l = 2;
         window.appendTable = function (f) {
-            let today = null;
+            let today;
             if (f) {
                 today = $(pcRule);
                 today.append(ruleHtml.replace('{0}', k++));
@@ -1127,7 +1182,7 @@
                 "请正确输入标签,例如：阿卡索,MBA,算法"
             ],
             domains: function (value, ele) {
-                let v = '';
+                let v;
                 if (ele.name === 'pcDomains') {
                     v = document.getElementById('phoneDomains').value;
                 } else {
