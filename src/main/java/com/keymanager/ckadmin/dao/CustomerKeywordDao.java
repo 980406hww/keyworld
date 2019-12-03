@@ -52,15 +52,13 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<OptimizationKeywordVO> fetchCustomerKeywordsForCache(@Param("terminalType") String terminalType, @Param("machineGroup") String machineGroup, @Param("batchCount") int batchCount);
 
-    CustomerKeyword getOneSameCustomerKeyword(@Param("terminalType") String terminalType,
-        @Param("customerUuid") long customerUuid, @Param("keyword") String keyword,
-        @Param("url") String url, @Param("title") String title);
+    CustomerKeyword getOneSameCustomerKeyword(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid,
+        @Param("qzSettingUuid") Long qzSettingUuid, @Param("keyword") String keyword, @Param("url") String url, @Param("title") String title);
 
     void updateSameCustomerKeyword(@Param("customerKeyword") CustomerKeyword customerKeyword);
 
-    CustomerKeyword getOneSimilarCustomerKeyword(@Param("terminalType") String terminalType,
-        @Param("customerUuid") long customerUuid, @Param("keyword") String keyword,
-        @Param("originalUrl") String originalUrl, @Param("title") String title);
+    CustomerKeyword getOneSimilarCustomerKeyword(@Param("terminalType") String terminalType, @Param("customerUuid") long customerUuid,
+        @Param("qzSettingUuid") Long qzSettingUuid, @Param("keyword") String keyword, @Param("originalUrl") String originalUrl, @Param("title") String title);
 
     void updateSimilarCustomerKeyword(@Param("customerKeyword") CustomerKeyword customerKeyword);
 

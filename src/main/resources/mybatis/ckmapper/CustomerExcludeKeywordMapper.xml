@@ -14,7 +14,7 @@
         FROM t_exclude_keyword ek
         WHERE ek.fTerminalType = #{terminalType}
         <choose>
-            <when test="qzSettingUuid != 0">
+            <when test="qzSettingUuid != null and qzSettingUuid != 0">
                 AND ek.fQZSettingUuid = #{qzSettingUuid}
             </when>
             <otherwise>

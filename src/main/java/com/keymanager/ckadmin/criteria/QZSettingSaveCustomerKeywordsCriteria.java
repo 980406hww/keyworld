@@ -7,7 +7,7 @@ import java.util.List;
  * @Date 2018/12/24 11:48
  **/
 public class QZSettingSaveCustomerKeywordsCriteria {
-    private long qzSettingUuid;
+    private Long qzSettingUuid;
     private long customerUuid;
     private String domain;
     private String optimizeGroupName;
@@ -19,11 +19,11 @@ public class QZSettingSaveCustomerKeywordsCriteria {
     private List<String> terminalTypes;
     private List<String> keywords;
 
-    public long getQzSettingUuid () {
+    public Long getQzSettingUuid () {
         return qzSettingUuid;
     }
 
-    public void setQzSettingUuid (long qzSettingUuid) {
+    public void setQzSettingUuid (Long qzSettingUuid) {
         this.qzSettingUuid = qzSettingUuid;
     }
 

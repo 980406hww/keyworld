@@ -251,6 +251,9 @@
         WHERE ck.fKeyword = #{keyword}
         AND ck.fTerminalType = #{terminalType}
         AND ck.fCustomerUuid = #{customerUuid}
+        <if test="qzSettingUuid != null and qzSettingUuid != 0"">
+            AND ck.fQZSettingUuid = #{qzSettingUuid}
+        </if>
         <choose>
             <when test="url == 'NoUrl'">
                 AND ck.fTitle = #{title}
@@ -298,6 +301,9 @@
         WHERE ck.fKeyword = #{keyword}
         AND ck.fTerminalType = #{terminalType}
         AND ck.fCustomerUuid = #{customerUuid}
+        <if test="qzSettingUuid != null and qzSettingUuid != 0">
+            AND ck.fQZSettingUuid = #{qzSettingUuid}
+        </if>
         <choose>
             <when test="originalUrl == 'NoUrl'">
                 AND ck.fTitle = #{title}
@@ -318,7 +324,6 @@
         WHERE fKeyword = #{customerKeyword.keyword}
         AND fTerminalType = #{customerKeyword.terminalType}
         AND fCustomerUuid = #{customerKeyword.customerUuid}
-
         <choose>
             <when test="customerKeyword.originalUrl == 'NoUrl'">
                 AND fTitle = #{title}

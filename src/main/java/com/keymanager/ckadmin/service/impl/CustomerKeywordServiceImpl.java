@@ -286,7 +286,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
             CustomerKeyword customerKeyword1 = customerKeywordDao.getOneSameCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid()
-                , customerKeyword.getKeyword(), customerKeyword.getUrl(), customerKeyword.getTitle());
+                , customerKeyword.getQzSettingUuid(), customerKeyword.getKeyword(), customerKeyword.getUrl(), customerKeyword.getTitle());
             if (customerKeyword1 != null) {
                 detectCustomerKeywordEffect(customerKeyword, customerKeyword1);
                 return null;
@@ -295,7 +295,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
         if (!EntryTypeEnum.fm.name().equals(customerKeyword.getType())) {
             CustomerKeyword customerKeyword1 = customerKeywordDao.getOneSimilarCustomerKeyword(customerKeyword.getTerminalType(), customerKeyword.getCustomerUuid()
-                , customerKeyword.getKeyword(), originalUrl, customerKeyword.getTitle());
+                , customerKeyword.getQzSettingUuid(), customerKeyword.getKeyword(), originalUrl, customerKeyword.getTitle());
             if (customerKeyword1 != null) {
                 detectCustomerKeywordEffect(customerKeyword, customerKeyword1);
                 return null;
