@@ -978,7 +978,7 @@ public class QZSettingServiceImpl extends
     }
 
     @Override
-    public List<QZSetting> getQzSettingByCustomer(Long customerUuid) {
-        return qzSettingDao.getQzSettingByCustomer(customerUuid);
+    public List<QZSetting> getQzSettingByCustomer(Long customerUuid, String searchEngine) {
+        return qzSettingDao.getQzSettingByCustomer(customerUuid,searchEngine);
     }
 }

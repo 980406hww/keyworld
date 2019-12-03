@@ -383,6 +383,9 @@
         SELECT fUuid AS 'uuid',fDomain AS 'domain'
         FROM t_qz_setting
         WHERE fCustomerUuid = #{customerUuid}
+        <if test="searchEngine != null and searchEngine != ''">
+            AND fSearchEngine = #{searchEngine}
+        </if>
     </select>
     
     <select id="getExistingQzSettingUuid" resultType="java.lang.Long">
@@ -399,7 +402,7 @@
         c.fContactPerson AS 'contactPerson'
         FROM t_qz_setting qz
         LEFT JOIN t_customer c
-        ON qz.fCustomerUuid = c.fUuid
+        ON qz.fCustomerUuid = c.fUuidgetQzSettingByCustomer
         WHERE qz.fUuid IN
         <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
             #{uuid}

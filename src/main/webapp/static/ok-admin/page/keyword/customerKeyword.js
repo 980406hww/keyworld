@@ -45,7 +45,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     let okLayer = layui.okLayer;
     let common = layui.common;
     let layer = layui.layer;
-    let qzList = '<option value="">请选择整站</option>';
     //日期范围
     laydate.render({
         elem: '#gtCreateTime',
@@ -64,7 +63,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     function init_search() {
         init_keyword_type();
         init_searchEngine();
-        getQzSettings();
+        getQzSettings(searchEngine, function (data) {
+            initQzUuid(data);
+        });
         if (qzBusiness === 'qz') {
             if_from_qz(layui);
             showQzSettings();
@@ -80,31 +81,58 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         document.getElementById('qzUuid').parentElement.style.display = 'none';
     }
 
-    function getQzSettings() {
+    function getQzSettings(se, callback) {
+        se = se ? '/' + se : '';
         let uuid = document.getElementById('customerUuid').value;
         $.ajax({
-            url: '/internal/qzsetting/getQzSettingByCustomer/' + uuid,
+            url: '/internal/qzsetting/getQzSettingByCustomer' + se + '/' + uuid,
             dataType: 'json',
             async: false,
             type: 'get',
             success: function (res) {
-                if (res.code === 200) {
-                    $("#qzUuid").empty();
-                    $("#qzUuid").append('<option value="">请选择整站</option>');
-                    $("#qzUuid").append('<option value="-1">未关联整站数据</option>');
-                    $.each(res.data, function (index, item) {
-                        if (item.uuid + '' === qzUuid) {
-                            $('#qzUuid').append('<option value="' + item.uuid + '" selected>' + item.domain + '</option>');// 下拉菜单里添加元素
-                        } else {
-                            $('#qzUuid').append('<option value="' + item.uuid + '">' + item.domain + '</option>');// 下拉菜单里添加元素
-                        }
-                        qzList += '<option value="' + item.uuid + '">' + item.domain + '</option>';
-                    });
-                    form.render("select");
-                }
+                callback(res);
             }
         });
     }
+
+    form.on("select(searchEngine)", function (data) {
+        let type = $('#type').val();
+        if (type === 'qz') {
+            getQzSettings(data.value, function (data) {
+                initQzUuid(data);
+            })
+        }
+    });
+
+    function initQzUuid(res) {
+        $("#qzUuid").empty();
+        $("#qzUuid").append('<option value="">请选择整站</option>');
+        $("#qzUuid").append('<option value="-1">未关联整站数据</option>');
+        if (res.code === 200) {
+            $.each(res.data, function (index, item) {
+                if (item.uuid + '' === qzUuid) {
+                    $('#qzUuid').append('<option value="' + item.uuid + '" selected>' + item.domain + '</option>');// 下拉菜单里添加元素
+                } else {
+                    $('#qzUuid').append('<option value="' + item.uuid + '">' + item.domain + '</option>');// 下拉菜单里添加元素
+                }
+            });
+        }
+        form.render("select");
+    }
+
+    let qzList = '<option value="">请选择整站</option>';
+    function getQzList(res) {
+        if (res.code === 200) {
+            $.each(res.data, function (index, item) {
+                qzList += '<option value="' + item.uuid + '">' + item.domain + '</option>';
+            });
+            form.render("select");
+        }
+    }
+
+    getQzSettings('', function (data) {
+        getQzList(data);
+    });
 
     function init_keyword_type() {
         $.ajax({
