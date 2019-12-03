@@ -543,7 +543,7 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {filed: 'uuid', align: 'center', type: 'checkbox', width: '35',fixed: "left"},
+                    {filed: 'uuid', align: 'center', type: 'checkbox', width: '35'},
                     {field: 'clientIDs', align: 'left', title: '客户端ID', width: '148', templet: '#clientIDs'},
                     {field: 'machineGroups', align: 'left', title: '机器分组', width: '140', templet: '#machineGroups'},
                     {field: 'renewalDate', align: 'left', title: '续费<br>日期', width: '116', templet: '#showRenewalDate', hide: true},
@@ -561,7 +561,7 @@
                     {field: 'valids', align: 'left', title: '状态', width: '110', templet: '#valid'},
                     {field: 'upgradeFailedReasons', align: 'left', title: '失败原因', width: '116', templet: '#upgradeFailedReasons'},
                     {field: 'vpsBackendSystemComputerID', align: 'left', title: '服务器ID', width: '126', templet: '#vpsBackendSystemComputerIDs'},
-                    {title: '操作', templet: '#operationTpl', align: 'center',fixed: "right",width: '198'}
+                    {title: '操作', templet: '#operationTpl', align: 'center', width: '198'}
                 ]],
                 height: 'full-115',
                 done: function (res, curr, count) {
@@ -633,6 +633,7 @@
                                 downDirection.style.display = 'inline-block';
                                 rightDirection.style.display = 'none';
                             }
+                            handleStyle();
                         }
                     });
                 }
