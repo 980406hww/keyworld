@@ -599,8 +599,8 @@ public class QZSettingServiceImpl extends
             groupService.deleteByGroupName(phoneGroup);
         }
         qzCategoryTagService.deleteById(uuid);
-        qzSettingDao.deleteById(uuid);
         saveQzChargeMon(uuid, username, 4);
+        qzSettingDao.deleteById(uuid);
     }
 
     @Override
