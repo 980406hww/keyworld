@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.controller.external.rest;
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.service.QZKeywordRankInfoService;
 import com.keymanager.ckadmin.vo.ExternalQZKeywordRankInfoResultVO;
+import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -53,5 +54,22 @@ public class ExternalQZKeywordRankController extends SpringMVCBaseController {
             logger.error(ex.getMessage());
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping(value = "/handleXtCurveDate")
+    public ResponseEntity<?> handleXtCurveDate(@RequestBody Map<String, String> requestMap) {
+        try {
+            String userName = requestMap.get("userName");
+            String password = requestMap.get("password");
+            if (validUser(userName, password)) {
+                qzKeywordRankInfoService.handleXtCurveDate();
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

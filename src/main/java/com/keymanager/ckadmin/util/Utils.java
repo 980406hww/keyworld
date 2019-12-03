@@ -1,6 +1,5 @@
 package com.keymanager.ckadmin.util;
 
-import com.keymanager.ckadmin.entity.CaptureRankJob;
 import com.keymanager.util.PagePercentage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,7 +12,6 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
