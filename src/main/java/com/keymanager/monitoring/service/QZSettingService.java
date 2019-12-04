@@ -443,7 +443,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		rankInfoVo.setTopForty(calculate(qzKeywordRankInfo.getTopForty()));
 		rankInfoVo.setTopFifty(topFifty);
 		rankInfoVo.setTopHundred(calculate(qzKeywordRankInfo.getTopHundred()));
-		rankInfoVo.setDate(calculate(qzKeywordRankInfo.getDate()));
+		if ("xt".equals(qzKeywordRankInfo.getWebsiteType())) {
+			rankInfoVo.setDate(calculate(qzKeywordRankInfo.getFullDate()));
+		} else {
+			rankInfoVo.setDate(calculate(qzKeywordRankInfo.getDate()));
+		}
 		rankInfoVo.setBaiduRecord(calculate(qzKeywordRankInfo.getBaiduRecord()));
 		rankInfoVo.setBaiduRecordFullDate(calculate(qzKeywordRankInfo.getBaiduRecordFullDate()));
 		rankInfoVo.setAchieveTime(qzKeywordRankInfo.getAchieveTime());
@@ -452,7 +456,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
     public String[] calculate(String targetStr) {
 		String[] split = null;
 		if (StringUtil.isNotNullNorEmpty(targetStr)) {
-			split = targetStr.replace("[", "").replace("]", "").replaceAll("'", "").split(", ");
+			split = targetStr.replace("[", "").replace("]", "").replaceAll("'", "").replaceAll(" ", "").split(",");
 			Collections.reverse(Arrays.asList(split));
 		}
 		return split;

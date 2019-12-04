@@ -251,7 +251,7 @@
         WHERE ck.fKeyword = #{keyword}
         AND ck.fTerminalType = #{terminalType}
         AND ck.fCustomerUuid = #{customerUuid}
-        <if test="qzSettingUuid != null and qzSettingUuid != 0"">
+        <if test="qzSettingUuid != null and qzSettingUuid != 0">
             AND ck.fQZSettingUuid = #{qzSettingUuid}
         </if>
         <choose>
