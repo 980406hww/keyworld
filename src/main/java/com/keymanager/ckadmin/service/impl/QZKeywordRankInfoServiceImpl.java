@@ -1,5 +1,8 @@
 package com.keymanager.ckadmin.service.impl;
 
+import static com.keymanager.ckadmin.util.Utils.formatDatetime;
+import static com.keymanager.ckadmin.util.Utils.getCurrentTimestamp;
+
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.QZSettingCountNumCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSearchCriteria;
@@ -10,6 +13,7 @@ import com.keymanager.ckadmin.service.QZChargeRuleService;
 import com.keymanager.ckadmin.service.QZKeywordRankInfoService;
 import com.keymanager.ckadmin.service.QZOperationTypeService;
 import com.keymanager.ckadmin.service.QZSettingService;
+import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.ExternalQZKeywordRankInfoResultVO;
 import com.keymanager.ckadmin.entity.Config;
 import com.keymanager.ckadmin.vo.ExternalQZKeywordRankInfoVO;
@@ -50,10 +54,8 @@ public class QZKeywordRankInfoServiceImpl extends
     private QZChargeRuleService qzChargeRuleService;
 
     @Override
-    public List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo(long qzSettingUuid,
-        String terminalType, String websiteType) {
-        return qzKeywordRankInfoDao
-            .searchExistingQZKeywordRankInfo(qzSettingUuid, terminalType, websiteType);
+    public List<QZKeywordRankInfo> searchExistingQZKeywordRankInfo(long qzSettingUuid, String terminalType, String websiteType) {
+        return qzKeywordRankInfoDao.searchExistingQZKeywordRankInfo(qzSettingUuid, terminalType, websiteType);
     }
 
     @Override
@@ -72,8 +74,7 @@ public class QZKeywordRankInfoServiceImpl extends
     }
 
     @Override
-    public QZSettingCountNumCriteria searchCountNumOfQZKeywordRankInfo(
-        QZSettingSearchCriteria criteria) {
+    public QZSettingCountNumCriteria searchCountNumOfQZKeywordRankInfo(QZSettingSearchCriteria criteria) {
         double upperValue = Double.parseDouble(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_UPPER_VALUE).getValue());
         double differenceValue = Double.parseDouble(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_DIFFERENCEVALUE_VALUE).getValue());
         int oneWeekDiff = Integer.parseInt(configService.getConfig(Constants.CONFIG_TYPE_QZSETTING_KEYWORD_RANK, Constants.CONFIG_KEY_ONE_WEEK_DIFF).getValue());
@@ -270,5 +271,33 @@ public class QZKeywordRankInfoServiceImpl extends
     @Override
     public void fixQZXTRankDate(Long uuid, String yearRankDate) {
         qzKeywordRankInfoDao.updateRankDateWithYear(uuid, yearRankDate);
+    }
+
+    @Override
+    public void handleXtCurveDate() {
+        List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoDao.getBaiDuXTRankInfos();
+        if (CollectionUtils.isNotEmpty(qzKeywordRankInfos)) {
+            String currentYear = formatDatetime(getCurrentTimestamp(), "yyyy");
+            for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("[");
+                String fullDate = qzKeywordRankInfo.getFullDate();
+                String[] dates = fullDate.substring(1, fullDate.length() - 1).replaceAll("'", "").split(",");
+                for (String date : dates) {
+                    String[] items = date.split("-");
+                    if (items.length == 2) {
+                        date = currentYear + "-" + date;
+                    }
+                    sb.append("'").append(date).append("',");
+                }
+                String newFullDate = sb.toString();
+                newFullDate = newFullDate.substring(0, newFullDate.length() - 1) + "]";
+                if (!newFullDate.equals(fullDate)) {
+                    QZKeywordRankInfo rankInfo = qzKeywordRankInfoDao.selectById(qzKeywordRankInfo.getUuid());
+                    rankInfo.setFullDate(newFullDate);
+                    qzKeywordRankInfoDao.updateById(rankInfo);
+                }
+            }
+        }
     }
 }

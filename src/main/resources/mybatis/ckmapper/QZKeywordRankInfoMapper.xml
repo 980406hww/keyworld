@@ -216,4 +216,19 @@
     <update id="updateRankDateWithYear">
         UPDATE t_qz_keyword_rank_info SET fFullDate = #{yearRankDate} WHERE fUuid = #{uuid}
     </update>
+
+    <select id="getBaiDuXTRankInfos" resultType="com.keymanager.ckadmin.entity.QZKeywordRankInfo">
+        SELECT
+            fUuid     AS 'uuid',
+            fFullDate AS 'fullDate'
+        FROM t_qz_keyword_rank_info qkri
+        WHERE qkri.fWebsiteType = 'xt'
+        AND qkri.fFullDate > ''
+        AND EXISTS (
+            SELECT 1
+            FROM t_qz_setting qs
+            WHERE qs.fUuid = qkri.fQZSettingUuid
+            AND fSearchEngine = '百度'
+        )
+    </select>
 </mapper>
