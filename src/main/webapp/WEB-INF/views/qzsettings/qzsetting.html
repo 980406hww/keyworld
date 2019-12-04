@@ -3240,10 +3240,10 @@
             });
         };
 
-        window.toCustomerKeywordFromQZ = function (customerUuid, pcGroup, phoneGroup) {
+        window.toCustomerKeywordFromQZ = function (customerUuid, pcGroup, phoneGroup, se, uuid) {
             let group = pcGroup === 'null' ? phoneGroup : pcGroup;
             let terminalType = document.getElementById('terminalType').value;
-            let url = '/internal/customerKeyword/toCustomerKeywordFromQZ/qz/' + terminalType + '/' + customerUuid + '/' + group + '/' + uuid;
+            let url = '/internal/customerKeyword/toCustomerKeywordFromQZ/qz/' + terminalType + '/' + customerUuid + '/' + group + '/' + uuid + '/' + se;
             let tit = group + '--关键字列表';
             let id = customerUuid + '-czcs';
             common.updateOrNewTab(url, tit, id);
@@ -3547,7 +3547,7 @@
                          </span>
                     </div>
                     <div class="layui-col-md12">
-                    <span class="click-czcs" onclick="toCustomerKeywordFromQZ('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.uuid}}')">操作词数</span>
+                    <span class="click-czcs" onclick="toCustomerKeywordFromQZ('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}','{{d.uuid}}')">操作词数</span>
                     </div>
                 </div>
             </div>

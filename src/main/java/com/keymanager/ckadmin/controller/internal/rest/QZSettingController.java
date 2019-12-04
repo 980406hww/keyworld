@@ -659,11 +659,13 @@ public class QZSettingController extends SpringMVCBaseController {
         return resultBean;
     }
 
-    @RequestMapping(value = "/getQzSettingByCustomer/{customerUuid}", method = RequestMethod.GET)
-    public ResultBean getQzSettingByCustomer(@PathVariable Long customerUuid) {
+    @RequestMapping(value = {"/getQzSettingByCustomer/{searchEngine}/{customerUuid}",
+        "/getQzSettingByCustomer/{customerUuid}"}, method = RequestMethod.GET)
+    public ResultBean getQzSettingByCustomer(@PathVariable(value = "searchEngine", required = false) String searchEngine,
+        @PathVariable(value = "customerUuid") Long customerUuid) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
-            List<QZSetting> qzSettings = qzSettingService.getQzSettingByCustomer(customerUuid);
+            List<QZSetting> qzSettings = qzSettingService.getQzSettingByCustomer(customerUuid, searchEngine);
             if (null == qzSettings || qzSettings.isEmpty()) {
                 resultBean.setCode(300);
                 return resultBean;

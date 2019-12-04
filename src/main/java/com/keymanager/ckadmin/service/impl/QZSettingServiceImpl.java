@@ -603,8 +603,8 @@ public class QZSettingServiceImpl extends
             groupService.deleteByGroupName(phoneGroup);
         }
         qzCategoryTagService.deleteById(uuid);
-        qzSettingDao.deleteById(uuid);
         saveQzChargeMon(uuid, username, 4);
+        qzSettingDao.deleteById(uuid);
     }
 
     @Override
@@ -982,7 +982,7 @@ public class QZSettingServiceImpl extends
     }
 
     @Override
-    public List<QZSetting> getQzSettingByCustomer(Long customerUuid) {
-        return qzSettingDao.getQzSettingByCustomer(customerUuid);
+    public List<QZSetting> getQzSettingByCustomer(Long customerUuid, String searchEngine) {
+        return qzSettingDao.getQzSettingByCustomer(customerUuid,searchEngine);
     }
 }

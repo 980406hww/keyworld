@@ -65,3 +65,21 @@
 .my-input {
   border: 0;
 }
+
+.special-select {
+  overflow: visible;
+}
+
+.special-select input {
+  width: 100%;
+  border: 0;
+}
+
+.special-select .layui-form-select dl {
+  padding: 0;
+  top: 29px;
+}
+
+.special-select .layui-form-select dd {
+  line-height: 24px;
+}

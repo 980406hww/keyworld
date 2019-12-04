@@ -383,6 +383,9 @@
         SELECT fUuid AS 'uuid',fDomain AS 'domain'
         FROM t_qz_setting
         WHERE fCustomerUuid = #{customerUuid}
+        <if test="searchEngine != null and searchEngine != ''">
+            AND fSearchEngine = #{searchEngine}
+        </if>
     </select>
     
     <select id="getExistingQzSettingUuid" resultType="java.lang.Long">

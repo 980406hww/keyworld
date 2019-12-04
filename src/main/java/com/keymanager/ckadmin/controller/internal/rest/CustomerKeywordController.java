@@ -894,10 +894,11 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toCustomerKeywordFromQZ/{businessType}/{terminalType}/{customerUuid}/{group}/{qzUuid}")
+    @GetMapping(value = "/toCustomerKeywordFromQZ/{businessType}/{terminalType}/{customerUuid}/{group}/{qzUuid}/{searchEngine}")
     public ModelAndView toCustomerKeywordFromQZ(@PathVariable(name = "businessType") String businessType,
         @PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "customerUuid") Long customerUuid,
-        @PathVariable(name = "group") String group, @PathVariable(name = "qzUuid") String qzUuid) {
+        @PathVariable(name = "group") String group, @PathVariable(name = "qzUuid") String qzUuid,
+        @PathVariable(name = "searchEngine") String searchEngine) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/customerKeyword");
         mv.addObject("businessType", businessType);
@@ -905,6 +906,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         mv.addObject("customerUuid", customerUuid);
         mv.addObject("group", group);
         mv.addObject("qzUuid", qzUuid);
+        mv.addObject("searchEngine", searchEngine);
         return mv;
     }
 
