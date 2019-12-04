@@ -91,12 +91,11 @@
                         <div class="layui-form-item layui-form-text">
                             <label class="phone layui-form-label" for="pcMessage">电脑信息批量输入</label>
                             <div class="layui-input-block">
-                                <textarea placeholder="第一个列为域名,第二列为域名,第三列为熊掌号,第四列为标签
-每列使用Tab符或一个空格符分隔,如熊掌号为空值搜索引擎与标签直接要两个Tab符或两个空格
+                                <textarea placeholder="可以直接从excel中复制内容粘贴到此处,如需要手动输入请遵守下列规则
 例如 ：
 www.alibaba1.com(空格)百度(空格)阿里(空格)标签1,标签2
 www.alibaba2.com(空格)百度(空格)(空格)标签1,标签2
-www.alibaba3.com(空格)百度(空格)(空格)(空格)
+www.alibaba3.com(空格)百度(空格)(空格)
 www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
                                           name="pcMessage" id="pcMessage" class="layui-textarea" lay-verify="message"></textarea>
                             </div>
@@ -106,12 +105,11 @@ www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
                         <div class="layui-form-item layui-form-text">
                             <label class="phone layui-form-label" for="phoneMessage">手机信息批量输入</label>
                             <div class="layui-input-block">
-                                <textarea  placeholder="第一个列为域名,第二列为域名,第三列为熊掌号,第四列为标签
-每列使用Tab符或一个空格符分隔,如熊掌号为空值搜索引擎与标签直接要两个Tab符或两个空格
+                                <textarea  placeholder="可以直接从excel中复制内容粘贴到此处,如需要手动输入请遵守下列规则
 例如 ：
 www.alibaba1.com(空格)百度(空格)阿里(空格)标签1,标签2
 www.alibaba2.com(空格)百度(空格)(空格)标签1,标签2
-www.alibaba3.com(空格)百度(空格)(空格)(空格)
+www.alibaba3.com(空格)百度(空格)(空格)
 www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
                                            name="phoneMessage"  id="phoneMessage" class="layui-textarea" lay-verify="message"></textarea>
                             </div>
@@ -896,15 +894,31 @@ www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
             let listMap = {};
             for (let i = 0; i < list.length; i++) {
                 let temp = list[i].split('\t');
-                if (temp.length < 2 || !domainReg.test(temp[0]) || !searchEngineReg.test(temp[1])) {
-                    common.showFailMsg('信息输入规则不符,请检查输入内容');
+                if (temp.length < 2) {
+                    common.showFailMsg('每行数据必须存在域名和搜索引擎');
+                    return false;
+                }
+                if (!domainReg.test(temp[0])) {
+                    if (temp[0]) {
+                        common.showFailMsg('域名存在错误：位于' + (i + 1) + '行 ' + temp[0]);
+                    } else {
+                        common.showFailMsg('域名不能为空');
+                    }
+                    return false;
+                }
+                if (!searchEngineReg.test(temp[1])) {
+                    if (temp[1]) {
+                        common.showFailMsg('搜索引擎不包含：位于' + (i + 1) + '行 ' + temp[1]);
+                    } else {
+                        common.showFailMsg('搜索引擎不能为空');
+                    }
                     return false;
                 }
                 if (listMap[temp[0]]) {
                     continue;
                 }
                 listMap[temp[0]] = 'notNull';
-                table.append(msgHtml.replace('{0}', (i + 1) + '').replace('{1}', toGroup(temp[0], temp[1], t)).replace('{2}', temp[0])
+                table.append(msgHtml.replace('{0}', i + 1).replace('{1}', toGroup(temp[0], temp[1], t)).replace('{2}', temp[0])
                 .replace('{3}', toSearchEngineEle(temp[1])).replace('{4}', temp[2] ? temp[2] : '').replace('{5}', temp[3] ? temp[3] : ''));
             }
         }
