@@ -55,6 +55,10 @@
             padding-left: 4px;
             padding-right: 20px !important;
         }
+
+        .special-select dl {
+            height: 170px;
+        }
     </style>
 </head>
 <body>
@@ -95,7 +99,7 @@
 例如 ：
 www.alibaba1.com(空格)百度(空格)阿里(空格)标签1,标签2
 www.alibaba2.com(空格)百度(空格)(空格)标签1,标签2
-www.alibaba3.com(空格)百度(空格)(空格)
+www.alibaba3.com(空格)百度
 www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
                                           name="pcMessage" id="pcMessage" class="layui-textarea" lay-verify="message"></textarea>
                             </div>
@@ -109,7 +113,7 @@ www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
 例如 ：
 www.alibaba1.com(空格)百度(空格)阿里(空格)标签1,标签2
 www.alibaba2.com(空格)百度(空格)(空格)标签1,标签2
-www.alibaba3.com(空格)百度(空格)(空格)
+www.alibaba3.com(空格)百度
 www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
                                            name="phoneMessage"  id="phoneMessage" class="layui-textarea" lay-verify="message"></textarea>
                             </div>
@@ -469,7 +473,7 @@ www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
             children[i].style.height = h + 'px';
         }
         let texts = document.getElementsByClassName('layui-textarea');
-        h -= 164;
+        h -= 120;
         for (let i = 0; i < 2; i++) {
             texts[i].style.height = h + 'px';
         }
