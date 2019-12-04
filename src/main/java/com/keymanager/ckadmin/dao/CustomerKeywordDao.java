@@ -30,15 +30,11 @@ import org.springframework.stereotype.Repository;
 @Repository("customerKeywordDao2")
 public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
-    List<Map> getCustomerKeywordsCount(@Param("customerUuids") List<Long> customerUuids,
-        @Param("terminalType") String terminalType, @Param
-        ("entryType") String entryType);
+    List<Map> getCustomerKeywordsCount(@Param("customerUuids") List<Long> customerUuids, @Param("terminalType") String terminalType, @Param("entryType") String entryType);
 
     List<String> getMachineGroups();
 
-    void changeCustomerKeywordStatus(@Param("terminalType") String terminalType,
-        @Param("entryType") String entryType,
-        @Param("customerUuid") Long customerUuid, @Param("status") Integer status);
+    void changeCustomerKeywordStatus(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("customerUuid") Long customerUuid, @Param("status") Integer status);
 
     void deleteCustomerKeywordsByCustomerUuid(long customerUuid);
 
