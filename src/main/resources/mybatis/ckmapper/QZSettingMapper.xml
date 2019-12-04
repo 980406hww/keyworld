@@ -402,7 +402,7 @@
         c.fContactPerson AS 'contactPerson'
         FROM t_qz_setting qz
         LEFT JOIN t_customer c
-        ON qz.fCustomerUuid = c.fUuidgetQzSettingByCustomer
+        ON qz.fCustomerUuid = c.fUuid
         WHERE qz.fUuid IN
         <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
             #{uuid}
