@@ -942,12 +942,9 @@
     <update id="updCKStatusFromQZ" parameterType="java.util.HashMap">
         UPDATE t_customer_keyword ck
         SET ck.fStatus = #{condition.newStatus}
-        WHERE ck.fCustomerUuid = #{condition.customerUuid}
-        AND ck.fOptimizeGroupName = #{condition.optimizeGroupName}
-        AND ck.fSearchEngine = #{condition.searchEngine}
+        WHERE ck.fQZSettingUuid = #{condition.qzUuid}
         AND ck.fStatus = #{condition.status}
         AND ck.fTerminalType = #{condition.terminalType}
-        AND ck.fType = #{condition.type}
     </update>
     
     <update id="cleanSelectedCustomerKeywordTitle">

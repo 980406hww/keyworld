@@ -243,8 +243,8 @@ public class QZSettingController extends SpringMVCBaseController {
             long uuid = Long.parseLong(requestMap.get("uuid").toString());
             String terminalType = (String) requestMap.get("terminalType");
             String optimizeGroupName = (String) requestMap.get("optimizeGroupName");
-            Long customerUuid = Long.parseLong(requestMap.get("customerUuid").toString());
-            Map<String, Object> rankMap = qzSettingService.getQZKeywordRankInfo(uuid, terminalType, optimizeGroupName, customerUuid);
+            Long qzUuid = Long.parseLong(requestMap.get("qzUuid").toString());
+            Map<String, Object> rankMap = qzSettingService.getQZKeywordRankInfo(uuid, terminalType, optimizeGroupName, qzUuid);
             resultBean.setCode(200);
             resultBean.setMsg("获取曲线信息成功");
             resultBean.setData(rankMap);

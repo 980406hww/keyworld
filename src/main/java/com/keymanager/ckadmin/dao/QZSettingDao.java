@@ -23,7 +23,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     List<QZSettingVO> searchQZSettingSearchEngines(@Param("customerUuid") String customerUuid, @Param("domain") String domain);
 
-    Map getQZSettingGroupInfo(@Param("terminalType") String terminalType, @Param("optimizeGroupName") String optimizeGroupName, @Param("customerUuid") Long customerUuid);
+    Map<String, Object> getQZSettingGroupInfo(@Param("qzUuid") Long qzUuid, @Param("terminalType") String terminalType);
 
     long selectLastId();
 

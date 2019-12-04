@@ -110,7 +110,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         $("#qzUuid").append('<option value="-1">未关联整站数据</option>');
         if (res.code === 200) {
             $.each(res.data, function (index, item) {
-                if (item.uuid + '' === qzUuid) {
+                        if (item.uuid + '' === qzUuid + '') {
                     $('#qzUuid').append('<option value="' + item.uuid + '" selected>' + item.domain + '</option>');// 下拉菜单里添加元素
                 } else {
                     $('#qzUuid').append('<option value="' + item.uuid + '">' + item.domain + '</option>');// 下拉菜单里添加元素

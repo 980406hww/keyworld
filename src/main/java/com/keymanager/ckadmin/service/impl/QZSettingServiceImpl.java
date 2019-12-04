@@ -177,7 +177,7 @@ public class QZSettingServiceImpl extends
     }
 
     @Override
-    public Map<String, Object> getQZKeywordRankInfo(long uuid, String terminalType, String optimizeGroupName, Long customerUuid) {
+    public Map<String, Object> getQZKeywordRankInfo(long uuid, String terminalType, String optimizeGroupName, Long qzUuid) {
         List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(uuid, terminalType, null);
         Map<String, Object> rankInfoVoMap = new HashMap<>(8);
         if (CollectionUtils.isNotEmpty(qzKeywordRankInfos)) {
@@ -189,7 +189,7 @@ public class QZSettingServiceImpl extends
                 rankInfoVoMap.put(qzKeywordRankInfo.getWebsiteType(), qzKeywordRankInfoVo);
             }
             rankInfoVoMap.put("price", price);
-            this.getQZSettingGroupInfo(rankInfoVoMap, uuid, terminalType, optimizeGroupName, customerUuid);
+            this.getQZSettingGroupInfo(rankInfoVoMap, uuid, terminalType, optimizeGroupName, qzUuid);
         }
         return rankInfoVoMap;
     }
@@ -241,8 +241,8 @@ public class QZSettingServiceImpl extends
         return qzSettingDao.findQZCustomer(domain);
     }
 
-    private void getQZSettingGroupInfo(Map<String, Object> rankInfoVoMap, long uuid, String terminalType, String optimizeGroupName, Long customerUuid) {
-        rankInfoVoMap.put("customerKeywordCount", qzSettingDao.getQZSettingGroupInfo(terminalType, optimizeGroupName, customerUuid));
+    private void getQZSettingGroupInfo(Map<String, Object> rankInfoVoMap, long uuid, String terminalType, String optimizeGroupName, Long qzUuid) {
+        rankInfoVoMap.put("customerKeywordCount", qzSettingDao.getQZSettingGroupInfo(qzUuid, terminalType));
         rankInfoVoMap.put("operationCombineName", operationCombineService.getOperationCombineName(optimizeGroupName));
         rankInfoVoMap.put("categoryTagNames", qzCategoryTagService.findTagNameByQZSettingUuid(uuid));
         rankInfoVoMap.put("standardTime", qzOperationTypeService.getStandardTime(uuid, terminalType));
