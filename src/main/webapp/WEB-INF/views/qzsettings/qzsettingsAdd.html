@@ -716,7 +716,6 @@ www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
                     p_l.push(p);
                 }
             }
-            console.log(p_l);
             commit(p_l);
         }
 
@@ -893,6 +892,7 @@ www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
         let searchEngineReg = /^360$|^谷歌$|^百度$|^搜狗$|^必应中国$|^百度下拉$|^必应日本$/;
 
         function toMsgTable(list, table, t) {
+            console.log(list);
             clearTable(table);
             table = $(table);
             let listMap = {};
@@ -1191,9 +1191,9 @@ www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
             message: function (value, ele) {
                 let v;
                 if (ele.name === 'pcMessage') {
-                    v = document.getElementById('phoneMessage').value;
+                    v = document.getElementById('phoneMessage').value.trim();
                 } else {
-                    v = document.getElementById('pcMessage').value;
+                    v = document.getElementById('pcMessage').value.trim();
                 }
                 if (v || value) {
                     return '';
