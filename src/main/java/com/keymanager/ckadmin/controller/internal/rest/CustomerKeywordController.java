@@ -793,17 +793,15 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toKeywordsWithQZ/{businessType}/{terminalType}/{customerUuid}/{group}/{searchEngine}/{status}/{qzUuid}")
+    @GetMapping(value = "/toKeywordsWithQZ/{businessType}/{terminalType}/{customerUuid}/{searchEngine}/{status}/{qzUuid}")
     public ModelAndView toKeywordsWithQZ(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "group") String group,
-        @PathVariable(name = "searchEngine") String searchEngine, @PathVariable(name = "qzUuid") String qzUuid,
-        @PathVariable(name = "status") int status) {
+        @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "searchEngine") String searchEngine,
+        @PathVariable(name = "qzUuid") String qzUuid, @PathVariable(name = "status") int status) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/customerKeyword");
         mv.addObject("businessType", businessType);
         mv.addObject("terminalType2", terminalType);
         mv.addObject("customerUuid", customerUuid);
-        mv.addObject("group", group);
         mv.addObject("status", status);
         mv.addObject("searchEngine", searchEngine);
         mv.addObject("qzUuid", qzUuid);
@@ -894,16 +892,15 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = "/toCustomerKeywordFromQZ/{businessType}/{terminalType}/{customerUuid}/{group}/{qzUuid}")
+    @GetMapping(value = "/toCustomerKeywordFromQZ/{businessType}/{terminalType}/{customerUuid}/{qzUuid}")
     public ModelAndView toCustomerKeywordFromQZ(@PathVariable(name = "businessType") String businessType,
         @PathVariable(name = "terminalType") String terminalType, @PathVariable(name = "customerUuid") Long customerUuid,
-        @PathVariable(name = "group") String group, @PathVariable(name = "qzUuid") String qzUuid) {
+        @PathVariable(name = "qzUuid") String qzUuid) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/customerKeyword");
         mv.addObject("businessType", businessType);
         mv.addObject("terminalType2", terminalType);
         mv.addObject("customerUuid", customerUuid);
-        mv.addObject("group", group);
         mv.addObject("qzUuid", qzUuid);
         return mv;
     }

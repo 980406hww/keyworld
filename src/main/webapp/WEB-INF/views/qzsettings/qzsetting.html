@@ -1075,7 +1075,7 @@
                 postData.uuid = val.uuid;
                 postData.terminalType = terminalType;
                 postData.optimizeGroupName = optimizeGroupName;
-                postData.customerUuid = td.find("#cus_uuid").val();
+                postData.qzUuid = td.find("#qz_uuid").val();
                 getQZKeywordRankInfo(postData, function (result) {
                     td.find(".other-rank_2").find("#optimizationGroup span").prop("title", optimizeGroupName);
                     td.find(".other-rank_2").find("#optimizationGroup span a").text(optimizeGroupName);
@@ -3168,13 +3168,13 @@
         window.searchCustomerKeywords = function (customerUuid, pcGroup, phoneGroup, searchEngine, status, uuid) {
             let group = phoneGroup && phoneGroup !== 'null' ? phoneGroup : pcGroup;
             let terminalType = document.getElementById('terminalType').value;
-            let url = '/internal/customerKeyword/toKeywordsWithQZ/qz/' + terminalType + '/' + customerUuid + '/' + group + '/' + searchEngine + '/' + status + '/' + uuid;
+            let url = '/internal/customerKeyword/toKeywordsWithQZ/qz/' + terminalType + '/' + customerUuid + '/' + searchEngine + '/' + status + '/' + uuid;
             let tit = group + '--关键字列表';
             let id = customerUuid + "-" + (status === 0 ? "暂停" : "激活");
             common.updateOrNewTab(url, tit, id);
         };
 
-        window.updCKStatusFromQZ = function (customerUuid, pcGroup, phoneGroup, searchEngine, oldStatus, newStatus, ele) {
+        window.updCKStatusFromQZ = function (qzUuid, oldStatus, newStatus, ele) {
             let msg = '';
             switch (newStatus) {
                 case 0:
@@ -3188,12 +3188,9 @@
             }
             layer.confirm(msg, {icon: 3, title: '更新关键字状态'}, function (index) {
                 let postData = {};
-                postData.customerUuid = customerUuid;
-                postData.optimizeGroupName = phoneGroup && phoneGroup !== 'null' ? phoneGroup : pcGroup;
-                postData.searchEngine = searchEngine;
+                postData.qzUuid = qzUuid;
                 postData.status = oldStatus;
                 postData.terminalType = document.getElementById('terminalType').value;
-                postData.type = 'qz';
                 postData.newStatus = newStatus;
                 $.ajax({
                     url: '/internal/customerKeyword/updCKStatusFromQZ',
@@ -3225,7 +3222,8 @@
                             content = parseInt(ele.previousElementSibling.innerHTML);
                             objContent = parseInt(obj.innerHTML);
                             obj.innerHTML = content + objContent;
-                            ele.previousElementSibling.innerHTML = 0;
+                            ele.previousElementSibling.innerHTML = '0';
+                            common.showFailMsg('操作成功');
                         } else {
                             common.showFailMsg('操作失败');
                         }
@@ -3240,10 +3238,10 @@
             });
         };
 
-        window.toCustomerKeywordFromQZ = function (customerUuid, pcGroup, phoneGroup) {
+        window.toCustomerKeywordFromQZ = function (customerUuid, pcGroup, phoneGroup, uuid) {
             let group = pcGroup === 'null' ? phoneGroup : pcGroup;
             let terminalType = document.getElementById('terminalType').value;
-            let url = '/internal/customerKeyword/toCustomerKeywordFromQZ/qz/' + terminalType + '/' + customerUuid + '/' + group + '/' + uuid;
+            let url = '/internal/customerKeyword/toCustomerKeywordFromQZ/qz/' + terminalType + '/' + customerUuid + '/' + uuid;
             let tit = group + '--关键字列表';
             let id = customerUuid + '-czcs';
             common.updateOrNewTab(url, tit, id);
@@ -3518,30 +3516,30 @@
             <div class="layui-col-md12 other-rank" style="width: 164px">
                 <div class="layui-col-md12 line1 count-show" style="height: 73px !important;">
                     <div class="layui-col-md12">
-                        <input type="hidden" id="cus_uuid" value="{{d.customerUuid}}">
+                        <input type="hidden" id="qz_uuid" value="{{d.uuid}}">
                         <span>
                             <div name="newCount">
                                 <label>新增: </label>
-                                <a href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 2);">0</a>
+                                <a href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 2,'{{d.uuid}}');">0</a>
                                 <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                                <span style="color: green;cursor: pointer" onclick="updCKStatusFromQZ('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 2, 1,this)">激活</span>
+                                <span style="color: green;cursor: pointer" onclick="updCKStatusFromQZ('{{d.uuid}}', 2, 1,this)">激活</span>
                                 </@shiro.hasPermission>
                                 <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
-                                <span style="color: red;cursor: pointer" onclick="updCKStatusFromQZ('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 2, 0,this)">暂停</span>
+                                <span style="color: red;cursor: pointer" onclick="updCKStatusFromQZ('{{d.uuid}}', 2, 0,this)">暂停</span>
                                 </@shiro.hasPermission>
                             </div>
                             <div name="activeCount">
                                 <label>激活: </label>
                             <a href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 1 ,'{{d.uuid}}');">0</a>
                                 <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordGroupName">
-                                <span style="color: red;cursor: pointer" onclick="updCKStatusFromQZ('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 1, 0,this)">暂停</span>
+                                <span style="color: red;cursor: pointer" onclick="updCKStatusFromQZ('{{d.uuid}}', 1, 0,this)">暂停</span>
                                 </@shiro.hasPermission>
                             </div>
                             <div name="stopCount">
                                 <label>暂停: </label>
                             <a href="javascript:searchCustomerKeywords('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 0 ,'{{d.uuid}}');">0</a>
                                 <@shiro.hasPermission name="/internal/customerKeyword/updateCustomerKeywordStatus">
-                                <span style="color: green;cursor: pointer" onclick="updCKStatusFromQZ('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 0, 1,this)">激活</span>
+                                <span style="color: green;cursor: pointer" onclick="updCKStatusFromQZ('{{d.uuid}}', 0, 1,this)">激活</span>
                                 </@shiro.hasPermission>
                             </div>
                          </span>
