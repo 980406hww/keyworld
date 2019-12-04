@@ -10,7 +10,7 @@ function getHeight(){
 }
 
 // layui相关
-layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'], function () {
+layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common', 'util'], function () {
     var element = layui.element;
     var form = layui.form;
     var $ = layui.jquery;
@@ -117,6 +117,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer','common'],
                 '                   <strong>描述信息</strong>' +
                 '                   <p class="skip" >客户类型 : ' + obj.type +'</p>' +
                 '                   <p class="skip" >所属用户 : ' + obj.userName +'</p>' +
+                '                   <p class="skip" >创建时间 : ' + layui.util.toDateString(obj.createTime, 'yyyy-MM-dd') + '</p>' +
                 '                   <div class="skip" style="height: 24px;margin: 1px 0"><span style="position: relative;top: 1px">客户状态 : </span>'+ generate_customer_status(obj.uuid, obj.status) +'</div>' +
                 '                   <div class="skip" style="height: 24px;margin: 1px 0"><span style="position: relative;top: 1px">产生报表 : </span>' + generate_customer_daily_report(obj.uuid, obj.dailyReportIdentify) + '</div>' +
                 '               </div>';
