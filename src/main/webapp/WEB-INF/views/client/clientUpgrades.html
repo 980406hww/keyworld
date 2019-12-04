@@ -149,6 +149,7 @@
                         terminalType = 'PC'
                     }
                     let data = {'terminalType': terminalType};
+                    data.init = null;
                     table.reload('clientUpgradeTable', {
                         where: data,
                         page: {
