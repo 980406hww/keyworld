@@ -22,7 +22,6 @@ import com.keymanager.ckadmin.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.CustomerService;
-import com.keymanager.ckadmin.service.PerformanceService;
 import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
@@ -89,9 +88,6 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     @Resource(name = "customerService2")
     private CustomerService customerService;
 
-    @Resource(name = "performanceService2")
-    private PerformanceService performanceService;
-
     @Resource(name = "qzSettingService2")
     private QZSettingService qzSettingService;
 
@@ -109,10 +105,8 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         if ("init".equals(criteria.getInit())) {
             return resultBean;
         }
-        long startMilleSeconds = System.currentTimeMillis();
         try {
             List<MachineGroupQueueVO> machineGroupQueueVos = customerKeywordService.getMachineGroupAndSize();
-            performanceService.addPerformanceLog("PC:showMachineGroupAndSize", (System.currentTimeMillis() - startMilleSeconds), null);
             resultBean.setData(machineGroupQueueVos);
         } catch (Exception e) {
             logger.error(e.getMessage());
