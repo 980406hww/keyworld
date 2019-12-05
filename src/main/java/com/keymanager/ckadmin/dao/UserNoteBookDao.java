@@ -9,6 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository("userNoteBookDao2")
 public interface UserNoteBookDao extends BaseMapper<UserNoteBook> {
 
-    List<UserNoteBook> findUserNoteBooks(@Param("customerUuid") Long customerUuid,
-        @Param("terminalType") String terminalType, @Param("searchAll") Integer searchAll);
+    List<UserNoteBook> findUserNoteBooks(@Param("qzUuid") Long qzUuid, @Param("terminalType") String terminalType, @Param("searchAll") Integer searchAll);
 }

@@ -12,7 +12,7 @@
     FROM t_user_notebook un
     JOIN t_userinfo u
     ON u.fLoginName = un.fNotesPerson
-    WHERE un.fCustomerUuid = #{customerUuid}
+    WHERE un.fQzUuid = #{qzUuid}
     <if test="terminalType != null">AND un.fTerminalType = #{terminalType}</if>
     ORDER BY un.fCreateTime DESC
     <if test="searchAll == 0">
