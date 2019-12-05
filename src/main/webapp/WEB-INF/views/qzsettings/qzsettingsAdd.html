@@ -1100,9 +1100,9 @@ www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
             }
         });
 
-        function getInitData() {
+        function getInitData(terminal) {
             $.ajax({
-                url: '/internal/qzsetting/getSaveQZSettingsMsg',
+                url: '/internal/qzsetting/getSaveQZSettingsMsg/' + terminal,
                 type: 'get',
                 dataType: 'json',
                 success: function (res) {
@@ -1202,7 +1202,7 @@ www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
             }
         });
 
-        getInitData();
+        getInitData('PC');
     });
 </script>
 </body>

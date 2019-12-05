@@ -16,8 +16,6 @@ import com.keymanager.ckadmin.vo.QZChargeRuleStandardInfoVO;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
 import com.keymanager.util.TerminalTypeMapping;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -126,15 +124,9 @@ public class QZSettingController extends SpringMVCBaseController {
     public ModelAndView toQzSetting(@PathVariable String domain, @PathVariable String terminal, @PathVariable String customerUuidTmp) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("qzsettings/qzsetting");
-        try {
-            domain = URLDecoder.decode(domain, "UTF-8");
-            mv.addObject("domain", domain);
-            mv.addObject("terminal", terminal);
-            mv.addObject("customerUuidTmp", customerUuidTmp);
-        } catch (UnsupportedEncodingException e) {
-            logger.error(e.getMessage());
-            e.printStackTrace();
-        }
+        mv.addObject("domain", domain);
+        mv.addObject("terminal", terminal);
+        mv.addObject("customerUuidTmp", customerUuidTmp);
         int isSEOSales = 0;
         if (getCurrentUser().getRoles().contains("SEOSales")) {
             isSEOSales = 1;
@@ -295,12 +287,9 @@ public class QZSettingController extends SpringMVCBaseController {
      */
     @RequiresPermissions("/internal/qzsetting/save")
     @PostMapping(value = "/excludeQZSettingCustomerKeywords2")
-    public ResultBean excludeQZSettingCustomerKeywords2(HttpServletRequest request,
-        @RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
+    public ResultBean excludeQZSettingCustomerKeywords2(@RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
         ResultBean resultBean = new ResultBean();
         try {
-            String entryType = (String) request.getSession().getAttribute("entryType");
-            qzSettingExcludeCustomerKeywordsCriteria.setType(entryType);
             qzSettingService.excludeQZSettingCustomerKeywords(qzSettingExcludeCustomerKeywordsCriteria);
             resultBean.setCode(200);
             resultBean.setMsg("更新排除词成功");
@@ -390,18 +379,16 @@ public class QZSettingController extends SpringMVCBaseController {
      * 获得初始用户列表
      */
     @RequiresPermissions("/internal/qzsetting/searchQZSettings")
-    @GetMapping(value = "/getSaveQZSettingsMsg")
-    public ResultBean getSaveQZSettingsMsg(HttpServletRequest request) {
+    @GetMapping(value = "/getSaveQZSettingsMsg/{terminalType}")
+    public ResultBean getSaveQZSettingsMsg(@PathVariable("terminalType") String terminalType, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
         CustomerCriteria customerCriteria = new CustomerCriteria();
-        String entryType = (String) request.getSession().getAttribute("entryType");
-        customerCriteria.setEntryType(entryType);
+        customerCriteria.setEntryType("qz");
         if (!getCurrentUser().getRoles().contains("DepartmentManager")) {
             String loginName = (String) request.getSession().getAttribute("username");
             customerCriteria.setLoginName(loginName);
         }
-        String terminalType = TerminalTypeMapping.getTerminalType(request);
         Map<String, Object> map = new HashMap<>(2);
         try {
             map.put("customers", customerService.getActiveCustomerSimpleInfo(customerCriteria));

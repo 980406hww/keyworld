@@ -76,7 +76,7 @@ public class AlgorithmAutoTestController {
      */
     @RequiresPermissions("/internal/algorithmAutoTest/saveAlgorithmTestPlan")
     @RequestMapping(value = "/getAlgorithmTestPlanAddData/{terminalType}", method = RequestMethod.GET)
-    public ResultBean getAlgorithmTestPlanAddData(@PathVariable(value = "terminalType",required = false) String terminalType) {
+    public ResultBean getAlgorithmTestPlanAddData(@PathVariable(name = "terminalType",required = false) String terminalType) {
         ResultBean resultBean = new ResultBean();
         try{
             Map<String, Object> mapData = new HashMap<>();

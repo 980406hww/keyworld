@@ -332,6 +332,7 @@
             groupList.push(v);
             let d = {};
             d.groupNames = groupList;
+            d.terminalType = window.parent.document.getElementById('terminalType').value;
             $.ajax({
                 url: '/internal/customer/searchCustomersWithKeyword2',
                 method: 'post',

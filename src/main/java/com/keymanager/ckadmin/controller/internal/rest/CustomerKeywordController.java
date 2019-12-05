@@ -2,6 +2,8 @@ package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.CustomerKeywordCleanTitleCriteria;
@@ -33,7 +35,6 @@ import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordUploadVO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
 import com.keymanager.monitoring.enums.EntryTypeEnum;
-import com.keymanager.util.TerminalTypeMapping;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -103,16 +104,15 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/customerKeyword/toMachineGroupAndSize")
     @RequestMapping(value = "/searchMachineGroupAndSize", method = RequestMethod.POST)
-    public ResultBean searchMachineGroupAndSize(HttpServletRequest request, @RequestBody BaseCriteria criteria) {
+    public ResultBean searchMachineGroupAndSize(@RequestBody BaseCriteria criteria) {
         ResultBean resultBean = new ResultBean(0, "success");
         if ("init".equals(criteria.getInit())) {
             return resultBean;
         }
         long startMilleSeconds = System.currentTimeMillis();
-        String terminalType = TerminalTypeMapping.getTerminalType(request);
         try {
             List<MachineGroupQueueVO> machineGroupQueueVos = customerKeywordService.getMachineGroupAndSize();
-            performanceService.addPerformanceLog(terminalType + ":showMachineGroupAndSize", (System.currentTimeMillis() - startMilleSeconds), null);
+            performanceService.addPerformanceLog("PC:showMachineGroupAndSize", (System.currentTimeMillis() - startMilleSeconds), null);
             resultBean.setData(machineGroupQueueVos);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -199,12 +199,10 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/customerKeyword/resetInvalidRefreshCount")
     @RequestMapping(value = "/resetInvalidRefresh", method = RequestMethod.POST)
-    public ResultBean resetInvalidRefresh(@RequestBody RefreshStatisticsCriteria criteria, HttpServletRequest request) {
+    public ResultBean resetInvalidRefresh(@RequestBody RefreshStatisticsCriteria criteria) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
         try {
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
-            criteria.setTerminalType(terminalType);
             customerKeywordService.resetInvalidRefreshCount(criteria);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -688,9 +686,6 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             String loginName = (String) session.getAttribute("username");
             UserInfo user = userInfoService.getUserInfo(loginName);
             List<UserInfo> activeUsers = userInfoService.findActiveUsers();
-            if (null == ptKeywordCriteria.getTerminalType()) {
-                ptKeywordCriteria.setTerminalType(TerminalTypeMapping.getTerminalType(request));
-            }
             Map<String, String> searchEngineMap = configService.getSearchEngineMap(ptKeywordCriteria.getTerminalType());
             Map<String, Object> data = new HashMap<>(3);
             data.put("user", user);
@@ -738,11 +733,16 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/customerKeyword/saveCustomerKeywords")
     @RequestMapping(value = "/saveCustomerKeywords2", method = RequestMethod.POST)
-    public ResultBean saveCustomerKeywords(@RequestBody List<CustomerKeyword> customerKeywords, HttpServletRequest request) {
+    public ResultBean saveCustomerKeywords(@RequestBody Map<String,Object> map, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
+            List<CustomerKeyword> customerKeywords = new ObjectMapper().convertValue(map.get("customerKeywords"), new TypeReference<List<CustomerKeyword>>() {
+            });
+            if (null == customerKeywords || customerKeywords.isEmpty()) {
+                return resultBean;
+            }
             String userName = (String) request.getSession().getAttribute("username");
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
+            String terminalType = (String) map.get("terminalType");
             customerKeywordService.addCustomerKeywordsFromSimpleUI(customerKeywords, terminalType, "qt", userName);
         } catch (Exception ex) {
             logger.error(ex.getMessage());

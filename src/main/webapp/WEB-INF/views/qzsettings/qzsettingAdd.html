@@ -480,6 +480,7 @@
     var uuid_ = null;
     var layui_ = null;
     var init_ = false;
+    var terminal_ = 'PC';
 
     /**
      * 供上方调用
@@ -494,8 +495,9 @@
         }
     }
 
-    function initForm2(isSEOSales) {
+    function initForm2(isSEOSales, terminal) {
         init_ = true;
+        terminal_ = terminal;
         if (isSEOSales === '1') {
             initRenewalStatus('2');
         } else {
@@ -519,11 +521,10 @@
                     // 初始化续费状态
                     initRenewalStatus(d.renewalStatus + '');
                     // 初始化用户列表和搜索引擎下拉框
-                    getInitData({
+                    getInitData('PC', {
                             uuid: d.customerUuid,
                             contactPerson: d.contactPerson
-                        },
-                        d.searchEngine);
+                        }, d.searchEngine);
                     d_n['filterRule[ignoreNoIndex]'] = d.ignoreNoIndex; //去掉没指数
                     d_n['filterRule[ignoreNoOrder]'] = d.ignoreNoOrder;//去掉没排名
                     d_n['terminalType[PC]'] = exist(d.captureTerminalType, 'PC'); //电脑终端
@@ -785,10 +786,10 @@
             layui_ = layui;
         }
 
-        window.getInitData = function (a, b) {
+        window.getInitData = function (terminal, a, b) {
             b = b === undefined ? '百度' : b;
             $.ajax({
-                url: '/internal/qzsetting/getSaveQZSettingsMsg',
+                url: '/internal/qzsetting/getSaveQZSettingsMsg/' + terminal,
                 type: 'get',
                 dataType: 'json',
                 success: function (res) {
@@ -1232,7 +1233,7 @@
 
         if (init_) {
             // 执行初始化数据方法
-            getInitData();
+            getInitData(terminal_);
         }
     });
 </script>

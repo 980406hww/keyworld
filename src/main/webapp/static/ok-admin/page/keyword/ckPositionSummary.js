@@ -446,7 +446,6 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                     if (res.code === 200) {
                         let url = '/internal/qzsetting/toQzSetting/' + data.qzDomain + '/' + data.terminalType.split(',')[0] + '/';
                         url += res.data ? res.data : '';
-                        url = encodeURI(encodeURI(url));
                         common.updateOrNewTab(url, data.qzCustomer + '整站信息', data.qzCustomer + '整站信息');
                     }
                 }

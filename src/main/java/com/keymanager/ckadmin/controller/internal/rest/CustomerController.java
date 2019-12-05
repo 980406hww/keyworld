@@ -151,14 +151,12 @@ public class CustomerController extends SpringMVCBaseController {
      */
     @RequiresPermissions("/internal/customer/saveCustomer")
     @GetMapping(value = "/getCustomersMsgById/{uuid}")
-    public ResultBean toCustomersAdd(@PathVariable Long uuid, HttpServletRequest request) {
+    public ResultBean toCustomersAdd(@PathVariable("uuid") Long uuid, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean();
         try {
             HttpSession session = request.getSession();
-            String entryType = (String) session.getAttribute("entryType");
             String loginName = (String) session.getAttribute("username");
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
-            Customer customer = customerService.getCustomerWithKeywordCount(terminalType, entryType, uuid, loginName);
+            Customer customer = customerService.getCustomerWithKeywordCount(uuid, loginName);
             if (customer != null) {
                 resultBean.setCode(200);
                 resultBean.setData(customer);
@@ -378,8 +376,8 @@ public class CustomerController extends SpringMVCBaseController {
     public ResultBean searchCustomersWithKeyword(@RequestBody Map<String, Object> requestMap, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
-            String terminalType = TerminalTypeMapping.getTerminalType(request);
             List<String> groupNames = (List<String>) requestMap.get("groupNames");
+            String terminalType = (String) requestMap.get("terminalType");
             resultBean.setData(customerService.searchCustomersWithKeyword(groupNames, terminalType));
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -473,7 +471,7 @@ public class CustomerController extends SpringMVCBaseController {
     public ResultBean uploadDailyReportTemplate(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200, "success");
         String customerUuid = request.getParameter("customerUuid");
-        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        String terminalType = request.getParameter("terminalType");
         String path = Utils.getWebRootPath() + "dailyreport" + File.separator + terminalType + File.separator;
         String fileName = customerUuid + ".xls";
         File targetFile = new File(path, fileName);

@@ -6,7 +6,6 @@ import com.keymanager.ckadmin.criteria.KeywordCriteria;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.entity.DailyReport;
-import com.keymanager.ckadmin.enums.EntryTypeEnum;
 import com.keymanager.ckadmin.excel.operator.CustomerKeywordDailyReportExcelWriter;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.CustomerService;
@@ -48,11 +47,10 @@ public class DailyReportController extends SpringMVCBaseController {
     @Resource(name = "customerService2")
     private CustomerService customerService;
 
-    @RequestMapping(value = "/downloadSingleCustomerReport2/{customerUuid}", method = RequestMethod.GET)
-    public ResultBean downloadSingleCustomerReport(@PathVariable("customerUuid")Long customerUuid, HttpServletRequest request,
+    @RequestMapping(value = "/downloadSingleCustomerReport2/{customerUuid}/{terminalType}", method = RequestMethod.GET)
+    public ResultBean downloadSingleCustomerReport(@PathVariable("customerUuid") Long customerUuid, @PathVariable("terminalType") String terminalType,
         HttpServletResponse response) throws Exception {
-        ResultBean resultBean = new ResultBean(200,"success");
-        String terminalType = TerminalTypeMapping.getTerminalType(request);
+        ResultBean resultBean = new ResultBean(200, "success");
         int dayOfMonth = Utils.getDayOfMonth();
 
         KeywordCriteria keywordCriteria = new KeywordCriteria();
@@ -60,7 +58,7 @@ public class DailyReportController extends SpringMVCBaseController {
         keywordCriteria.setCustomerUuid(customerUuid);
         List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywordsForDailyReport(keywordCriteria);
         if (!Utils.isEmpty(customerKeywords)) {
-            if(dayOfMonth == 1) {
+            if (dayOfMonth == 1) {
                 String uuids = "" + customerUuid;
                 dailyReportService.resetDailyReportExcel(terminalType, uuids);
             }
