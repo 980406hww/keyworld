@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface UserNoteBookDao extends BaseMapper<UserNoteBook> {
 
     List<UserNoteBook> findUserNoteBooks(@Param("qzUuid") Long qzUuid, @Param("terminalType") String terminalType, @Param("searchAll") Integer searchAll);
+
+    void deleteUserNoteBook(@Param("qzUuid") Long qzUuid);
 }

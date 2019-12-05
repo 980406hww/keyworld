@@ -19,4 +19,9 @@
       LIMIT 10
     </if>
   </select>
+
+  <delete id="deleteUserNoteBook">
+    DELETE FROM t_user_notebook
+    WHERE fQzUuid = #{qzUuid}
+  </delete>
 </mapper>

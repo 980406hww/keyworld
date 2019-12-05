@@ -9,8 +9,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 @Service("userNoteBookService2")
-public class UserNoteBookServiceImpl extends ServiceImpl<UserNoteBookDao, UserNoteBook> implements
-    UserNoteBookService {
+public class UserNoteBookServiceImpl extends ServiceImpl<UserNoteBookDao, UserNoteBook> implements UserNoteBookService {
 
     @Resource(name = "userNoteBookDao2")
     private UserNoteBookDao userNoteBookDao;
@@ -27,5 +26,10 @@ public class UserNoteBookServiceImpl extends ServiceImpl<UserNoteBookDao, UserNo
         } else {
             return userNoteBookDao.updateById(userNoteBook);
         }
+    }
+
+    @Override
+    public void deleteUserNoteBook(Long qzUuid) {
+        userNoteBookDao.deleteUserNoteBook(qzUuid);
     }
 }

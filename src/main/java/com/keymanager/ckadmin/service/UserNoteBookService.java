@@ -9,4 +9,6 @@ public interface UserNoteBookService extends IService<UserNoteBook> {
     List<UserNoteBook> findUserNoteBooks(Long qzUuid, String terminalType, Integer searchAll);
 
     int saveUserNoteBook(UserNoteBook userNoteBook);
+
+    void deleteUserNoteBook(Long qzUuid);
 }
