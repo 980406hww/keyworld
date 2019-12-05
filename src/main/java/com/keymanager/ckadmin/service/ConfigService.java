@@ -28,4 +28,6 @@ public interface ConfigService {
     void refreshWebsiteWhiteList(String websiteWhiteList);
 
     void evictAllConfigCache();
+
+    Integer getOnceGetKeywordNum();
 }

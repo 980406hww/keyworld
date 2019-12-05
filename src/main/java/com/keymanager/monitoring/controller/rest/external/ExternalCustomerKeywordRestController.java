@@ -310,7 +310,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/fetchCustomerKeywordZip", method = RequestMethod.GET)
+    @RequestMapping(value = "/fetchCustomerKeywordZip2", method = RequestMethod.GET)
     public ResponseEntity<?> fetchCustomerKeywordForOptimization(HttpServletRequest request)
         throws Exception {
         long startMilleSeconds = System.currentTimeMillis();
@@ -360,7 +360,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/fetchCustomerKeywordZipList", method = RequestMethod.GET)
+    @RequestMapping(value = "/fetchCustomerKeywordZipList2", method = RequestMethod.GET)
     public ResponseEntity<?> fetchCustomerKeywordListForOptimization(HttpServletRequest request) throws Exception {
         long startMilleSeconds = System.currentTimeMillis();
         String clientID = request.getParameter("clientID");

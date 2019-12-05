@@ -12,6 +12,7 @@ import com.keymanager.ckadmin.criteria.QZRateKewordCountCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.entity.MachineInfo;
 import com.keymanager.ckadmin.vo.CodeNameVo;
 import com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
@@ -19,6 +20,8 @@ import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 
+import com.keymanager.ckadmin.vo.OptimizationMachineVO;
+import com.keymanager.ckadmin.vo.OptimizationVO;
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
 import com.keymanager.ckadmin.vo.SearchEngineResultVO;
@@ -155,4 +158,8 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     List<String> getGroupsByUser(String username, String type);
 
     void addCustomerKeywords(SearchEngineResultVO searchEngineResultVo, String userName);
+
+    OptimizationVO fetchCustomerKeywordForOptimization(MachineInfo machineInfo);
+
+    List<OptimizationMachineVO> fetchCustomerKeywordForOptimizationList(MachineInfo machineInfo);
 }

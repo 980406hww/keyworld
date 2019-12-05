@@ -1,18 +1,15 @@
 package com.keymanager.ckadmin.service.impl;
 
 import com.keymanager.ckadmin.dao.ConfigDao;
-
 import com.keymanager.ckadmin.entity.Config;
 import com.keymanager.ckadmin.service.ConfigCacheService;
 import com.keymanager.ckadmin.service.ConfigService;
-
 import com.keymanager.ckadmin.util.Constants;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -128,5 +125,14 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     @CacheEvict(value = "configList", allEntries = true)
     public void evictAllConfigCache() {
+    }
+
+    @Override
+    public Integer getOnceGetKeywordNum() {
+        Config config = getConfig(Constants.CONFIG_OPERATE_KEYWORD, "OnceGetKeywordNum");
+        if (config != null) {
+            return Integer.parseInt(config.getValue());
+        }
+        return null;
     }
 }
