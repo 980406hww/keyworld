@@ -84,8 +84,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     function getQzSettings(se, callback) {
         se = se ? '/' + se : '';
         let uuid = document.getElementById('customerUuid').value;
+        let terminal = document.getElementById('terminalType').value;
         $.ajax({
-            url: '/internal/qzsetting/getQzSettingByCustomer' + se + '/' + uuid,
+            url: '/internal/qzsetting/getQzSettingByCustomer/' + uuid + '/' + terminal + se,
             dataType: 'json',
             async: false,
             type: 'get',
@@ -163,6 +164,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         $('#terminalType').val(d.terminal);
         if (d.type === 'qz') {
             showQzSettings();
+            getQzSettings(data.value, function (data) {
+                initQzUuid(data);
+            })
         } else {
             hideQzSettings();
         }
@@ -181,8 +185,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
             data: JSON.stringify({'terminalType': 'All'}),
             success: function (data) {
                 $("#searchEngine").empty();
-                $("#searchEngine").append(
-                    '<option value="">搜索引擎</option>');
+                $("#searchEngine").append('<option value="">搜索引擎</option>');
                 $.each(data.data, function (index, item) {
                     if (item === searchEngine){
                         $('#searchEngine').append('<option value="' + item + '" selected>' + item + '</option>');// 下拉菜单里添加元素
