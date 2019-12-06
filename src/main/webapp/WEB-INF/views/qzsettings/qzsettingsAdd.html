@@ -889,10 +889,9 @@ www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
             + '                                </td>'
             + '                            </tr>';
 
-        let searchEngineReg = /^360$|^谷歌$|^百度$|^搜狗$|^必应中国$|^百度下拉$|^必应日本$/;
+        let searchEngineReg = /^百度$|^360$|^谷歌$|^搜狗$|^神马$|^必应中国$|^百度下拉$|^必应日本$/;
 
         function toMsgTable(list, table, t) {
-            console.log(list);
             clearTable(table);
             table = $(table);
             let listMap = {};
@@ -918,10 +917,11 @@ www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
                     }
                     return false;
                 }
-                if (listMap[temp[0]]) {
+                let key = temp[0] + "--" + temp[1];
+                if (listMap[key] && listMap[key] === temp[1]) {
                     continue;
                 }
-                listMap[temp[0]] = 'notNull';
+                listMap[key] = temp[1];
                 table.append(msgHtml.replace('{0}', i + 1).replace('{1}', toGroup(temp[0], temp[1], t)).replace('{2}', temp[0])
                 .replace('{3}', toSearchEngineEle(temp[1])).replace('{4}', temp[2] ? temp[2] : '').replace('{5}', temp[3] ? temp[3] : ''));
             }
@@ -968,19 +968,22 @@ www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
                         group = 'm_pm_';
                         break;
                     case '360':
-                        group = '360m_pm_';
+                        group = 'm360_pm_';
                         break;
                     case '谷歌':
-                        group = 'ggm_pm_';
+                        group = 'mgg_pm_';
                         break;
                     case '搜狗':
-                        group = 'sgm_pm_';
+                        group = 'msg_pm_';
                         break;
                     case '必应中国':
-                        group = 'bym_pm_';
+                        group = 'mby_pm_';
                         break;
                     case '必应日本':
-                        group = 'bym_pm_';
+                        group = 'mby_pm_';
+                        break;
+                    case '神马':
+                        group = "uc_pm_";
                         break;
                     default:
                         group = 'm_pm_';
