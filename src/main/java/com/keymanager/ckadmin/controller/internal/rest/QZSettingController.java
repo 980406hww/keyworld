@@ -15,7 +15,6 @@ import com.keymanager.ckadmin.enums.KeywordEffectEnum;
 import com.keymanager.ckadmin.vo.QZChargeRuleStandardInfoVO;
 import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
-import com.keymanager.util.TerminalTypeMapping;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -384,7 +383,7 @@ public class QZSettingController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
         CustomerCriteria customerCriteria = new CustomerCriteria();
-        customerCriteria.setEntryType("qz");
+        customerCriteria.setEntryType("qzsetting");
         if (!getCurrentUser().getRoles().contains("DepartmentManager")) {
             String loginName = (String) request.getSession().getAttribute("username");
             customerCriteria.setLoginName(loginName);
