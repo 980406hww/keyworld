@@ -4,11 +4,10 @@
 <mapper namespace="com.keymanager.ckadmin.dao.UserNoteBookDao">
   <select id="findUserNoteBooks" resultType="com.keymanager.ckadmin.entity.UserNoteBook">
     SELECT
-    un.fUuid AS 'uuid',
-    u.fUserName AS 'notesPerson',
-    un.fCustomerUuid AS 'customerUuid',
-    un.fContent AS 'content',
-    un.fCreateTime AS 'createTime'
+      un.fUuid AS 'uuid',
+      u.fUserName AS 'notesPerson',
+      un.fContent AS 'content',
+      un.fCreateTime AS 'createTime'
     FROM t_user_notebook un
     JOIN t_userinfo u
     ON u.fLoginName = un.fNotesPerson
