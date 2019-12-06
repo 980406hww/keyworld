@@ -208,7 +208,7 @@
         UNION ALL
         SELECT CONCAT(c.fUserID, '##', c.fContactPerson)
         FROM t_customer c
-        WHERE c.fEntryType = 'qz'
+        WHERE EXISTS (SELECT 1 FROM t_customer_business cb WHERE cb.fCustomerUuid = c.fUuid AND cb.fType = 'qzsetting')
         AND c.fContactPerson LIKE '${domain}%'
         LIMIT 1
     </select>

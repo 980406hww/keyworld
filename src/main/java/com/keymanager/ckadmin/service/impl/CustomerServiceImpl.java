@@ -75,6 +75,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
 
     @Override
     public void saveCustomer(Customer customer, String loginName) {
+        customer.setEntryType(null);
         //修改
         if (null != customer.getUuid()) {
             updateCustomer(customer, loginName);
