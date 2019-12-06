@@ -105,7 +105,7 @@
             if (captcha && captcha.trim()) {
                 msg.append('captcha', captcha.trim());
             } else {
-                layui.layer.msg("密码不能为空", {icon: 5, anim: 5, time: 1000, isOutAnim: false});
+                layui.layer.msg("验证码不能为空", {icon: 5, anim: 5, time: 1000, isOutAnim: false});
                 return;
             }
             let rememberMe = document.getElementById('rememberMe').checked;

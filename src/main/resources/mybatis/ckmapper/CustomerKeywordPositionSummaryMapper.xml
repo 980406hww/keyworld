@@ -59,7 +59,7 @@
             AND ck.fType = #{condition.type}
         </if>
         <if test="condition.loginName != null and condition.loginName != ''">
-            AND EXISTS(SELECT 1 FROM t_customer c WHERE c.fUuid = ck.fCustomerUuid AND c.fUserID = #{condition.loginName})
+            AND c.fUserID = #{condition.loginName}
         </if>
         GROUP BY ck.fUuid
         LIMIT #{condition.start}, #{condition.limit}
@@ -108,13 +108,27 @@
         AND ps.fCreateDate = CURRENT_DATE()
     </select>
 
-    <insert id="addPositionSummary" parameterType="com.keymanager.ckadmin.entity.CustomerKeywordPositionSummary">
-        INSERT INTO t_ck_position_summary
-            (fCustomerKeywordUuid,
-             fPosition,
-             fCreateDate)
+    <insert id="addPositionSummary">
+        INSERT INTO t_ck_position_summary(fCustomerKeywordUuid, fSearchEngine, fTerminalType, fCustomerUuid, fType, fPosition, fCreateDate)
         VALUES (#{customerKeywordPositionSummary.customerKeywordUuid},
+            #{customerKeywordPositionSummary.searchEngine},
+            #{customerKeywordPositionSummary.terminalType},
+            #{customerKeywordPositionSummary.customerUuid},
+            #{customerKeywordPositionSummary.type},
             #{customerKeywordPositionSummary.position},
             CURRENT_DATE())
     </insert>
+
+    <select id="getDistinctCustomerKeywordUuids" resultType="java.lang.Long">
+        SELECT DISTINCT fCustomerKeywordUuid FROM t_ck_position_summary;
+    </select>
+
+    <update id="updateByCustomerKeywordUuid">
+        UPDATE t_ck_position_summary SET fCustomerUuid = #{customerUuid}, fSearchEngine = #{searchEngine}, fTerminalType = #{terminalType}, fType = #{type} WHERE fCustomerKeywordUuid = #{uuid}
+    </update>
+
+    <delete id="deleteByCustomerKeywordUuid">
+        DELETE FROM t_ck_position_summary WHERE fCustomerKeywordUuid = #{uuid}
+    </delete>
+
 </mapper>

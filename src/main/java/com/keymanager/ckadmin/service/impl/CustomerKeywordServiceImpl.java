@@ -886,8 +886,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime, String ip, String city) {
         Double todayFee = null;
+        CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordFee(customerKeywordUuid);
         if (position > 0 && position <= 10) {
-            CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordFee(customerKeywordUuid);
             if (customerKeyword.getPositionFirstFee() != null && customerKeyword.getPositionFirstFee() > 0 && position == 1) {
                 todayFee = customerKeyword.getPositionFirstFee();
             } else if (customerKeyword.getPositionSecondFee() != null && customerKeyword.getPositionSecondFee() > 0 && position == 2) {
@@ -904,7 +904,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         }
         customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee, ip, city);
         if (capturePositionQueryTime != null) {
-            ckPositionSummaryService.savePositionSummary(customerKeywordUuid, position);
+            ckPositionSummaryService.savePositionSummary(customerKeywordUuid, customerKeyword.getSearchEngine(), customerKeyword.getTerminalType(),
+                customerKeyword.getCustomerUuid(), customerKeyword.getType(), position);
         }
     }
 

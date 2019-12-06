@@ -3,8 +3,10 @@ package com.keymanager.ckadmin.service.impl;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.dao.CustomerKeywordPositionSummaryDao;
+import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.entity.CustomerKeywordPositionSummary;
 import com.keymanager.ckadmin.service.CustomerKeywordPositionSummaryService;
+import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.vo.CustomerKeywordPositionSummaryCountVO;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +28,9 @@ public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<Custo
 
     @Resource(name = "customerKeywordPositionSummaryDao2")
     private CustomerKeywordPositionSummaryDao customerKeywordPositionSummaryDao;
+
+    @Resource(name = "customerKeywordService2")
+    private CustomerKeywordService customerKeywordService;
 
     @Override
     public Map<String, Object> getCustomerKeywordPositionSummaryData(Map<String, Object> condition) {
@@ -89,12 +94,11 @@ public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<Custo
     }
 
     @Override
-    public void savePositionSummary(Long customerKeywordUuid, int position) {
+    public void savePositionSummary(Long customerKeywordUuid, String searchEngine, String terminalType, Long customerUuid, String type, int position) {
         try {
             CustomerKeywordPositionSummary positionSummary = customerKeywordPositionSummaryDao.getTodayPositionSummary(customerKeywordUuid);
             if (positionSummary != null) {
-                boolean updFlag =
-                    (positionSummary.getPosition() == null || positionSummary.getPosition() <= 0) || (position > 0 && positionSummary.getPosition() > position);
+                boolean updFlag = (positionSummary.getPosition() == null || positionSummary.getPosition() <= 0) || (position > 0 && positionSummary.getPosition() > position);
                 if (updFlag) {
                     positionSummary.setPosition(position);
                     customerKeywordPositionSummaryDao.updateById(positionSummary);
@@ -103,6 +107,10 @@ public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<Custo
                 positionSummary = new CustomerKeywordPositionSummary();
                 positionSummary.setPosition(position);
                 positionSummary.setCustomerKeywordUuid(customerKeywordUuid);
+                positionSummary.setSearchEngine(searchEngine);
+                positionSummary.setTerminalType(terminalType);
+                positionSummary.setCustomerUuid(customerUuid);
+                positionSummary.setType(type);
                 customerKeywordPositionSummaryDao.addPositionSummary(positionSummary);
             }
         } catch (Exception ex) {
@@ -118,5 +126,23 @@ public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<Custo
         String ltDate = f.format(calendar.getTime());
         condition.put("ltDate", ltDate);
         condition.put("gtDate", f.format(new Date()) + " 23:59:59");
+    }
+
+    @Override
+    public void handleCkPositionHistoryData() {
+        // todo 对表的fcustomerkeyworduuid做一个去重操作
+        List<Long> uuids = customerKeywordPositionSummaryDao.getDistinctCustomerKeywordUuids();
+        // todo 根据id查询数据，对于存在的，做赋值处理；不存在的，做删除操作
+        if (CollectionUtils.isNotEmpty(uuids)) {
+            for (Long uuid : uuids) {
+                CustomerKeyword customerKeyword = customerKeywordService.selectById(uuid);
+                if (null != customerKeyword) {
+                    customerKeywordPositionSummaryDao.updateByCustomerKeywordUuid(uuid, customerKeyword.getCustomerUuid(), customerKeyword.getSearchEngine(),
+                        customerKeyword.getTerminalType(), customerKeyword.getType());
+                } else {
+                    customerKeywordPositionSummaryDao.deleteByCustomerKeywordUuid(uuid);
+                }
+            }
+        }
     }
 }

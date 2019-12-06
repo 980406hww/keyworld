@@ -7,6 +7,7 @@ import com.keymanager.ckadmin.criteria.MachineInfoBatchUpdateCriteria;
 import com.keymanager.ckadmin.criteria.MachineInfoCriteria;
 import com.keymanager.ckadmin.criteria.MachineInfoGroupStatCriteria;
 import com.keymanager.ckadmin.entity.MachineInfo;
+import com.keymanager.ckadmin.entity.Role;
 import com.keymanager.ckadmin.entity.UserPageSetup;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.MachineInfoService;
@@ -721,7 +722,8 @@ public class MachineInfoController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
             String username = null;
-            if (!getCurrentUser().getRoles().contains("Operation") && !getCurrentUser().getRoles().contains("Technical")) {
+            Set<String> roles = getCurrentUser().getRoles();
+            if (!roles.contains("Operation") && !roles.contains("Technical")) {
                 username = (String) session.getAttribute("username");
             }
             resultBean.setData(machineInfoService.getMachineStatusCount(username));

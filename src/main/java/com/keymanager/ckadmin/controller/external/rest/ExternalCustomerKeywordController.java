@@ -6,6 +6,7 @@ import com.keymanager.ckadmin.criteria.base.ExternalBaseCriteria;
 import com.keymanager.ckadmin.entity.MachineInfo;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.MachineInfoService;
+import com.keymanager.ckadmin.service.PerformanceService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.StringUtil;
