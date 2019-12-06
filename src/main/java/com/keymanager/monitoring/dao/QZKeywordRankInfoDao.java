@@ -36,6 +36,9 @@ public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
 
     List<QZKeywordRankInfo> searchExistingExtraQZKeywordRankInfo (@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType")String terminalType);
 
+    /**
+     * 百度同步操作词曲线，非百度同步指定词曲线（2019-12-06） 若操作词曲线的跨度大于指定词时，都使用操作词曲线
+     */
     List<QZKeywordRankForSync> getQZKeywordRankInfoByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid, @Param("searchEngine") String searchEngine, @Param("limitRow") int limitRow);
 
     /**
