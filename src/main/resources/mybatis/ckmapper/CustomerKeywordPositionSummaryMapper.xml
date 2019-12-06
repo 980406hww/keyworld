@@ -108,11 +108,8 @@
         AND ps.fCreateDate = CURRENT_DATE()
     </select>
 
-    <insert id="addPositionSummary" parameterType="com.keymanager.ckadmin.entity.CustomerKeywordPositionSummary">
-        INSERT INTO t_ck_position_summary
-        (fCustomerKeywordUuid,fSearchEngine,
-        fTerminalType,fCustomerUuid,fType,
-        fPosition,fCreateDate)
+    <insert id="addPositionSummary">
+        INSERT INTO t_ck_position_summary(fCustomerKeywordUuid, fSearchEngine, fTerminalType, fCustomerUuid, fType, fPosition, fCreateDate)
         VALUES (#{customerKeywordPositionSummary.customerKeywordUuid},
             #{customerKeywordPositionSummary.searchEngine},
             #{customerKeywordPositionSummary.terminalType},
