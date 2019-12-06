@@ -282,13 +282,15 @@ public class QZKeywordRankInfoServiceImpl extends
                 StringBuilder sb = new StringBuilder();
                 sb.append("[");
                 String fullDate = qzKeywordRankInfo.getFullDate();
-                String[] dates = fullDate.substring(1, fullDate.length() - 1).replaceAll("'", "").split(",");
+                String[] dates = fullDate.substring(1, fullDate.length() - 1).replaceAll("'", "").replaceAll(" ", "").split(", ");
                 for (String date : dates) {
-                    String[] items = date.split("-");
-                    if (items.length == 2) {
-                        date = currentYear + "-" + date;
+                    if (!"2019-12-06".equals(date)) {
+                        String[] items = date.split("-");
+                        if (items.length == 2) {
+                            date = currentYear + "-" + date;
+                        }
+                        sb.append("'").append(date).append("', ");
                     }
-                    sb.append("'").append(date).append("',");
                 }
                 String newFullDate = sb.toString();
                 newFullDate = newFullDate.substring(0, newFullDate.length() - 1) + "]";

@@ -3,8 +3,7 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.ckadmin.dao.QZKeywordRankInfoDao">
 
-    <select id="searchExistingQZKeywordRankInfo"
-        resultType="com.keymanager.ckadmin.entity.QZKeywordRankInfo">
+    <select id="searchExistingQZKeywordRankInfo" resultType="com.keymanager.ckadmin.entity.QZKeywordRankInfo">
         SELECT
         qzkri.fUuid AS 'uuid',
         qzkri.fQZSettingUuid AS 'qzSettingUuid',
@@ -228,7 +227,6 @@
             SELECT 1
             FROM t_qz_setting qs
             WHERE qs.fUuid = qkri.fQZSettingUuid
-            AND fSearchEngine = '百度'
         )
     </select>
 </mapper>
