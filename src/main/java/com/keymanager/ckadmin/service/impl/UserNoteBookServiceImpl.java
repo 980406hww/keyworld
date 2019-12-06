@@ -9,15 +9,14 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 @Service("userNoteBookService2")
-public class UserNoteBookServiceImpl extends ServiceImpl<UserNoteBookDao, UserNoteBook> implements
-    UserNoteBookService {
+public class UserNoteBookServiceImpl extends ServiceImpl<UserNoteBookDao, UserNoteBook> implements UserNoteBookService {
 
     @Resource(name = "userNoteBookDao2")
     private UserNoteBookDao userNoteBookDao;
 
     @Override
-    public List<UserNoteBook> findUserNoteBooks(Long customerUuid, String terminalType, Integer searchAll) {
-        return userNoteBookDao.findUserNoteBooks(customerUuid, terminalType, searchAll);
+    public List<UserNoteBook> findUserNoteBooks(Long qzUuid, String terminalType, Integer searchAll) {
+        return userNoteBookDao.findUserNoteBooks(qzUuid, terminalType, searchAll);
     }
 
     @Override
@@ -27,5 +26,10 @@ public class UserNoteBookServiceImpl extends ServiceImpl<UserNoteBookDao, UserNo
         } else {
             return userNoteBookDao.updateById(userNoteBook);
         }
+    }
+
+    @Override
+    public void deleteUserNoteBook(Long qzUuid) {
+        userNoteBookDao.deleteUserNoteBook(qzUuid);
     }
 }

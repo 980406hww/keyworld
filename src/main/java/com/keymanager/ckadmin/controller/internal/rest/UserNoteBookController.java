@@ -28,11 +28,11 @@ public class UserNoteBookController {
     public ResultBean getUserNoteBooks(@RequestBody Map<String, Object> resultMap) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
-        Long customerUuid = Long.parseLong((String) resultMap.get("customerUuid"));
+        Long qzUuid = Long.parseLong((String) resultMap.get("qzUuid"));
         Integer searchAll = (Integer) resultMap.get("searchAll");
         String terminalType = (String) resultMap.get("terminalType");
         try {
-            resultBean.setData(userNoteBookService.findUserNoteBooks(customerUuid, terminalType, searchAll));
+            resultBean.setData(userNoteBookService.findUserNoteBooks(qzUuid, terminalType, searchAll));
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
@@ -53,7 +53,7 @@ public class UserNoteBookController {
             if (null != uuid) {
                 userNoteBook.setUuid(Long.parseLong(uuid));
             }
-            userNoteBook.setCustomerUuid(Long.parseLong((String) resultMap.get("customerUuid")));
+            userNoteBook.setQzUuid(Long.parseLong((String) resultMap.get("qzUuid")));
             userNoteBook.setContent((String) resultMap.get("content"));
             userNoteBook.setNotesPerson((String) session.getAttribute("username"));
             userNoteBook.setTerminalType((String) resultMap.get("terminalType"));

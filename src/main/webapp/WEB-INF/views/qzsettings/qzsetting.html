@@ -2662,7 +2662,7 @@
                 common.showFailMsg("请填写内容");
                 return;
             }
-            d.customerUuid = document.getElementById('notBookCustomerUuid').value;
+            d.qzUuid = document.getElementById('notBookQzUuid').value;
             d.terminalType = document.getElementById('terminalType').value;
             $.ajax({
                 url: '/internal/notebook/saveUserNoteBook',
@@ -2674,7 +2674,7 @@
                 data: JSON.stringify(d),
                 success: function (res) {
                     if (res.code === 200) {
-                        refreshNotebook(d.customerUuid);
+                        refreshNotebook(d.qzUuid);
                     } else {
                         common.showFailMsg('数据获取失败');
                     }
@@ -2739,12 +2739,12 @@
         window.refreshNotebook = function (uuid) {
             noteAddRow = true;
             if (!uuid) {
-                uuid = document.getElementById('notBookCustomerUuid').value;
+                uuid = document.getElementById('notBookQzUuid').value;
             }
             showData(uuid, function (noteBookHtml) {
                 let noteBookBody = document.getElementById('noteBookBody').parentElement;
                 noteBookBody.innerHTML = noteBookHtml;
-                document.getElementById('notBookCustomerUuid').value = uuid;
+                document.getElementById('notBookQzUuid').value = uuid;
             });
         };
 
@@ -2763,7 +2763,7 @@
                     area: '700px',
                     offset:'40px',
                     success: function () {
-                        document.getElementById('notBookCustomerUuid').value = uuid;
+                        document.getElementById('notBookQzUuid').value = uuid;
                     }
                 });
             });
@@ -2777,7 +2777,7 @@
                 '<tbody id="noteBookTbody">\n' +
                 '<tr class="my-bg">\n' +
                 '<td colspan="3" class="my-header-title">\n' +
-                '<input type="hidden" id="notBookCustomerUuid" value>\n' +
+                '<input type="hidden" id="notBookQzUuid" value>\n' +
                 '<div id="phoneTitle" style="max-width: none" class="my-label my-padding">\n' +
                 '运 营 记 录\n' +
                 '</div>\n' +
@@ -2808,7 +2808,7 @@
                 '记录者\n' +
                 '</div>\n' +
                 '</td>\n' +
-                '<td class="my-left">\n' +
+                '<td class="my-left" style="min-width: 150px">\n' +
                 '<div class="my-label my-padding">\n' +
                 '内容\n' +
                 '</div>\n' +
@@ -2825,7 +2825,7 @@
                 '</td>\n' +
                 '</tr>';
             let d = {};
-            d.customerUuid = uuid;
+            d.qzUuid = uuid;
             d.searchAll = 0;
             d.terminalType = document.getElementById('terminalType').value;
             $.ajax({
@@ -3466,7 +3466,7 @@
             <@shiro.hasPermission name="/internal/usernotebook/searchUserNoteBooks">
                 <span>
                     <a class="blue"
-                       href="javascript:openNoteBookDialog('{{d.customerUuid}}')">运营记录</a>
+                       href="javascript:openNoteBookDialog('{{d.uuid}}')">运营记录</a>
                 </span>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/qzchargelog/save">

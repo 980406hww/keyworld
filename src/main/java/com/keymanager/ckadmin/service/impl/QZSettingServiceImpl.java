@@ -38,6 +38,7 @@ import com.keymanager.ckadmin.service.QZKeywordRankInfoService;
 import com.keymanager.ckadmin.service.QZOperationTypeService;
 import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.service.QzChargeMonService;
+import com.keymanager.ckadmin.service.UserNoteBookService;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.ExternalQZSettingVO;
 import com.keymanager.ckadmin.vo.GroupVO;
@@ -120,6 +121,9 @@ public class QZSettingServiceImpl extends
 
     @Resource(name = "qzChargeMonService2")
     private QzChargeMonService qzChargeMonService;
+
+    @Resource(name = "userNoteBookService2")
+    private UserNoteBookService userNoteBookService;
 
     @Override
     public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingCriteria) {
@@ -604,6 +608,7 @@ public class QZSettingServiceImpl extends
         }
         qzCategoryTagService.deleteById(uuid);
         saveQzChargeMon(uuid, username, 4);
+        userNoteBookService.deleteUserNoteBook(uuid);
         qzSettingDao.deleteById(uuid);
     }
 
@@ -982,7 +987,7 @@ public class QZSettingServiceImpl extends
     }
 
     @Override
-    public List<QZSetting> getQzSettingByCustomer(Long customerUuid, String searchEngine) {
-        return qzSettingDao.getQzSettingByCustomer(customerUuid,searchEngine);
+    public List<QZSetting> getQzSettingByCustomer(Long customerUuid, String terminalType, String searchEngine) {
+        return qzSettingDao.getQzSettingByCustomer(customerUuid, terminalType, searchEngine);
     }
 }
