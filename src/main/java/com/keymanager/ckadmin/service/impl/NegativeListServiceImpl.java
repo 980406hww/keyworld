@@ -51,7 +51,7 @@ public class NegativeListServiceImpl extends ServiceImpl<NegativeListDao, Negati
             keywordNegativeCriteria.setNegativeList(negativeList);
             keywordNegativeCriteria.setNegative(true);
             negativeListDao.insert(negativeList);
-            negativeListsSynchronizeService.negativeListsSynchronize(keywordNegativeCriteria);
+//            negativeListsSynchronizeService.negativeListsSynchronize(keywordNegativeCriteria);
         }
         this.negativeListCacheEvict(negativeList.getKeyword());
     }
@@ -97,7 +97,7 @@ public class NegativeListServiceImpl extends ServiceImpl<NegativeListDao, Negati
         keywordNegativeCriteria.setNegativeList(negativeList);
         keywordNegativeCriteria.setNegative(false);
         negativeListDao.deleteById(uuid);
-        negativeListsSynchronizeService.negativeListsSynchronize(keywordNegativeCriteria);
+//        negativeListsSynchronizeService.negativeListsSynchronize(keywordNegativeCriteria);
         // 设置关键词负面清单更新时间
         negativeListUpdateInfoService.saveNegativeListUpdateInfo(negativeList.getKeyword());
         // 删除关键词缓存
