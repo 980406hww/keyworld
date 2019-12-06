@@ -126,7 +126,7 @@
         function init_search_data() {
             var postData = {};
             var terminalType = $("#terminalType").val();
-            if (terminalType === '' || terminalType == null) {
+            if (!terminalType) {
                 terminalType = 'PC'
             }
             postData.terminalType = terminalType;

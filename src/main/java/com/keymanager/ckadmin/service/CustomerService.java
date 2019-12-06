@@ -30,7 +30,7 @@ public interface CustomerService extends IService<Customer> {
 
     void changeCustomerDailyReportIdentify(long uuid, int identify);
 
-    Customer getCustomerWithKeywordCount(String terminalType, String entryType, long customerUuid, String loginName);
+    Customer getCustomerWithKeywordCount(long customerUuid, String loginName);
 
     List<Customer> getActiveCustomerSimpleInfo(CustomerCriteria customerCriteria);
 

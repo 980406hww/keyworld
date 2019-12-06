@@ -237,7 +237,9 @@
             condition.customerName = customerName;
             condition.groupName = groupName;
             condition.fullMatchGroup = fullMatchGroup;
-            condition.entryType = common.formToJsonObject("searchForm").entryType;
+            let where = common.formToJsonObject("searchForm");
+            condition.entryType = where.entryType;
+            condition.terminalType = where.terminalType;
             $.ajax({
                 url: '/internal/customerKeyword/resetInvalidRefresh',
                 data: JSON.stringify(condition),

@@ -1374,7 +1374,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
 
     function download_daily_report() {
         let customerUuid = $('#customerUuid').val();
-        let url = '/internal/dailyReport/downloadSingleCustomerReport2/' + customerUuid;
+        let terminalType = $('#terminalType').val();
+        let url = '/internal/dailyReport/downloadSingleCustomerReport2/' + customerUuid + '/' + terminalType;
         window.open(url, '_blank');
     }
 

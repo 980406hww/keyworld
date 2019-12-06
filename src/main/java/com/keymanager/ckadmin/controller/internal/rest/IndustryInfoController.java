@@ -237,9 +237,6 @@ public class IndustryInfoController {
             HttpSession session = request.getSession();
             String loginName = (String) session.getAttribute("username");
             UserInfo user = userInfoService.getUserInfo(loginName);
-            if (null == industryCriteria.getTerminalType()) {
-                industryCriteria.setTerminalType(TerminalTypeMapping.getTerminalType(request));
-            }
             if (!userRoleService.isDepartmentManager(user.getUuid())) {
                 industryCriteria.setLoginName(loginName);
             }
@@ -265,9 +262,6 @@ public class IndustryInfoController {
             String loginName = (String) session.getAttribute("username");
             UserInfo user = userInfoService.getUserInfo(loginName);
             List<UserInfo> activeUsers = userInfoService.findActiveUsers();
-            if (null == industryCriteria.getTerminalType()) {
-                industryCriteria.setTerminalType(TerminalTypeMapping.getTerminalType(request));
-            }
             Map<String, String> searchEngineMap = configService.getSearchEngineMap(industryCriteria.getTerminalType());
             Map<String, Object> data = new HashMap<>();
             data.put("user", user);

@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.AdvertisingAllTypeAndCustomerListCriteria;
 import com.keymanager.ckadmin.criteria.AdvertisingCriteria;
 import com.keymanager.ckadmin.criteria.CustomerCriteria;
@@ -9,6 +10,8 @@ import com.keymanager.ckadmin.entity.Advertising;
 import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.service.AdvertisingService;
 import com.keymanager.ckadmin.service.CustomerService;
+import java.util.Set;
+import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +24,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/internal/advertisingList")
-public class AdvertisingController {
+public class AdvertisingController extends SpringMVCBaseController {
     
     private static Logger logger = LoggerFactory.getLogger(AdvertisingController.class);
 
@@ -69,12 +72,15 @@ public class AdvertisingController {
     }
 
     @GetMapping(value = "/searchAdvertisingAllTypeAndCustomerList/{websiteUuid}")
-    public ResultBean searchAdvertisingAllTypeAndCustomerList(@PathVariable Long websiteUuid, HttpServletRequest request) {
+    public ResultBean searchAdvertisingAllTypeAndCustomerList(@PathVariable Long websiteUuid, HttpSession session) {
         ResultBean resultBean = new ResultBean();
         try {
             CustomerCriteria customerCriteria = new CustomerCriteria();
-            String entryType = (String) request.getSession().getAttribute("entryType");
-            customerCriteria.setEntryType(entryType);
+            Set<String> roles = getCurrentUser().getRoles();
+            if (!roles.contains("DepartmentManager")) {
+                String loginName = (String) session.getAttribute("username");
+                customerCriteria.setLoginName(loginName);
+            }
             List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
             AdvertisingAllTypeAndCustomerListCriteria advertisingAllTypeAndCustomerListCriteria = advertisingService.searchAdvertisingAllTypeList(websiteUuid);
             advertisingAllTypeAndCustomerListCriteria.setCustomerList(customerList);

@@ -527,6 +527,13 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
             + '        <div class="layui-form-item">'
             + '             <textarea style="height: 250px" id="customerKeywordTextarea" placeholder="关键字 域名  关键字与域名以空格作为分割，一行一组" autocomplete="off" class="layui-textarea"></textarea>'
             + '        </div>'
+            + '        <div class="layui-form-item" pane="">'
+            + '            <label style="width: 100px" class="layui-form-label">终端选择</label>'
+            + '            <div style="margin-left: 100px" class="layui-input-block">'
+            + '                 <input type="radio" name="terminalType" value="PC" title="电脑" checked="">'
+            + '                 <input type="radio" name="terminalType" value="Phone" title="手机">'
+            + '            </div>'
+            + '        </div>'
             + '        <div class="layui-form-item" style="margin-bottom: 0">'
             + '            <label style="width: 100px" class="layui-form-label">分组名称</label>'
             + '            <div style="margin-left: 100px" class="layui-input-block">'
@@ -545,9 +552,15 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
             offset: '100px',
             btn: ['确定', '取消'],
             yes: function (index) {
-                let customerKeywords = [];
+                let p_d = {},customerKeywords = [];
                 let customerKeywordTextarea = document.getElementById('customerKeywordTextarea').value.trim();
                 let group = document.getElementById('group').value.trim();
+                let terminalType = document.getElementsByName('terminalType');
+                if (terminalType[0].checked) {
+                    p_d.terminalType = terminalType[0].value;
+                } else {
+                    p_d.terminalType = terminalType[1].value;
+                }
                 if (!customerKeywordTextarea) {
                     common.showFailMsg('请输入关键字信息');
                     return false;
@@ -590,9 +603,10 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
                         customerKeywords.push(customerKeyword);
                     }
                 });
+                p_d.customerKeywords = customerKeywords;
                 $.ajax({
                     url: '/internal/customerKeyword/saveCustomerKeywords2',
-                    data: JSON.stringify(customerKeywords),
+                    data: JSON.stringify(p_d),
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
@@ -617,6 +631,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
             },
             btn2: function (index) {
                 layer.close(index);
+            },
+            success:function () {
+                form.render('radio');
             }
         });
     };
@@ -644,6 +661,13 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
             + '                type="file" onchange="showName(this)" style="cursor: pointer; opacity: 0; position: absolute; left: 0; height: 38px; width: 142px;">'
             + '                <div id="fileName">允许上传.xls .xlsx文件</div>'
             + '            </div>'
+            + '            <div class="layui-form-item" style="margin-top: 5px;margin-bottom: 0" pane="">'
+            + '                 <label style="width: 100px" class="layui-form-label">终端选择</label>'
+            + '                 <div style="margin-left: 100px" class="layui-input-block">'
+            + '                     <input type="radio" name="terminalType" value="PC" title="电脑" checked="">'
+            + '                     <input type="radio" name="terminalType" value="Phone" title="手机">'
+            + '                 </div>'
+            + '             </div>'
             + '</div></form>';
         layer.open({
             type: 1,
@@ -665,6 +689,14 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
                 let formData = new FormData();
                 formData.append('file', file.files[0]);
                 formData.append('customerUuid', uuid);
+                let terminalType = document.getElementsByName('terminalType');
+                if (terminalType[0].checked) {
+                    terminalType = terminalType[0].value;
+                } else {
+                    terminalType = terminalType[1].value;
+                }
+                debugger
+                formData.append('terminalType', terminalType);
                 $.ajax({
                     url: '/internal/customer/uploadDailyReportTemplate2',
                     type: 'POST',
@@ -688,6 +720,9 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
             },
             btn2: function (index) {
                 layer.close(index);
+            },
+            success:function () {
+                form.render('radio');
             }
         });
     };

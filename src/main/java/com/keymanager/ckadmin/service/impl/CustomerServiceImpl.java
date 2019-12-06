@@ -156,8 +156,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
     }
 
     @Override
-    public Customer getCustomerWithKeywordCount(String terminalType, String entryType,
-        long customerUuid, String loginName) {
+    public Customer getCustomerWithKeywordCount(long customerUuid, String loginName) {
         Customer customer = customerDao.selectById(customerUuid);
 
         if (customer != null) {
@@ -172,9 +171,6 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
                 customer.setTelphone(null);
                 customer.setSaleRemark(null);
             }
-            /*
-            customer.setKeywordCount(customerKeywordService
-                .getCustomerKeywordCount(terminalType, entryType, customerUuid));*/
         }
         return customer;
     }
