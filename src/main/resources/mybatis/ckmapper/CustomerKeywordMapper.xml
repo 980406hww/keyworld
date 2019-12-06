@@ -1404,7 +1404,11 @@
           ck.fPositionThirdFee     AS 'positionThirdFee',
           ck.fPositionForthFee     AS 'positionForthFee',
           ck.fPositionFifthFee     AS 'positionFifthFee',
-          ck.fPositionFirstPageFee AS 'positionFirstPageFee'
+          ck.fPositionFirstPageFee AS 'positionFirstPageFee',
+          ck.fSearchEngine AS 'searchEngine',
+          ck.fTerminalType AS 'terminalType',
+          ck.fCustomerUuid AS 'customerUuid',
+          ck.fType AS 'type'
         FROM t_customer_keyword ck
         WHERE ck.fUuid = #{uuid}
     </select>

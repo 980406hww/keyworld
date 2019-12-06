@@ -6,6 +6,7 @@ import com.keymanager.ckadmin.criteria.base.ExternalBaseCriteria;
 import com.keymanager.ckadmin.entity.MachineInfo;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.MachineInfoService;
+import com.keymanager.ckadmin.service.PerformanceService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.StringUtil;
@@ -13,7 +14,6 @@ import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.SearchEngineResultVO;
 import com.keymanager.ckadmin.vo.OptimizationMachineVO;
 import com.keymanager.ckadmin.vo.OptimizationVO;
-import com.keymanager.monitoring.service.PerformanceService;
 import com.keymanager.util.AESUtils;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import java.util.Date;
@@ -25,7 +25,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -98,11 +97,11 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
                 String ip = (String) requestMap.get("capturePositionIP");
                 String clientID = (String) requestMap.get("clientID");
                 String city = (String) requestMap.get("capturePositionCity");
-                Date startTime = new Date((Long) requestMap.get("startTime"));
+//                Date startTime = new Date((Long) requestMap.get("startTime"));
                 if (null != position && position > -1) {
                     customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp(), ip, city);
                 } else {
-                    customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, capturePositionFailIdentify, startTime);
+//                    customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, capturePositionFailIdentify, startTime);
                 }
                 if (StringUtil.isNotNullNorEmpty(clientID)) {
                     machineInfoService.updateMachineInfoForCapturePosition(clientID);

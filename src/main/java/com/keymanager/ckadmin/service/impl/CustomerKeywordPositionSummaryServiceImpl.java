@@ -89,12 +89,11 @@ public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<Custo
     }
 
     @Override
-    public void savePositionSummary(Long customerKeywordUuid, int position) {
+    public void savePositionSummary(Long customerKeywordUuid, String searchEngine, String terminalType, Long customerUuid, String type, int position) {
         try {
             CustomerKeywordPositionSummary positionSummary = customerKeywordPositionSummaryDao.getTodayPositionSummary(customerKeywordUuid);
             if (positionSummary != null) {
-                boolean updFlag =
-                    (positionSummary.getPosition() == null || positionSummary.getPosition() <= 0) || (position > 0 && positionSummary.getPosition() > position);
+                boolean updFlag = (positionSummary.getPosition() == null || positionSummary.getPosition() <= 0) || (position > 0 && positionSummary.getPosition() > position);
                 if (updFlag) {
                     positionSummary.setPosition(position);
                     customerKeywordPositionSummaryDao.updateById(positionSummary);
@@ -103,6 +102,10 @@ public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<Custo
                 positionSummary = new CustomerKeywordPositionSummary();
                 positionSummary.setPosition(position);
                 positionSummary.setCustomerKeywordUuid(customerKeywordUuid);
+                positionSummary.setSearchEngine(searchEngine);
+                positionSummary.setTerminalType(terminalType);
+                positionSummary.setCustomerUuid(customerUuid);
+                positionSummary.setType(type);
                 customerKeywordPositionSummaryDao.addPositionSummary(positionSummary);
             }
         } catch (Exception ex) {

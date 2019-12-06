@@ -16,5 +16,5 @@ public interface CustomerKeywordPositionSummaryService extends IService<Customer
 
     Map<String,Object> getOneCKPositionSummaryData(Long uuid);
 
-    void savePositionSummary(Long customerKeywordUuid, int position);
+    void savePositionSummary(Long customerKeywordUuid, String searchEngine, String terminalType, Long customerUuid, String type, int position);
 }
