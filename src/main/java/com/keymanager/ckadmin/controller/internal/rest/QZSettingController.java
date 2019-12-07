@@ -383,7 +383,7 @@ public class QZSettingController extends SpringMVCBaseController {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
         CustomerCriteria customerCriteria = new CustomerCriteria();
-        customerCriteria.setEntryType("qzsetting");
+        customerCriteria.setEntryType("qz");
         if (!getCurrentUser().getRoles().contains("DepartmentManager")) {
             String loginName = (String) request.getSession().getAttribute("username");
             customerCriteria.setLoginName(loginName);
