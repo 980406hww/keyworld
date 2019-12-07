@@ -15,12 +15,15 @@ public enum SuperUserFullKeywordDefinition {
     PositionForthFee(11),
     PositionFifthFee(12),
     PositionFirstPageFee(13),
-    OptimizeGroupName(14),
-    BearPawNumber(15),
-    Title(16),
-    RunImmediate(17),
-    OrderNumber(18),
-    Remarks(19);
+    MachineGroupName(14),
+    OptimizeGroupName(15),
+    BearPawNumber(16),
+    Title(17),
+    RunImmediate(18),
+    OrderNumber(19),
+    Remarks(20),
+    KeywordEffect(21);
+
     private int columnIndex;
 
     private SuperUserFullKeywordDefinition(int columnIndex) {
