@@ -33,26 +33,21 @@ public class SuperUserFullKeywordExcelOperator extends AbstractExcelReader {
         if (Utils.isNullOrEmpty(customerKeyword.getCollectMethod())) {
             return null;
         }
-
         customerKeyword.setOriginalUrl(getStringValue(SuperUserFullKeywordDefinition.OriginalURL.getColumnIndex(), rowIndex).trim());
-
         String url = getStringValue(SuperUserFullKeywordDefinition.URL.getColumnIndex(), rowIndex);
         if (url.substring(url.length() - 1).equals("/")) {
             url = url.substring(0, url.length() - 1);
         }
         customerKeyword.setUrl(url);
-
         customerKeyword.setPositionFirstFee(getDoubleValue(SuperUserFullKeywordDefinition.PositionFirstFee.getColumnIndex(), rowIndex));
         customerKeyword.setPositionSecondFee(getDoubleValue(SuperUserFullKeywordDefinition.PositionSecondFee.getColumnIndex(), rowIndex));
         customerKeyword.setPositionThirdFee(getDoubleValue(SuperUserFullKeywordDefinition.PositionThirdFee.getColumnIndex(), rowIndex));
         customerKeyword.setPositionForthFee(getDoubleValue(SuperUserFullKeywordDefinition.PositionForthFee.getColumnIndex(), rowIndex));
         customerKeyword.setPositionFifthFee(getDoubleValue(SuperUserFullKeywordDefinition.PositionFifthFee.getColumnIndex(), rowIndex));
         customerKeyword.setPositionFirstPageFee(getDoubleValue(SuperUserFullKeywordDefinition.PositionFirstPageFee.getColumnIndex(), rowIndex));
-
         if (Utils.isNullOrEmpty(customerKeyword.getUrl())) {
             return null;
         }
-
         String searchEngine = getStringValue(SuperUserFullKeywordDefinition.SearchEngine.getColumnIndex(), rowIndex);
         if (Utils.isNullOrEmpty(searchEngine)) {
             customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
@@ -62,26 +57,21 @@ public class SuperUserFullKeywordExcelOperator extends AbstractExcelReader {
         customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
         customerKeyword.setManualCleanTitle(true);
         customerKeyword.setServiceProvider("baidutop123");
-
         Integer indexCount = getIntValue(SuperUserFullKeywordDefinition.IndexCount.getColumnIndex(), rowIndex);
         customerKeyword.setCurrentIndexCount(indexCount);
-
         Integer sequence = getIntValue(SuperUserFullKeywordDefinition.Sequnce.getColumnIndex(), rowIndex);
         customerKeyword.setSequence(sequence);
-
         Integer optimizePlanCount = getIntValue(SuperUserFullKeywordDefinition.OptimizePlanCount.getColumnIndex(), rowIndex);
         customerKeyword.setOptimizePlanCount(optimizePlanCount);
         customerKeyword.setOptimizeRemainingCount(optimizePlanCount);
-
+        customerKeyword.setMachineGroup(getStringValue(SuperUserFullKeywordDefinition.MachineGroupName.getColumnIndex(), rowIndex).trim());
         customerKeyword.setOptimizeGroupName(getStringValue(SuperUserFullKeywordDefinition.OptimizeGroupName.getColumnIndex(), rowIndex).trim());
-
         customerKeyword.setBearPawNumber(getStringValue(SuperUserFullKeywordDefinition.BearPawNumber.getColumnIndex(), rowIndex).trim());
         customerKeyword.setTitle(getStringValue(SuperUserFullKeywordDefinition.Title.getColumnIndex(), rowIndex).trim());
-
         customerKeyword.setRunImmediate(getStringValue(SuperUserFullKeywordDefinition.RunImmediate.getColumnIndex(), rowIndex));
-
         customerKeyword.setOrderNumber(getStringValue(SuperUserFullKeywordDefinition.OrderNumber.getColumnIndex(), rowIndex).trim());
         customerKeyword.setRemarks(getStringValue(SuperUserFullKeywordDefinition.Remarks.getColumnIndex(), rowIndex));
+        customerKeyword.setKeywordEffect(getStringValue(SuperUserFullKeywordDefinition.KeywordEffect.getColumnIndex(), rowIndex));
         return customerKeyword;
     }
 
