@@ -272,34 +272,4 @@ public class QZKeywordRankInfoServiceImpl extends
     public void fixQZXTRankDate(Long uuid, String yearRankDate) {
         qzKeywordRankInfoDao.updateRankDateWithYear(uuid, yearRankDate);
     }
-
-    @Override
-    public void handleXtCurveDate() {
-        List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoDao.getBaiDuXTRankInfos();
-        if (CollectionUtils.isNotEmpty(qzKeywordRankInfos)) {
-            String currentYear = formatDatetime(getCurrentTimestamp(), "yyyy");
-            for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("[");
-                String fullDate = qzKeywordRankInfo.getFullDate();
-                String[] dates = fullDate.substring(1, fullDate.length() - 1).replaceAll("'", "").replaceAll(" ", "").split(", ");
-                for (String date : dates) {
-                    if (!"2019-12-06".equals(date)) {
-                        String[] items = date.split("-");
-                        if (items.length == 2) {
-                            date = currentYear + "-" + date;
-                        }
-                        sb.append("'").append(date).append("', ");
-                    }
-                }
-                String newFullDate = sb.toString();
-                newFullDate = newFullDate.substring(0, newFullDate.length() - 1) + "]";
-                if (!newFullDate.equals(fullDate)) {
-                    QZKeywordRankInfo rankInfo = qzKeywordRankInfoDao.selectById(qzKeywordRankInfo.getUuid());
-                    rankInfo.setFullDate(newFullDate);
-                    qzKeywordRankInfoDao.updateById(rankInfo);
-                }
-            }
-        }
-    }
 }

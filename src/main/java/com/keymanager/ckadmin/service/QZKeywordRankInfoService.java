@@ -25,6 +25,4 @@ public interface QZKeywordRankInfoService extends IService<QZKeywordRankInfo> {
     List<QZKeywordRankInfo> getXTRankInfos();
 
     void fixQZXTRankDate(Long uuid, String toString);
-
-    void handleXtCurveDate();
 }

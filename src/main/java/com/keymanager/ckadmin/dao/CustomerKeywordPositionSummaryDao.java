@@ -25,11 +25,4 @@ public interface CustomerKeywordPositionSummaryDao extends BaseMapper<CustomerKe
     CustomerKeywordPositionSummary getTodayPositionSummary(@Param("customerKeywordUuid") Long customerKeywordUuid);
 
     void addPositionSummary(@Param("customerKeywordPositionSummary") CustomerKeywordPositionSummary customerKeywordPositionSummary);
-
-    List<Long> getDistinctCustomerKeywordUuids();
-
-    void updateByCustomerKeywordUuid(@Param("uuid") Long uuid, @Param("customerUuid") long customerUuid, @Param("searchEngine") String searchEngine,
-        @Param("terminalType") String terminalType, @Param("type") String type);
-
-    void deleteByCustomerKeywordUuid(@Param("uuid") Long uuid);
 }

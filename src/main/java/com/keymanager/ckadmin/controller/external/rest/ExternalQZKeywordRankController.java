@@ -55,21 +55,4 @@ public class ExternalQZKeywordRankController extends SpringMVCBaseController {
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
-
-    @PostMapping(value = "/handleXtCurveDate")
-    public ResponseEntity<?> handleXtCurveDate(@RequestBody Map<String, String> requestMap) {
-        try {
-            String userName = requestMap.get("userName");
-            String password = requestMap.get("password");
-            if (validUser(userName, password)) {
-                qzKeywordRankInfoService.handleXtCurveDate();
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
 }

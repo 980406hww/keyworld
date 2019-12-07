@@ -127,22 +127,4 @@ public class CustomerKeywordPositionSummaryServiceImpl extends ServiceImpl<Custo
         condition.put("ltDate", ltDate);
         condition.put("gtDate", f.format(new Date()) + " 23:59:59");
     }
-
-    @Override
-    public void handleCkPositionHistoryData() {
-        // todo 对表的fcustomerkeyworduuid做一个去重操作
-        List<Long> uuids = customerKeywordPositionSummaryDao.getDistinctCustomerKeywordUuids();
-        // todo 根据id查询数据，对于存在的，做赋值处理；不存在的，做删除操作
-        if (CollectionUtils.isNotEmpty(uuids)) {
-            for (Long uuid : uuids) {
-                CustomerKeyword customerKeyword = customerKeywordService.selectById(uuid);
-                if (null != customerKeyword) {
-                    customerKeywordPositionSummaryDao.updateByCustomerKeywordUuid(uuid, customerKeyword.getCustomerUuid(), customerKeyword.getSearchEngine(),
-                        customerKeyword.getTerminalType(), customerKeyword.getType());
-                } else {
-                    customerKeywordPositionSummaryDao.deleteByCustomerKeywordUuid(uuid);
-                }
-            }
-        }
-    }
 }

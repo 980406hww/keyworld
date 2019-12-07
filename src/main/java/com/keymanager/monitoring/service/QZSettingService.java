@@ -1044,8 +1044,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	}
 
 	private void handlingQKErrorData(QZSetting qzSetting, String terminalType) {
-		List<QZKeywordRankInfo> rankInfos = qzKeywordRankInfoService
-			.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, null);
+		List<QZKeywordRankInfo> rankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, null);
 		for (QZKeywordRankInfo keywordRankInfo : rankInfos) {
 			qzKeywordRankInfoService.deleteById(keywordRankInfo.getUuid());
 			if (!"xt".equals(keywordRankInfo.getWebsiteType())) {
@@ -1053,11 +1052,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				qzKeywordRankInfo.setQzSettingUuid(keywordRankInfo.getQzSettingUuid());
 				qzKeywordRankInfo.setTerminalType(keywordRankInfo.getTerminalType());
 				qzKeywordRankInfo.setWebsiteType(keywordRankInfo.getWebsiteType());
-				qzKeywordRankInfo
-					.setDataProcessingStatus(keywordRankInfo.getDataProcessingStatus());
+				qzKeywordRankInfo.setDataProcessingStatus(keywordRankInfo.getDataProcessingStatus());
 				qzKeywordRankInfo.setCreateTopTenNum(keywordRankInfo.getCreateTopTenNum());
-				qzKeywordRankInfo
-					.setCreateTopFiftyNum(keywordRankInfo.getCreateTopFiftyNum());
+				qzKeywordRankInfo.setCreateTopFiftyNum(keywordRankInfo.getCreateTopFiftyNum());
 				qzKeywordRankInfoService.insert(qzKeywordRankInfo);
 
 				QZSetting setting = qzSettingDao.selectById(qzSetting.getUuid());
