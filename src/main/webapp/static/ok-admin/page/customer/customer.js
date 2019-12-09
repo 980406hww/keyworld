@@ -29,7 +29,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
 
     init_belong_user();
 
-    function initLayPage(pageConf) {
+    function initLayPage(pageConf, call) {
         var load_index = layer.load(2, {shade: false}); //添加laoding 0-2
         if (!pageConf) {
             pageConf = {};
@@ -66,11 +66,12 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
                             pageConf = common.formToJsonObject('searchForm');
                             pageConf.page = obj.curr;
                             pageConf.limit = obj.limit;
-                            initLayPage(pageConf);
+                            initLayPage(pageConf, getOtherMsg);
                         }
                     }
                 });
                 init_data(result.data);
+                call(result.data);
                 layer.close(load_index);
                 form.render();
             },
@@ -81,10 +82,10 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
     }
 
     function init_data(data) {
-        $("#data_list").html('');
-        let et = document.getElementById('entryType').value;
+        $("#data_list").empty();
+        let item = '', et = document.getElementById('entryType').value;
         $.each(data, function (index, obj) {
-            let item = '<div class="layadmin-contact-box">';
+            item += '<div class="layadmin-contact-box">';
             item += '      <div class="layui-row"><div class="layui-col-md5">'
                 + '        <h3 class="layadmin-title skip" title="' + obj.contactPerson + '">' +
                 '               <input type="checkbox" name="checkItem" value="' + obj.uuid + '" status="' + obj.status + '"lay-skin="primary" >' +
@@ -129,140 +130,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
                 '                   QQ : ' + obj.qq +
                 '               </div>' +
                 '      </div>';
-            item += '   <div class="layui-col-md7">';
-            let customerBusinessList = obj.customerBusinessList;
-            if (customerBusinessList !== null && customerBusinessList.length > 0) {
-                $.each(obj.customerBusinessList, function (index, tmp) {
-                    if (tmp === 'keyword') {
-                        item += '<div class="layadmin-address" id="customQT' + obj.uuid + '">' +
-                            '<strong>' +
-                            '单词业务' +
-                            '</strong>' +
-                            '<br>';
-                        $.ajax({
-                            url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid + '/pt',
-                            dataType: 'json',
-                            type: 'get',
-                            async: false,
-                            success: function (res) {
-                                if (res.code === 200) {
-                                    if (res.data != null) {
-                                        item += '<span>操作词数 : ' + res.data.totalCount + '</span><br>';
-                                        if (res.data["PC"] != null) {
-                                            item += generate_customer_info(obj.contactPerson, res.data["PC"], 'PC', 'pt', obj.uuid);
-                                        }
-                                        if (res.data["Phone"] != null) {
-                                            item += generate_customer_info(obj.contactPerson, res.data["Phone"], 'Phone', 'pt', obj.uuid);
-                                        }
-                                    } else {
-                                        item += generate_customer_info(obj.contactPerson, null, 'PC', 'pt', obj.uuid);
-                                    }
-                                } else {
-                                    item += generate_customer_info(obj.contactPerson, null, 'PC', 'pt', obj.uuid);
-                                }
-                                item += '</div>';
-                            }
-                        });
-                    } else if (tmp === 'qzsetting') {
-                        item += '<div class="layadmin-address"><strong>' +
-                            '全站业务' +
-                            '</strong>' +
-                            '<br>';
-                        $.ajax({
-                            url: '/internal/qzsetting/getQZSettingsCount/' + obj.uuid,
-                            dataType: 'json',
-                            type: 'get',
-                            async: false,
-                            success: function (res) {
-                                if (res.code === 200) {
-                                    if (res.data != null) {
-                                        item += '<span>站点数 : ' + res.data.totalCount + '</span><br>';
-                                        if (res.data["PC"] != null) {
-                                            item += generate_qzsetting_info(obj.contactPerson, res.data["PC"], 'PC',  obj.uuid);
-                                        }
-                                        if (res.data["Phone"] != null) {
-                                            item += generate_qzsetting_info(obj.contactPerson, res.data["Phone"], 'Phone', obj.uuid);
-                                        }
-                                    } else {
-                                        item += generate_qzsetting_info(obj.contactPerson, null, 'PC',  obj.uuid);
-                                    }
-                                } else {
-                                    item += generate_qzsetting_info(obj.contactPerson, null, 'PC', obj.uuid);
-                                }
-                                item += '</div>';
-                            }
-                        });
-                    } else if (tmp === 'fm') {
-                        item += '<div class="layadmin-address"><strong>' +
-                            '负面业务' +
-                            '</strong>' +
-                            '<br>';
-                        $.ajax({
-                            url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid + '/fm',
-                            dataType: 'json',
-                            type: 'get',
-                            async: false,
-                            success: function (res) {
-                                if (res.code === 200) {
-                                    if (res.data != null) {
-                                        item += '<span>操作词数 : ' + res.data.totalCount + '</span><br>';
-                                        if (res.data["PC"] != null) {
-                                            item += generate_customer_info(obj.contactPerson, res.data["PC"], 'PC', 'fm', obj.uuid);
-                                        }
-                                        if (res.data["Phone"] != null) {
-                                            item += generate_customer_info(obj.contactPerson, res.data["Phone"], 'Phone', 'fm', obj.uuid);
-                                        }
-                                    } else {
-                                        item += generate_customer_info(obj.contactPerson, null, 'PC', 'fm', obj.uuid);
-                                    }
-                                } else {
-                                    item += generate_customer_info(obj.contactPerson, null, 'PC', 'fm', obj.uuid);
-                                }
-                                item += '</div>';
-                            }
-                        });
-                    } else if (tmp === 'qt') {
-                        item += '<div class="layadmin-address"><strong>' +
-                            '其他业务' +
-                            '</strong>' +
-                            '<br>';
-                        $.ajax({
-                            url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid + '/qt',
-                            dataType: 'json',
-                            type: 'get',
-                            async: false,
-                            success: function (res) {
-                                if (res.code === 200) {
-                                    if (res.data != null) {
-                                        item += '<span>操作词数 : ' + res.data.totalCount + '</span><br>';
-                                        if (res.data["PC"] != null) {
-                                            item += generate_customer_info(obj.contactPerson, res.data["PC"], 'PC', 'qt', obj.uuid);
-                                        }
-                                        if (res.data["Phone"] != null) {
-                                            item += generate_customer_info(obj.contactPerson, res.data["Phone"], 'Phone', 'qt', obj.uuid);
-                                        }
-                                    } else {
-                                        item += generate_customer_info(obj.contactPerson, null, 'PC', 'qt', obj.uuid);
-                                    }
-                                } else {
-                                    item += generate_customer_info(obj.contactPerson, null, 'PC', 'qt', obj.uuid);
-                                }
-                                let se = obj.searchEngine ? obj.searchEngine : '无';
-                                item += '<div><span style="position: relative;top:1px">搜索引擎 : </span>' + get_se_method(obj.searchEngine, obj.uuid) + '</div>';
-                                let ea = obj.externalAccount ? obj.externalAccount : '无';
-                                item += '<div style="height: 24px;margin-top: 1px;line-height: 24px"><span data-uuid="' + obj.uuid + '">账号 : </span><a href="javascript:void(0)" title="'+obj.externalAccount+'" onclick="changeMe(this)">'+ ea +'</a></div>';
-                                item += '</div>';
-                            }
-                        });
-                    }
-                });
-            } else {
-                item += '<div class="layadmin-address">\n' +
-                    '                <strong>暂无业务</strong>\n' +
-                    '    </div>';
-            }
-            item += '</div>';
-            item += '</div>';
+            item += '  <div class="layui-col-md7 msg-show"></div>';
+            item += '  </div>';
             item += '           <div class="layadmin-address ">' +
                 '                   <strong>备注</strong>';
             if (isSEOSales){
@@ -272,8 +141,138 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
             item += '           <p class="skip">销售详细备注 : <span title="'+obj.remark+'" class="can-click" onclick=changeRemark("'+obj.uuid+'",this)>' + msg + '</span></p>' +
                 '               </div>'
                 + '</div>';
-            $("#data_list").append(item)
-        })
+        });
+        $("#data_list").append(item)
+    }
+
+    function getOtherMsg(data) {
+        let boxs = document.getElementById('data_list').children;
+        $.each(data, function (index, obj) {
+            let item = '', customerBusinessList = obj.customerBusinessList;
+            if (customerBusinessList !== null && customerBusinessList.length > 0) {
+                $.each(obj.customerBusinessList, function (index, tmp) {
+                    if (tmp === 'keyword') {
+                        item += '<div class="layadmin-address" id="customPT' + obj.uuid + '"><strong>单词业务</strong><br></div>';
+                        $.ajax({
+                            url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid + '/pt',
+                            dataType: 'json',
+                            type: 'get',
+                            success: function (res) {
+                                let msg = '';
+                                if (res.code === 200) {
+                                    if (res.data != null) {
+                                        msg += '<span>操作词数 : ' + res.data.totalCount + '</span><br>';
+                                        if (res.data["PC"] != null) {
+                                            msg += generate_customer_info(obj.contactPerson, res.data["PC"], 'PC', 'pt', obj.uuid);
+                                        }
+                                        if (res.data["Phone"] != null) {
+                                            msg += generate_customer_info(obj.contactPerson, res.data["Phone"], 'Phone', 'pt', obj.uuid);
+                                        }
+                                    } else {
+                                        msg += generate_customer_info(obj.contactPerson, null, 'PC', 'pt', obj.uuid);
+                                    }
+                                } else {
+                                    msg += generate_customer_info(obj.contactPerson, null, 'PC', 'pt', obj.uuid);
+                                }
+                                let msgBox = document.getElementById("customPT" + obj.uuid);
+                                msgBox.innerHTML = msgBox.innerHTML + msg;
+                            }
+                        });
+                    } else if (tmp === 'qzsetting') {
+                        item += '<div class="layadmin-address" id="customQZ' + obj.uuid + '"><strong>全站业务</strong><br></div>';
+                        $.ajax({
+                            url: '/internal/qzsetting/getQZSettingsCount/' + obj.uuid,
+                            dataType: 'json',
+                            type: 'get',
+                            success: function (res) {
+                                let msg = '';
+                                if (res.code === 200) {
+                                    if (res.data != null) {
+                                        msg += '<span>站点数 : ' + res.data.totalCount + '</span><br>';
+                                        if (res.data["PC"] != null) {
+                                            msg += generate_qzsetting_info(obj.contactPerson, res.data["PC"], 'PC', obj.uuid);
+                                        }
+                                        if (res.data["Phone"] != null) {
+                                            msg += generate_qzsetting_info(obj.contactPerson, res.data["Phone"], 'Phone', obj.uuid);
+                                        }
+                                    } else {
+                                        msg += generate_qzsetting_info(obj.contactPerson, null, 'PC', obj.uuid);
+                                    }
+                                } else {
+                                    msg += generate_qzsetting_info(obj.contactPerson, null, 'PC', obj.uuid);
+                                }
+                                let msgBox = document.getElementById("customQZ" + obj.uuid);
+                                msgBox.innerHTML = msgBox.innerHTML + msg;
+                            }
+                        });
+                    } else if (tmp === 'fm') {
+                        item += '<div class="layadmin-address" id="customFM' + obj.uuid + '"><strong>负面业务</strong><br></div>';
+                        $.ajax({
+                            url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid + '/fm',
+                            dataType: 'json',
+                            type: 'get',
+                            success: function (res) {
+                                let msg = '';
+                                if (res.code === 200) {
+                                    if (res.data != null) {
+                                        msg += '<span>操作词数 : ' + res.data.totalCount + '</span><br>';
+                                        if (res.data["PC"] != null) {
+                                            msg += generate_customer_info(obj.contactPerson, res.data["PC"], 'PC', 'fm', obj.uuid);
+                                        }
+                                        if (res.data["Phone"] != null) {
+                                            msg += generate_customer_info(obj.contactPerson, res.data["Phone"], 'Phone', 'fm', obj.uuid);
+                                        }
+                                    } else {
+                                        msg += generate_customer_info(obj.contactPerson, null, 'PC', 'fm', obj.uuid);
+                                    }
+                                } else {
+                                    msg += generate_customer_info(obj.contactPerson, null, 'PC', 'fm', obj.uuid);
+                                }
+                                let msgBox = document.getElementById("customFM" + obj.uuid);
+                                msgBox.innerHTML = msgBox.innerHTML + msg;
+                            }
+                        });
+                    } else if (tmp === 'qt') {
+                        item += '<div class="layadmin-address" id="customQT' + obj.uuid + '"><strong>其他业务</strong><br></div>';
+                        $.ajax({
+                            url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid + '/qt',
+                            dataType: 'json',
+                            type: 'get',
+                            success: function (res) {
+                                let msg = '';
+                                if (res.code === 200) {
+                                    if (res.data != null) {
+                                        msg += '<span>操作词数 : ' + res.data.totalCount + '</span><br>';
+                                        if (res.data["PC"] != null) {
+                                            msg += generate_customer_info(obj.contactPerson, res.data["PC"], 'PC', 'qt', obj.uuid);
+                                        }
+                                        if (res.data["Phone"] != null) {
+                                            msg += generate_customer_info(obj.contactPerson, res.data["Phone"], 'Phone', 'qt', obj.uuid);
+                                        }
+                                    } else {
+                                        msg += generate_customer_info(obj.contactPerson, null, 'PC', 'qt', obj.uuid);
+                                    }
+                                } else {
+                                    msg += generate_customer_info(obj.contactPerson, null, 'PC', 'qt', obj.uuid);
+                                }
+                                msg += '<div><span style="position: relative;top:1px">搜索引擎 : </span>' + get_se_method(obj.searchEngine, obj.uuid) + '</div>';
+                                let ea = obj.externalAccount ? obj.externalAccount : '无';
+                                msg += '<div style="height: 24px;margin-top: 1px;line-height: 24px"><span data-uuid="' + obj.uuid
+                                    + '">账号 : </span><a href="javascript:void(0)" title="' + obj.externalAccount + '" onclick="changeMe(this)">' + ea
+                                    + '</a></div>';
+                                let msgBox = document.getElementById("customQT" + obj.uuid);
+                                msgBox.innerHTML = msgBox.innerHTML + msg;
+                            }
+                        });
+                    }
+                });
+            } else {
+                item += '<div class="layadmin-address">\n' +
+                    '                <strong>暂无业务</strong>\n' +
+                    '    </div>';
+            }
+            boxs[index].getElementsByClassName('msg-show')[0].innerHTML = item;
+        });
     }
 
     function init_keyword_type() {
@@ -343,7 +342,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
             }
         }
         if (searchOpen === true) {
-            initLayPage(common.formToJsonObject('searchForm'));
+            initLayPage(common.formToJsonObject('searchForm'), getOtherMsg);
         }
     });
 
@@ -377,10 +376,10 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
         if (!open2) {
             showCondition();
         }
-        initLayPage(pageConf);
+        initLayPage(pageConf, getOtherMsg);
         return false;
     });
-    
+
     //获取选中客户uuid[]
     function get_select_uuids(){
         var uuidArr = [];
@@ -421,7 +420,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
                     if (result.code === 200) {
                         common.showSuccessMsg('操作成功',function () {
                             let pageConf = common.formToJsonObject('searchForm');
-                            initLayPage(pageConf)
+                            initLayPage(pageConf, getOtherMsg);
                         });
                     } else {
                         common.showFailMsg('操作失败');
@@ -459,7 +458,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
                     if (result.code === 200) {
                         common.showSuccessMsg('操作成功', function () {
                             let pageConf = common.formToJsonObject('searchForm');
-                            initLayPage(pageConf)
+                            initLayPage(pageConf, getOtherMsg);
                         });
                     } else {
                         common.showFailMsg('操作失败');
@@ -484,7 +483,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
         }, function () {
             if (sign) {
                 let pageConf = common.formToJsonObject('searchForm');
-                initLayPage(pageConf);
+                initLayPage(pageConf, getOtherMsg);
                 sign = false;
             }
         });
@@ -501,7 +500,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
         }, function () {
             if (sign) {
                 let pageConf = common.formToJsonObject('searchForm');
-                initLayPage(pageConf);
+                initLayPage(pageConf, getOtherMsg);
                 sign = false;
             }
         })
@@ -514,7 +513,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
         }, function () {
             if (sign) {
                 let pageConf = common.formToJsonObject('searchForm');
-                initLayPage(pageConf);
+                initLayPage(pageConf, getOtherMsg);
                 sign = false;
             }
         })
@@ -617,7 +616,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
                         if (res.code === 200) {
                             common.showSuccessMsg('保存成功', function () {
                                 let pageConf = common.formToJsonObject('searchForm');
-                                initLayPage(pageConf);
+                                initLayPage(pageConf, getOtherMsg);
                                 layer.close(index);
                             });
                         } else {
@@ -875,7 +874,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
                     if (result.code === 200) {
                         common.showSuccessMsg('操作成功!', function () {
                             let pageConf = common.formToJsonObject('searchForm');
-                            initLayPage(pageConf);
+                            initLayPage(pageConf, getOtherMsg);
                         });
                     } else {
                         common.showFailMsg('操作失败');
@@ -900,7 +899,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
         }, function () {
             if (sign) {
                 let pageConf = common.formToJsonObject('searchForm');
-                initLayPage(pageConf);
+                initLayPage(pageConf, getOtherMsg);
                 sign = false;
             }
         });
