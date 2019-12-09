@@ -609,6 +609,8 @@ public class QZSettingServiceImpl extends
         qzCategoryTagService.deleteById(uuid);
         saveQzChargeMon(uuid, username, 4);
         userNoteBookService.deleteUserNoteBook(uuid);
+        // 删除同步关键词表的对应数据
+        customerKeywordService.deleteSysCustomerKeywordByQzId(uuid);
         qzSettingDao.deleteById(uuid);
     }
 

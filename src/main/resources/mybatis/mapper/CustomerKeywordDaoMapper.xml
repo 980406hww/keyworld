@@ -1967,8 +1967,8 @@
 		AND qs.fUuid = #{qsId}
     </insert>
 
-    <delete id="cleanSysCustomerKeywordCreateOverOneWeek">
-        DELETE FROM sys_customer_keyword WHERE CREATE_TIME &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY);
+    <delete id="cleanSysCustomerKeywordOverOneWeek">
+        DELETE FROM sys_customer_keyword WHERE CREATE_TIME &lt;= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
     </delete>
 
     <select id="searchExistingSysCustomerKeywordQsId" resultType="java.lang.Long">

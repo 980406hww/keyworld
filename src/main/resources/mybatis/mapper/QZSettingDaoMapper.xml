@@ -579,4 +579,8 @@
             )
         </foreach>
     </insert>
+
+    <delete id="deleteSysQzSettings">
+        DELETE FROM sys_qz_setting
+    </delete>
 </mapper>

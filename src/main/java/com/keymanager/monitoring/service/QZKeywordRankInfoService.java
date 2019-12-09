@@ -261,6 +261,7 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
     }
 
     public void replaceQZKeywordRanks(List<QZKeywordRankForSync> qzKeywordRanks) {
+        qzKeywordRankInfoDao.deleteSysQzKeywordRanks();
         qzKeywordRankInfoDao.replaceQZKeywordRanks(qzKeywordRanks);
     }
 }

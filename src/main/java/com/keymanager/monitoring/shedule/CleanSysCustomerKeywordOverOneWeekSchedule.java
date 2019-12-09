@@ -10,19 +10,19 @@ import org.springframework.stereotype.Component;
  * @author shunshikj40
  */
 @Component
-public class CleanSysCustomerKeywordCreateOverOneWeekSchedule {
+public class CleanSysCustomerKeywordOverOneWeekSchedule {
 
-    private static final Logger logger = LoggerFactory.getLogger(CleanSysCustomerKeywordCreateOverOneWeekSchedule.class);
+    private static final Logger logger = LoggerFactory.getLogger(CleanSysCustomerKeywordOverOneWeekSchedule.class);
 
     @Autowired
     private CustomerKeywordService customerKeywordService;
 
     public void runTask() {
-        logger.info("============= "+" Clean Sys Customer Keyword Create Over One Week Task "+"===================");
+        logger.info("============= "+" Clean Sys Customer Keyword Over One Week Task "+"===================");
         try {
-            customerKeywordService.cleanSysCustomerKeywordCreateOverOneWeek();
+            customerKeywordService.cleanSysCustomerKeywordOverOneWeek();
         } catch (Exception e) {
-            logger.error("Clean Sys Customer Keyword Create Over One Week Task is error" + e.getMessage());
+            logger.error("Clean Sys Customer Keyword Over One Week Task is error" + e.getMessage());
         }
     }
 

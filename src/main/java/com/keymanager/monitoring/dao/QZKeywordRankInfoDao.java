@@ -43,7 +43,11 @@ public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
 
     /**
      * replace 站点曲线数据
-     * @param qzKeywordRanks
      */
     void replaceQZKeywordRanks(@Param("qzKeywordRanks") List<QZKeywordRankForSync> qzKeywordRanks);
+
+    /**
+     * 清空 sys_qz_keyword_rank 表的数据
+     */
+    void deleteSysQzKeywordRanks();
 }

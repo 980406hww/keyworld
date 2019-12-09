@@ -37,7 +37,7 @@
 				<ref bean="cronTriggerGenerateQZSettingKeywordCountCurve" />
 				<ref bean="cronTriggerAutoSaveTestDataStatisticsSchedule"/>
 				<ref bean="cronTriggerSyncQZCustomerData" />
-				<ref bean="cronTriggerCleanSysCustomerKeywordCreateOverOneWeek" />
+				<ref bean="cronTriggerCleanSysCustomerKeywordOverOneWeek" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -113,7 +113,7 @@
 	<!--全站自动更新涨幅-->
 	<bean id="cronTriggerQZRateStatistics" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerQZRateStatisticsSchedule" />
-		<property name="cronExpression" value="0 0 0/2 * * ?" />
+		<property name="cronExpression" value="0 0 8-22/2 * * ?" />
 	</bean>
 
 	<bean id="cronTriggerQZRateStatisticsSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -357,7 +357,7 @@
 	<!--终端刷量统计保存记录-->
 	<bean id="cronTriggerRefreshStatInfo" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerRefreshStatInfoSchedule" />
-		<property name="cronExpression" value="0 45 23 * * ?" />
+		<property name="cronExpression" value="0 40 23 * * ?" />
 	</bean>
 
 	<bean id="cronTriggerRefreshStatInfoSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -428,7 +428,7 @@
 	<!--缓存需同步到简化版seo后台的数据信息-->
 	<bean id="cronTriggerSyncQZCustomerData" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerSyncQZCustomerDataSchedule" />
-		<property name="cronExpression" value="0 55 23 * * ?" />
+		<property name="cronExpression" value="0 25 23 * * * ?" />
 	</bean>
 
 	<bean id="cronTriggerSyncQZCustomerDataSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -438,13 +438,13 @@
 	</bean>
 
 	<!--清除超过一周的同步数据-->
-	<bean id="cronTriggerCleanSysCustomerKeywordCreateOverOneWeek" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="cronTriggerCleanSysCustomerKeywordCreateOverOneWeekSchedule" />
-		<property name="cronExpression" value="0 10 0 * * ?" />
+	<bean id="cronTriggerCleanSysCustomerKeywordOverOneWeek" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerCleanSysCustomerKeywordOverOneWeekSchedule" />
+		<property name="cronExpression" value="0 5 23 * * ?" />
 	</bean>
 
-	<bean id="cronTriggerCleanSysCustomerKeywordCreateOverOneWeekSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="cleanSysCustomerKeywordCreateOverOneWeekSchedule" />
+	<bean id="cronTriggerCleanSysCustomerKeywordOverOneWeekSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cleanSysCustomerKeywordOverOneWeekSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>

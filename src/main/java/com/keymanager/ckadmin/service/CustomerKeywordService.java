@@ -162,4 +162,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     OptimizationVO fetchCustomerKeywordForOptimization(MachineInfo machineInfo);
 
     List<OptimizationMachineVO> fetchCustomerKeywordForOptimizationList(MachineInfo machineInfo);
+
+    void deleteSysCustomerKeywordByQzId(Long uuid);
 }
