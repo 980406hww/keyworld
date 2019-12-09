@@ -2648,6 +2648,9 @@
         };
 
         window.commitNoteBook = function (e) {
+            if (!common.waitMoment()) {
+                return false;
+            }
             let this_ = e.parentElement.parentElement;
             let td_l = this_.parentElement.children;
             let d = {};
