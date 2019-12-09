@@ -1963,8 +1963,9 @@
 		FROM t_customer_keyword ck
 		LEFT JOIN t_qz_setting qs
 		ON qs.fCustomerUuid = ck.fCustomerUuid
-		WHERE ck.fCustomerUuid = #{customerUuid}
-		AND qs.fUuid = #{qsId}
+		WHERE qs.fUuid = #{qsId}
+		AND ck.fQZSettingUuid = #{qsId}
+		AND ck.fCustomerUuid = #{customerUuid}
     </insert>
 
     <delete id="cleanSysCustomerKeywordOverOneWeek">
