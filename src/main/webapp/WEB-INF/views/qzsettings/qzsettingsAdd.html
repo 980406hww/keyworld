@@ -663,7 +663,8 @@ www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
                     if (t === 'PC') {
                         children.push(temp);
                     } else {
-                        children[temp.subDomainName] = temp;
+                        let key = temp.subDomainName + "_" + temp.searchEngine;
+                        children[key] = temp;
                     }
                 }
             }
@@ -680,32 +681,37 @@ www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
             p_d.type = 'qz';
             p_d.ignoreNoIndex = false;
             p_d.ignoreNoOrder = false;
-            for (let i = 0; i < pcChildren.length; i++) {
-                let pc = pcChildren[i], p = Object.assign({}, p_d);
+            let rules;
+            for (let j in pcChildren) {
+                rules = [];
+                let pc = pcChildren[j], p = Object.assign({}, p_d);
                 pc.optimizationType = d.optimizationPcType;
-                pc.qzChargeRules = pcRules;
                 p.pcGroup = pc.group;
                 p.domain = pc.subDomainName;
                 p.searchEngine = pc.searchEngine;
                 p.bearPawNumber = pc.bearPawNumber;
+                pc.qzChargeRules = handleQzRules(pc.searchEngine, pcRules, rules);
                 p.qzCategoryTags = pc.qzCategoryTags;
                 p.qzOperationTypes = [];
                 p.qzOperationTypes.push(pc);
-                let phone = phoneChildren[pc.subDomainName];
+                let key = pc.subDomainName + "_" + pc.searchEngine;
+                let phone = phoneChildren[key];
                 if (phone) {
+                    rules = [];
                     phone.optimizationType = d.optimizationPhoneType;
-                    phone.qzChargeRules = phoneRules;
+                    phone.qzChargeRules = handleQzRules(phone.searchEngine, phoneRules, rules);
                     p.phoneGroup = phone.group;
                     p.qzOperationTypes.push(phone);
-                    phoneChildren[pc.subDomainName] = null;
+                    phoneChildren[key] = null;
                 }
                 p_l.push(p);
             }
             for (let k in phoneChildren) {
                 if (phoneChildren[k]) {
+                    rules = [];
                     let phone = phoneChildren[k], p = Object.assign({}, p_d);
                     phone.optimizationType = d.optimizationPhoneType;
-                    phone.qzChargeRules = phoneRules;
+                    phone.qzChargeRules = handleQzRules(phone.searchEngine, phoneRules, rules);
                     p.phoneGroup = phone.group;
                     p.domain = phone.subDomainName;
                     p.searchEngine = phone.searchEngine;
@@ -717,6 +723,22 @@ www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
                 }
             }
             commit(p_l);
+        }
+
+        function handleQzRules(searchEngine, originalRules, rules) {
+            if (searchEngine === '百度' || searchEngine === '百度下拉') {
+                return originalRules;
+            } else {
+                for (let i = 0; i < originalRules.length; i++) {
+                    let rule = {};
+                    rule.startKeywordCount = originalRules[i].startKeywordCount;
+                    rule.endKeywordCount = originalRules[i].endKeywordCount;
+                    rule.amount = originalRules[i].amount;
+                    rule.standardSpecies = 'designationWord';
+                    rules.push(rule);
+                }
+                return rules;
+            }
         }
 
         function commit(p_d) {
@@ -895,6 +917,7 @@ www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
             clearTable(table);
             table = $(table);
             let listMap = {};
+            let row_n = 1;
             for (let i = 0; i < list.length; i++) {
                 let temp = list[i].split('\t');
                 if (temp.length < 2) {
@@ -922,8 +945,9 @@ www.alibaba4.com(空格)百度(空格)阿里(空格)标签1,标签2"
                     continue;
                 }
                 listMap[key] = temp[1];
-                table.append(msgHtml.replace('{0}', i + 1).replace('{1}', toGroup(temp[0], temp[1], t)).replace('{2}', temp[0])
+                table.append(msgHtml.replace('{0}', row_n).replace('{1}', toGroup(temp[0], temp[1], t)).replace('{2}', temp[0])
                 .replace('{3}', toSearchEngineEle(temp[1])).replace('{4}', temp[2] ? temp[2] : '').replace('{5}', temp[3] ? temp[3] : ''));
+                row_n += 1;
             }
         }
 
