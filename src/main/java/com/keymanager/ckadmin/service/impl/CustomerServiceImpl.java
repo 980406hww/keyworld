@@ -240,8 +240,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerDao, Customer> impl
 
     @Override
     public List<Customer> searchTargetCustomers(String entryType, String accountName) {
-        List<Customer> customers = customerDao.searchTargetCustomers(entryType, accountName);
-        return customers;
+        return customerDao.searchTargetCustomers(entryType, accountName);
     }
 
     @Override

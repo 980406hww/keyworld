@@ -526,7 +526,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         data.uuids = uuidArr;
         data.entryType = entryType;
         data.terminalType = terminalType;
-        okLayer.open("首页 / 客户列表 / 修改客户所属", "/internal/customerKeyword/toUpdateBelongCustomer", "40%", "50%", function(layero){
+        okLayer.open("首页 / 关键字列表 / 更改客户", "/internal/customerKeyword/toUpdateBelongCustomer", "40%", "50%", function(layero){
             window[layero.find("iframe")[0]["name"]].initForm(data);
         }, function () {
             if (sign) {
