@@ -71,7 +71,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 			if (StringUtil.isNotNullNorEmpty(syncQzCustomerTagStr)) {
 				String[] syncQzCustomerTags = syncQzCustomerTagStr.replaceAll(" ", "").split(",");
 				for (String qzCustomerTag : syncQzCustomerTags) {
-					// 根据网站标签查找操作中的站点信息，进行转储，利用站点id转储站点曲线信息（百度就要爱站/5118，非百度就要指定词）
+					// 根据网站标签查找操作中的站点信息，进行转储，利用站点id转储站点曲线信息（百度：`xt`曲线，非百度: 指定词曲线）
 					List<QZSettingForSync> qzSettingForSyncs = qzSettingDao.getAvailableQZSettingsByTagName(qzCustomerTag);
 					List<QZKeywordRankForSync> qzKeywordRanks = new ArrayList<>();
 					if (CollectionUtils.isNotEmpty(qzSettingForSyncs)) {

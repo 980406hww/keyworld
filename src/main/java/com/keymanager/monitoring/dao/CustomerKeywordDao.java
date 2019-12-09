@@ -276,8 +276,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     /**
      * 根据qsId判断站点关键词当天是否已同步
-     * @param qsId
-     * @return
      */
     Long searchExistingSysCustomerKeywordQsId(@Param("qsId") Long qsId);
 }
