@@ -1493,4 +1493,8 @@
         </if>
         AND cb.fType = #{type})
     </select>
+
+    <delete id="deleteSysCustomerKeywordByQzId">
+        DELETE FROM sys_customer_keyword WHERE QS_ID = #{uuid}
+    </delete>
 </mapper>

@@ -64,14 +64,14 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	private ConfigService configService;
 
 	public void syncQZCustomerKeyword() {
-		// todo 读取配置表需要同步的客户网站标签
+		// 读取配置表需要同步的客户网站标签
 		Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_QZ_CUSTOMER_KEYWORD, Constants.CONFIG_KEY_SYNC_QZ_CUSTOMER_TAG);
 		if (null != config) {
 			String syncQzCustomerTagStr = config.getValue();
 			if (StringUtil.isNotNullNorEmpty(syncQzCustomerTagStr)) {
 				String[] syncQzCustomerTags = syncQzCustomerTagStr.replaceAll(" ", "").split(",");
 				for (String qzCustomerTag : syncQzCustomerTags) {
-					// todo 根据网站标签查找操作中的站点信息，进行转储，利用站点id转储站点曲线信息（百度就要爱站/5118，非百度就要指定词）
+					// 根据网站标签查找操作中的站点信息，进行转储，利用站点id转储站点曲线信息（百度：`xt`曲线，非百度: 指定词曲线）
 					List<QZSettingForSync> qzSettingForSyncs = qzSettingDao.getAvailableQZSettingsByTagName(qzCustomerTag);
 					List<QZKeywordRankForSync> qzKeywordRanks = new ArrayList<>();
 					if (CollectionUtils.isNotEmpty(qzSettingForSyncs)) {
@@ -83,14 +83,15 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 							if (CollectionUtils.isNotEmpty(qzKeywordRankForSyncs)) {
 								qzKeywordRanks.addAll(qzKeywordRankForSyncs);
 							}
-							// todo 转储关键词信息
+							// 转储关键词信息
 							customerKeywordService.batchInsertCustomerKeywordByCustomerUuid(qzSettingForSync.getCustomerId(), qzSettingForSync.getQsId());
 						}
-						// todo 转储站点曲线信息
+						// 转储站点曲线信息，先清空，后同步
 						if (CollectionUtils.isNotEmpty(qzKeywordRanks)) {
 							qzKeywordRankInfoService.replaceQZKeywordRanks(qzKeywordRanks);
 						}
-						// todo 转储站点信息
+						// 转储站点信息，先清空，后同步
+						qzSettingDao.deleteSysQzSettings();
 						qzSettingDao.replaceQZSettings(qzSettingForSyncs, qzCustomerTag);
 					}
 				}

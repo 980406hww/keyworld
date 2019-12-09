@@ -1187,6 +1187,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         }
         return machineVOList;
     }
+
+    @Override
+    public void deleteSysCustomerKeywordByQzId(Long uuid) {
+        customerKeywordDao.deleteSysCustomerKeywordByQzId(uuid);
+    }
 }
 
 

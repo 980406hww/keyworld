@@ -266,20 +266,16 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     /**
      * 批量插入数据
-     * @param customerUuid
-     * @param qsId
      */
     void batchInsertCustomerKeywordByCustomerUuid(@Param("customerUuid") Long customerUuid, @Param("qsId") Long qsId);
 
     /**
      * 定时删除创建超过七天的同步关键词
      */
-    void cleanSysCustomerKeywordCreateOverOneWeek();
+    void cleanSysCustomerKeywordOverOneWeek();
 
     /**
      * 根据qsId判断站点关键词当天是否已同步
-     * @param qsId
-     * @return
      */
     Long searchExistingSysCustomerKeywordQsId(@Param("qsId") Long qsId);
 }

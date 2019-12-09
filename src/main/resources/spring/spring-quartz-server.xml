@@ -64,7 +64,7 @@
 	<!--缓存检查收录的关键字信息到队列中-->
 	<bean id="cronTriggerCacheCheckingEnteredCustomerKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerCacheCheckingEnteredCustomerKeywordSchedule"/>
-		<property name="cronExpression" value="0 0/10 9-23 * * ?" />
+		<property name="cronExpression" value="0 0/10 9-22 * * ?" />
 	</bean>
 
 	<bean id="cronTriggerCacheCheckingEnteredCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -88,7 +88,7 @@
 	<!--全站自动更新涨幅-->
 	<bean id="cronTriggerQZRateStatistics" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerQZRateStatisticsSchedule" />
-		<property name="cronExpression" value="0 0 0/2 * * ?" />
+		<property name="cronExpression" value="0 0 8-22/2 * * ?" />
 	</bean>
 
 	<bean id="cronTriggerQZRateStatisticsSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">

@@ -167,4 +167,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateCrawlRankKeywordTimeByUuids(@Param("uuids") List<Long> uuids);
 
     List<String> getGroupsByUser(@Param("username") String username, @Param("type") String type);
+
+    void deleteSysCustomerKeywordByQzId(@Param("uuid") Long uuid);
 }
