@@ -98,7 +98,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">搜索引擎</label>
                         <div class="layui-input-block">
-                            <select id="searchList" name="searchEngine"></select>
+                            <select id="searchList" name="searchEngine" lay-filter="searchEngine"></select>
                         </div>
                     </div>
                 </div>
@@ -127,7 +127,7 @@
                     <div class="layui-form-item" pane>
                         <label class="layui-form-label">电脑</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" name="computer" lay-skin="switch" lay-filter="computer" lay-text="选中|不选中">
+                            <input type="checkbox" name="computer" id="computer" lay-skin="switch" lay-filter="computer" lay-text="选中|不选中">
                         </div>
                     </div>
                     <div id="comQzsettingBoxSelect" style="display: none" class="layui-form-item" pane>
@@ -269,11 +269,10 @@
                     <div class="layui-form-item" pane>
                         <label class="layui-form-label">手机</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" name="phone" lay-skin="switch" lay-filter="phone" lay-text="选中|不选中">
+                            <input type="checkbox" name="phone" id="phone" lay-skin="switch" lay-filter="phone" lay-text="选中|不选中">
                         </div>
                     </div>
-                    <div id="phoneQzsettingBoxSelect" style="display: none" class="layui-form-item"
-                         pane>
+                    <div id="phoneQzsettingBoxSelect" style="display: none" class="layui-form-item" pane>
                         <label class="phone layui-form-label">达标优化类型</label>
                         <div class="layui-input-block">
                             <input type="radio" name="optimizationPhoneType" lay-filter="optimizationPhoneType" value="1" title="主优化" class="phone-input" checked>
@@ -898,6 +897,38 @@
                     selectComputer(true);
                     break;
             }
+        });
+
+        form.on('select(searchEngine)', function (data) {
+            let oldCom = $(comStandardSpecies).find("input:checked").val();
+            let oldPhone = $(phoneStandardSpecies).find("input:checked").val();
+            let computerTitle = document.getElementById('computerTitle');
+            let phoneTitle = document.getElementById('phoneTitle');
+            if (data.value === '百度' || data.value === '百度下拉') {
+                if (oldCom === 'designationWord') {
+                    $(comStandardSpecies).find("input[title='爱站']")[0].checked = true;
+                    computerTitle.innerHTML = '爱站' + name;
+                    computerTable.style.display = 'block';
+                }
+                if (oldPhone === 'designationWord') {
+                    $(phoneStandardSpecies).find("input[title='爱站']")[0].checked = true;
+                    phoneTitle.innerHTML = '爱站' + name;
+                    phoneTable.style.display = 'block';
+                }
+            }
+            else {
+                if (oldCom !== 'other') {
+                    $(comStandardSpecies).find("input[title='指定词']")[0].checked = true;
+                    computerTitle.innerHTML = '指定词' + name;
+                    computerTable.style.display = 'block';
+                }
+                if (oldPhone !== 'other') {
+                    $(phoneStandardSpecies).find("input[title='指定词']")[0].checked = true;
+                    phoneTitle.innerHTML = '指定词' + name;
+                    phoneTable.style.display = 'block';
+                }
+            }
+            form.render('radio');
         });
 
         form.on('radio(autoCrawlKeywordFlag)', function (data) {
