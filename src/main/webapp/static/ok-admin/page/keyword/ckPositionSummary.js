@@ -272,8 +272,9 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
             },
             confine: true,
             formatter: function (p) {
+                let value = p[0].value === '999' ? '0' : p[0].value;
                 return '<div style="font-size: 6px;line-height: 14px"><span>' + p[0].axisValue + '</span>'
-                    + '<br>' + p[0].marker + '<span>排名：' + p[0].value + '</span></div>'
+                    + '<br>' + p[0].marker + '<span>排名：' + value + '</span></div>'
             }
         },
         xAxis: {
@@ -377,7 +378,6 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
             height: 'full-425',
             loading: true,
             done: function (res, curr, count) {
-                console.log(res);
                 showLogData(res.data);
             }
         });
@@ -397,7 +397,11 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                 success: function (result) {
                     if (result.code === 200) {
                         if (result.data !== null && result.data.hData !== null && result.data.hDate !== null) {
-                            option.series[0].data = result.data.hData.split(',');
+                            let hData = result.data.hData.split(',');
+                            for (let ht in hData) {
+                                hData[ht] = hData[ht] === '0' ? '999' : hData[ht];
+                            }
+                            option.series[0].data = hData;
                             option.xAxis.data = result.data.hDate.split(',');
                             echarts.init(boxes[i].children[2].firstElementChild).setOption(option);
                         } else {
@@ -422,7 +426,6 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                 curr: 1
             },
             done: function (res, curr, count) {
-                console.log(res);
                 showLogData(res.data);
             }
         });
