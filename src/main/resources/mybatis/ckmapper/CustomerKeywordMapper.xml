@@ -611,7 +611,6 @@
         <if test="keywordCriteria.ltCreateTime != null and keywordCriteria.ltCreateTime != ''">
             AND ck.fCreateTime &lt;= #{keywordCriteria.ltCreateTime}
         </if>
-
         <if test="keywordCriteria.noPosition != null and keywordCriteria.noPosition != ''">
             AND ck.fCurrentPosition = 0
         </if>
@@ -731,12 +730,9 @@
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
 
-    <update id="updateMachineGroup" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria">
-        UPDATE
-        t_customer_keyword ck,t_customer c
-        SET
-        ck.fMachineGroup = #{keywordCriteria.targetMachineGroup},
-        ck.fUpdateTime = NOW()
+    <update id="updateMachineGroup">
+        UPDATE t_customer_keyword ck, t_customer c
+        SET ck.fMachineGroup = #{keywordCriteria.targetMachineGroup}, ck.fUpdateTime = NOW()
         WHERE c.fUuid = ck.fCustomerUuid
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
@@ -770,21 +766,28 @@
 
     <delete id="deleteCustomerKeywordsWhenEmptyTitle">
         DELETE FROM t_customer_keyword
-        WHERE fTerminalType = #{keywordCriteria.terminalType}
+        WHERE 1 = 1
+        <if test="keywordCriteria.qzUuid != null and keywordCriteria.qzUuid != ''">
+            AND fQZSettingUuid = #{keywordCriteria.qzUuid}
+        </if>
         AND fCustomerUuid = #{keywordCriteria.customerUuid}
+        AND fTerminalType = #{keywordCriteria.terminalType}
         AND (fTitle = '' OR fTitle IS NULL)
     </delete>
 
     <delete id="deleteCustomerKeywordsWhenEmptyTitleAndUrl">
         DELETE FROM t_customer_keyword
-        WHERE fTerminalType = #{keywordCriteria.terminalType}
+        WHERE 1 = 1
+        <if test="keywordCriteria.qzUuid != null and keywordCriteria.qzUuid != ''">
+            AND fQZSettingUuid = #{keywordCriteria.qzUuid}
+        </if>
         AND fCustomerUuid = #{keywordCriteria.customerUuid}
+        AND fTerminalType = #{keywordCriteria.terminalType}
         AND (fTitle = '' OR fTitle IS NULL)
         AND (fUrl = '' OR fUrl IS NULL)
     </delete>
 
-    <select id="searchCustomerKeywords" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria"
-            resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
+    <select id="searchCustomerKeywords" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
         SELECT
         ck.fUuid AS 'uuid',
         c.fUserID AS 'userID',
@@ -827,7 +830,7 @@
         <include refid="searchCustomerKeywordsCriteria"/>
     </select>
 
-    <update id="updateOptimizePlanCount" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria">
+    <update id="updateOptimizePlanCount">
         UPDATE
         t_customer_keyword ck,t_customer c
         SET
@@ -837,8 +840,7 @@
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
 
-    <select id="searchCustomerKeywordsForDailyReport" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria"
-            resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
+    <select id="searchCustomerKeywordsForDailyReport" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
         SELECT
         <include refid="dailyReportColID"/>
         FROM
@@ -910,7 +912,7 @@
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
 
-    <update id="changeCustomerKeywordStatusInCKPage" parameterType="com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria">
+    <update id="changeCustomerKeywordStatusInCKPage">
         UPDATE
         t_customer_keyword ck,t_customer c
         SET
@@ -956,9 +958,13 @@
         UPDATE t_customer_keyword
         SET fTitle = NULL,
         fManualCleanTitle = 1
-        WHERE fTerminalType = #{terminalType}
-        AND fType = #{type}
+        WHERE 1 = 1
+        <if test="qzUuid != null and qzUuid != ''">
+            AND fQZSettingUuid = #{qzUuid}
+        </if>
         AND fCustomerUuid = #{customerUuid}
+        AND fTerminalType = #{terminalType}
+        AND fType = #{type}
     </update>
 
     <update id="cleanCaptureTitleFlag">
@@ -966,8 +972,12 @@
         SET fTitle = NULL,
         fCaptureTitleQueryTime = NULL,
         fCapturedTitle = 0
-        WHERE fTerminalType = #{terminalType}
+        WHERE 1 = 1
+        <if test="qzUuid != null and qzUuid != ''">
+            AND fQZSettingUuid = #{qzUuid}
+        </if>
         AND fCustomerUuid = #{customerUuid}
+        AND fTerminalType = #{terminalType}
         AND fType = #{type}
         AND fManualCleanTitle = 0
     </update>
@@ -984,17 +994,17 @@
     </update>
 
     <select id="searchDuplicateKeywords" resultType="java.lang.String">
-        SELECT
-        GROUP_CONCAT(CAST(fUuid AS CHAR) ORDER BY fUuid) AS 'uuids'
-        FROM
-        t_customer_keyword
-        WHERE
-        fType = #{customerKeywordUpdateStatusCriteria.type}
+        SELECT GROUP_CONCAT(CAST(fUuid AS CHAR) ORDER BY fUuid) AS 'uuids'
+        FROM t_customer_keyword
+        WHERE fType = #{customerKeywordUpdateStatusCriteria.type}
         AND fTerminalType = #{customerKeywordUpdateStatusCriteria.terminalType}
         <if test="customerKeywordUpdateStatusCriteria.customerUuid != null and customerKeywordUpdateStatusCriteria.customerUuid != ''">
             AND fCustomerUuid = #{customerKeywordUpdateStatusCriteria.customerUuid}
         </if>
-        GROUP BY fKeyword,fUrl, fCustomerUuid
+        <if test="customerKeywordUpdateStatusCriteria.qzUuid != null and customerKeywordUpdateStatusCriteria.qzUuid != ''">
+            AND fQZSettingUuid = #{customerKeywordUpdateStatusCriteria.qzUuid}
+        </if>
+        GROUP BY fKeyword, fUrl, fCustomerUuid, fQZSettingUuid
         HAVING COUNT(1) > 1
     </select>
 

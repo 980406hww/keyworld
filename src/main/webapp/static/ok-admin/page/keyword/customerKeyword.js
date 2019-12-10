@@ -424,22 +424,22 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
                 change_select_machineGroup();
                 break;
             case 'down_off_all_keyword':
-                change_all_keyowrd_status(3);
+                change_all_keyword_status(3);
                 break;
             case 'down_off_select_keyword':
-                change_select_keyowrd_status(3);
+                change_select_keyword_status(3);
                 break;
             case 'pause_all_keyword':
-                change_all_keyowrd_status(0);
+                change_all_keyword_status(0);
                 break;
             case 'pause_select_keyword':
-                change_select_keyowrd_status(0);
+                change_select_keyword_status(0);
                 break;
             case 'active_all_keyword':
-                change_all_keyowrd_status(1);
+                change_all_keyword_status(1);
                 break;
             case 'active_select_keyword':
-                change_select_keyowrd_status(1);
+                change_select_keyword_status(1);
                 break;
             case 'recollect_customer_keyword_title':
                 change_title('recollectAll');
@@ -864,22 +864,31 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         });
     }
 
-    function change_all_keyowrd_status(status) {
+    function change_all_keyword_status(status) {
         let postData = {};
         postData.terminalType = $("#terminalType").val();
         postData.type = $("#type").val();
         postData.targetStatus = status;
         postData.customerUuid = $('#customerUuid').val();
+        let qzUuid = $('#qzUuid').val();
+        let qzText = $('#qzUuid').parent().find("input").val();
+        if (qzUuid === '' || qzUuid === '-1') {
+            qzUuid = null;
+            qzText = "客户所有站点下";
+        } else {
+            qzText = "<br>客户站点：" + qzText + "<br>";
+        }
+        postData.qzUuid = qzUuid;
         let msg = '';
         switch (status) {
             case 0:
-                msg = '是否暂停所有关键字';
+                msg = '是否暂停'+ qzText +'所有关键字';
                 break;
             case 3:
-                msg = '是否下架所有关键字';
+                msg = '是否下架'+ qzText +'所有关键字';
                 break;
             case 1:
-                msg = '是否激活所有关键字';
+                msg = '是否激活'+ qzText +'所有关键字';
                 break;
             default:
                 return;
@@ -916,8 +925,16 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         postData.terminalType = $("#terminalType").val();
         postData.type = $("#type").val();
         postData.customerUuid = $('#customerUuid').val();
-
-        layer.confirm('确定删除重复关键字吗', {icon: 3, title: '删除重复关键字'}, function (index) {
+        let qzUuid = $('#qzUuid').val();
+        let qzText = $('#qzUuid').parent().find("input").val();
+        if (qzUuid === '' || qzUuid === '-1') {
+            qzUuid = null;
+            qzText = "客户所有站点下";
+        } else {
+            qzText = "<br>客户站点：" + qzText + "<br>";
+        }
+        postData.qzUuid = qzUuid;
+        layer.confirm('确定删除' + qzText + '重复关键字吗', {icon: 3, title: '删除' + qzText + '重复关键字'}, function (index) {
             $.ajax({
                 url: '/internal/customerKeyword/deleteDuplicateCustomerKeywords2',
                 data: JSON.stringify(postData),
@@ -944,7 +961,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         });
     }
 
-    function change_select_keyowrd_status(status) {
+    function change_select_keyword_status(status) {
         let postData = {};
         let uuidArr = get_selected_uuid_arr();
         if (uuidArr.length <= 0) {
@@ -953,17 +970,25 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         }
         postData.uuids = uuidArr;
         postData.targetStatus = status;
-
+        let qzUuid = $('#qzUuid').val();
+        let qzText = $('#qzUuid').parent().find("input").val();
+        if (qzUuid === '' || qzUuid === '-1') {
+            qzUuid = null;
+            qzText = "客户所有站点下";
+        } else {
+            qzText = "<br>客户站点：" + qzText + "<br>";
+        }
+        postData.qzUuid = qzUuid;
         let msg = '';
         switch (status) {
             case 0:
-                msg = '是否暂停所选关键字';
+                msg = '是否暂停'+ qzText +'所选关键字';
                 break;
             case 3:
-                msg = '是否下架所选关键字';
+                msg = '是否下架'+ qzText +'所选关键字';
                 break;
             case 1:
-                msg = '是否激活所选关键字';
+                msg = '是否激活'+ qzText +'所选关键字';
                 break;
             default:
                 return;
@@ -1000,12 +1025,21 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         postData.type = $('#type').val();
         postData.terminalType = $('#terminalType').val();
         postData.cleanType = changeType;
+        let qzUuid = $('#qzUuid').val();
+        let qzText = $('#qzUuid').parent().find("input").val();
+        if (qzUuid === '' || qzUuid === '-1') {
+            qzUuid = null;
+            qzText = "客户所有站点下";
+        } else {
+            qzText = "<br>客户站点：" + qzText + "<br>";
+        }
+        postData.qzUuid = qzUuid;
         let uuidArr;
         let msg = '';
         switch (changeType) {
             case 'recollectAll':
                 postData.customerUuid = $('#customerUuid').val();
-                msg = '确认要重新采集自动导入的关键词的标题吗';
+                msg = '确认要重新采集'+ qzText +'自动导入的关键词的标题吗';
                 break;
             case 'recollectSelect':
                 uuidArr = get_selected_uuid_arr();
@@ -1014,12 +1048,12 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
                     return;
                 }
                 postData.uuids = uuidArr;
-                msg = '确认要重新采集所选关键词的标题吗';
+                msg = '确认要重新采集'+ qzText +'所选关键词的标题吗';
                 break;
             case 'cleanAll':
                 postData.customerUuid = $('#customerUuid').val();
 
-                msg = '确认要清空客户下所有关键词的标题吗';
+                msg = '确认要清空'+ qzText +'所有关键词的标题吗';
                 break;
 
             case 'cleanSelect':
@@ -1029,7 +1063,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
                     return;
                 }
                 postData.uuids = uuidArr;
-                msg = '确认要清空所选关键词的标题吗';
+                msg = '确认要清空'+ qzText +'所选关键词的标题吗';
                 break;
             default:
                 return;
@@ -1065,12 +1099,21 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     function batch_delete(deleteType) {
         let customerUuid = $("#customerUuid").val();
         let terminalType = $("#terminalType").val();
-        let msg = deleteType === 'byEmptyTitleAndUrl' ? '确定要删除标题和网址为空的词吗' : '确定要删除标题为空的词吗';
+        let qzUuid = $('#qzUuid').val();
+        let qzText = $('#qzUuid').parent().find("input").val();
+        if (qzUuid === '' || qzUuid === '-1') {
+            qzUuid = null;
+            qzText = "客户所有站点下";
+        } else {
+            qzText = "<br>客户站点：" + qzText + "<br>";
+        }
+        let msg = deleteType === 'byEmptyTitleAndUrl' ? '确定要删除'+ qzText +'标题和网址为空的词吗' : '确定要删除'+ qzText +'标题为空的词吗';
         layer.confirm(msg, {icon: 3, title: '删除词'}, function (index) {
             let postData = {};
             postData.customerUuid = customerUuid;
             postData.terminalType = terminalType;
             postData.deleteType = deleteType;
+            postData.qzUuid = qzUuid;
             $.ajax({
                 url: '/internal/customerKeyword/deleteCustomerKeywords2',
                 data: JSON.stringify(postData),

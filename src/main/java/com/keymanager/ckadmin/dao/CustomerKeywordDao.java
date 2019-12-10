@@ -108,9 +108,9 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void cleanSelectedCustomerKeywordTitle(@Param("uuids") List<Long> uuids);
 
-    void cleanCustomerTitle(@Param("terminalType") String terminalType, @Param("type") String type, @Param("customerUuid") Long customerUuid);
+    void cleanCustomerTitle(@Param("terminalType") String terminalType, @Param("type") String type, @Param("customerUuid") Long customerUuid, @Param("qzUuid") Long qzUuid);
 
-    void cleanCaptureTitleFlag(@Param("terminalType") String terminalType, @Param("type") String type, @Param("customerUuid") Long customerUuid);
+    void cleanCaptureTitleFlag(@Param("terminalType") String terminalType, @Param("type") String type, @Param("customerUuid") Long customerUuid, @Param("qzUuid") Long qzUuid);
 
     void cleanCaptureTitleBySelected(@Param("uuids") List<Long> uuids);
 

@@ -254,13 +254,13 @@ public class CustomerKeywordController extends SpringMVCBaseController {
                 keywordCriteria.setUserName(userName);
             }
             customerKeywordService.updateMachineGroup(keywordCriteria);
+            return resultBean;
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
             return resultBean;
         }
-        return resultBean;
     }
 
     @RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
@@ -563,8 +563,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
 
     @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordStatus")
     @PostMapping(value = "/changeCustomerKeywordStatus3")
-    public ResultBean changeCustomerKeywordStatusInCKPage(@RequestBody CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria,
-        HttpServletRequest request) {
+    public ResultBean changeCustomerKeywordStatusInCKPage(@RequestBody CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria) {
         try {
             customerKeywordService.changeCustomerKeywordStatusInCKPage(customerKeywordUpdateStatusCriteria);
             return new ResultBean(200, "success");
@@ -589,7 +588,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     //重采标题
     @RequiresPermissions("/internal/customerKeyword/cleanTitle")
     @PostMapping(value = "/cleanTitle2")
-    public ResultBean cleanTitle(@RequestBody CustomerKeywordCleanTitleCriteria customerKeywordCleanTitleCriteria, HttpServletRequest request) {
+    public ResultBean cleanTitle(@RequestBody CustomerKeywordCleanTitleCriteria customerKeywordCleanTitleCriteria) {
         try {
             customerKeywordService.cleanTitle(customerKeywordCleanTitleCriteria);
             return new ResultBean(200, "success");

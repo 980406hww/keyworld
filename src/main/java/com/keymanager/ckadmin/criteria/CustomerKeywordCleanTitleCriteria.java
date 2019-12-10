@@ -12,6 +12,7 @@ import java.util.List;
 public class CustomerKeywordCleanTitleCriteria {
     private List<Long> uuids;
     private Long customerUuid;
+    private Long qzUuid;
     private String terminalType;
     private String type;
     private String cleanType;
@@ -30,6 +31,14 @@ public class CustomerKeywordCleanTitleCriteria {
 
     public void setCustomerUuid(Long customerUuid) {
         this.customerUuid = customerUuid;
+    }
+
+    public Long getQzUuid() {
+        return qzUuid;
+    }
+
+    public void setQzUuid(Long qzUuid) {
+        this.qzUuid = qzUuid;
     }
 
     public String getTerminalType() {

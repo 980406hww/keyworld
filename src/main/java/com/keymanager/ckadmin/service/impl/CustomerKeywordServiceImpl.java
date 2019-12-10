@@ -655,14 +655,14 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         switch (customerKeywordCleanTitleCriteria.getCleanType()) {
             case "recollectAll":
                 customerKeywordDao.cleanCaptureTitleFlag(customerKeywordCleanTitleCriteria.getTerminalType(), customerKeywordCleanTitleCriteria.getType(),
-                    customerKeywordCleanTitleCriteria.getCustomerUuid());
+                    customerKeywordCleanTitleCriteria.getCustomerUuid(), customerKeywordCleanTitleCriteria.getQzUuid());
                 break;
             case "recollectSelect":
                 customerKeywordDao.cleanCaptureTitleBySelected(customerKeywordCleanTitleCriteria.getUuids());
                 break;
             case "cleanAll":
                 customerKeywordDao.cleanCustomerTitle(customerKeywordCleanTitleCriteria.getTerminalType(), customerKeywordCleanTitleCriteria.getType(),
-                    customerKeywordCleanTitleCriteria.getCustomerUuid());
+                    customerKeywordCleanTitleCriteria.getCustomerUuid(), customerKeywordCleanTitleCriteria.getQzUuid());
                 break;
             case "cleanSelect":
                 customerKeywordDao.cleanSelectedCustomerKeywordTitle(customerKeywordCleanTitleCriteria.getUuids());

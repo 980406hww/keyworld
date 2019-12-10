@@ -10,10 +10,12 @@ import java.util.List;
  * @Version 1.0
  */
 public class CustomerKeywordUpdateStatusCriteria {
+
     private List<Long> uuids;
     private Long customerUuid;
+    private Long qzUuid;
     private String terminalType;
-    private String type;//词类型
+    private String type;
     private Integer targetStatus;
 
     public List<Long> getUuids() {
@@ -30,6 +32,14 @@ public class CustomerKeywordUpdateStatusCriteria {
 
     public void setCustomerUuid(Long customerUuid) {
         this.customerUuid = customerUuid;
+    }
+
+    public Long getQzUuid() {
+        return qzUuid;
+    }
+
+    public void setQzUuid(Long qzUuid) {
+        this.qzUuid = qzUuid;
     }
 
     public String getTerminalType() {
