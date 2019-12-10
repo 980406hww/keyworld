@@ -23,6 +23,4 @@ public interface QZKeywordRankInfoService extends IService<QZKeywordRankInfo> {
     QZSettingCountNumCriteria searchCountNumOfQZKeywordRankInfo(QZSettingSearchCriteria criteria);
 
     List<QZKeywordRankInfo> getXTRankInfos();
-
-    void fixQZXTRankDate(Long uuid, String toString);
 }

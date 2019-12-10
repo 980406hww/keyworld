@@ -211,8 +211,4 @@
         FROM t_qz_keyword_rank_info qzkri
         WHERE qzkri.fWebSiteType ='xt'
     </select>
-
-    <update id="updateRankDateWithYear">
-        UPDATE t_qz_keyword_rank_info SET fFullDate = #{yearRankDate} WHERE fUuid = #{uuid}
-    </update>
 </mapper>

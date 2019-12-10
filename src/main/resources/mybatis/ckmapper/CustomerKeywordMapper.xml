@@ -616,9 +616,8 @@
             AND ck.fCurrentPosition = 0
         </if>
         <if test="keywordCriteria.pushPay != null and keywordCriteria.pushPay != ''">
-            AND ((ck.fCollectMethod = 'PerDay' AND ck.fEffectiveToTime is not null) OR (ck.fEffectiveToTime &lt;= DATE_ADD(CURDATE(),INTERVAL 3 DAY)))
+            AND ((ck.fCollectMethod = 'PerDay' AND ck.fEffectiveToTime > '') OR (ck.fEffectiveToTime &lt;= DATE_ADD(CURDATE(),INTERVAL 3 DAY)))
         </if>
-
         <if test="keywordCriteria.requireDelete != null and keywordCriteria.requireDelete != ''">
             AND ck.fRequireDelete = 1
         </if>
@@ -905,15 +904,11 @@
     </select>
 
     <update id="updateSearchEngine">
-        UPDATE
-        t_customer_keyword ck,t_customer c
-        SET
-        ck.fSearchEngine = #{keywordCriteria.targetSearchEngine},
-        ck.fUpdateTime = NOW()
+        UPDATE t_customer_keyword ck, t_customer c
+        SET ck.fSearchEngine = #{keywordCriteria.targetSearchEngine}, ck.fUpdateTime = NOW()
         WHERE c.fUuid = ck.fCustomerUuid
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
-
 
     <update id="changeCustomerKeywordStatusInCKPage" parameterType="com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria">
         UPDATE

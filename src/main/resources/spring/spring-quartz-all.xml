@@ -428,7 +428,7 @@
 	<!--缓存需同步到简化版seo后台的数据信息-->
 	<bean id="cronTriggerSyncQZCustomerData" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerSyncQZCustomerDataSchedule" />
-		<property name="cronExpression" value="0 25 23 * * * ?" />
+		<property name="cronExpression" value="0 25 23 * * ?" />
 	</bean>
 
 	<bean id="cronTriggerSyncQZCustomerDataSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
