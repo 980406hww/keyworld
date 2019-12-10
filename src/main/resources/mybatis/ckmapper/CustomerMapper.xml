@@ -25,25 +25,8 @@
 
     <select id="searchCustomers" resultType="com.keymanager.ckadmin.entity.Customer">
         SELECT
-        c.fUuid AS `uuid`,
-        c.fUserID AS `loginName`,
-        c.fExternalAccount AS `externalAccount`,
-        c.fSearchEngine AS `searchEngine`,
-        c.fContactPerson AS `contactPerson`,
-        IFNULL(c.fQQ,'暂无') AS `qq`,
-        c.fType AS `type`,
-        c.fEmail  AS `email`,
-        IFNULL(c.fTelphone,'暂无') AS `telphone`,
-        c.fAlipay AS `alipay`,
-        c.fPaidFee AS `paidFee`,
-        IFNULL(c.fSaleRemark,'暂无') AS 'saleRemark',
-        IFNULL(c.fRemark,'暂无') AS `remark`,
-        c.fDailyReportIdentify AS `dailyReportIdentify`,
-        c.fStatus AS `status`,
-        c.fUpdateInterval AS `updateInterval`,
-        c.fUpdateTime AS `updateTime`,
-        c.fCreateTime AS `createTime`,
-        u.fUserName AS `userName`
+        u.fUserName AS `userName`,
+        <include refid="colID"/>
         FROM t_customer c, t_userinfo u
         WHERE c.fUserID = u.fLoginName
         <if test="customerCriteria.contactPerson != null and customerCriteria.contactPerson != ''">
@@ -272,8 +255,9 @@
     <select id="getCustomerListByUser" resultType="com.keymanager.ckadmin.entity.Customer">
         SELECT
         <include refid="colID"/>
-        FROM t_customer c
-        WHERE EXISTS (
+        FROM t_customer c, t_userinfo u
+        WHERE c.fUserID = u.fLoginName
+        AND EXISTS (
             SELECT 1
             FROM t_customer_business cb
             WHERE cb.fCustomerUuid = c.fUuid
