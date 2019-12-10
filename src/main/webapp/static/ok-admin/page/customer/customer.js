@@ -82,7 +82,8 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
     }
 
     function init_data(data) {
-        $("#data_list").empty();
+        let dataList = document.getElementById('data_list');
+        dataList.innerHTML = '';
         let item = '', et = document.getElementById('entryType').value;
         $.each(data, function (index, obj) {
             item += '<div class="layadmin-contact-box">';
@@ -116,11 +117,13 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
                 '       <div class="layui-col-md5">';
             item += '           <div class="layadmin-address other_info">' +
                 '                   <strong>描述信息</strong>' +
-                '                   <p class="skip" >客户类型 : ' + obj.type +'</p>' +
-                '                   <p class="skip" >所属用户 : ' + obj.userName +'</p>' +
+                '                   <p class="skip" >客户类型 : ' + obj.type + '</p>' +
+                '                   <p class="skip" >所属用户 : ' + obj.userName + '</p>' +
                 '                   <p class="skip" >创建时间 : ' + layui.util.toDateString(obj.createTime, 'yyyy-MM-dd') + '</p>' +
-                '                   <div class="skip" style="height: 24px;margin: 1px 0"><span style="position: relative;top: 1px">客户状态 : </span>'+ generate_customer_status(obj.uuid, obj.status) +'</div>' +
-                '                   <div class="skip" style="height: 24px;margin: 1px 0"><span style="position: relative;top: 1px">产生报表 : </span>' + generate_customer_daily_report(obj.uuid, obj.dailyReportIdentify) + '</div>' +
+                '                   <div class="skip" style="height: 24px;margin: 1px 0"><span style="position: relative;top: 1px">客户状态 : </span>'
+                + generate_customer_status(obj.uuid, obj.status) + '</div>' +
+                '                   <div class="skip" style="height: 24px;margin: 1px 0"><span style="position: relative;top: 1px">产生报表 : </span>'
+                + generate_customer_daily_report(obj.uuid, obj.dailyReportIdentify) + '</div>' +
                 '               </div>';
             item += '           <div class="layadmin-address">' +
                 '                   <strong>联系方式</strong>' +
@@ -130,29 +133,42 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
                 '                   QQ : ' + obj.qq +
                 '               </div>' +
                 '      </div>';
-            item += '  <div class="layui-col-md7 msg-show"></div>';
-            item += '  </div>';
-            item += '           <div class="layadmin-address ">' +
-                '                   <strong>备注</strong>';
-            if (isSEOSales){
-                item += '       <p class="skip">客户标签 : <span title="'+obj.saleRemark+'" class="can-click" onclick=changeSaleRemark("'+obj.uuid+'",this)>' + obj.saleRemark + '</span></p>';
-            }
-            let msg = obj.remark ? obj.remark : '暂无';
-            item += '           <p class="skip">销售详细备注 : <span title="'+obj.remark+'" class="can-click" onclick=changeRemark("'+obj.uuid+'",this)>' + msg + '</span></p>' +
-                '               </div>'
-                + '</div>';
-        });
-        $("#data_list").append(item)
-    }
-
-    function getOtherMsg(data) {
-        let boxs = document.getElementById('data_list').children;
-        $.each(data, function (index, obj) {
-            let item = '', customerBusinessList = obj.customerBusinessList;
+            item += '  <div class="layui-col-md7">';
+            let customerBusinessList = obj.customerBusinessList;
             if (customerBusinessList !== null && customerBusinessList.length > 0) {
                 $.each(obj.customerBusinessList, function (index, tmp) {
                     if (tmp === 'keyword') {
                         item += '<div class="layadmin-address" id="customPT' + obj.uuid + '"><strong>单词业务</strong><br></div>';
+                    } else if (tmp === 'qzsetting') {
+                        item += '<div class="layadmin-address" id="customQZ' + obj.uuid + '"><strong>全站业务</strong><br></div>';
+                    } else if (tmp === 'fm') {
+                        item += '<div class="layadmin-address" id="customFM' + obj.uuid + '"><strong>负面业务</strong><br></div>';
+                    } else if (tmp === 'qt') {
+                        item += '<div class="layadmin-address" id="customQT' + obj.uuid + '"><strong>其他业务</strong><br></div>';
+                    } else {
+                        item += '<div class="layadmin-address"><strong>暂无业务</strong></div>';
+                    }
+                });
+            }
+            item += '</div></div>';
+            item += '<div class="layadmin-address "><strong>备注</strong>';
+            if (isSEOSales) {
+                item += '       <p class="skip">客户标签 : <span title="' + obj.saleRemark + '" class="can-click" onclick=changeSaleRemark("' + obj.uuid
+                    + '",this)>' + obj.saleRemark + '</span></p>';
+            }
+            let msg = obj.remark ? obj.remark : '暂无';
+            item += '           <p class="skip">销售详细备注 : <span title="' + obj.remark + '" class="can-click" onclick=changeRemark("' + obj.uuid + '",this)>'
+                + msg + '</span></p></div></div>';
+        });
+        dataList.innerHTML = item;
+    }
+
+    function getOtherMsg(data) {
+        $.each(data, function (index, obj) {
+            let customerBusinessList = obj.customerBusinessList;
+            if (customerBusinessList !== null && customerBusinessList.length > 0) {
+                $.each(obj.customerBusinessList, function (index, tmp) {
+                    if (tmp === 'keyword') {
                         $.ajax({
                             url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid + '/pt',
                             dataType: 'json',
@@ -179,7 +195,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
                             }
                         });
                     } else if (tmp === 'qzsetting') {
-                        item += '<div class="layadmin-address" id="customQZ' + obj.uuid + '"><strong>全站业务</strong><br></div>';
                         $.ajax({
                             url: '/internal/qzsetting/getQZSettingsCount/' + obj.uuid,
                             dataType: 'json',
@@ -206,7 +221,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
                             }
                         });
                     } else if (tmp === 'fm') {
-                        item += '<div class="layadmin-address" id="customFM' + obj.uuid + '"><strong>负面业务</strong><br></div>';
                         $.ajax({
                             url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid + '/fm',
                             dataType: 'json',
@@ -233,7 +247,6 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
                             }
                         });
                     } else if (tmp === 'qt') {
-                        item += '<div class="layadmin-address" id="customQT' + obj.uuid + '"><strong>其他业务</strong><br></div>';
                         $.ajax({
                             url: '/internal/customerKeyword/getCustomerKeywordsCount/' + obj.uuid + '/qt',
                             dataType: 'json',
@@ -266,12 +279,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
                         });
                     }
                 });
-            } else {
-                item += '<div class="layadmin-address">\n' +
-                    '                <strong>暂无业务</strong>\n' +
-                    '    </div>';
             }
-            boxs[index].getElementsByClassName('msg-show')[0].innerHTML = item;
         });
     }
 
