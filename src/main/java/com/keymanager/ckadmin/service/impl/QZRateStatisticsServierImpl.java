@@ -7,7 +7,6 @@ import com.keymanager.ckadmin.entity.QZKeywordRankInfo;
 import com.keymanager.ckadmin.entity.QZRateStatistics;
 import com.keymanager.ckadmin.service.QZKeywordRankInfoService;
 import com.keymanager.ckadmin.service.QZRateStatisticsService;
-import com.keymanager.ckadmin.service.QZSettingService;
 import com.keymanager.ckadmin.vo.QZRateStatisticsCountVO;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,26 +28,16 @@ public class QZRateStatisticsServierImpl extends ServiceImpl<QZRateStatisticsDao
     @Resource(name = "qzRateStatisticsDao2")
     private QZRateStatisticsDao qzRateStatisticsDao;
 
-    @Resource(name = "qzSettingService2")
-    private QZSettingService qzSettingService;
-
     @Override
     public void generateQZRateStatistics() {
         List<QZKeywordRankInfo> qzKeywordRankInfos = qzKeywordRankInfoService.getXTRankInfos();
         List<QZRateStatistics> qzRateStatisticsList = new ArrayList<>();
         for (QZKeywordRankInfo qzKeywordRankInfo : qzKeywordRankInfos) {
-            String[] dateList = qzKeywordRankInfo.getDate().replace("[", "").replace("]", "").replace("'", "").replace(" ", "").split(",");
-            String[] fullDateList = qzKeywordRankInfo.getFullDate().replace("[", "").replace("]", "").replace("'", "").replace(" ", "").split(",");
-            String[] curveData = qzKeywordRankInfo.getTopTen().replace("[", "").replace("]", "").replace(" ", "").split(",");
-            if (dateList.length >= 2) {
-                QZRateStatistics qzRateStatistics = new QZRateStatistics();
-                qzRateStatistics.setQzSettingUuid(qzKeywordRankInfo.getQzSettingUuid());
-                qzRateStatistics.setTerminalType(qzKeywordRankInfo.getTerminalType());
-                qzRateStatistics.setRate(0);
-                qzRateStatistics.setRateDate(dateList[dateList.length - 1]);
-                qzRateStatistics.setRateFullDate(fullDateList[fullDateList.length - 1]);
-                qzRateStatisticsList.add(qzRateStatistics);
-                for (int i = dateList.length - 2; i >= 0; i--) {
+            String[] dateList = qzKeywordRankInfo.getDate().replaceAll("[\\[\\]'\\s]", "").split(",");
+            String[] fullDateList = qzKeywordRankInfo.getFullDate().replaceAll("[\\[\\]'\\s]", "").split(",");
+            String[] curveData = qzKeywordRankInfo.getTopTen().replaceAll("[\\[\\]'\\s]", "").split(",");
+            if (dateList.length == fullDateList.length && fullDateList.length == curveData.length && dateList.length > 1) {
+                for (int i = 0; i < dateList.length - 1; i++) {
                     QZRateStatistics qzRateStatistics2 = new QZRateStatistics();
                     qzRateStatistics2.setQzSettingUuid(qzKeywordRankInfo.getQzSettingUuid());
                     qzRateStatistics2.setTerminalType(qzKeywordRankInfo.getTerminalType());
@@ -57,6 +46,13 @@ public class QZRateStatisticsServierImpl extends ServiceImpl<QZRateStatisticsDao
                     qzRateStatistics2.setRateFullDate(fullDateList[i]);
                     qzRateStatisticsList.add(qzRateStatistics2);
                 }
+                QZRateStatistics qzRateStatistics = new QZRateStatistics();
+                qzRateStatistics.setQzSettingUuid(qzKeywordRankInfo.getQzSettingUuid());
+                qzRateStatistics.setTerminalType(qzKeywordRankInfo.getTerminalType());
+                qzRateStatistics.setRate(0);
+                qzRateStatistics.setRateDate(dateList[dateList.length - 1]);
+                qzRateStatistics.setRateFullDate(fullDateList[fullDateList.length - 1]);
+                qzRateStatisticsList.add(qzRateStatistics);
             } else {
                 QZRateStatistics qzRateStatistics = new QZRateStatistics();
                 qzRateStatistics.setQzSettingUuid(qzKeywordRankInfo.getQzSettingUuid());
