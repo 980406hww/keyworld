@@ -397,6 +397,9 @@
 
         form.verify({
             domain: function (value) {
+                if (isChecked('url') === '0') {
+                    return ''
+                }
                 if (value.indexOf('.') > -1) {
                     return ''
                 }
