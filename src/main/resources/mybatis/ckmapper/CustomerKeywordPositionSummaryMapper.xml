@@ -53,7 +53,6 @@
         </if>
         AND ck.fSearchEngine = #{condition.searchEngine}
         AND ck.fTerminalType = #{condition.terminal}
-        AND ck.fStatus = 1
         AND ck.fCurrentPosition > -1
         <if test="condition.type != null and condition.type != ''">
             AND ck.fType = #{condition.type}
@@ -77,7 +76,6 @@
         </if>
         AND ck.fSearchEngine = #{condition.searchEngine}
         AND ck.fTerminalType = #{condition.terminal}
-        AND ck.fStatus = 1
         AND ck.fCurrentPosition > -1
         <if test="condition.type != null and condition.type != ''">
             AND ck.fType = #{condition.type}
