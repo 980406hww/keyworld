@@ -363,19 +363,18 @@
         GROUP BY ck.fTerminalType
     </select>
 
-    <update id="resetInvalidRefreshCount" parameterType="com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria">
+    <update id="resetInvalidRefreshCount">
         UPDATE t_customer_keyword
-        SET fInvalidRefreshCount = 0,
-        fInvalidFlag = 0,
+        SET fInvalidRefreshCount = 0, fInvalidFlag = 0,
         fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
         WHERE fType = #{criteria.entryType}
         AND fTerminalType = #{criteria.terminalType}
         <if test="criteria.customerName != null and criteria.customerName != ''">
             AND EXISTS (
-            SELECT 1
-            FROM t_customer c
-            WHERE c.fUuid = fCustomerUuid
-            AND c.fContactPerson LIKE concat('%', #{criteria.customerName}, '%')
+                SELECT 1
+                FROM t_customer c
+                WHERE c.fUuid = fCustomerUuid
+                AND c.fContactPerson LIKE concat('%', #{criteria.customerName}, '%')
             )
         </if>
         <if test="criteria.groupName!=null and criteria.groupName!=''">

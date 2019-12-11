@@ -255,7 +255,9 @@
             condition.customerName = customerName;
             condition.machineGroup = groupName;
             condition.fullMatchGroup = fullMatchGroup;
-            condition.entryType = common.formToJsonObject("searchForm").entryType;
+            let obj = common.formToJsonObject("searchForm");
+            condition.entryType = obj.entryType;
+            condition.terminalType = obj.terminalType;
             $.ajax({
                 url: '/internal/customerKeyword/resetInvalidRefresh',
                 data: JSON.stringify(condition),
