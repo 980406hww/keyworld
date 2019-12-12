@@ -71,6 +71,6 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     /**
      * 清空 sys_qz_setting 表的数据
      */
-    void deleteSysQzSettings();
+    void deleteSysQzSettings(@Param("qzCustomerTag") String qzCustomerTag);
 }
 

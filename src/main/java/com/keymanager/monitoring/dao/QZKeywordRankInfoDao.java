@@ -49,5 +49,5 @@ public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
     /**
      * 清空 sys_qz_keyword_rank 表的数据
      */
-    void deleteSysQzKeywordRanks();
+    void deleteSysQzKeywordRanks(@Param("qzCustomerTag") String qzCustomerTag);
 }

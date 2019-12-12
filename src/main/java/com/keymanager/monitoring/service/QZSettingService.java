@@ -88,10 +88,10 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 						}
 						// 转储站点曲线信息，先清空，后同步
 						if (CollectionUtils.isNotEmpty(qzKeywordRanks)) {
-							qzKeywordRankInfoService.replaceQZKeywordRanks(qzKeywordRanks);
+							qzKeywordRankInfoService.replaceQZKeywordRanks(qzKeywordRanks, qzCustomerTag);
 						}
 						// 转储站点信息，先清空，后同步
-						qzSettingDao.deleteSysQzSettings();
+						qzSettingDao.deleteSysQzSettings(qzCustomerTag);
 						qzSettingDao.replaceQZSettings(qzSettingForSyncs, qzCustomerTag);
 					}
 				}

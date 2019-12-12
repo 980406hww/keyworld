@@ -4,4 +4,4 @@ UPDATE t_customer_keyword ck, t_qz_setting qs
 SET ck.fSearchEngine = qs.fSearchEngine
 WHERE ck.fQZSettingUuid = qs.fUuid
 AND ck.fCustomerUuid = qs.fCustomerUuid
-AND ck.fSearchngine IS NULL;
+AND ck.fSearchngine = '';
