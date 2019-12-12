@@ -99,7 +99,7 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     List<CustomerKeyword> searchCustomerKeywordInfo(KeywordCriteria keywordCriteria);
 
-    List<Map> searchAllKeywordAndUrl(Long customerUuid, String terminalType);
+    List<Map> searchAllKeywordAndUrl(Long customerUuid, String terminalType, String type);
 
     void updateSearchEngine(KeywordCriteria keywordCriteria);
 

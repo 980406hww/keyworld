@@ -17,6 +17,7 @@ import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.entity.UserInfo;
+import com.keymanager.ckadmin.enums.EntryTypeEnum;
 import com.keymanager.ckadmin.excel.operator.CustomerKeywordAndUrlCvsExportWriter;
 import com.keymanager.ckadmin.excel.operator.CustomerKeywordInfoExcelWriter;
 import com.keymanager.ckadmin.service.ConfigService;
@@ -27,13 +28,12 @@ import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 import com.keymanager.ckadmin.util.ReflectUtils;
 import com.keymanager.ckadmin.util.Utils;
+import com.keymanager.ckadmin.vo.CustomerKeywordUploadVO;
 import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
-import com.keymanager.ckadmin.vo.CustomerKeywordUploadVO;
 import com.keymanager.monitoring.common.shiro.ShiroUser;
-import com.keymanager.monitoring.enums.EntryTypeEnum;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -524,7 +524,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     public ResultBean keywordUrlExport(HttpServletRequest request, HttpServletResponse response, KeywordCriteria keywordCriteria) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
-            List<Map> dataList = customerKeywordService.searchAllKeywordAndUrl(keywordCriteria.getCustomerUuid(), keywordCriteria.getTerminalType());
+            List<Map> dataList = customerKeywordService.searchAllKeywordAndUrl(keywordCriteria.getCustomerUuid(), keywordCriteria.getTerminalType(), keywordCriteria.getType());
             Customer customer = customerService.selectById(keywordCriteria.getCustomerUuid());
             CustomerKeywordAndUrlCvsExportWriter.exportCsv(dataList);
             CustomerKeywordAndUrlCvsExportWriter.downloadZip(response, customer.getContactPerson(), keywordCriteria.getTerminalType());

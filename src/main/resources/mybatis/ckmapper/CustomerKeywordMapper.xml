@@ -782,6 +782,7 @@
         </if>
         AND fCustomerUuid = #{keywordCriteria.customerUuid}
         AND fTerminalType = #{keywordCriteria.terminalType}
+        AND fType = #{keywordCriteria.type}
         AND (fTitle = '' OR fTitle IS NULL)
         AND (fUrl = '' OR fUrl IS NULL)
     </delete>
@@ -902,6 +903,7 @@
         t_customer_keyword
         WHERE fCustomerUuid = #{customerUuid}
         AND fTerminalType = #{terminalType}
+        AND fType = #{type}
     </select>
 
     <update id="updateSearchEngine">

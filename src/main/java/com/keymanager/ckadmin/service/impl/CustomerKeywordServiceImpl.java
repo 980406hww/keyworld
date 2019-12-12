@@ -631,8 +631,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public List<Map> searchAllKeywordAndUrl(Long customerUuid, String terminalType) {
-        return customerKeywordDao.selectAllKeywordAndUrl(customerUuid, terminalType);
+    public List<Map> searchAllKeywordAndUrl(Long customerUuid, String terminalType, String type) {
+        return customerKeywordDao.selectAllKeywordAndUrl(customerUuid, terminalType, type);
     }
 
     @Override

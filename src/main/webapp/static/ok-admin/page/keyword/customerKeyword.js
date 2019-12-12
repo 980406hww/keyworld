@@ -654,7 +654,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         let type = $('#type').val();
         var msg = "确定导出所有关键字吗？";
         if (type === 'qz') {
-            if (!domain || domain === '-1') {
+            if (!domain || domain === '请选择整站') {
                 msg = "确定导出所有站点的关键字排名吗？"
             } else {
                 msg = '确定导出' + domain + '站点的关键字排名吗？';
@@ -673,6 +673,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     function download_keyword_url() {
         $("#customerUuidKU").val($("#customerUuid").val());
         $("#terminalTypeKU").val($("#terminalType").val());
+        $("#typeKU").val($("#type").val());
         $("#keywordUrlForm").submit();
     }
 
@@ -1099,19 +1100,27 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     function batch_delete(deleteType) {
         let customerUuid = $("#customerUuid").val();
         let terminalType = $("#terminalType").val();
-        let qzUuid = $('#qzUuid').val();
-        let qzText = $('#qzUuid').parent().find("input").val();
-        if (qzUuid === '' || qzUuid === '-1') {
-            qzUuid = null;
-            qzText = "客户所有站点下";
+        let type = $("#type").val();
+        let qzUuid = null;
+        let msg;
+        if (type === 'qz') {
+            qzUuid = $("#qzUuid").val();
+            let domain = $("#qzUuid").find("option:selected").text();
+            if (domain === '' || domain === '请选择整站' || domain === '未关联整站数据') {
+                domain = "客户所有站点下";
+                qzUuid = null;
+            } else {
+                domain = "客户站点：" + domain;
+            }
+            msg = deleteType === 'byEmptyTitleAndUrl' ? '确定要删除' + domain + '标题和网址为空的词吗' : '确定要删除' + domain + '标题为空的词吗';
         } else {
-            qzText = "<br>客户站点：" + qzText + "<br>";
+            msg = deleteType === 'byEmptyTitleAndUrl' ? '确定要删除标题和网址为空的词吗' : '确定要删除标题为空的词吗';
         }
-        let msg = deleteType === 'byEmptyTitleAndUrl' ? '确定要删除'+ qzText +'标题和网址为空的词吗' : '确定要删除'+ qzText +'标题为空的词吗';
         layer.confirm(msg, {icon: 3, title: '删除词'}, function (index) {
             let postData = {};
             postData.customerUuid = customerUuid;
             postData.terminalType = terminalType;
+            postData.type = type;
             postData.deleteType = deleteType;
             postData.qzUuid = qzUuid;
             $.ajax({
