@@ -59,7 +59,10 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 				List<Long> customerUuids = customerService.getActiveDailyReportIdentifyCustomerUuids(userID);
 				if (CollectionUtils.isNotEmpty(customerUuids)) {
 					List<String> groupNames = customerKeywordService.getGroups(customerUuids);
-					return !captureRankJobService.hasUncompletedCaptureRankJob(groupNames, null);
+					if(CollectionUtils.isNotEmpty(groupNames)) {
+						return !captureRankJobService.hasUncompletedCaptureRankJob(groupNames, null);
+					}
+					return false;
 				}
 			}
 		}
