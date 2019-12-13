@@ -17,6 +17,7 @@ import com.keymanager.monitoring.excel.operator.CustomerKeywordDailyReportTotalE
 import com.keymanager.util.*;
 import com.keymanager.util.common.StringUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,13 +50,13 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 	@Autowired
 	private KeywordInfoSynchronizeService keywordInfoSynchronizeService;
 
-	private boolean autoTriggerDailyReportCondition(){
+	private boolean autoTriggerDailyReportCondition(@Param("userID") String userID){
 		Config dailyReportType = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_TYPE);
 		if(dailyReportType != null){
 			if(EntryTypeEnum.qt.name().equalsIgnoreCase(dailyReportType.getValue())){
 				return !captureRankJobService.hasUncompletedCaptureRankJob(null, "China");
 			}else{
-				List<Long> customerUuids = customerService.getActiveDailyReportIdentifyCustomerUuids(null);
+				List<Long> customerUuids = customerService.getActiveDailyReportIdentifyCustomerUuids(userID);
 				if (CollectionUtils.isNotEmpty(customerUuids)) {
 					List<String> groupNames = customerKeywordService.getGroups(customerUuids);
 					return !captureRankJobService.hasUncompletedCaptureRankJob(groupNames, null);
@@ -69,7 +70,7 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 		Config dailyReportType = configService.getConfig(Constants.CONFIG_TYPE_DAILY_REPORT, Constants.CONFIG_TYPE_DAILY_REPORT_TYPE);
 		if(dailyReportType != null) {
 			if (EntryTypeEnum.qt.name().equalsIgnoreCase(dailyReportType.getValue())) {
-				if(autoTriggerDailyReportCondition() && CollectionUtils.isEmpty(dailyReportDao.fetchDailyReportTriggeredInToday(null, DailyReportTriggerModeEnum.Auto.name()))) {
+				if(autoTriggerDailyReportCondition(null) && CollectionUtils.isEmpty(dailyReportDao.fetchDailyReportTriggeredInToday(null, DailyReportTriggerModeEnum.Auto.name()))) {
 					long dailyReportUuid = createDailyReport(null, DailyReportTriggerModeEnum.Auto.name(), null);
 					List<Long> pcCustomerUuids = customerKeywordService.getCustomerUuids(EntryTypeEnum.qt.name(), TerminalTypeEnum.PC.name());
 					for (Long customerUuid : pcCustomerUuids) {
@@ -85,7 +86,7 @@ public class DailyReportService extends ServiceImpl<DailyReportDao, DailyReport>
 				List<String> userIDs = customerService.getActiveDailyReportIdentifyUserIDs();
 				if (CollectionUtils.isNotEmpty(userIDs)) {
 					for (String userID : userIDs) {
-						if (autoTriggerDailyReportCondition() && CollectionUtils.isEmpty(dailyReportDao.fetchDailyReportTriggeredInToday(userID, DailyReportTriggerModeEnum.Auto.name()))) {
+						if (autoTriggerDailyReportCondition(userID) && CollectionUtils.isEmpty(dailyReportDao.fetchDailyReportTriggeredInToday(userID, DailyReportTriggerModeEnum.Auto.name()))) {
 							long dailyReportUuid = createDailyReport(null, DailyReportTriggerModeEnum.Auto.name(), userID);
 							List<Long> customerUuids = customerService.getActiveDailyReportIdentifyCustomerUuids(userID);
 							if (CollectionUtils.isNotEmpty(customerUuids)) {
