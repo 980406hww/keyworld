@@ -53,8 +53,7 @@
         FROM t_capture_rank_job c
         WHERE (
         c.fExectionStatus = 'New'
-        OR (c.fExectionStatus = 'Complete'
-        AND c.fExectionType = 'Everyday'
+        OR (c.fExectionType = 'Everyday'
         AND c.fLastExecutionDate &lt; curdate())
         )
         <if test="rankJobArea != null">

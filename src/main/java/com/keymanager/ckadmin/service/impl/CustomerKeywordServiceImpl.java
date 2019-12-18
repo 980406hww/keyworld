@@ -139,7 +139,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                     do {
                         optimizationKeywordVOS = customerKeywordDao
                             .fetchCustomerKeywordsForCache(terminalTypeAndMachineGroups[0], terminalTypeAndMachineGroups[1],
-                                ((machineCount * 10) > 5000 ? 5000 : (machineCount * 10)));
+                                ((machineCount * 20) > 8000 ? 8000 : (machineCount * 20)));
                         if (CollectionUtils.isNotEmpty(optimizationKeywordVOS)) {
                             List<Long> customerKeywordUuids = new ArrayList<>();
                             if (optimizationKeywordVOS.size() > machineCount) {
@@ -216,7 +216,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                             }
                         }
                     }
-                    while (currentSize + offerCount < (machineCount * 10) && CollectionUtils.isNotEmpty(optimizationKeywordVOS));
+                    while (currentSize + offerCount < (machineCount * 20) && CollectionUtils.isNotEmpty(optimizationKeywordVOS));
                 }
             }
         }
