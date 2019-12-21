@@ -3226,7 +3226,7 @@
                             objContent = parseInt(obj.innerHTML);
                             obj.innerHTML = content + objContent;
                             ele.previousElementSibling.innerHTML = '0';
-                            common.showFailMsg('操作成功');
+                            common.showSuccessMsg('操作成功', null);
                         } else {
                             common.showFailMsg('操作失败');
                         }
