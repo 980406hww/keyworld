@@ -1360,7 +1360,7 @@
             </if>
         </if>
         <if test="startTime != null and captureStatus == 1">
-            AND ck.fCapturePositionQueryTime &lt;&gt; DATE_SUB( NOW(), INTERVAL 3 MINUTE )
+            AND ck.fCapturePositionQueryTime &lt; DATE_SUB( NOW(), INTERVAL 3 MINUTE )
         </if>
         <if test="customerUuid != null">
             AND ck.fCustomerUuid = #{customerUuid}
