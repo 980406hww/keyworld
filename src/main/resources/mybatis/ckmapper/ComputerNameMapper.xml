@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.ComputerNameDao">
+    <insert id="addComputerName">
+        INSERT INTO t_computer_name(fComputerNamePrefix, fSequence) VALUES (#{computerNamePrefix}, #{sequence})
+    </insert>
+
+    <update id="updateComputerNameSequence">
+        UPDATE t_computer_name
+        SET fSequence = #{sequence}
+        WHERE fComputerNamePrefix = #{computerNamePrefix}
+    </update>
+
+    <select id="findComputerName" resultType="com.keymanager.ckadmin.entity.ComputerName">
+        select fComputerNamePrefix as 'computerNamePrefix', fSequence as 'sequence' from t_computer_name where fComputerNamePrefix = #{computerNamePrefix}
+    </select>
+</mapper>
