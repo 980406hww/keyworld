@@ -732,7 +732,7 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         return machineInfoDao.searchMachineInfoGroupSummaryVO(group,terminalType);
     }
 
-    public MachineInfo getStoppedMachineInfo(){
+    public MachineInfo getStoppedMachineInfo(String clientIDPrefix){
         MachineInfo tmpMachineInfo = null;
 //        List<ClientStatus> clientStatuses = clientStatusDao.searchRestartingClientStatuses();
 //        for(ClientStatus clientStatus : clientStatuses){
@@ -743,7 +743,7 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
 ////			}
 //        }
         if(tmpMachineInfo == null) {
-            List<MachineInfo> machineInfos = machineInfoDao.searchWaitingRestartingMachineInfos();
+            List<MachineInfo> machineInfos = machineInfoDao.searchWaitingRestartingMachineInfos(clientIDPrefix);
             for (MachineInfo machineInfo : machineInfos) {
 //				if (customerKeywordService.haveCustomerKeywordForOptimization(machineInfo.getTerminalType(), machineInfo.getClientID())) {
                 tmpMachineInfo = machineInfo;

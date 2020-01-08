@@ -78,7 +78,7 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     List<MachineInfo> searchRestartingMachineInfos();
 
-    List<MachineInfo> searchWaitingRestartingMachineInfos();
+    List<MachineInfo> searchWaitingRestartingMachineInfos(@Param("clientIDPrefix") String clientIDPrefix);
 
     void updatePageNo(@Param("clientID") String clientID, @Param("pageNo") int pageNo);
 
