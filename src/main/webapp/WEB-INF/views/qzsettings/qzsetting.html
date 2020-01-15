@@ -2173,9 +2173,6 @@
                     }
                     if (customerMsg && customerMsg.value.trim()) {
                         p_d.customerMsg = customerMsg.value.trim();
-                    }else {
-                        common.showFailMsg("请输入评价或原因。");
-                        return;
                     }
                     $.ajax({
                         url: '/internal/qzchargestatus/saveQZChargeStatus',

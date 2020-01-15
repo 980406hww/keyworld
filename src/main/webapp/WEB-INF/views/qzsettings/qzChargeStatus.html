@@ -65,7 +65,7 @@
                 {title: '续费状态', width: '11%', align: 'center', templet: '#item'},
                 {title: '收费金额', width: '11%', align: 'center', templet: '#item2'},
                 {title: '客户满意度', width: '11%', align: 'center', templet: '#item3'},
-                {field: 'chargeStatusMsg', title: '状态备注', width: '36%', align: 'center'},
+                {field: 'chargeStatusMsg', title: '状态备注', width: '36%', align: 'center', templet: '#chargeStatusMsg'},
                 {title: '创建时间', width: '16%', align: 'center', templet: '#item4'},
                 {field: 'loginName', title: '创建人', width: '15%', align: 'center'}
             ]],
@@ -115,6 +115,13 @@
 <script type="text/html" id="item4">
     {{#  if(d.createTime){ }}
         {{ layui.util.toDateString(d.createTime,'yyyy-MM-dd') }}
+    {{#  } }}
+</script>
+<script type="text/html" id="chargeStatusMsg">
+    {{#  if(d.chargeStatusMsg == ""){ }}
+        客户未评价
+    {{#  } else{ }}
+        {{d.chargeStatusMsg}}
     {{#  } }}
 </script>
 </body>
