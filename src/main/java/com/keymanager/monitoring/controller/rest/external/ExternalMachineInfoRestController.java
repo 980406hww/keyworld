@@ -125,9 +125,10 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
             userName = request.getParameter("username");
         }
         String password = request.getParameter("password");
+        String clientIDPrefix = request.getParameter("clientIDPrefix");
         try {
             if (validUser(userName, password)) {
-                MachineInfo machineInfo = machineInfoService.getStoppedMachineInfo();
+                MachineInfo machineInfo = machineInfoService.getStoppedMachineInfo(clientIDPrefix);
                 return new ResponseEntity<Object>(machineInfo, HttpStatus.OK);
             }
         } catch (Exception ex) {
@@ -144,9 +145,10 @@ public class ExternalMachineInfoRestController extends SpringMVCBaseController {
             userName = request.getParameter("username");
         }
         String password = request.getParameter("password");
+        String clientIDPrefix = request.getParameter("clientIDPrefix");
         try {
             if (validUser(userName, password)) {
-                MachineInfo machineInfo = machineInfoService.getStoppedMachineInfo();
+                MachineInfo machineInfo = machineInfoService.getStoppedMachineInfo(clientIDPrefix);
                 byte[] compress = AESUtils.compress(AESUtils.encrypt(machineInfo).getBytes());
                 String s = AESUtils.parseByte2HexStr(compress);
                 return new ResponseEntity<Object>(s, HttpStatus.OK);

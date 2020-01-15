@@ -581,6 +581,9 @@
         AND fTenMinsRestartTime &lt; NOW() and fRemainingKeyword = 1
         AND fStartUpStatus = 'Completed'
         AND fMachineGroup &gt; ''
+      <if test="clientIDPrefix != null and clientIDPrefix != ''">
+        AND cs.fClientID like '${clientIDPrefix}%'
+      </if>
         AND fValid = 1 AND fHost &gt; '' order by fRestartOrderingTime limit 1
     </select>
 
