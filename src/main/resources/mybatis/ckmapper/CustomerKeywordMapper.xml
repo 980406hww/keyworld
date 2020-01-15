@@ -848,6 +848,7 @@
         WHERE ck.fCustomerUuid = #{keywordCriteria.customerUuid}
         AND ck.fStatus = 1
         AND fTerminalType = #{keywordCriteria.terminalType}
+        AND fQZSettingUuid IS NULL
         ORDER BY ck.fSequence
     </select>
 
