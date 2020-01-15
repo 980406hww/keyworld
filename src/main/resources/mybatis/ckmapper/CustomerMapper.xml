@@ -148,16 +148,22 @@
     <select id="getActiveDailyReportIdentifyCustomerUuids" resultType="java.lang.Long">
         SELECT c.fUuid
         FROM t_customer c
+        LEFT JOIN t_customer_business tcb
+        ON c.fUuid = tcb.fCustomerUuid
         WHERE c.fStatus = 1
         AND c.fDailyReportIdentify = 1
+        AND tcb.fType IN ('keyword', 'qt')
         <if test="userID != null and userID != ''"> AND c.fUserID = #{userID}</if>
     </select>
 
     <select id="getActiveDailyReportIdentifyUserIDs" resultType="java.lang.String">
         SELECT DISTINCT c.fUserID
         FROM t_customer c
+        LEFT JOIN t_customer_business tcb
+        ON c.fUuid = tcb.fCustomerUuid
         WHERE c.fStatus = 1
-          AND c.fDailyReportIdentify = 1
+        AND c.fDailyReportIdentify = 1
+        AND tcb.fType IN ('keyword', 'qt')
     </select>
 
     <update id="changeSaleRemark">

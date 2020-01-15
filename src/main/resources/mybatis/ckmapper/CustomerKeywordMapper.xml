@@ -869,6 +869,7 @@
         WHERE ck.fType =  #{entryType}
         AND ck.fTerminalType = #{terminalType}
         AND ck.fStatus = 1
+        AND fQZSettingUuid IS NULL
     </select>
 
     <select id="searchCustomerKeywordInfo" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
