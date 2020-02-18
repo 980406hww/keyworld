@@ -14,35 +14,35 @@
     <!--模糊搜索区域-->
     <div class="layui-card ">
         <div class="layui-card-body ">
-                <div class="my-collapse">
-                    <div class="out-condition layui-row">
-                        <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
-                            <form class="layui-form layui-form-pane" id="searchForm">
-                                <div class="layui-row">
-                                    <div class="layui-col-md9 layui-col-sm9 layui-col-xs9" >
-                                        <input style="height: 30px" type="text" name="groupName" id="groupName" placeholder="搜索优化组名" autocomplete="off" class="layui-input layui-input-text">
-                                    </div>
-                                    <div class="layui-col-md3 layui-col-sm3 layui-col-xs3" style="text-align: center">
-                                        <button style="padding: 0 12px;" class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索</button>
-                                    </div>
+            <div class="my-collapse">
+                <div class="out-condition layui-row">
+                    <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
+                        <form class="layui-form layui-form-pane" id="searchForm">
+                            <div class="layui-row">
+                                <div class="layui-col-md9 layui-col-sm9 layui-col-xs9" >
+                                    <input style="height: 30px" type="text" name="groupName" id="groupName" placeholder="搜索优化组名" autocomplete="off" class="layui-input layui-input-text">
                                 </div>
-                            </form>
-                        </div>
-                        <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
-                            <form class="layui-form layui-form-pane" id="add">
-                                <div class="layui-row">
-                                    <div class="layui-col-md9 layui-col-sm9 layui-col-xs9">
-                                        <input style="height: 30px" type="text" name="groupName" id="addGroupName" placeholder="添加优化组名"
-                                               autocomplete="off" class="layui-input layui-input-text" lay-verify="required|oneGroupName">
-                                    </div>
-                                    <div class="layui-col-md3 layui-col-sm3 layui-col-xs3" style="text-align: center">
-                                        <button style="padding: 0 12px;" class="layui-btn" lay-submit="" lay-filter="add" id="addBtn">添加</button>
-                                    </div>
+                                <div class="layui-col-md3 layui-col-sm3 layui-col-xs3" style="text-align: center">
+                                    <button style="padding: 0 12px;" class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">搜索</button>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
+                        <form class="layui-form layui-form-pane" id="add">
+                            <div class="layui-row">
+                                <div class="layui-col-md9 layui-col-sm9 layui-col-xs9">
+                                    <input style="height: 30px" type="text" name="groupName" id="addGroupName" placeholder="添加优化组名"
+                                           autocomplete="off" class="layui-input layui-input-text" lay-verify="required|oneGroupName">
+                                </div>
+                                <div class="layui-col-md3 layui-col-sm3 layui-col-xs3" style="text-align: center">
+                                    <button style="padding: 0 12px;" class="layui-btn" lay-submit="" lay-filter="add" id="addBtn">添加</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
+            </div>
         </div>
     </div>
     <!--数据表格-->
@@ -51,7 +51,7 @@
 </div>
 <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
     <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
-        <button class="layui-btn" id="save" style="margin-right: 20px;width: 150px">
+        <button class="layui-btn layui-btn-disabled" id="save" style="margin-right: 20px;width: 150px;">
             保存
         </button>
         <div class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px;width: 150px">
@@ -65,6 +65,11 @@
 <script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
 <script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
+    // 进度条加载提示
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    };
 
     let layui_ = null;
     let uuid_ = null;
@@ -80,6 +85,8 @@
         let $ = layui.jquery;
         let table = layui.table;
         let common = layui.common;
+
+        let renderOver = false;
 
         groupTable = table.render({
             elem: '#groupTable',
@@ -99,7 +106,9 @@
                 $.each(res.data,function (idx, item) {
                     unselectUuidArr.push(item.groupUuid);
                     groups_.push(item.groupName);
-                })
+                });
+                renderOver = true;
+                $("#save").removeClass("layui-btn-disabled");
             }
         });
 
@@ -152,43 +161,44 @@
         };
 
         $('#save').click(function () {
-            let checkStatus = table.checkStatus('groupTable'), data = checkStatus.data;
-            $.each(data, function (index, item) {
-                unselectUuidArr.remove(item.groupUuid)
-            });
-            if (unselectUuidArr.length < 1) {
-                common.showSuccessMsg('操作成功', function () {
-                    parent.window.sign = true;
-                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+            if (renderOver) {
+                let checkStatus = table.checkStatus('groupTable'), data = checkStatus.data;
+                $.each(data, function (index, item) {
+                    unselectUuidArr.remove(item.groupUuid)
+                });
+                if (unselectUuidArr.length < 1) {
+                    common.showSuccessMsg('操作成功', function () {
+                        parent.window.sign = true;
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                }
+                let postData = {};
+                postData.groupUuids = unselectUuidArr;
+                $.ajax({
+                    url: '/internal/group/deleteGroupsBelowOperationCombine2',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(postData),
+                    timeout: 10000,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.code === 200) {
+                            common.showSuccessMsg('操作成功', function () {
+                                parent.window.sign = true;
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            });
+                        } else {
+                            common.showFailMsg('操作失败');
+                        }
+                    },
+                    error: function () {
+                        common.showFailMsg('操作失败');
+
+                    }
                 });
             }
-            let postData = {};
-            postData.groupUuids = unselectUuidArr;
-            $.ajax({
-                url: '/internal/group/deleteGroupsBelowOperationCombine2',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                data: JSON.stringify(postData),
-                timeout: 10000,
-                type: 'POST',
-                success: function (result) {
-                    if (result.code === 200) {
-                        common.showSuccessMsg('操作成功', function () {
-                            parent.window.sign = true;
-                            parent.layer.close(parent.layer.getFrameIndex(window.name));
-                        });
-                    } else {
-                        common.showFailMsg('操作失败');
-                    }
-                },
-                error: function () {
-                    common.showFailMsg('操作失败');
-
-                }
-            });
-
         });
 
         $('#close').click(function () {
