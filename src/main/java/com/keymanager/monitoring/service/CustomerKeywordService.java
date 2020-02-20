@@ -19,6 +19,7 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.ibatis.jdbc.Null;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,10 +146,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     }
                     updateOptimizedCountVO.setTotalCount(tmpUpdateOptimizedCountVO.getTotalCount() + 1);
                     updateOptimizedCountVO.setTotalSucceedCount(tmpUpdateOptimizedCountVO.getTotalSucceedCount() + updateOptimizedCountVO.getCount());
-                    if(updateOptimizedCountVO.getCount() > 0){
+                    if (updateOptimizedCountVO.getCount() > 0) {
                         updateOptimizedCountVO.setLastContinueFailedCount(0);
-                    }else{
+                        updateOptimizedCountVO.setFailedCause("");
+                    } else {
                         updateOptimizedCountVO.setLastContinueFailedCount(tmpUpdateOptimizedCountVO.getLastContinueFailedCount() + 1);
+                        if (tmpUpdateOptimizedCountVO.getFailedCause() != null && tmpUpdateOptimizedCountVO.getFailedCause() != "") {
+                            updateOptimizedCountVO.setFailedCause(tmpUpdateOptimizedCountVO.getFailedCause());
+                        }
                     }
 
                     UpdateOptimizedCountSimpleVO tmpUpdateOptimizedSimpleCountVO = updateOptimizedCountSimpleVOMap.get(updateOptimizedCountVO.getCustomerKeywordUuid());
@@ -162,8 +167,10 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     if(updateOptimizedCountVO.getCount() > 0){
                         tmpUpdateOptimizedSimpleCountVO.setLastContinueFailedCount(0);
                         tmpUpdateOptimizedSimpleCountVO.setTotalSucceedCount(tmpUpdateOptimizedSimpleCountVO.getTotalSucceedCount() + 1);
+                        tmpUpdateOptimizedSimpleCountVO.setFailedCause("");
                     }else{
                         tmpUpdateOptimizedSimpleCountVO.setLastContinueFailedCount(tmpUpdateOptimizedSimpleCountVO.getLastContinueFailedCount() + 1);
+                        tmpUpdateOptimizedSimpleCountVO.setFailedCause(updateOptimizedCountVO.getFailedCause());
                     }
                 }else{
                     queueEmptied = true;

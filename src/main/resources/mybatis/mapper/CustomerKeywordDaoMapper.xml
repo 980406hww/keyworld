@@ -629,11 +629,11 @@
     </select>
 
     <update id="resetOptimizationInfoForNoOptimizeDate" timeout="200000">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeTodayCount = fOptimizePlanCount * ROUND((RAND()*0.7+0.5),1), fQueryInterval = (24*60*60)/fOptimizeTodayCount, fOptimizeRemainingCount = fOptimizeTodayCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = DATE_ADD(NOW(), INTERVAL ROUND(RAND(1000)*1000) SECOND) WHERE fOptimizeDate IS NULL
+        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeTodayCount = fOptimizePlanCount * ROUND((RAND()*0.7+0.5),1), fQueryInterval = (24*60*60)/fOptimizeTodayCount, fOptimizeRemainingCount = fOptimizeTodayCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fFailedCause = '', fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = DATE_ADD(NOW(), INTERVAL ROUND(RAND(1000)*1000) SECOND) WHERE fOptimizeDate IS NULL
     </update>
 
     <update id="resetOptimizationInfo">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeTodayCount = fOptimizePlanCount * ROUND((RAND()*0.7+0.5),1), fQueryInterval = (24*60*60)/fOptimizeTodayCount, fOptimizeRemainingCount = fOptimizeTodayCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = DATE_ADD(NOW(), INTERVAL ROUND(RAND(1000)*1000) SECOND) WHERE fOptimizeDate <![CDATA[<]]> CURRENT_DATE() LIMIT 200000
+        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeTodayCount = fOptimizePlanCount * ROUND((RAND()*0.7+0.5),1), fQueryInterval = (24*60*60)/fOptimizeTodayCount, fOptimizeRemainingCount = fOptimizeTodayCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fFailedCause = '', fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = DATE_ADD(NOW(), INTERVAL ROUND(RAND(1000)*1000) SECOND) WHERE fOptimizeDate <![CDATA[<]]> CURRENT_DATE() LIMIT 200000
     </update>
 
     <select id="searchRemainingOptimizationCount" resultType="java.util.Map">
@@ -764,6 +764,11 @@
                     when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then #{updateOptimizedCountVO.totalSucceedCount}
                 </foreach>
             </trim>
+            <trim prefix="fFailedCause =  (case" suffix="end),">
+                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
+                    when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then #{updateOptimizedCountVO.failedCause}
+                </foreach>
+            </trim>
             <trim prefix="fInvalidRefreshCount = (case" suffix="end),">
                 <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
                     when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then
@@ -777,8 +782,11 @@
                     </choose>
                 </foreach>
             </trim>
-            fInvalidFlag = if(fInvalidRefreshCount > 8, 1, 0), fLastOptimizeDateTime = now(), fQueryTime = if(fOptimizeTodayCount > fOptimizedCount, fQueryTime,
-            DATE_ADD(NOW(), INTERVAL 1 DAY)), fUpdateTime = NOW()
+            fInvalidFlag = if(fInvalidRefreshCount > 8 or fFailedCause > '', 1, 0),
+            fLastOptimizeDateTime = now(),
+            fQueryTime = if(fOptimizeTodayCount > fOptimizedCount, fQueryTime,DATE_ADD(NOW(), INTERVAL 1 DAY)),
+            fUpdateTime = NOW()
+
         </trim>
         WHERE fUuid IN
         <foreach item="updateOptimizedCountVO" index="index" collection="updateOptimizedCountVOs" open="(" separator="," close=")">

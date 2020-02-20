@@ -10,7 +10,7 @@
 				<ref bean="cronTriggerCacheCustomerKeyword" />
 				<ref bean="cronTriggerCacheCrawlRankCustomerQZKeyword" />
 				<ref bean="cronTriggerCacheCrawlRankCustomerPTKeyword" />
-				<ref bean="cronTriggerCacheCheckingEnteredCustomerKeyword" />
+<!--				<ref bean="cronTriggerCacheCheckingEnteredCustomerKeyword" />-->
 				<ref bean="cronTriggerUpdateOptimizedCount" />
 				<ref bean="cronTriggerQZRateStatistics" />
 			</list>

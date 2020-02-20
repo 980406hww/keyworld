@@ -11,6 +11,15 @@ public class UpdateOptimizedCountVO extends UpdateOptimizedCountSimpleVO{
     private int cpuCount;
     private int memory;
     private String ip;
+    private String failedCause;
+
+    public String getFailedCause() {
+        return failedCause;
+    }
+
+    public void setFailedCause(String failedCause) {
+        this.failedCause = failedCause;
+    }
 
     public int getCount() {
         return count;

@@ -422,6 +422,8 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         updateOptimizedCountVO.setMemory(request.getParameter("memory") == null ? 0
             : Integer.parseInt(request.getParameter("memory")));
         updateOptimizedCountVO.setIp(getIP(request));
+        updateOptimizedCountVO.setFailedCause(request.getParameter("failedCause") == null ? ""
+                : request.getParameter("failedCause"));
 
         String position = request.getParameter("position");
 

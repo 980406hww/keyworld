@@ -7,6 +7,15 @@ public class UpdateOptimizedCountSimpleVO implements Serializable{
     private int totalCount;
     private int totalSucceedCount;
     private int lastContinueFailedCount;
+    private String failedCause;
+
+    public String getFailedCause() {
+        return failedCause;
+    }
+
+    public void setFailedCause(String failedCause) {
+        this.failedCause = failedCause;
+    }
 
     public Long getCustomerKeywordUuid() {
         return customerKeywordUuid;
