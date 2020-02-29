@@ -1464,6 +1464,9 @@
             FROM t_customer_keyword ck
             WHERE ck.fType = #{type}
             AND ck.fSearchEngine = '百度'
+            <if test="type == 'qz'">
+                AND ck.fTerminalType = 'PC'
+            </if>
             <choose>
                 <when test="captureStatus == 1">
                     AND ck.fCaptureStatus = 1
