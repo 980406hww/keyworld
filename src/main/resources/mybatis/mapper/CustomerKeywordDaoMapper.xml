@@ -782,7 +782,7 @@
                     </choose>
                 </foreach>
             </trim>
-            fInvalidFlag = if(fInvalidRefreshCount > 8 or fFailedCause > '', 1, 0),
+            fInvalidFlag = if(fInvalidRefreshCount > 8 or (fFailedCause > ''  AND fOptimizedCount = 0), 1, 0),
             fLastOptimizeDateTime = now(),
             fQueryTime = if(fOptimizeTodayCount > fOptimizedCount, fQueryTime,DATE_ADD(NOW(), INTERVAL 1 DAY)),
             fUpdateTime = NOW()
