@@ -22,7 +22,8 @@
         ck.fPositionThirdFee	AS	'positionThirdFee',
         ck.fPositionForthFee	AS	'positionForthFee',
         ck.fPositionFifthFee	AS	'positionFifthFee',
-        ck.fPositionFirstPageFee	AS	'positionFirstPageFee'
+        ck.fPositionFirstPageFee	AS	'positionFirstPageFee',
+        ck.fCreateTime              AS 'createTime'
     </sql>
 
     <sql id="searchCustomerKeywordsCriteria">
