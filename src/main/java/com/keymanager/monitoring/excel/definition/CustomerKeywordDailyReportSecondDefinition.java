@@ -6,7 +6,8 @@ public enum CustomerKeywordDailyReportSecondDefinition {
 	Price1(2, "前三单价"),
 	Price4(3, "首页单价"),
 	CurrentPosition(4, "当天排名"),
-	TodayPrice(5, "当天收费");
+	TodayPrice(5, "当天收费"),
+	OperateStartDate(6, "上词日期");
 
 	private int columnIndex;
 	private String title;

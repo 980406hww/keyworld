@@ -9,10 +9,13 @@ import com.keymanager.util.excel.ExcelWriteException;
 import com.keymanager.util.excel.JXLExcelWriter;
 import jxl.Sheet;
 import jxl.read.biff.BiffException;
+import org.apache.commons.lang.time.DateUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class CustomerKeywordDailyReportSecondExcelWriter {
@@ -25,6 +28,7 @@ public class CustomerKeywordDailyReportSecondExcelWriter {
 	private int price4Width;
 	private int currentPositionWidth;
 	private int todayPriceWidth;
+	private int operateStartDateWidth;
 
 	private String dailyReportFileName;
 	private long dailyReportUuid;
@@ -93,6 +97,7 @@ public class CustomerKeywordDailyReportSecondExcelWriter {
 			writer.setColumnView(CustomerKeywordDailyReportSecondDefinition.Price4.getColumnIndex(), price4Width + 6);
 			writer.setColumnView(CustomerKeywordDailyReportSecondDefinition.CurrentPosition.getColumnIndex(), currentPositionWidth + 6);
 			writer.setColumnView(CustomerKeywordDailyReportSecondDefinition.TodayPrice.getColumnIndex(), todayPriceWidth + 6);
+			writer.setColumnView(CustomerKeywordDailyReportSecondDefinition.OperateStartDate.getColumnIndex(), operateStartDateWidth + 6);
 
 			writeDailySubTotal(rowIndex);
 
@@ -116,7 +121,10 @@ public class CustomerKeywordDailyReportSecondExcelWriter {
 		price4Width = calculateWidth(price4Width, CustomerKeywordDailyReportSecondDefinition.Price4.getTitle());
 		writer.addLabelCell(CustomerKeywordDailyReportSecondDefinition.TodayPrice.getColumnIndex(), rowIndex, CustomerKeywordDailyReportSecondDefinition
 				.TodayPrice.getTitle(), true);
+		writer.addLabelCell(CustomerKeywordDailyReportSecondDefinition.OperateStartDate.getColumnIndex(), rowIndex, CustomerKeywordDailyReportSecondDefinition
+				.OperateStartDate.getTitle(), true);
 		todayPriceWidth = calculateWidth(todayPriceWidth, CustomerKeywordDailyReportSecondDefinition.TodayPrice.getTitle());
+		operateStartDateWidth = calculateWidth(operateStartDateWidth, CustomerKeywordDailyReportSecondDefinition.OperateStartDate.getTitle());
 	}
 	
 	private double writeDailyRow(int rowIndex, CustomerKeyword view) throws ExcelWriteException{
@@ -142,6 +150,8 @@ public class CustomerKeywordDailyReportSecondExcelWriter {
 				writer.addLabelCell(CustomerKeywordDailyReportSecondDefinition.TodayPrice.getColumnIndex(), rowIndex, todayPrice);
 			}
 		}
+		SimpleDateFormat f = new SimpleDateFormat("MM-dd");
+		writer.addLabelCell(CustomerKeywordDailyReportSecondDefinition.OperateStartDate.getColumnIndex(), rowIndex, f.format(view.getCreateTime()));
 		return todayPrice;
 	}
 
