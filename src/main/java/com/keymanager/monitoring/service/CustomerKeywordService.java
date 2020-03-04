@@ -132,7 +132,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         int times = 0;
         boolean queueEmptied = false;
         do {
+            //机器信息
             Map<String, UpdateOptimizedCountVO> updateOptimizedCountVOMap = new HashMap<String, UpdateOptimizedCountVO>();
+            //关键字信息
             Map<Long, UpdateOptimizedCountSimpleVO> updateOptimizedCountSimpleVOMap = new HashMap<Long, UpdateOptimizedCountSimpleVO>();
             for(int i = 0; i < 1000; i++) {
                 Object obj = updateOptimizedResultQueue.poll();
@@ -148,12 +150,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     updateOptimizedCountVO.setTotalSucceedCount(tmpUpdateOptimizedCountVO.getTotalSucceedCount() + updateOptimizedCountVO.getCount());
                     if (updateOptimizedCountVO.getCount() > 0) {
                         updateOptimizedCountVO.setLastContinueFailedCount(0);
-                        updateOptimizedCountVO.setFailedCause("");
                     } else {
                         updateOptimizedCountVO.setLastContinueFailedCount(tmpUpdateOptimizedCountVO.getLastContinueFailedCount() + 1);
-                        if (tmpUpdateOptimizedCountVO.getFailedCause() != null && tmpUpdateOptimizedCountVO.getFailedCause() != "") {
-                            updateOptimizedCountVO.setFailedCause(tmpUpdateOptimizedCountVO.getFailedCause());
-                        }
                     }
 
                     UpdateOptimizedCountSimpleVO tmpUpdateOptimizedSimpleCountVO = updateOptimizedCountSimpleVOMap.get(updateOptimizedCountVO.getCustomerKeywordUuid());
@@ -170,7 +168,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                         tmpUpdateOptimizedSimpleCountVO.setFailedCause("");
                     }else{
                         tmpUpdateOptimizedSimpleCountVO.setLastContinueFailedCount(tmpUpdateOptimizedSimpleCountVO.getLastContinueFailedCount() + 1);
-                        tmpUpdateOptimizedSimpleCountVO.setFailedCause(updateOptimizedCountVO.getFailedCause());
+                        if (updateOptimizedCountVO.getFailedCause() != null && updateOptimizedCountVO.getFailedCause() != "") {
+                            tmpUpdateOptimizedSimpleCountVO.setFailedCause(updateOptimizedCountVO.getFailedCause());
+                        }
                     }
                 }else{
                     queueEmptied = true;
