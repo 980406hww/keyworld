@@ -3,7 +3,6 @@ package com.keymanager.ckadmin.excel.operator;
 
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.entity.IndustryInfo;
-import com.keymanager.ckadmin.excel.definition.SuperUserFullKeywordDefinition;
 import com.keymanager.ckadmin.excel.definition.SuperUserSimpleKeywordDefinition;
 import com.keymanager.ckadmin.util.Constants;
 import com.keymanager.ckadmin.util.Utils;
@@ -39,7 +38,7 @@ public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
         if (Utils.isNullOrEmpty(customerKeyword.getUrl())) {
             return null;
         }
-        String searchEngine = getStringValue(SuperUserFullKeywordDefinition.SearchEngine.getColumnIndex(), rowIndex);
+        String searchEngine = getStringValue(SuperUserSimpleKeywordDefinition.SearchEngine.getColumnIndex(), rowIndex);
         if (Utils.isNullOrEmpty(searchEngine)) {
             customerKeyword.setSearchEngine(Constants.SEARCH_ENGINE_BAIDU);
         } else {
@@ -65,7 +64,9 @@ public class SuperUserSimpleKeywordExcelOperator extends AbstractExcelReader {
         Integer sequence = getIntValue(SuperUserSimpleKeywordDefinition.Sequnce.getColumnIndex(), rowIndex);
         customerKeyword.setSequence(sequence);
 
-        Integer optimizePlanCount = getIntValue(SuperUserFullKeywordDefinition.OptimizePlanCount.getColumnIndex(), rowIndex);
+        Integer optimizePlanCount = getIntValue(SuperUserSimpleKeywordDefinition.OptimizePlanCount.getColumnIndex(), rowIndex);
+        // null是脏数据，故设置默认要刷数：50
+        optimizePlanCount = optimizePlanCount == null ? 50 : optimizePlanCount;
         customerKeyword.setOptimizePlanCount(optimizePlanCount);
         customerKeyword.setOptimizeRemainingCount(optimizePlanCount);
 

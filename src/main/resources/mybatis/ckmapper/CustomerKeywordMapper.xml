@@ -455,9 +455,6 @@
         <if test="keywordCriteria.customerKeywordSource != null and keywordCriteria.customerKeywordSource != ''">
             AND ck.fCustomerKeywordSource = #{keywordCriteria.customerKeywordSource}
         </if>
-        <if test="keywordCriteria.status != null and keywordCriteria.status != ''">
-            AND ck.fStatus = #{keywordCriteria.status}
-        </if>
         <if test="keywordCriteria.gtOptimizePlanCount != null">
             AND ck.fOptimizePlanCount &gt;= #{keywordCriteria.gtOptimizePlanCount}
         </if>

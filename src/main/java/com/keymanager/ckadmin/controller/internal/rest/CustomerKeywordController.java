@@ -495,7 +495,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
                 keywordCriteria.setOrderingElement("fKeyword DESC");
             }
             List<CustomerKeyword> customerKeywords = customerKeywordService.searchCustomerKeywordInfo(keywordCriteria);
-            if (!Utils.isEmpty(customerKeywords)) {
+            if (CollectionUtils.isNotEmpty(customerKeywords)) {
                 CustomerKeywordInfoExcelWriter excelWriter = new CustomerKeywordInfoExcelWriter();
                 excelWriter.writeDataToExcel(customerKeywords);
                 Customer customer = customerService.selectById(keywordCriteria.getCustomerUuid());
@@ -510,13 +510,13 @@ public class CustomerKeywordController extends SpringMVCBaseController {
                 byte[] buffer = excelWriter.getExcelContentBytes();
                 downExcelFile(response, fileName, buffer);
             }
+            return resultBean;
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
             return resultBean;
         }
-        return resultBean;
     }
 
     @RequiresPermissions("/internal/customerKeyword/cleanTitle")

@@ -50,7 +50,8 @@ public class CustomerKeywordInfoExcelWriter {
             view.getInitialPosition() == null ? 0 : view.getInitialPosition());
         writer.addLabelCell(CustomerKeywordInfoDefinition.CurrentPosition.getColumnIndex(), rowIndex,
             view.getCurrentPosition() == null ? 0 : view.getCurrentPosition());
-        writer.addLabelCell(CustomerKeywordInfoDefinition.PlannedOptimizeCount.getColumnIndex(), rowIndex, view.getOptimizePlanCount());
+        writer.addLabelCell(CustomerKeywordInfoDefinition.PlannedOptimizeCount.getColumnIndex(), rowIndex,
+            view.getOptimizePlanCount() == null ? 0 : view.getOptimizePlanCount());
         writer.addLabelCell(CustomerKeywordInfoDefinition.OptimizedCount.getColumnIndex(), rowIndex, view.getOptimizedCount());
         writer.addLabelCell(CustomerKeywordInfoDefinition.Price1.getColumnIndex(), rowIndex, view.getPositionFirstFeeString());
         writer.addLabelCell(CustomerKeywordInfoDefinition.Price2.getColumnIndex(), rowIndex, view.getPositionSecondFeeString());

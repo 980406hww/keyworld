@@ -62,6 +62,8 @@ public class SuperUserFullKeywordExcelOperator extends AbstractExcelReader {
         Integer sequence = getIntValue(SuperUserFullKeywordDefinition.Sequnce.getColumnIndex(), rowIndex);
         customerKeyword.setSequence(sequence);
         Integer optimizePlanCount = getIntValue(SuperUserFullKeywordDefinition.OptimizePlanCount.getColumnIndex(), rowIndex);
+        // null是脏数据，故设置默认要刷数：50
+        optimizePlanCount = optimizePlanCount == null ? 50 : optimizePlanCount;
         customerKeyword.setOptimizePlanCount(optimizePlanCount);
         customerKeyword.setOptimizeRemainingCount(optimizePlanCount);
         customerKeyword.setMachineGroup(getStringValue(SuperUserFullKeywordDefinition.MachineGroupName.getColumnIndex(), rowIndex).trim());
