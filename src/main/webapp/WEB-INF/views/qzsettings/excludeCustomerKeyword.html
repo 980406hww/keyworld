@@ -136,6 +136,7 @@
 
         form.on("submit(save)", function (data) {
             var postData = common.jsonObjectTrim(data.field);
+            postData.type = 'qz';
             if (!postData.customerKeywordDialogContent) {
                 layer.confirm('确认修改为空值吗？', {offset: '120px'}, function (index) {
                     commit(postData);

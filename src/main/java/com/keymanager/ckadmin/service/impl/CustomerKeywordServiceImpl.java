@@ -258,8 +258,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public void excludeCustomerKeyword(QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
-        customerKeywordDao.excludeCustomerKeyword(qzSettingExcludeCustomerKeywordsCriteria);
+    public void excludeCustomerKeyword(QZSettingExcludeCustomerKeywordsCriteria criteria) {
+        customerKeywordDao.excludeCustomerKeyword(criteria);
     }
 
     @Override

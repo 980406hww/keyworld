@@ -258,13 +258,11 @@ public class QZSettingController extends SpringMVCBaseController {
         return mv;
     }
 
-
     /**
      * 排除词回显
      */
     @PostMapping(value = "/echoExcludeKeyword2")
-    public ResultBean echoExcludeKeyword(HttpServletRequest request,
-        @RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
+    public ResultBean echoExcludeKeyword(@RequestBody QZSettingExcludeCustomerKeywordsCriteria qzSettingExcludeCustomerKeywordsCriteria) {
         ResultBean resultBean = new ResultBean();
         try {
             CustomerExcludeKeyword customerExcludeKeyword = qzSettingService.echoExcludeKeyword(qzSettingExcludeCustomerKeywordsCriteria);
@@ -278,7 +276,6 @@ public class QZSettingController extends SpringMVCBaseController {
             return resultBean;
         }
         return resultBean;
-
     }
 
     /**
@@ -292,14 +289,13 @@ public class QZSettingController extends SpringMVCBaseController {
             qzSettingService.excludeQZSettingCustomerKeywords(qzSettingExcludeCustomerKeywordsCriteria);
             resultBean.setCode(200);
             resultBean.setMsg("更新排除词成功");
+            return resultBean;
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
             return resultBean;
         }
-        return resultBean;
-
     }
 
     /**

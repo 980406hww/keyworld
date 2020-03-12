@@ -102,17 +102,26 @@
     <update id="excludeCustomerKeyword">
         UPDATE t_customer_keyword ck
         SET ck.fStatus = 3
-        WHERE 1=1
-        <if test="qzSettingExcludeCustomerKeywordsCriteria.customerUuid != null and qzSettingExcludeCustomerKeywordsCriteria.customerUuid != ''">
-            AND ck.fCustomerUuid = #{qzSettingExcludeCustomerKeywordsCriteria.customerUuid}
-        </if>
-        AND ck.fType = #{qzSettingExcludeCustomerKeywordsCriteria.type}
-        AND ck.fTerminalType = #{qzSettingExcludeCustomerKeywordsCriteria.terminalType}
-        AND ck.fKeyword IN
-        <foreach item="keyword" collection="qzSettingExcludeCustomerKeywordsCriteria.keywords" open="(" separator="," close=")">
-            #{keyword}
-        </foreach>
-        AND ck.fUrl LIKE CONCAT(#{qzSettingExcludeCustomerKeywordsCriteria.domain},'%')
+        <where>
+            <if test="criteria.customerUuid != null and criteria.customerUuid != ''">
+                ck.fCustomerUuid = #{criteria.customerUuid}
+            </if>
+            <if test="criteria.type != null and criteria.type != ''">
+                AND ck.fType = #{criteria.type}
+            </if>
+            <if test="criteria.terminalType != null and criteria.terminalType != ''">
+                AND ck.fTerminalType = #{criteria.terminalType}
+            </if>
+            <if test="criteria.keywords.size > 0">
+                AND ck.fKeyword IN
+                <foreach item="keyword" collection="criteria.keywords" open="(" separator="," close=")">
+                    #{keyword}
+                </foreach>
+            </if>
+            <if test="criteria.domain != null and criteria.domain != ''">
+                AND FIND_IN_SET(#{criteria.domain}, ck.fUrl)
+            </if>
+        </where>
     </update>
 
     <insert id="addCustomerKeywords">
