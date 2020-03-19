@@ -25,6 +25,7 @@ import com.keymanager.ckadmin.vo.OptimizationVO;
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
 import com.keymanager.ckadmin.vo.SearchEngineResultVO;
+import com.keymanager.monitoring.vo.UpdateOptimizedCountVO;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
 import java.io.InputStream;
@@ -44,6 +45,10 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     List<MachineGroupQueueVO> getMachineGroupAndSize();
 
     void cacheCustomerKeywords();
+
+    void cacheUpdateOptimizedCountResult(UpdateOptimizedCountVO updateOptimizedCountVO);
+
+    void updateOptimizedCount();
 
     void updateOptimizationQueryTime(List<Long> customerKeywordUuids);
 
@@ -164,4 +169,7 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     List<OptimizationMachineVO> fetchCustomerKeywordForOptimizationList(MachineInfo machineInfo);
 
     void deleteSysCustomerKeywordByQzId(Long uuid);
+
+    CustomerKeywordForCapturePosition getCustomerKeywordForCapturePosition(String terminalType, List<String> groupNames, Long customerUuid,
+                                                                                  Date startTime, Long captureRankJobUuid);
 }

@@ -99,6 +99,4 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
     List<MachineInfoMachineGroupSummaryVO> searchMachineInfoMachineGroupSummaryVO(@Param("machineGroup") String machineGroup, @Param("terminalType") String terminalType);
 
     void updateMachine(@Param("clientID")String clientID, @Param("city")String city, @Param("version")String version,@Param("freeSpace") String freeSpace,@Param("runningProgramType") String runningProgramType,@Param("cpuCount") int cpuCount,@Param("memory") int memory);
-
-    void updateOptimizationResultFromCache(@Param("updateOptimizedCountVOs") Collection<UpdateOptimizedCountVO> updateOptimizedCountVOs);
 }

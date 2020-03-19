@@ -49,6 +49,76 @@
         mi.fMemory AS "memory"
     </sql>
 
+    <update id="updateOptimizationResultFromCache" parameterType="java.util.Collection">
+        UPDATE t_machine_info
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="fOptimizationTotalCount = fOptimizationTotalCount + (case" suffix="end),">
+                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
+                    when fClientID = #{updateOptimizedCountVO.clientID} then #{updateOptimizedCountVO.totalCount}
+                </foreach>
+            </trim>
+            <trim prefix="fOptimizationSucceedCount = fOptimizationSucceedCount + (case" suffix="end),">
+                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
+                    when fClientID = #{updateOptimizedCountVO.clientID} then #{updateOptimizedCountVO.totalSucceedCount}
+                </foreach>
+            </trim>
+            <trim prefix="fStatus = (case" suffix="end),">
+                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
+                    when fClientID = #{updateOptimizedCountVO.clientID} then #{updateOptimizedCountVO.status}
+                </foreach>
+            </trim>
+            <trim prefix="fFreeSpace = (case" suffix="end),">
+                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
+                    when fClientID = #{updateOptimizedCountVO.clientID} then #{updateOptimizedCountVO.freeSpace}
+                </foreach>
+            </trim>
+            <trim prefix="fVersion = (case" suffix="end),">
+                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
+                    when fClientID = #{updateOptimizedCountVO.clientID} then #{updateOptimizedCountVO.version}
+                </foreach>
+            </trim>
+            <trim prefix="fCity = (case" suffix="end),">
+                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
+                    when fClientID = #{updateOptimizedCountVO.clientID} then #{updateOptimizedCountVO.city}
+                </foreach>
+            </trim>
+            <trim prefix="fRunningProgramType = (case" suffix="end),">
+                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
+                    when fClientID = #{updateOptimizedCountVO.clientID} then #{updateOptimizedCountVO.runningProgramType}
+                </foreach>
+            </trim>
+            <trim prefix="fCpuCount = (case" suffix="end),">
+                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
+                    when fClientID = #{updateOptimizedCountVO.clientID} then #{updateOptimizedCountVO.cpuCount}
+                </foreach>
+            </trim>
+            <trim prefix="fMemory = (case" suffix="end),">
+                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
+                    when fClientID = #{updateOptimizedCountVO.clientID} then #{updateOptimizedCountVO.memory}
+                </foreach>
+            </trim>
+            <trim prefix="fVersion = (case" suffix="end),">
+                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
+                    when fClientID = #{updateOptimizedCountVO.clientID} then #{updateOptimizedCountVO.version}
+                </foreach>
+            </trim>
+            <trim prefix="fContinuousFailCount = (case" suffix="end),">
+                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
+                    when fClientID = #{updateOptimizedCountVO.clientID} then IF(#{updateOptimizedCountVO.totalSucceedCount} > 0, 0, fContinuousFailCount) + #{updateOptimizedCountVO.lastContinueFailedCount}
+                </foreach>
+            </trim>
+            fRestartOrderingTime = NOW(),
+            fOptimizationStartDate = IF(fOptimizationStartDate IS NULL, CURRENT_DATE(), fOptimizationStartDate),
+            fLastVisitTime = NOW(),
+            fTenMinsLastVisitTime = DATE_ADD(NOW(), INTERVAL 10 MINUTE ),
+            fLastSendNotificationTime = NULL
+        </trim>
+        WHERE fClientID IN
+        <foreach item="updateOptimizedCountVO" index="index" collection="updateOptimizedCountVOs" open="(" separator="," close=")">
+            #{updateOptimizedCountVO.clientID}
+        </foreach>
+    </update>
+
     <update id="updateMachineInfoTargetVersion">
         UPDATE t_machine_info SET fTargetVersion = #{targetVersion}
         WHERE fClientID IN

@@ -40,10 +40,6 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
     @Autowired
     private ClientStatusRestartLogService clientStatusRestartLogService;
 
-    public void updateOptimizationResultFromCache(Collection updateOptimizedCountVOs){
-        machineInfoDao.updateOptimizationResultFromCache(updateOptimizedCountVOs);
-    }
-
     public void changeTerminalType(String clientID, String terminalType){
         MachineInfo machineInfo = machineInfoDao.selectById(clientID);
         if(machineInfo != null){

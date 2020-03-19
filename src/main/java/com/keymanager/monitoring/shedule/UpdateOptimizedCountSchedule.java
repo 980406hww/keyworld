@@ -1,18 +1,17 @@
 package com.keymanager.monitoring.shedule;
 
-import com.keymanager.monitoring.service.CustomerKeywordService;
-import com.keymanager.monitoring.service.MachineInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 @Component
 public class UpdateOptimizedCountSchedule {
     private static Logger logger = LoggerFactory.getLogger(UpdateOptimizedCountSchedule.class);
 
-    @Autowired
-    private CustomerKeywordService customerKeywordService;
+    @Resource(name = "customerKeywordService2")
+    private com.keymanager.ckadmin.service.CustomerKeywordService customerKeywordService;
 
     public void runTask(){
         logger.info("=============  Update Optimized Count Task ===================");

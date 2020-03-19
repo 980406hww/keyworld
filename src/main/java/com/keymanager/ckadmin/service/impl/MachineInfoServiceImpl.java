@@ -25,13 +25,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
+
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -54,6 +50,10 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     @Override
     public Integer getResidualMachineCount(ClientUpgrade clientUpgrade) {
         return machineInfoDao.getResidualMachineCount(clientUpgrade);
+    }
+
+    public void updateOptimizationResultFromCache(Collection updateOptimizedCountVOs){
+        machineInfoDao.updateOptimizationResultFromCache(updateOptimizedCountVOs);
     }
 
     @Override

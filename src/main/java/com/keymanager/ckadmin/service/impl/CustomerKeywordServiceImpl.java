@@ -20,16 +20,7 @@ import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.EntryTypeEnum;
 import com.keymanager.ckadmin.enums.KeywordEffectEnum;
 import com.keymanager.ckadmin.excel.operator.AbstractExcelReader;
-import com.keymanager.ckadmin.service.CaptureRankJobService;
-import com.keymanager.ckadmin.service.ConfigService;
-import com.keymanager.ckadmin.service.CustomerExcludeKeywordService;
-import com.keymanager.ckadmin.service.CustomerKeywordPositionSummaryService;
-import com.keymanager.ckadmin.service.CustomerKeywordService;
-import com.keymanager.ckadmin.service.OperationCombineService;
-import com.keymanager.ckadmin.service.QZRateStatisticsService;
-import com.keymanager.ckadmin.service.QZSettingService;
-import com.keymanager.ckadmin.service.UserInfoService;
-import com.keymanager.ckadmin.service.UserRoleService;
+import com.keymanager.ckadmin.service.*;
 import com.keymanager.ckadmin.util.Constants;
 import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.util.Utils;
@@ -49,22 +40,15 @@ import com.keymanager.ckadmin.vo.SearchEngineResultVO;
 import com.keymanager.ckadmin.entity.GroupSetting;
 import com.keymanager.ckadmin.entity.MachineInfo;
 import com.keymanager.ckadmin.entity.OperationCombine;
-import com.keymanager.ckadmin.service.GroupSettingService;
 import com.keymanager.ckadmin.vo.OptimizationMachineVO;
 import com.keymanager.ckadmin.vo.OptimizationVO;
+import com.keymanager.monitoring.vo.UpdateOptimizedCountSimpleVO;
+import com.keymanager.monitoring.vo.UpdateOptimizedCountVO;
+import com.keymanager.monitoring.vo.machineGroupQueueVO;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import javax.annotation.Resource;
@@ -114,7 +98,14 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Resource(name = "operationCombineService2")
     private OperationCombineService operationCombineService;
 
+    @Resource(name = "machineInfoService2")
+    private MachineInfoService machineInfoService;
+
+    private final static LinkedBlockingQueue updateOptimizedResultQueue = new LinkedBlockingQueue();
+
     private final static Map<String, LinkedBlockingQueue> machineGroupQueueMap = new HashMap<>();
+
+    private final static Map<String, LinkedBlockingQueue> optimizeGroupNameQueueMap = new HashMap<String, LinkedBlockingQueue>();
 
     private final static ArrayBlockingQueue<CustomerKeyWordCrawlRankVO> customerKeywordCrawlPTRankQueue = new ArrayBlockingQueue<>(24000);
 
@@ -222,6 +213,110 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         }
     }
 
+    public void cacheUpdateOptimizedCountResult(UpdateOptimizedCountVO updateOptimizedCountVO){
+        updateOptimizedResultQueue.offer(updateOptimizedCountVO);
+    }
+
+    public CustomerKeywordForCapturePosition getCustomerKeywordForCapturePosition(String terminalType, List<String> groupNames, Long customerUuid,
+                                                                                  Date startTime, Long captureRankJobUuid) {
+        Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
+        if (captureRankJobStatus) {
+            String key = terminalType + "_" + groupNames + "_" + customerUuid;
+            LinkedBlockingQueue capturePositionCustomerKeywordQueue = optimizeGroupNameQueueMap.get(key);
+            if(capturePositionCustomerKeywordQueue == null){
+                synchronized (com.keymanager.monitoring.service.CustomerKeywordService.class) {
+                    capturePositionCustomerKeywordQueue = optimizeGroupNameQueueMap.get(key);
+                    if(capturePositionCustomerKeywordQueue == null){
+                        capturePositionCustomerKeywordQueue = new LinkedBlockingQueue();
+                        optimizeGroupNameQueueMap.put(key, capturePositionCustomerKeywordQueue);
+                    }
+                }
+            }
+            if(capturePositionCustomerKeywordQueue.size() == 0){
+                synchronized (com.keymanager.monitoring.service.CustomerKeywordService.class) {
+                    if(capturePositionCustomerKeywordQueue.size() == 0) {
+                        Collection<CustomerKeywordForCapturePosition> customerKeywordForCapturePositions = customerKeywordDao.cacheCustomerKeywordForCapturePosition(terminalType, groupNames, customerUuid, startTime, 0);
+                        if (CollectionUtils.isEmpty(customerKeywordForCapturePositions)) {
+                            customerKeywordForCapturePositions = customerKeywordDao.cacheCustomerKeywordForCapturePosition(terminalType, groupNames, customerUuid, startTime, 1);
+                        }
+                        if (CollectionUtils.isEmpty(customerKeywordForCapturePositions)) {
+                            return null;
+                        }
+                        List<Long> customerKeywordUuids = new ArrayList<Long>();
+                        for (CustomerKeywordForCapturePosition customerKeywordForCapturePosition : customerKeywordForCapturePositions) {
+                            capturePositionCustomerKeywordQueue.offer(customerKeywordForCapturePosition);
+                            customerKeywordUuids.add(customerKeywordForCapturePosition.getUuid());
+                        }
+                        customerKeywordDao.updateCapturePositionQueryTimeAndCaptureStatusTemp(customerKeywordUuids);
+                    }
+                }
+            }
+            CustomerKeywordForCapturePosition customerKeywordForCapturePosition = (CustomerKeywordForCapturePosition)capturePositionCustomerKeywordQueue.poll();
+            customerKeywordForCapturePosition.setCaptureRankJobStatus(true);
+            return customerKeywordForCapturePosition;
+        }
+        return new CustomerKeywordForCapturePosition();
+    }
+
+    public void updateOptimizedCount(){
+        int times = 0;
+        boolean queueEmptied = false;
+        do {
+            //机器信息
+            Map<String, UpdateOptimizedCountVO> updateOptimizedCountVOMap = new HashMap<String, UpdateOptimizedCountVO>();
+            //关键字信息
+            Map<Long, UpdateOptimizedCountSimpleVO> updateOptimizedCountSimpleVOMap = new HashMap<Long, UpdateOptimizedCountSimpleVO>();
+            for(int i = 0; i < 1000; i++) {
+                Object obj = updateOptimizedResultQueue.poll();
+                if (obj != null) {
+                    UpdateOptimizedCountVO updateOptimizedCountVO = (UpdateOptimizedCountVO) obj;
+                    UpdateOptimizedCountVO tmpUpdateOptimizedCountVO = updateOptimizedCountVOMap.get(updateOptimizedCountVO.getClientID());
+
+                    updateOptimizedCountVOMap.put(updateOptimizedCountVO.getClientID(), updateOptimizedCountVO);
+                    if(tmpUpdateOptimizedCountVO == null){
+                        tmpUpdateOptimizedCountVO = updateOptimizedCountVO;
+                    }
+                    updateOptimizedCountVO.setTotalCount(tmpUpdateOptimizedCountVO.getTotalCount() + 1);
+                    updateOptimizedCountVO.setTotalSucceedCount(tmpUpdateOptimizedCountVO.getTotalSucceedCount() + updateOptimizedCountVO.getCount());
+                    if (updateOptimizedCountVO.getCount() > 0) {
+                        updateOptimizedCountVO.setLastContinueFailedCount(0);
+                    } else {
+                        updateOptimizedCountVO.setLastContinueFailedCount(tmpUpdateOptimizedCountVO.getLastContinueFailedCount() + 1);
+                    }
+
+                    UpdateOptimizedCountSimpleVO tmpUpdateOptimizedSimpleCountVO = updateOptimizedCountSimpleVOMap.get(updateOptimizedCountVO.getCustomerKeywordUuid());
+
+                    if(tmpUpdateOptimizedSimpleCountVO == null) {
+                        tmpUpdateOptimizedSimpleCountVO = new UpdateOptimizedCountSimpleVO();
+                        tmpUpdateOptimizedSimpleCountVO.setCustomerKeywordUuid(updateOptimizedCountVO.getCustomerKeywordUuid());
+                        updateOptimizedCountSimpleVOMap.put(updateOptimizedCountVO.getCustomerKeywordUuid(), tmpUpdateOptimizedSimpleCountVO);
+                    }
+                    tmpUpdateOptimizedSimpleCountVO.setTotalCount(tmpUpdateOptimizedSimpleCountVO.getTotalCount() + 1);
+                    if(updateOptimizedCountVO.getCount() > 0){
+                        tmpUpdateOptimizedSimpleCountVO.setLastContinueFailedCount(0);
+                        tmpUpdateOptimizedSimpleCountVO.setTotalSucceedCount(tmpUpdateOptimizedSimpleCountVO.getTotalSucceedCount() + 1);
+                        tmpUpdateOptimizedSimpleCountVO.setFailedCause("");
+                    }else{
+                        tmpUpdateOptimizedSimpleCountVO.setLastContinueFailedCount(tmpUpdateOptimizedSimpleCountVO.getLastContinueFailedCount() + 1);
+                        if (updateOptimizedCountVO.getFailedCause() != null && updateOptimizedCountVO.getFailedCause() != "") {
+                            tmpUpdateOptimizedSimpleCountVO.setFailedCause(updateOptimizedCountVO.getFailedCause());
+                        }
+                    }
+                }else{
+                    queueEmptied = true;
+                    break;
+                }
+            }
+            if(updateOptimizedCountSimpleVOMap.size() > 0) {
+                customerKeywordDao.batchUpdateOptimizedCountFromCache(updateOptimizedCountSimpleVOMap.values());
+            }
+            if(updateOptimizedCountVOMap.size() > 0) {
+                machineInfoService.updateOptimizationResultFromCache(updateOptimizedCountVOMap.values());
+            }
+            times++;
+        } while (times < 20 && updateOptimizedResultQueue.size() > 100 && !queueEmptied);
+    }
+
     @Override
     public void updateOptimizationQueryTime(List<Long> customerKeywordUuids) {
         customerKeywordDao.updateOptimizationQueryTime(customerKeywordUuids);
@@ -231,6 +326,12 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     public List<MachineGroupQueueVO> getMachineGroupAndSize() {
         List<MachineGroupQueueVO> machineGroupQueueVos = new ArrayList<>();
         for (Map.Entry<String, LinkedBlockingQueue> entry : machineGroupQueueMap.entrySet()) {
+            machineGroupQueueVos.add(new MachineGroupQueueVO(entry.getKey(), entry.getValue().size()));
+        }
+
+        machineGroupQueueVos.add(new MachineGroupQueueVO("Update", updateOptimizedResultQueue.size()));
+
+        for (Map.Entry<String, LinkedBlockingQueue> entry : optimizeGroupNameQueueMap.entrySet()) {
             machineGroupQueueVos.add(new MachineGroupQueueVO(entry.getKey(), entry.getValue().size()));
         }
         return machineGroupQueueVos;

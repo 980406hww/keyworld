@@ -59,29 +59,6 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
     @Autowired
     private ConfigService configService;
 
-    private String getIP(HttpServletRequest request) {
-        String ip = request.getHeader("X-Forwarded-For");
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("Proxy-Client-IP");
-        }
-
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
-        }
-
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("HTTP_CLIENT_IP");
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-        }
-
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getRemoteAddr();
-        }
-        return ip;
-    }
-
     @RequestMapping(value = "/getKeywordForCaptureTitle", method = RequestMethod.POST)
     public ResponseEntity<?> getKeywordForCaptureTitle(@RequestBody Map<String, Object> requestMap,
         HttpServletRequest request) throws Exception {
@@ -400,53 +377,6 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/updateOptimizedCount", method = RequestMethod.GET)
-    public ResponseEntity<?> updateOptimizedCount(HttpServletRequest request) throws Exception {
-        String userName = request.getParameter("userName");
-        if (StringUtils.isBlank(userName)) {
-            userName = request.getParameter("username");
-        }
-        String password = request.getParameter("password");
-
-        UpdateOptimizedCountVO updateOptimizedCountVO = new UpdateOptimizedCountVO();
-        updateOptimizedCountVO.setCustomerKeywordUuid(Long.parseLong(request.getParameter("uuid").trim()));
-        updateOptimizedCountVO.setCount(Integer.parseInt(request.getParameter("count")));
-        updateOptimizedCountVO.setClientID(request.getParameter("clientID"));
-        updateOptimizedCountVO.setFreeSpace(request.getParameter("freespace"));
-        updateOptimizedCountVO.setVersion(request.getParameter("version"));
-        updateOptimizedCountVO.setCity(request.getParameter("city"));
-        updateOptimizedCountVO.setStatus(request.getParameter("status"));
-        updateOptimizedCountVO.setRunningProgramType(request.getParameter("runningProgramType"));
-        updateOptimizedCountVO.setCpuCount(request.getParameter("cpuCount") == null ? 0
-            : Integer.parseInt(request.getParameter("cpuCount")));
-        updateOptimizedCountVO.setMemory(request.getParameter("memory") == null ? 0
-            : Integer.parseInt(request.getParameter("memory")));
-        updateOptimizedCountVO.setIp(getIP(request));
-        updateOptimizedCountVO.setFailedCause(request.getParameter("failedCause") == null ? ""
-                : request.getParameter("failedCause"));
-
-        String position = request.getParameter("position");
-
-        try {
-            if (validUser(userName, password)) {
-
-//                if (StringUtils.isNotBlank(position)) {
-//                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid,
-//                        Integer.parseInt(position), null, null, null);
-//                }
-//                customerKeywordService.updateOptimizationResult(customerKeywordUuid,
-//                    Integer.parseInt(count.trim()), ip, city, clientID,
-//                    status, freeSpace, version, runningProgramType, cpuCount, memory);
-                customerKeywordService.cacheUpdateOptimizedCountResult(updateOptimizedCountVO);
-                return new ResponseEntity<Object>(1, HttpStatus.OK);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            logger.error("updateOptimizedCount:     " + ex.getMessage());
-        }
-        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-    }
-
     @RequestMapping(value = "/batchUpdateOptimizedCount", method = RequestMethod.POST)
     public ResponseEntity<?> batchUpdateOptimizedCount(@RequestBody Map<String, Object> requestMap,
         HttpServletRequest request) {
@@ -509,34 +439,6 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
             logger.error("updateCustomerKeywordPosition:        " + ex.getMessage());
         }
         return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-    }
-
-    @RequestMapping(value = "/getCustomerKeywordForCapturePosition", method = RequestMethod.POST)
-    public ResponseEntity<?> getCustomerKeywordForCapturePosition(
-        @RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception {
-        String userName = (String) requestMap.get("userName");
-        String password = (String) requestMap.get("password");
-        String terminalType = (String) requestMap.get("terminalType");
-        List<String> groupNames = (List<String>) requestMap.get("groupNames");
-        Date startTime = new Date((Long) requestMap.get("startTime"));
-        Integer customerUuid = (requestMap.get("customerUuid") == null) ? null
-            : (Integer) requestMap.get("customerUuid");
-        Integer captureRankJobUuid = (Integer) requestMap.get("captureRankJobUuid");
-        try {
-            if (validUser(userName, password)) {
-                CustomerKeywordForCapturePosition capturePosition = customerKeywordService.getCustomerKeywordForCapturePosition(terminalType,
-                    groupNames, customerUuid != null ? customerUuid.longValue() : null, startTime, captureRankJobUuid.longValue());
-                if (capturePosition == null) {
-                    capturePosition = new CustomerKeywordForCapturePosition();
-                    capturePosition.setKeyword("end");
-                }
-                return new ResponseEntity<Object>(capturePosition, HttpStatus.OK);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            logger.error("getCustomerKeywordForCapturePosition:        " + ex.getMessage());
-        }
-        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/getCustomerKeywordForCapturePositionTemp2", method = RequestMethod.POST)

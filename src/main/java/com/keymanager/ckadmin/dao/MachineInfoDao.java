@@ -14,7 +14,11 @@ import com.keymanager.ckadmin.vo.CookieVO;
 import com.keymanager.ckadmin.vo.MachineInfoGroupSummaryVO;
 import com.keymanager.ckadmin.vo.MachineInfoMachineGroupSummaryVO;
 import com.keymanager.ckadmin.vo.MachineInfoSummaryVO;
+
+import java.util.Collection;
 import java.util.Map;
+
+import com.keymanager.monitoring.vo.UpdateOptimizedCountVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -65,6 +69,8 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
     void batchUpdateUpgradeFailedReason(@Param("clientIDs") List<String> clientIDs, @Param("upgradeFailedReason") String upgradeFailedReason);
 
     void updateStartUpStatusForCompleted(@Param("clientIDs") List<String> clientIDs);
+
+    void updateOptimizationResultFromCache(@Param("updateOptimizedCountVOs") Collection<UpdateOptimizedCountVO> updateOptimizedCountVOs);
 
     Integer selectMaxIdByMachineID(@Param("clientID") String clientID);
 

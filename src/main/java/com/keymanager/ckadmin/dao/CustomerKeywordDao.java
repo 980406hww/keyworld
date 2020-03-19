@@ -19,11 +19,9 @@ import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
+import com.keymanager.monitoring.vo.UpdateOptimizedCountSimpleVO;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -169,4 +167,10 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<String> getGroupsByUser(@Param("username") String username, @Param("type") String type);
 
     void deleteSysCustomerKeywordByQzId(@Param("uuid") Long uuid);
+
+    void batchUpdateOptimizedCountFromCache(@Param("updateOptimizedCountVOs") Collection<UpdateOptimizedCountSimpleVO> updateOptimizedCountVOs);
+
+    List<CustomerKeywordForCapturePosition> cacheCustomerKeywordForCapturePosition(@Param("terminalType") String terminalType, @Param("groupNames") List<String> groupNames,
+                                                                                   @Param("customerUuid") Long customerUuid, @Param("startTime") Date startTime,
+                                                                                   @Param("captureStatus") Integer captureStatus);
 }
