@@ -1007,15 +1007,21 @@
     <select id="searchDuplicateKeywords" resultType="java.lang.String">
         SELECT GROUP_CONCAT(CAST(fUuid AS CHAR) ORDER BY fUuid) AS 'uuids'
         FROM t_customer_keyword
-        WHERE fType = #{customerKeywordUpdateStatusCriteria.type}
-        AND fTerminalType = #{customerKeywordUpdateStatusCriteria.terminalType}
-        <if test="customerKeywordUpdateStatusCriteria.customerUuid != null and customerKeywordUpdateStatusCriteria.customerUuid != ''">
-            AND fCustomerUuid = #{customerKeywordUpdateStatusCriteria.customerUuid}
-        </if>
-        <if test="customerKeywordUpdateStatusCriteria.qzUuid != null and customerKeywordUpdateStatusCriteria.qzUuid != ''">
-            AND fQZSettingUuid = #{customerKeywordUpdateStatusCriteria.qzUuid}
-        </if>
-        GROUP BY fKeyword, fUrl, fCustomerUuid, fQZSettingUuid
+        <where>
+            <if test="customerKeywordUpdateStatusCriteria.customerUuid != null and customerKeywordUpdateStatusCriteria.customerUuid != ''">
+                AND fCustomerUuid = #{customerKeywordUpdateStatusCriteria.customerUuid}
+            </if>
+            <if test="customerKeywordUpdateStatusCriteria.terminalType != null and customerKeywordUpdateStatusCriteria.terminalType != ''">
+                AND fTerminalType = #{customerKeywordUpdateStatusCriteria.terminalType}
+            </if>
+            <if test="customerKeywordUpdateStatusCriteria.type != null and customerKeywordUpdateStatusCriteria.type != ''">
+                AND fType = #{customerKeywordUpdateStatusCriteria.type}
+            </if>
+            <if test="customerKeywordUpdateStatusCriteria.qzUuid != null and customerKeywordUpdateStatusCriteria.qzUuid != ''">
+                AND fQZSettingUuid = #{customerKeywordUpdateStatusCriteria.qzUuid}
+            </if>
+        </where>
+        GROUP BY fCustomerUuid, fQZSettingUuid, fKeyword, fUrl
         HAVING COUNT(1) > 1
     </select>
 

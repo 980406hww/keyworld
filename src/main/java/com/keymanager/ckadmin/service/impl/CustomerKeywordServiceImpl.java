@@ -675,13 +675,15 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     public void deleteDuplicateKeywords(CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria) {
         List<String> uuidsList = customerKeywordDao.searchDuplicateKeywords(customerKeywordUpdateStatusCriteria);
         List<Long> customerKeywordUuids = new ArrayList<>();
+        ArrayList<Long> listIds = null;
         for (String uuids : uuidsList) {
-            ArrayList<Long> listIds = new ArrayList<>(Arrays.asList((Long[]) ConvertUtils.convert(uuids.split(","), Long.class)));
+            listIds = new ArrayList<>(Arrays.asList((Long[]) ConvertUtils.convert(uuids.split(","), Long.class)));
             listIds.remove(0);
             customerKeywordUuids.addAll(listIds);
         }
+        List<Long> subCustomerKeywordUuids = null;
         while (customerKeywordUuids.size() > 0) {
-            List<Long> subCustomerKeywordUuids = customerKeywordUuids.subList(0, Math.min(customerKeywordUuids.size(), 500));
+            subCustomerKeywordUuids = customerKeywordUuids.subList(0, Math.min(customerKeywordUuids.size(), 500));
             customerKeywordDao.deleteBatchIds(subCustomerKeywordUuids);
             logger.info("controlCustomerKeywordStatus:" + subCustomerKeywordUuids.toString());
             customerKeywordUuids.removeAll(subCustomerKeywordUuids);

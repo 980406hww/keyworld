@@ -598,6 +598,9 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         }
     }
 
+    /**
+     * 删除重复关键词
+     */
     @RequiresPermissions("/internal/customerKeyword/deleteCustomerKeywords")
     @PostMapping(value = "/deleteDuplicateCustomerKeywords2")
     public ResultBean deleteDuplicateCustomerKeyword(@RequestBody CustomerKeywordUpdateStatusCriteria customerKeywordUpdateStatusCriteria) {

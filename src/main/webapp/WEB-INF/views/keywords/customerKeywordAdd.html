@@ -157,8 +157,8 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">第一报价</label>
                         <div class="layui-input-block">
-                            <input type="number" name="positionFirstFee" id="positionFirstFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="integer" oninput="getFirstFee(this.value)"/>
+                            <input type="number" name="positionFirstFee" id="positionFirstFee" autocomplete="on" class="layui-input"
+                                   step="0.1" lay-verify="amount" oninput="getFirstFee(this.value)"/>
                         </div>
                     </div>
                 </div>
@@ -167,8 +167,8 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">第五报价</label>
                         <div class="layui-input-block">
-                            <input type="number" name="positionFifthFee" id="positionFifthFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="integer"/>
+                            <input type="number" name="positionFifthFee" id="positionFifthFee" autocomplete="on" class="layui-input"
+                                   step="0.1" lay-verify="amount"/>
                         </div>
                     </div>
                 </div>
@@ -178,8 +178,8 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">第二报价</label>
                         <div class="layui-input-block">
-                            <input type="number" name="positionSecondFee" id="positionSecondFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="integer"/>
+                            <input type="number" name="positionSecondFee" id="positionSecondFee" autocomplete="on" class="layui-input"
+                                   step="0.1" lay-verify="amount"/>
                         </div>
                     </div>
                 </div>
@@ -188,8 +188,8 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">首页报价</label>
                         <div class="layui-input-block">
-                            <input type="number" name="positionFirstPageFee" id="positionFirstPageFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="integer"/>
+                            <input type="number" name="positionFirstPageFee" id="positionFirstPageFee" autocomplete="on" class="layui-input"
+                                   step="0.1" lay-verify="amount"/>
                         </div>
                     </div>
                 </div>
@@ -200,8 +200,8 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">第三报价</label>
                         <div class="layui-input-block">
-                            <input type="number" name="positionThirdFee" id="positionThirdFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="integer"/>
+                            <input type="number" name="positionThirdFee" id="positionThirdFee" autocomplete="on" class="layui-input"
+                                   step="0.1" lay-verify="amount"/>
                         </div>
                     </div>
                 </div>
@@ -226,8 +226,8 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">第四报价</label>
                         <div class="layui-input-block">
-                            <input type="number" name="positionForthFee" id="positionForthFee" placeholder="" autocomplete="off" class="layui-input"
-                                   lay-verify="integer" oninput="getForthFee(this.value)"/>
+                            <input type="number" name="positionForthFee" id="positionForthFee" autocomplete="on" class="layui-input"
+                                   step="0.1" lay-verify="amount" oninput="getForthFee(this.value)"/>
                         </div>
                     </div>
                 </div>
@@ -394,14 +394,13 @@
             ],
             positiveInteger: [
                 /(^$)|(^0$)|(^[0-9]*[1-9][0-9]*$)/,
-                "请输入合适的正整数、如：1、2、3"
+                "请输入合适的正整数、如：20、50、100..."
             ],
-            integer: [
-                /(^$)|(^[\-][0-9]*[0-9][0-9]*$)|(^[0-9]*[0-9][0-9]*$)/,
-                "请输入合适的整数、如：-1、0、1"
+            amount: [
+                /(^$)|(^0$)|(^[0-9]*[1-9][0-9]*$)|(^[0-9]*[1-9][0-9]*\.[0-9]{1,2}$)/,
+                "请输入合适的正数(最多两位小数)"
             ],
         });
-
     })
 
 </script>

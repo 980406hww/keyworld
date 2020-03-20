@@ -926,15 +926,18 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         postData.terminalType = $("#terminalType").val();
         postData.type = $("#type").val();
         postData.customerUuid = $('#customerUuid').val();
-        let qzUuid = $('#qzUuid').val();
-        let qzText = $('#qzUuid').parent().find("input").val();
-        if (qzUuid === '' || qzUuid === '-1') {
-            qzUuid = null;
-            qzText = "客户所有站点下";
-        } else {
-            qzText = "<br>客户站点：" + qzText + "<br>";
+        let qzText = "";
+        if (postData.type === 'qz'){
+            let qzUuid = $('#qzUuid').val();
+            postData.qzUuid = qzUuid;
+            qzText = $('#qzUuid').parent().find("input").val();
+            if (qzUuid === '' || qzUuid === '-1') {
+                qzUuid = null;
+                qzText = "客户所有站点下";
+            } else {
+                qzText = "<br>客户站点：" + qzText + "<br>";
+            }
         }
-        postData.qzUuid = qzUuid;
         layer.confirm('确定删除' + qzText + '重复关键字吗', {icon: 3, title: '删除' + qzText + '重复关键字'}, function (index) {
             $.ajax({
                 url: '/internal/customerKeyword/deleteDuplicateCustomerKeywords2',

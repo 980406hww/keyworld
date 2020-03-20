@@ -25,13 +25,9 @@
         </button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
-    {{#
-        var businessType = document.getElementById('type').value;
-        if(businessType==='qz'){  }}
-            <button class="layui-btn layui-btn-sm layui-btn-danger" id="delete_same_keyword" lay-event="delete_same_keyword">
-                删除重复关键字
-            </button>
-        {{#  }  }}
+        <button class="layui-btn layui-btn-sm layui-btn-danger" id="delete_same_keyword" lay-event="delete_same_keyword">
+            删除重复关键字
+        </button>
     </@shiro.hasPermission>
     <@shiro.hasPermission name="/internal/customerKeyword/deleteCustomerKeywords">
         <button class="layui-btn layui-btn-sm layui-btn-danger" id="batch_delete" lay-event="batch_delete">

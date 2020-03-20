@@ -1,11 +1,8 @@
 package com.keymanager.monitoring.shedule;
 
-import com.keymanager.monitoring.entity.Config;
-import com.keymanager.monitoring.service.ConfigService;
 import com.keymanager.monitoring.service.CustomerKeywordRefreshStatInfoService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
 import com.keymanager.monitoring.service.MachineGroupWorkInfoService;
-import com.keymanager.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
