@@ -106,7 +106,7 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void adjustOptimizePlanCount(@Param("customerKeywordUuid") Long customerKeywordUuid, @Param("queryInterval") int queryInterval, @Param("optimizeTodayCount") int optimizeTodayCount);
 
-    Long getCustomerKeywordUuidForCapturePosition(@Param("terminalType") String terminalType, @Param("groupNames") List<String> groupNames,
+    List<CustomerKeywordForCapturePosition> cacheCustomerKeywordForCapturePosition(@Param("terminalType") String terminalType, @Param("groupNames") List<String> groupNames,
                                                   @Param("customerUuid") Long customerUuid, @Param("startTime") Date startTime,
                                                   @Param("captureStatus") Integer captureStatus);
 

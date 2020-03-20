@@ -1579,4 +1579,83 @@
     <delete id="deleteSysCustomerKeywordByQzId">
         DELETE FROM sys_customer_keyword WHERE QS_ID = #{uuid}
     </delete>
+
+    <select id="cacheCustomerKeywordForCapturePosition" resultType="com.keymanager.value.CustomerKeywordForCapturePosition">
+        SELECT
+        ck.fUuid	AS	'uuid',
+        ck.fTerminalType	AS	'terminalType',
+        ck.fKeyword	AS	'keyword',
+        ck.fUrl	AS	'url',
+        ck.fTitle	AS	'title',
+        ck.fSearchEngine	AS	'searchEngine',
+        ck.fBearPawNumber AS 'bearPawNumber'
+        FROM t_customer_keyword ck
+        WHERE ck.fTerminalType = #{terminalType} and ck.fStatus = 1
+        AND fCaptureStatus = #{captureStatus}
+        <if test="startTime != null and captureStatus == 0">
+            AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
+            AND !(ck.fCapturePositionQueryTime > CURRENT_DATE() AND ck.fCurrentPosition &lt; 4 AND ck.fCurrentPosition &gt; 0)
+        </if>
+        <if test="startTime != null and captureStatus == 1">
+            AND ck.fCapturePositionQueryTime <![CDATA[<]]> DATE_SUB( NOW(), INTERVAL 3 MINUTE )
+        </if>
+        <if test="customerUuid != null">
+            AND ck.fCustomerUuid = #{customerUuid}
+        </if>
+        <choose>
+            <when test="groupNames != null">
+                AND ck.fOptimizeGroupName IN
+                <foreach item="item" index="index" collection="groupNames" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </when>
+            <otherwise>
+                AND ck.fOptimizeGroupName IS NULL
+            </otherwise>
+        </choose>
+        LIMIT 500
+    </select>
+
+    <update id="batchUpdateOptimizedCountFromCache" parameterType="java.util.Collection">
+        UPDATE t_customer_keyword
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="fOptimizedCount = fOptimizedCount + (case" suffix="end),">
+                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
+                    when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then #{updateOptimizedCountVO.totalSucceedCount}
+                </foreach>
+            </trim>
+            <trim prefix="fOptimizeRemainingCount = fOptimizeRemainingCount - (case" suffix="end),">
+                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
+                    when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then #{updateOptimizedCountVO.totalSucceedCount}
+                </foreach>
+            </trim>
+            <trim prefix="fFailedCause =  (case" suffix="end),">
+                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
+                    when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then #{updateOptimizedCountVO.failedCause}
+                </foreach>
+            </trim>
+            <trim prefix="fInvalidRefreshCount = (case" suffix="end),">
+                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
+                    when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then
+                    <choose>
+                        <when test="updateOptimizedCountVO.totalSucceedCount > 0">
+                            0
+                        </when>
+                        <otherwise>
+                            fInvalidRefreshCount
+                        </otherwise>
+                    </choose>
+                </foreach>
+            </trim>
+            fInvalidFlag = if(fInvalidRefreshCount > 8 or (fFailedCause > ''  AND fOptimizedCount = 0), 1, 0),
+            fLastOptimizeDateTime = now(),
+            fQueryTime = if(fOptimizeTodayCount > fOptimizedCount, fQueryTime,DATE_ADD(NOW(), INTERVAL 1 DAY)),
+            fUpdateTime = NOW()
+
+        </trim>
+        WHERE fUuid IN
+        <foreach item="updateOptimizedCountVO" index="index" collection="updateOptimizedCountVOs" open="(" separator="," close=")">
+            #{updateOptimizedCountVO.customerKeywordUuid}
+        </foreach>
+    </update>
 </mapper>

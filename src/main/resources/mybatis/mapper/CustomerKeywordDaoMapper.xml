@@ -752,49 +752,6 @@
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 
-    <update id="batchUpdateOptimizedCountFromCache" parameterType="java.util.Collection">
-        UPDATE t_customer_keyword
-        <trim prefix="set" suffixOverrides=",">
-            <trim prefix="fOptimizedCount = fOptimizedCount + (case" suffix="end),">
-                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
-                    when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then #{updateOptimizedCountVO.totalSucceedCount}
-                </foreach>
-            </trim>
-            <trim prefix="fOptimizeRemainingCount = fOptimizeRemainingCount - (case" suffix="end),">
-                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
-                    when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then #{updateOptimizedCountVO.totalSucceedCount}
-                </foreach>
-            </trim>
-            <trim prefix="fFailedCause =  (case" suffix="end),">
-                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
-                    when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then #{updateOptimizedCountVO.failedCause}
-                </foreach>
-            </trim>
-            <trim prefix="fInvalidRefreshCount = (case" suffix="end),">
-                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
-                    when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then
-                    <choose>
-                        <when test="updateOptimizedCountVO.totalSucceedCount > 0">
-                            0
-                        </when>
-                        <otherwise>
-                            fInvalidRefreshCount
-                        </otherwise>
-                    </choose>
-                </foreach>
-            </trim>
-            fInvalidFlag = if(fInvalidRefreshCount > 8 or (fFailedCause > ''  AND fOptimizedCount = 0), 1, 0),
-            fLastOptimizeDateTime = now(),
-            fQueryTime = if(fOptimizeTodayCount > fOptimizedCount, fQueryTime,DATE_ADD(NOW(), INTERVAL 1 DAY)),
-            fUpdateTime = NOW()
-
-        </trim>
-        WHERE fUuid IN
-        <foreach item="updateOptimizedCountVO" index="index" collection="updateOptimizedCountVOs" open="(" separator="," close=")">
-            #{updateOptimizedCountVO.customerKeywordUuid}
-        </foreach>
-    </update>
-
     <update id="batchUpdateOptimizedCount">
         UPDATE t_customer_keyword
         SET fLastOptimizeDateTime = now(), fOptimizedCount = fOptimizedCount + 1,fOptimizeTodayCount = fOptimizePlanCount * ROUND(rand()*0.7+0.5,1),

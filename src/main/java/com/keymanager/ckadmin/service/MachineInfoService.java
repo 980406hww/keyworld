@@ -15,10 +15,12 @@ import com.keymanager.ckadmin.vo.MachineInfoSummaryVO;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 public interface MachineInfoService extends IService<MachineInfo> {
+    public void updateOptimizationResultFromCache(Collection updateOptimizedCountVOs);
 
     void changeTerminalType(String clientID, String terminalType);
 
