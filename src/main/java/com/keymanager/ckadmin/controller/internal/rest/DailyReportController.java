@@ -69,7 +69,7 @@ public class DailyReportController extends SpringMVCBaseController {
 
             try {
                 String fileName = customer.getContactPerson() + Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy.MM.dd") + ".xls";
-                fileName = new String(fileName.getBytes("gb2312"), "ISO8859-1");
+                fileName = new String(fileName.getBytes("utf-8"), "ISO8859-1");
                 // 以流的形式下载文件。
                 byte[] buffer = excelWriter.getExcelContentBytes();
                 // 清空response
