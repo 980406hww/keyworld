@@ -302,6 +302,8 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
         updateOptimizedCountVO.setIp(getIP(request));
         updateOptimizedCountVO.setFailedCause(request.getParameter("failedCause") == null ? ""
                 : request.getParameter("failedCause"));
+        updateOptimizedCountVO.setBearpawNumber(request.getParameter("bearPawNumber") == null ? ""
+                : request.getParameter("bearPawNumber"));
 
         String position = request.getParameter("position");
 

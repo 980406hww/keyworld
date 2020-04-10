@@ -302,6 +302,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                             tmpUpdateOptimizedSimpleCountVO.setFailedCause(updateOptimizedCountVO.getFailedCause());
                         }
                     }
+                    if(tmpUpdateOptimizedSimpleCountVO.getBearpawNumber() == null || tmpUpdateOptimizedSimpleCountVO.getBearpawNumber() == ""){
+                        if(updateOptimizedCountVO.getBearpawNumber() != null && updateOptimizedCountVO.getBearpawNumber() != ""){
+                            tmpUpdateOptimizedSimpleCountVO.setBearpawNumber(updateOptimizedCountVO.getBearpawNumber());
+                        }
+                    }
                 }else{
                     queueEmptied = true;
                     break;

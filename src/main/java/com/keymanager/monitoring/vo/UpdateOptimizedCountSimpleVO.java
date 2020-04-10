@@ -8,6 +8,7 @@ public class UpdateOptimizedCountSimpleVO implements Serializable{
     private int totalSucceedCount;
     private int lastContinueFailedCount;
     private String failedCause;
+    private String bearpawNumber;
 
     public String getFailedCause() {
         return failedCause;
@@ -47,5 +48,13 @@ public class UpdateOptimizedCountSimpleVO implements Serializable{
 
     public void setLastContinueFailedCount(int lastContinueFailedCount) {
         this.lastContinueFailedCount = lastContinueFailedCount;
+    }
+
+    public String getBearpawNumber() {
+        return bearpawNumber;
+    }
+
+    public void setBearpawNumber(String bearpawNumber) {
+        this.bearpawNumber = bearpawNumber;
     }
 }

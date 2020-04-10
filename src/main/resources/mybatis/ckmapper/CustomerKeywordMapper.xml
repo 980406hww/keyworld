@@ -1634,6 +1634,15 @@
                     when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then #{updateOptimizedCountVO.failedCause}
                 </foreach>
             </trim>
+            <trim prefix="fBearPawNumber =  (case" suffix="end),">
+                <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
+                    <choose>
+                        <when test="updateOptimizedCountVO.bearpawNumber != null and updateOptimizedCountVO.bearpawNumber != ''">
+                            when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then #{updateOptimizedCountVO.bearpawNumber}
+                        </when>
+                    </choose>
+                </foreach>
+            </trim>
             <trim prefix="fInvalidRefreshCount = (case" suffix="end),">
                 <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
                     when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then
