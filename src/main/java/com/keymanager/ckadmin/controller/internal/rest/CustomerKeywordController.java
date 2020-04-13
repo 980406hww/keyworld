@@ -124,6 +124,26 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         mv.setViewName("keywords/keyword");
         return mv;
     }
+//直接跳轉至統計中心
+
+    /**
+     * 參數説明 uuid所需查看客戶id,type 表示的是單詞或則整站類型
+     * @return
+     */
+    @GetMapping(value = "/toStatisticCenter/{uuid}/{type}/{terminal}/{contactPerson}")
+    public ModelAndView toStatisticCenter(@PathVariable String uuid,@PathVariable String type,@PathVariable String contactPerson,@PathVariable  String terminal){
+        ModelAndView mv=new ModelAndView();
+        System.out.println("uuid"+uuid+"type:"+type);
+        mv.setViewName("ckPositionSummary/ckPositionSummary");
+        mv.addObject("uuid",uuid);
+        mv.addObject("type",type);
+        mv.addObject("search","百度");
+        mv.addObject("terminal",terminal);
+        mv.addObject("time","-1000");
+        mv.addObject("contactPerson",contactPerson);
+        mv.addObject("cid",this.getCurrentUser().getId());
+        return mv;
+    }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
     @PostMapping(value = "/getKeywords")

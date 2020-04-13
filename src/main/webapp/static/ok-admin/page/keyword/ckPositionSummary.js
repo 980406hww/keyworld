@@ -99,6 +99,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
     keywordLogShow.showLoading({text: '数据加载中'});
 
     if (condition) {
+
         getCustomerKeywordPositionSummaryData(condition);
         tableInit(condition);
     } else {
@@ -399,7 +400,10 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                         if (result.data !== null && result.data.hData !== null && result.data.hDate !== null) {
                             let hData = result.data.hData.split(',');
                             for (let ht in hData) {
-                                hData[ht] = hData[ht] === '0' ? '999' : hData[ht];
+
+                                let temp =parseInt(hData[ht]);
+                                if(temp>100 ||temp==0)
+                                    hData[ht]='101';
                             }
                             option.series[0].data = hData;
                             option.xAxis.data = result.data.hDate.split(',');

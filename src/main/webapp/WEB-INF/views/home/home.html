@@ -187,8 +187,11 @@
 </div>
 
 <div class="layui-row layui-col-space15">
-    <!--每日排名趋势-->
+
     <div class="layui-col-md6">
+        <@shiro.hasPermission name="/internal/ckpositionsummary/toCustomerKeywordPositionSummary">
+
+    <!--每日排名趋势-->
         <div class="layui-card">
             <div class="yskj-card-body clearfix" style="position:relative;height: 360px;">
                 <div style="position: absolute;top: 18px;left: 0;z-index: 9999;width: 100%;">
@@ -215,8 +218,13 @@
                 <div style="height: 100%;" id="keywordLogShow"></div>
             </div>
         </div>
+    </@shiro.hasPermission>
     </div>
+
+
+
     <!--每日站点趋势-->
+<@shiro.hasPermission name="/internal/qzRateStatistics/toQZRateStatisticsDetail">
     <div class="layui-col-md6">
         <div class="layui-card">
             <div class="yskj-card-body map-body" style="position:relative;">
@@ -248,10 +256,13 @@
             </div>
         </div>
     </div>
+</@shiro.hasPermission>
 </div>
 
 <div class="layui-row layui-col-space15">
     <!--每月站点监控-->
+    /internal/qzchargemon/getQZChargeMonData
+    <@shiro.hasPermission name=" /internal/qzchargemon/getQZChargeMonData">
     <div class="layui-col-md6">
         <div class="layui-card">
             <div class="yskj-card-body map-body" style="position:relative;">
@@ -283,6 +294,7 @@
             </div>
         </div>
     </div>
+</@shiro.hasPermission>
     <!--<div class="layui-col-md6">
         <div class="layui-card">
             <div class="yskj-card-body clearfix">
@@ -291,7 +303,10 @@
     </div>-->
 </div>
 </body>
-<script>var condition;</script>
+<script>
+    var condition;
+
+</script>
 <script type="text/javascript" src="/static/ok-admin/lib/layui/layui.js"></script>
 <script src="/static/ok-admin/js/somePublic.js"></script>
 <script type="text/javascript" src="/static/ok-admin/js/home.js"></script>
