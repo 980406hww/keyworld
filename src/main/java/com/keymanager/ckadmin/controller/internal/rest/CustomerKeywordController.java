@@ -437,6 +437,14 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         return mv;
     }
 
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = "/toDownKeywords")
+    public ModelAndView toDownKeywords() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("keywords/downKeywordByExcel");
+        return mv;
+    }
+
     /**
      * 关键字Excel上传(简化版)
      */
