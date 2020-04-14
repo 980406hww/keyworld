@@ -400,9 +400,8 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
                         if (result.data !== null && result.data.hData !== null && result.data.hDate !== null) {
                             let hData = result.data.hData.split(',');
                             for (let ht in hData) {
-
                                 let temp =parseInt(hData[ht]);
-                                if(temp>100 ||temp==0)
+                                if(temp>100 || temp<=0)
                                     hData[ht]='101';
                             }
                             option.series[0].data = hData;
