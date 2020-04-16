@@ -87,39 +87,39 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
         let dataList = document.getElementById('data_list');
         dataList.innerHTML = '';
         let item = '', et = document.getElementById('entryType').value;
-            $.each(data, function (index, obj) {
-                item += '<div class="layadmin-contact-box">';
-                item += '      <div class="layui-row"><div class="layui-col-md5">'
-                    + '        <h3 class="layadmin-title skip" title="' + obj.contactPerson + '">' +
-                    '               <input type="checkbox" name="checkItem" value="' + obj.uuid + '" status="' + obj.status + '"lay-skin="primary" >' +
-                    '               <strong >' + obj.contactPerson + '</strong>' +
-                    '           </h3>'
-                    + '         </div><div class="layui-col-md7">';
-                item += '       <div class="operation" style="text-align: right;line-height: 27px">';
-                if (et === 'qt') {
-                    item += '           <a href="javascript:void(0)" class="caller-fr can-click" onclick=openCustomerRule("' + obj.uuid + '")>' +
-                        '                   客户规则' +
-                        '               </a>'
-                        + '             <a href="javascript:void(0)" class="caller-fr can-click" onclick=openQuicklyAddKeyword("' + obj.uuid + '")>' +
-                        '                   快速加词' +
-                        '               </a>'
-                        + '             <a href="javascript:void(0)" class="caller-fr can-click" onclick=uploadDayReportList("' + obj.uuid + '")>' +
-                        '                   上传模板' +
-                        '               </a>';
-                }
-                item += '             <a href="javascript:void(0)" class="caller-fr can-click" onclick=editCustomer("' + obj.uuid + '")>' +
-                    '                   修改<i style="position: relative;top: 1px" class="layui-icon layui-icon-edit"></i>' +
+        $.each(data, function (index, obj) {
+            item += '<div class="layadmin-contact-box">';
+            item += '      <div class="layui-row"><div class="layui-col-md5">'
+                + '        <h3 class="layadmin-title skip" title="' + obj.contactPerson + '">' +
+                '               <input type="checkbox" name="checkItem" value="' + obj.uuid + '" status="' + obj.status + '"lay-skin="primary" >' +
+                '               <strong >' + obj.contactPerson + '</strong>' +
+                '           </h3>'
+                + '         </div><div class="layui-col-md7">';
+            item += '       <div class="operation" style="text-align: right;line-height: 27px">';
+            if (et === 'qt') {
+                item += '           <a href="javascript:void(0)" class="caller-fr can-click" onclick=openCustomerRule("' + obj.uuid + '")>' +
+                    '                   客户规则' +
                     '               </a>'
-                    + '             <a href="javascript:void(0)" class="caller-fr can-click" onclick=delOneCustomer("' + obj.uuid + '")>' +
-                    '                   删除<i style="position: relative;top: 1px" class="layui-icon layui-icon-close"></i>' +
+                    + '             <a href="javascript:void(0)" class="caller-fr can-click" onclick=openQuicklyAddKeyword("' + obj.uuid + '")>' +
+                    '                   快速加词' +
                     '               </a>'
-                    + '</div>';
+                    + '             <a href="javascript:void(0)" class="caller-fr can-click" onclick=uploadDayReportList("' + obj.uuid + '")>' +
+                    '                   上传模板' +
+                    '               </a>';
+            }
+            item += '             <a href="javascript:void(0)" class="caller-fr can-click" onclick=editCustomer("' + obj.uuid + '")>' +
+                '                   修改<i style="position: relative;top: 1px" class="layui-icon layui-icon-edit"></i>' +
+                '               </a>'
+                + '             <a href="javascript:void(0)" class="caller-fr can-click" onclick=delOneCustomer("' + obj.uuid + '")>' +
+                '                   删除<i style="position: relative;top: 1px" class="layui-icon layui-icon-close"></i>' +
+                '               </a>'
+                + '</div>';
             item += '</div></div>';
             item += '   <div class="layui-row">' +
                 '       <div class="layui-col-md5">';
             item += '           <div class="layadmin-address other_info">' +
                 '                   <strong>描述信息</strong>' +
-                '                   <p class="skip" >客户类型: ' + obj.type + '</p>' +
+                '                   <p class="skip" >客户类型 : ' + obj.type + '</p>' +
                 '                   <p class="skip" >所属用户 : ' + obj.userName + '</p>' +
                 '                   <p class="skip" >创建时间 : ' + layui.util.toDateString(obj.createTime, 'yyyy-MM-dd') + '</p>' +
                 '                   <div class="skip" style="height: 24px;margin: 1px 0"><span style="position: relative;top: 1px">客户状态 : </span>'
@@ -1196,8 +1196,8 @@ function generate_qzsetting_info(contactPerson, data, terminalType, customerUuid
 
     let toStatisticCenterTitle=contactPerson+"-排名漲幅詳情"
     let toStatisticCenterId=customerUuid+'-qz-'+terminalType;
-    let computerUrl="/internal/ckpositionsummary/toStatisticCenter/"+customerUuid+"/qz/PC/"+contactPerson;
-    let mobileUrl="/internal/ckpositionsummary/toStatisticCenter/"+customerUuid+"/qz/Phone/"+contactPerson;
+    let computerUrl="/internal/ckpositionsummary/toStatisticCenter/"+customerUuid+"/qz/PC/";
+    let mobileUrl="/internal/ckpositionsummary/toStatisticCenter/"+customerUuid+"/qz/Phone/";
     let htm = '';
     let terminalTypeName = '';
     //terminalType === 'PC' ?'<a href="javascript:void(0)"  onclick=updateOrNewTab("' + computerUrl + '","' +toStatisticTitle+ '","' + toStatisticCenterId+ '") > 电脑端</a> ': '<a  href="javascript:void(0)"   onclick=updateOrNewTab("' + mobileUrl + '","' +toStatisticTitle+ '","' + toStatisticCenterId+ '")  >移动端</a>';
@@ -1256,8 +1256,8 @@ function generate_customer_info(contactPerson, data, terminalType, type, custome
     let id = contactPerson + '-' + type + '-' + terminalType;
 
     let toStatisticTitle=contactPerson+"-排名漲幅詳情"
-    let computerUrl="/internal/ckpositionsummary/toStatisticCenter/"+customerUuid+"/"+type+"/PC/"+contactPerson;
-    let mobileUrl="/internal/ckpositionsummary/toStatisticCenter/"+customerUuid+"/"+type+"/Phone/"+contactPerson;
+    let computerUrl="/internal/ckpositionsummary/toStatisticCenter/"+customerUuid+"/"+type+"/PC/";
+    let mobileUrl="/internal/ckpositionsummary/toStatisticCenter/"+customerUuid+"/"+type+"/Phone/";
     let toStatisticCenterId=customerUuid+'-'+type+'-'+terminalType;
 
     let terminalTypeName = '';

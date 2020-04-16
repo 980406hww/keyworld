@@ -153,6 +153,7 @@
         </div>
     </div>
 
+    <@shiro.hasPermission name="/internal/machineInfo/searchMachineInfos">
     <div class="layui-col-xs6 layui-col-md3">
         <div class="layui-card">
             <div class="yskj-card-body clearfix cart-data">
@@ -182,15 +183,14 @@
                 </@shiro.hasAnyRoles>
             </div>
         </div>
-
     </div>
+    </@shiro.hasPermission>
 </div>
 
 <div class="layui-row layui-col-space15">
 
+    <@shiro.hasPermission name="/internal/ckpositionsummary/toCustomerKeywordPositionSummary">
     <div class="layui-col-md6">
-        <@shiro.hasPermission name="/internal/ckpositionsummary/toCustomerKeywordPositionSummary">
-
     <!--每日排名趋势-->
         <div class="layui-card">
             <div class="yskj-card-body clearfix" style="position:relative;height: 360px;">
@@ -218,13 +218,10 @@
                 <div style="height: 100%;" id="keywordLogShow"></div>
             </div>
         </div>
-    </@shiro.hasPermission>
     </div>
-
-
-
+    </@shiro.hasPermission>
     <!--每日站点趋势-->
-<@shiro.hasPermission name="/internal/qzRateStatistics/toQZRateStatisticsDetail">
+    <@shiro.hasPermission name="/internal/qzRateStatistics/toQZRateStatisticsDetail">
     <div class="layui-col-md6">
         <div class="layui-card">
             <div class="yskj-card-body map-body" style="position:relative;">
@@ -256,13 +253,12 @@
             </div>
         </div>
     </div>
-</@shiro.hasPermission>
+    </@shiro.hasPermission>
 </div>
 
 <div class="layui-row layui-col-space15">
     <!--每月站点监控-->
-    /internal/qzchargemon/getQZChargeMonData
-    <@shiro.hasPermission name=" /internal/qzchargemon/getQZChargeMonData">
+    <@shiro.hasPermission name="/internal/qzchargemon/toQzChargeMon">
     <div class="layui-col-md6">
         <div class="layui-card">
             <div class="yskj-card-body map-body" style="position:relative;">
@@ -294,7 +290,7 @@
             </div>
         </div>
     </div>
-</@shiro.hasPermission>
+    </@shiro.hasPermission>
     <!--<div class="layui-col-md6">
         <div class="layui-card">
             <div class="yskj-card-body clearfix">
@@ -312,6 +308,16 @@
 <script type="text/javascript" src="/static/ok-admin/js/home.js"></script>
 <script type="text/javascript" src="/static/ok-admin/page/keyword/ckPositionSummary.js"></script>
 <script type="text/javascript" src="/static/ok-admin/page/qzsetting/qzChargeMon.js"></script>
+<@shiro.lacksPermission name="/internal/machineInfo/searchMachineInfos">
+<script>
+    var sunCards = document.getElementsByClassName('layui-col-xs6');
+    for(var i=0; i<sunCards.length; i++){
+        sunCards[i].classList.remove('layui-col-md3');
+        sunCards[i].classList.add('layui-col-md4');
+        sunCards[i].style.setProperty('text-align', 'center');
+    }
+</script>
+</@shiro.lacksPermission>
 <script>
     layui.use(['jquery', 'form', 'common'], function () {
         var $ = layui.jquery;
@@ -587,8 +593,9 @@
             });
         }
 
+        <@shiro.hasPermission name="/internal/machineInfo/searchMachineInfos">
         getMachineStatusCount();
-
+        </@shiro.hasPermission>
         /**
          * 获取机器各状态下的数量
          */

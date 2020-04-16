@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="/static/ok-admin/css/home.css" media="all"/>
     <script type="text/javascript" src="/static/ok-admin/lib/echarts/echarts.min.js"></script>
     <script type="text/javascript" src="/static/ok-admin/lib/echarts/echarts.theme.js"></script>
-    <script type="text/javascript" src="/js/jquery.js"></script>
     <style>
         .layui-linline {
             width: 120px;
@@ -199,34 +198,25 @@
 </body>
 <script>
     var terminal = '<#if terminal?exists>${terminal}</#if>';
-    var search = '<#if search?exists>${search}</#if>';
-    var time = '<#if time?exists>${time}</#if>';
-    var customer = '<#if uuid?exists>${uuid}</#if>';
-    var type = '<#if type?exists>${type}</#if>';
+    var search = '<#if search?exists>${search}<#else>百度</#if>';
+    var time = '<#if time?exists>${time}<#else>-1000</#if>';
+    var jumpCusuid = '<#if uuid?exists>${cusuid}</#if>';
+    var jumpType = '<#if type?exists>${type}<#else></#if>';
     var condition = {
         searchEngine: search,
         terminal: terminal,
         time: time,
-        type:type,
-        customer:customer
+        type: jumpType,
+        customer: jumpCusuid
     };
 </script>
 <script type="text/javascript" src="/static/ok-admin/lib/layui/layui.js"></script>
 <script type="text/javascript" src="/static/ok-admin/page/keyword/ckPositionSummary.js"></script>
 <script>
-    layui.use(['jquery', 'form'], function () {
-
-    })
-</script>
-<script>
     layui.use(['jquery', 'form', 'common', 'table'], function () {
         var $ = layui.jquery;
         var form = layui.form;
         var common = layui.common;
-        let cusId = '<#if uuid?exists>${uuid}<#else></#if>';
-        let type2 = '<#if type?exists>${type}<#else></#if>';
-        let cont = '<#if contactPerson?exists>${contactPerson}<#else></#if>';
-        let cid = '<#if cid?exists>${cid}<#else></#if>';
 
         initCustomer();
         initKeywordType();
@@ -243,7 +233,7 @@
                         customer.append('<option value="">请选择客户</option>');
                         if (res.data !== null) {
                             $.each(res.data, function (idx, val) {
-                                if (val.uuid !== parseInt(cusId))
+                                if (val.uuid !== parseInt(jumpCusuid))
                                     customer.append('<option value="' + val.uuid + '" >' + val.contactPerson.trim() + '</option>')
                                 else
                                     customer.append('<option value="' + val.uuid + '" selected >' + val.contactPerson.trim() + '</option>')
@@ -274,7 +264,7 @@
                         if (res.data != null) {
                             $.each(res.data, function (idx, val) {
                                 var v = val.split('#');
-                                if (type2 != v[0])
+                                if (jumpType != v[0])
                                     type.append('<option value="' + v[0] + '" >' + v[1] + '</option>')
                                 else
                                     type.append('<option value="' + v[0] + '" selected>' + v[1] + '</option>')

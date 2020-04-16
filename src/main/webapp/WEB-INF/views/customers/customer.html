@@ -160,7 +160,9 @@
 <script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
     var hasToStatic=false;
-    <@shiro.hasPermission name="/internal/ckpositionsummary/toStatisticCenter">   hasToStatic=true;</@shiro.hasPermission>
+    <@shiro.hasPermission name="/internal/ckpositionsummary/toCustomerKeywordPositionSummary">
+    hasToStatic=true;
+    </@shiro.hasPermission>
 </script>
 <script src="/static/ok-admin/page/customer/customer.js"></script>
 <script>
