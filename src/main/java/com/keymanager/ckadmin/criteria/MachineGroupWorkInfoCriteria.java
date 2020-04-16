@@ -1,9 +1,7 @@
 package com.keymanager.ckadmin.criteria;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.keymanager.ckadmin.criteria.base.BaseCriteria;
 
-import java.util.Date;
 
 public class MachineGroupWorkInfoCriteria extends BaseCriteria {
 
