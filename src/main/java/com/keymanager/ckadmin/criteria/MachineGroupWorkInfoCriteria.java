@@ -1,6 +1,9 @@
 package com.keymanager.ckadmin.criteria;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.keymanager.ckadmin.criteria.base.BaseCriteria;
+
+import java.util.Date;
 
 public class MachineGroupWorkInfoCriteria extends BaseCriteria {
 
@@ -12,7 +15,7 @@ public class MachineGroupWorkInfoCriteria extends BaseCriteria {
 
     private String terminalType;
 
-    private int dayNum;
+    private String dayNum;
 
     private String userName;
 
@@ -66,11 +69,11 @@ public class MachineGroupWorkInfoCriteria extends BaseCriteria {
         this.terminalType = terminalType;
     }
 
-    public int getDayNum() {
+    public String getDayNum() {
         return dayNum;
     }
 
-    public void setDayNum(int dayNum) {
+    public void setDayNum(String dayNum) {
         this.dayNum = dayNum;
     }
 }

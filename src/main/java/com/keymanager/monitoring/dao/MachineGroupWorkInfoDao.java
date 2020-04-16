@@ -12,6 +12,4 @@ public interface MachineGroupWorkInfoDao extends BaseMapper<MachineGroupWorkInfo
     List<MachineGroupWorkInfo> getMachineGroupWorkInfos(@Param("machineGroupWorkInfoCriteria") MachineGroupWorkInfoCriteria machineGroupWorkInfoCriteria);
 
     List<MachineGroupWorkInfo> getHistoryMachineGroupWorkInfo(@Param("machineGroupWorkInfoCriteria") MachineGroupWorkInfoCriteria machineGroupWorkInfoCriteria);
-
-    List<Long> findMostDistantMachineGroupWorkInfo();
 }

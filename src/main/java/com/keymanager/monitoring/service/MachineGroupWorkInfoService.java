@@ -74,10 +74,6 @@ public class MachineGroupWorkInfoService {
     }
 
     public void updateCustomerKeywordStatInfo (){
-        List<Long> uuids = machineGroupWorkInfoDao.findMostDistantMachineGroupWorkInfo();
-        if (CollectionUtils.isNotEmpty(uuids)) {
-            machineGroupWorkInfoDao.deleteBatchIds(uuids);
-        }
         List<MachineGroupWorkInfo> machineGroupWorkInfos = generateAllMachineGroupWorkInfo(new MachineGroupWorkInfoCriteria());
         for (MachineGroupWorkInfo machineGroupWorkInfo : machineGroupWorkInfos) {
             machineGroupWorkInfo.setCreateDate(new Date());
