@@ -27,6 +27,7 @@ import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.CodeNameVo;
 import com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
+import com.keymanager.ckadmin.vo.CustomerKeywordUploadVO;
 import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.vo.KeywordStandardVO;
@@ -1300,6 +1301,37 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     public void deleteSysCustomerKeywordByQzId(Long uuid) {
         customerKeywordDao.deleteSysCustomerKeywordByQzId(uuid);
     }
+
+    @Override
+    public Boolean batchDownKeywordsForExcel(CustomerKeywordUploadVO customerKeywordUploadVO, String loginName) {
+        String type = customerKeywordUploadVO.getEntryType();
+        String excelType = customerKeywordUploadVO.getExcelType();
+        String terminalType = customerKeywordUploadVO.getTerminalType();
+        try{
+            AbstractExcelReader operator = AbstractExcelReader.createExcelOperator(customerKeywordUploadVO.getFile().getInputStream(), excelType);
+            if (null != operator) {
+                List<CustomerKeyword> customerKeywords = operator.readDataFromExcel();
+                List<Long> downUuids = new ArrayList<>();
+                for (CustomerKeyword customerKeyword : customerKeywords){
+                    customerKeyword.setType(type);
+                    customerKeyword.setTerminalType(terminalType);
+                    List<Long> uuids = customerKeywordDao.getCustomerKeywordUuidsForBDExcel(customerKeyword, loginName);
+                    if (uuids != null){
+                        downUuids.addAll(uuids);
+                    }
+                }
+                if (downUuids.size() > 0){
+                    customerKeywordDao.batchDownKeywordByExcel(downUuids);
+                }
+                return true;
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+        return false;
+    }
+
 }
 
 

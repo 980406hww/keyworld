@@ -1671,4 +1671,30 @@
             #{updateOptimizedCountVO.customerKeywordUuid}
         </foreach>
     </update>
+
+    <select id="getCustomerKeywordUuidsForBDExcel" resultType="java.lang.Long">
+        SELECT ck.fUuid
+        FROM
+            t_customer_keyword ck,
+            t_customer c
+        WHERE
+            c.fUuid = ck.fCustomerUuid
+            AND c.fUserID = #{username}
+            AND ck.fKeyword = #{customerKeyword.keyword}
+            AND ck.fUrl = #{customerKeyword.url}
+            AND ck.fSearchEngine = #{customerKeyword.searchEngine}
+            AND ck.fType = #{customerKeyword.type}
+            AND ck.fTerminalType = #{customerKeyword.terminalType}
+    </select>
+
+    <update id="batchDownKeywordByExcel">
+        UPDATE t_customer_keyword
+        SET
+        fStatus = 3,
+        fUpdateTime = NOW()
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
 </mapper>
