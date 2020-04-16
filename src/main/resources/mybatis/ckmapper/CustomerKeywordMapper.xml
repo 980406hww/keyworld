@@ -1681,7 +1681,6 @@
             AND ck.fSearchEngine = #{customerKeyword.searchEngine}
             AND ck.fType = #{customerKeyword.type}
             AND ck.fTerminalType = #{customerKeyword.terminalType}
-            AND ck.fStatus = 1
     </select>
 
     <update id="batchDownKeywordByExcel">
