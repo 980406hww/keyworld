@@ -29,6 +29,8 @@ public abstract class AbstractExcelReader {
             return new SuperUserFullKeywordExcelOperator(inputStream);
         } else if (Constants.EXCEL_TYPE_SUPER_INDUSTRY_SIMPLE.equals(excelType)) {
             return new SimpleIndustryExcelOperator(inputStream);
+        } else if (Constants.EXCEL_TYPE_BATCH_DOWN.equals(excelType)) {
+            return new BatchDownKeywordExcelOperator(inputStream);
         }
         return null;
     }
