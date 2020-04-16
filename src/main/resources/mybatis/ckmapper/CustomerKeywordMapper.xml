@@ -1636,10 +1636,14 @@
             </trim>
             <trim prefix="fBearPawNumber =  (case" suffix="end),">
                 <foreach collection="updateOptimizedCountVOs" item="updateOptimizedCountVO">
+                    when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then
                     <choose>
                         <when test="updateOptimizedCountVO.bearpawNumber != null and updateOptimizedCountVO.bearpawNumber != ''">
-                            when fUuid = #{updateOptimizedCountVO.customerKeywordUuid} then #{updateOptimizedCountVO.bearpawNumber}
+                            #{updateOptimizedCountVO.bearpawNumber}
                         </when>
+                        <otherwise>
+                            fBearPawNumber
+                        </otherwise>
                     </choose>
                 </foreach>
             </trim>
