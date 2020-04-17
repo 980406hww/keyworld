@@ -2006,10 +2006,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             customerKeywordDao.batchInsertCustomerKeywordByCustomerUuid(customerUuid, qsId);
         }
     }
-
-    public void cleanSysCustomerKeywordOverOneWeek() {
-        customerKeywordDao.cleanSysCustomerKeywordOverOneWeek();
-    }
 }
 
 
