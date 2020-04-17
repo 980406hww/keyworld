@@ -23,18 +23,18 @@ public class BatchDownKeywordExcelOperator extends AbstractExcelReader {
             return null;
         }
         String url = getStringValue(BatchDownKeywordDefinition.URL.getColumnIndex(), rowIndex);
+        if (Utils.isNullOrEmpty(url)) {
+            return null;
+        }
         if (url.substring(url.length() - 1).equals("/")) {
             url = url.substring(0, url.length() - 1);
         }
         customerKeyword.setUrl(url);
-        if (Utils.isNullOrEmpty(customerKeyword.getUrl())) {
-            return null;
-        }
         String searchEngine = getStringValue(BatchDownKeywordDefinition.SearchEngine.getColumnIndex(), rowIndex);
         if (Utils.isNullOrEmpty(searchEngine)) {
             return null;
         }
-
+        customerKeyword.setSearchEngine(searchEngine);
         return customerKeyword;
     }
 

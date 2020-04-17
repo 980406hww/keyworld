@@ -104,9 +104,10 @@
             choose: function (obj) {
                 obj.preview(function (index, file, result) {
                     if (file.name.length > 0){
+                        $('div.layui-upload').append('<span class=\"layui-inline layui-upload-choose\">'+ file.name +'</span>');
                         choose_file = true;
                     }
-                })
+                });
             }
         });
 
