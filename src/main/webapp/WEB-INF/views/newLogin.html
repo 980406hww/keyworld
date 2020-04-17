@@ -26,14 +26,29 @@
 <div class="page-fill" id="login">
     <div class="layui-form" onkeydown="clickEnter()">
         <div class="login_face"><img src="/static/ok-admin/lib/layui/images/logo.png" alt="log"></div>
+
+        <div class="layui-form-item input-item layui-input-active" style="position: absolute;z-index: -1;">
+            <label for="username">用户名</label>
+            <input type="text" lay-verify="required" autocomplete="new-password" name="username" autofocus class="layui-input" value="******">
+        </div>
+        <div class="layui-form-item input-item layui-input-active" style="position: absolute;z-index: -1;">
+            <label for="password">密码</label>
+            <input type="password" lay-verify="required|password" autocomplete="new-password" name="password" class="layui-input" value="******">
+        </div>
+
         <div class="layui-form-item input-item layui-input-active">
             <label for="username">用户名</label>
-            <input type="text" lay-verify="required" name="username" autocomplete="off" id="username" autofocus class="layui-input">
+            <input type="text" lay-verify="required" autocomplete="new-password" name='username' id="username" autofocus class="layui-input">
         </div>
+
         <div class="layui-form-item input-item layui-input-active">
             <label for="password">密码</label>
-            <input type="password" lay-verify="required|password" name="password" autocomplete="off" id="password" class="layui-input">
+            <input type="password" lay-verify="required|password" autocomplete="new-password" name='password' id="password" class="layui-input">
+<!--            <input type="password" lay-verify="required|password" autocomplete="new-password" name='password' id="password" class="layui-input"-->
+<!--                   onchange="savePassword(this)" onfocus="clearPassword(this)">-->
         </div>
+
+
         <div class="layui-form-item input-item captcha-box">
             <label for="captcha">验证码</label>
             <input type="text" lay-verify="required|captcha" name="captcha" autocomplete="off" id="captcha" maxlength="4"
@@ -51,13 +66,14 @@
                     <!--<a href="javascript:;">注册</a>-->
                     <a href="javascript:checkEmail();">忘记密码?</a>
                 </div>
-                <div class="layui-col-md5" style="text-align: right">
-                    <input type="checkbox" name="rememberMe" id="rememberMe" lay-skin="primary" title="记住密码" checked>
-                </div>
+                <!--                <div class="layui-col-md5" style="text-align: right">-->
+                <!--                    <input type="checkbox" name="rememberMe" id="rememberMe" lay-skin="primary" title="记住密码" checked>-->
+                <!--                </div>-->
             </div>
         </div>
     </div>
 </div>
+
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script src="/static/ok-admin/js/somePublic.js"></script>
 <script>
@@ -78,6 +94,7 @@
     }
 
     function refreshCaptcha(e) {
+
         e.src = '/captcha?t=' + new Date().getTime();
     }
 
@@ -101,6 +118,7 @@
                 layui.layer.msg("密码不能为空", {icon: 5, anim: 5, time: 1000, isOutAnim: false});
                 return;
             }
+
             let captcha = document.getElementById('captcha').value;
             if (captcha && captcha.trim()) {
                 msg.append('captcha', captcha.trim());
@@ -108,7 +126,8 @@
                 layui.layer.msg("验证码不能为空", {icon: 5, anim: 5, time: 1000, isOutAnim: false});
                 return;
             }
-            let rememberMe = document.getElementById('rememberMe').checked;
+            // let rememberMe = document.getElementById('rememberMe').checked;
+            rememberMe = false;
             if (rememberMe) {
                 msg.append('rememberMe', '1');
             }
