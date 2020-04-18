@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.OperationCombineCriteria;
 import com.keymanager.ckadmin.criteria.UpdateGroupSettingCriteria;
+import com.keymanager.ckadmin.entity.OperationCombine;
 import com.keymanager.ckadmin.service.OperationCombineService;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,25 @@ public class OperationCombineController {
         return resultBean;
     }
 
+    /**
+     * 根据终端获取组合的用户名以及id
+     * @param terminalType
+     * @return
+     */
+    @GetMapping("/getCombineUser/{terminalType}")
+    public ResultBean getCombineUser(@PathVariable(name="terminalType") String terminalType){
+        ResultBean result =new ResultBean(200,"success");
+        try {
+            List<OperationCombine> ops=operationCombineService.getCombinesUser(terminalType);
+            result.setData(ops);
+            return result;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setCode(400);
+            result.setMsg(e.getMessage());
+            return result;
+        }
+    }
     @RequiresPermissions("/internal/operationCombine/updateMaxInvalidCount")
     @PostMapping("/updateMaxInvalidCount2")
     public ResultBean updateMaxInvalidCount(@RequestBody Map<String, Object> requestMap) {
