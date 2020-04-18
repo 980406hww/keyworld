@@ -183,7 +183,7 @@
         function init_combineUser(){
             let terminalType = $('#terminalType').val();
             $.ajax({
-                url: '/internal/groupsetting/getCombineUser/'+terminalType,
+                url: '/internal/operationcombine/getCombineUser/'+terminalType,
                 dataType: 'json',
                 type: 'get',
                 async: false,

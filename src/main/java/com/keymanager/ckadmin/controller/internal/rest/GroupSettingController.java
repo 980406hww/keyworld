@@ -77,22 +77,6 @@ public class GroupSettingController {
         }
         return resultBean;
     }
-
-    @GetMapping("/getCombineUser/{terminalType}")
-    public ResultBean getCombineUser(@PathVariable(name="terminalType") String terminalType){
-        ResultBean result =new ResultBean(200,"success");
-        try {
-            List<OperationCombine> ops=operationCombineService.getCombinesUser(terminalType);
-            result.setData(ops);
-            return result;
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            result.setCode(400);
-            result.setMsg(e.getMessage());
-            return result;
-        }
-    }
-
     @PostMapping("/getOperationTypes/{terminalType}")
     public ResultBean getOperationTypes(@PathVariable(name = "terminalType") String terminalType){
         ResultBean resultBean = new ResultBean(200, "success");
