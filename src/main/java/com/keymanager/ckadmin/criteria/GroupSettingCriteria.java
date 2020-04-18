@@ -15,6 +15,19 @@ public class GroupSettingCriteria extends BaseCriteria {
     /**
      * 操作类型
      */
+    /**
+     * 用户id
+     */
+    private long uuid;
+
+    public long getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(long uuid) {
+        this.uuid = uuid;
+    }
+
     private String operationType;
     /**
      * 终端类型

@@ -56,6 +56,13 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="layui-inline" style="width: 160px">
+                            <div class="layui-input-inline">
+                                <select name="ownerSelect" lay-search id="ownerSelect" lay-filter="operationTypeFilter">
+                                    <option value="">归属人</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="layui-inline">
                             <div class="layui-input-inline">
                                 <input type="checkbox" name="hasRemainingAccount" id="hasRemainingAccount" title="剩分组设置占比" lay-filter="oneChecked"/>
@@ -124,6 +131,7 @@
         var laypage = layui.laypage;
         var common = layui.common;
         var operationTypes ;
+        var combineUsers ;
 
         let ternimalType225 = $('#terminalType').val();
 
@@ -149,7 +157,7 @@
         });
 
         init_operationType();
-
+        init_combineUser();
         function init_operationType(){
             let terminalType = $('#terminalType').val();
             $.ajax({
@@ -165,6 +173,28 @@
                         $.each(data, function (index, item) {
                             $('#operationType').append(
                                 '<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
+                        });
+                        form.render("select");
+                    }
+                }
+            });
+        }
+
+        function init_combineUser(){
+            let terminalType = $('#terminalType').val();
+            $.ajax({
+                url: '/internal/groupsetting/getCombineUser/'+terminalType,
+                dataType: 'json',
+                type: 'get',
+                async: false,
+                success: function (res) {
+                    if (res.code === 200){
+                        let data =res.data;
+                        combineUsers = data;
+                        $("#ownerSelect").empty().append('<option value="">归属人</option>');
+                        $.each(data, function (index, item) {
+                            $('#ownerSelect').append(
+                                '<option value="' + item.uuid + '">' + item.creator + '</option>');// 下拉菜单里添加元素
                         });
                         form.render("select");
                     }
@@ -254,6 +284,7 @@
             data.operationCombineUuid = operationCombineUuid;
             data.operationCombineName = operationCombineName;
             data.maxInvalidCount = maxInvalidCount;
+            data.combineUsers=combineUsers
             data.groupNames = groupNames;
             data.operationTypes = operationTypes;
             data.remainAccount = remainAccount;
@@ -281,6 +312,7 @@
             data.operationCombineName = operationCombineName;
             data.operationCombineUuid = operationCombineUuid;
             data.operationTypes = operationTypes;
+            data.combineUsers=combineUsers
             data.remainAccount = remainingAccount;
             data.currentAccount = machineUsedPercent;
             data.terminalType = $('#terminalType').val();
@@ -306,6 +338,7 @@
             data.operationCombineName = operationCombineName;
             data.operationCombineUuid = operationCombineUuid;
             data.operationTypes = operationTypes;
+            data.combineUsers=combineUsers
             data.remainAccount = 100;
             data.currentAccount = 0;
             data.terminalType = $('#terminalType').val();

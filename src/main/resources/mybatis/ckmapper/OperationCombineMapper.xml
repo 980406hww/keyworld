@@ -44,6 +44,13 @@
         ORDER BY toc.fCreateTime DESC
     </select>
 
+    <select id="getUserName" resultType="com.keymanager.ckadmin.entity.OperationCombine">
+      select toc.fUuid AS "uuid",
+        u.fUserName AS "creator"
+        FROM t_operation_combine toc
+        LEFT JOIN t_userinfo u
+        ON u.fLoginName = toc.fCreator where toc.fTerminalType=#{terminal}
+    </select>
     <select id="getOperationCombineNames" resultType="java.util.Map">
         SELECT
             toc.fUuid AS 'uuid',

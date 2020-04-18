@@ -123,4 +123,10 @@ public class OperationCombineServiceImpl extends
     public List<OperationCombine> searchOperationCombines(Page<OperationCombine> page, GroupSettingCriteria groupSettingCriteria) {
         return operationCombineDao.searchOperationCombines(page, groupSettingCriteria);
     }
+
+    @Override
+    public List<OperationCombine> getCombinesUser(String terminal) {
+        return operationCombineDao.getUserName(terminal);
+    }
+
 }

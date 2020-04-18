@@ -37,4 +37,5 @@ public interface OperationCombineService extends IService<OperationCombine> {
     public String getOperationCombineName (String optimizeGroupName);
 
     public List<OperationCombine> searchOperationCombines(Page<OperationCombine> page, GroupSettingCriteria groupSettingCriteria);
+    public List<OperationCombine> getCombinesUser(String terminal);
 }

@@ -42,4 +42,12 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
     List<OperationCombine> searchOperationCombines(Page<OperationCombine> page, @Param("groupSettingCriteria") GroupSettingCriteria groupSettingCriteria);
 
     void updateOperationCombineName(@Param("uuid") long uuid, @Param("operationCombineName") String operationCombineName);
+
+    /**
+     * 获取用户名以及id
+     * @param terminal
+     * @return
+     */
+    List<OperationCombine> getUserName(@Param("terminal") String terminal);
+
 }
