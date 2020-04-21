@@ -6,6 +6,8 @@
     <select id="searchOperationCombines" resultType="com.keymanager.ckadmin.entity.OperationCombine">
         SELECT
         toc.fUuid AS "uuid",
+        toc.fSearchEngine as "searchEngine",
+        toc.fDefaultEngine as "defaultEngine",
         toc.fOperationCombineName AS "operationCombineName",
         u.fUserName AS "creator",
         toc.fRemainingAccount AS "remainingAccount",
@@ -27,6 +29,9 @@
             AND EXISTS(SELECT 1 FROM t_group g WHERE toc.fUuid = g.fOperationCombineUuid AND
             g.fGroupName LIKE '${groupSettingCriteria.optimizedGroupName}%')
         </if>
+        <if test="groupSettingCriteria.ownerSelect !=null and  groupSettingCriteria.ownerSelect != ''">
+            and toc.fUuid= #{groupSettingCriteria.ownerSelect}
+        </if>
         AND toc.fTerminalType = #{groupSettingCriteria.terminalType}
         AND EXISTS (
         SELECT 1
@@ -42,6 +47,24 @@
         </if>
         GROUP BY toc.fUuid
         ORDER BY toc.fCreateTime DESC
+    </select>
+
+    <update id="alterDefaultSearchEngine">
+        update t_operation_combine
+        <if test="oc.searchEngine ==1">
+            set fDefaultEngine=1
+        </if>
+        <if test="oc.searchEngine ==0">
+            set fDefaultEngine=0
+        </if>
+        where fUuid =#{oc.uuid}
+    </update>
+
+    <select id="getOperationCombineByEngine" resultType="com.keymanager.ckadmin.entity.OperationCombine">
+        select  fuuid  from t_operation_combine where fsearchEngine like '${searchEngine}' and fTerminalType like '${terminalType}'
+    </select>
+    <select id="getOperationCombineById" resultType="com.keymanager.ckadmin.entity.OperationCombine">
+        select toc.fSearchEngine as "searchEngine" ,toc.fDefaultEngine as  "defaultEngine",toc.fUuid as "uuid" ,toc.fTerminalType as "terminalType" from  t_operation_combine toc where toc.fUuid=#{uuid}
     </select>
 
     <select id="getUserName" resultType="com.keymanager.ckadmin.entity.OperationCombine">

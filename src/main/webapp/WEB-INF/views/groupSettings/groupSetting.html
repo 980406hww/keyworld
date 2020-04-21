@@ -417,6 +417,7 @@
                     + '                            <div class="layui-col-md12">\n'
                     + '                                <div class="data-head">\n'
                     + '                                     <div class="layui-col-md2 skip importantText" title="'+item.operationCombineName+'---'+item.remainingAccount+'%">'+ item.creator + '&nbsp;&nbsp;&nbsp;&nbsp;' + item.operationCombineName+'</div>\n'
+                    + '                                     <div class="layui-col-md1" onclick=changeDefaultSearchEngine("'+item.uuid+'","'+item.defaultEngine+'")>組搜索引擎:<span style="color: #00a65a" id="defaultSearchEngine'+item.uuid+'">'+item.searchEngine+'</span></div>\n'
                     + '                                     <div class="layui-col-md1" onclick=changeMaxInvalidCount("'+item.uuid+'")>最大无效点击数:<span style="color: #00a65a" id="maxInvalidCount'+item.uuid+'">'+item.maxInvalidCount+'</span></div>\n'
                     + '                                     <div class="layui-col-md6 skip" onclick=changeGroupNames("'+item.uuid+'")>分组:<span style="color: #00a65a" id="groupNameStr'+item.uuid+'">'+getGroupNameStrByUuid(item.uuid)+'</span></div>\n'
                     + '                                     <div class="layui-col-md3 head-operation" title="操作">\n'
@@ -504,6 +505,70 @@
                 $("#data_list").append(htm);
             })
         }
+
+        function generate_customer_status(uuid, status) {
+
+            let stat = '<div onclick=changeCustomerStatus(\'' + uuid + '\',this) class="layui-unselect layui-form-switch ';
+            if (parseInt(status)  === 1) {
+                stat += 'layui-form-onswitch';
+            }
+            stat += '" lay-skin="_switch"><em>';
+            if (parseInt(status) === 1) {
+                stat += '默认';
+            }else {
+                stat += '取消';
+            }
+            stat += '</em><i></i></div>';
+            return stat;
+        }
+
+
+        window.changeDefaultSearchEngine = function(uuid,statu){
+            layer.open({
+                type:1,
+                area:['200px','200px'],
+                title:"修改默認",
+                shadeClose:true,
+                content: '<div class="skip" style="height: 34px;margin: -1px 0"><span style="position: relative;top: 1px">引擎默認: </span>'+generate_customer_status(uuid,statu) + '</div>'
+        });
+        };
+
+        // 改变浏览器默认状态
+        window.changeCustomerStatus = function (uuid, ele) {
+
+            let newStatus = ele.children[0].innerHTML === '默认' ? 0: 1;
+            var postData = {};
+            postData.uuid = uuid;
+            postData.statu = newStatus;
+            $.ajax({
+                url: '/internal/operationcombine/alterDefaultSearchEngine',
+                type: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(postData),
+                success: function (result) {
+                    if (result.code === 200) {
+                        common.showSuccessMsg('操作成功');
+                        var form =document.getElementById("searchForm");
+                        form.submit();
+                        if (newStatus === 0) {
+                            ele.classList.remove('layui-form-onswitch');
+                            ele.children[0].innerHTML = '取消';
+                        } else {
+                            ele.classList.add('layui-form-onswitch');
+                            ele.children[0].innerHTML = '默认';
+                        }
+                    } else {
+                        common.showFailMsg('操作失败');
+                    }
+                },
+                error: function () {
+                    common.showFailMsg('操作失败');
+                }
+            });
+        };
 
         window.getGroupNameStrByUuid = function(uuid){
             $.ajax({

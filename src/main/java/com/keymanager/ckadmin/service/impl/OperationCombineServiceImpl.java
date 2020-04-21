@@ -128,5 +128,26 @@ public class OperationCombineServiceImpl extends
     public List<OperationCombine> getCombinesUser(String terminal) {
         return operationCombineDao.getUserName(terminal);
     }
+    @Override
+    public void alterDefaultSearchEngine(Long uuid, int status) {
+       OperationCombine oc= operationCombineDao.getOperationCombineById(uuid);
+       List<OperationCombine> ocs=operationCombineDao.getOperationCombineByEngine(oc.getSearchEngine(),oc.getTerminalType());
+      int is=ocs.size();
+       if(status==0){
+           oc.setSearchEngine("0");
+           operationCombineDao.alterDefaultSearchEngine(oc);
+       }else{
+           if(ocs.size()>1){
+               for(OperationCombine cos:ocs){
+                   cos.setSearchEngine("0");
+                   operationCombineDao.alterDefaultSearchEngine(cos);
+               }
+           }
+           oc.setSearchEngine("1");
+           operationCombineDao.alterDefaultSearchEngine(oc);
+       }
+
+
+    }
 
 }

@@ -121,6 +121,27 @@ public class OperationCombineController {
         }
     }
 
+    /**
+     * 修改默认的搜索引擎
+     * @param resultMap
+     * @return
+     */
+    @PostMapping("/alterDefaultSearchEngine")
+    public ResultBean alterDefaultSearchEngine(@RequestBody Map resultMap){
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            long uuid=Long.valueOf((String) resultMap.get("uuid"));
+           operationCombineService.alterDefaultSearchEngine(uuid,(int)resultMap.get("statu"));
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+            return resultBean;
+        }
+    }
+
+
     @RequiresPermissions("/internal/operationCombine/updateOperationCombine")
     @PostMapping("/updateOperationCombine2/{operationCombineUuid}")
     public ResultBean updateOperationCombine(@PathVariable("operationCombineUuid") long operationCombineUuid,

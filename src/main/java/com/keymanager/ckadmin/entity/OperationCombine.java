@@ -18,7 +18,27 @@ public class OperationCombine extends BaseEntity {
 
     @TableField(value = "fRemainingAccount")
     private int remainingAccount;
+    @TableField(value = "fSearchEngine")
+    private String searchEngine;
 
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
+    }
+
+    public int getDefaultEngine() {
+        return defaultEngine;
+    }
+
+    public void setDefaultEngine(int defaultEngine) {
+        this.defaultEngine = defaultEngine;
+    }
+
+    @TableField(value = "fDefaultEngine")
+    private int defaultEngine;
     @TableField(value = "fMaxInvalidCount")
     private int maxInvalidCount;
 

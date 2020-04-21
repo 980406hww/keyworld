@@ -20,6 +20,16 @@ public class GroupSettingCriteria extends BaseCriteria {
      */
     private long uuid;
 
+    private String ownerSelect;
+
+    public String getOwnerSelect() {
+        return ownerSelect;
+    }
+
+    public void setOwnerSelect(String ownerSelect) {
+        this.ownerSelect = ownerSelect;
+    }
+
     public long getUuid() {
         return uuid;
     }
