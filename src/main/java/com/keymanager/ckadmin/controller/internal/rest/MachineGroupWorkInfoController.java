@@ -7,6 +7,8 @@ import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.MachineGroupWorkInfoService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
+
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -59,10 +61,11 @@ public class MachineGroupWorkInfoController {
                 criteria.setUserName(userName);
             }
             List<MachineGroupWorkInfo> machineGroupWorkInfos;
-            if (criteria.getDayNum() > 0) {
-                machineGroupWorkInfos = machineGroupWorkInfoService.getHistoryMachineGroupWorkInfo(criteria);
-            } else {
+
+            if (("").equals(criteria.getDayNum()) || criteria.getDayNum()==null ||("null").equals(criteria.getDayNum())) {
                 machineGroupWorkInfos = machineGroupWorkInfoService.generateMachineGroupWorkInfo(criteria);
+            } else {
+                machineGroupWorkInfos = machineGroupWorkInfoService.getHistoryMachineGroupWorkInfo(criteria);
             }
             if (null != machineGroupWorkInfos && !machineGroupWorkInfos.isEmpty()) {
                 resultBean.setData(machineGroupWorkInfos);
