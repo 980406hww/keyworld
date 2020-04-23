@@ -72,6 +72,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Resource(name = "userRoleService2")
     private UserRoleService userRoleService;
 
+    @Resource(name = "roleService2")
+    private RoleService roleService;
+
     @Resource(name = "userInfoService2")
     private UserInfoService userInfoService;
 
@@ -456,6 +459,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         if (Utils.isNullOrEmpty(customerKeyword.getMachineGroup())) {
             customerKeyword.setMachineGroup(customerKeyword.getType());
         }
+        Map<String, Set<String>> resourceMap = roleService.selectResourceMapByUserId(userInfoService.getUuidByLoginName(userName), "2.0");
+        Set<String> urls = resourceMap.get("urls");
+        if (!urls.contains("/internal/customerKeyword/editOptimizePlanCount")){
+            customerKeyword.setOptimizePlanCount(50);
+        }
         int queryInterval = 24 * 60 * 60;
         if (null != customerKeyword.getOptimizePlanCount() && customerKeyword.getOptimizePlanCount() > 0) {
             int optimizeTodayCount = (int) Math.floor(Utils.getRoundValue(customerKeyword.getOptimizePlanCount() * (Math.random() * 0.7 + 0.5), 1));
@@ -467,7 +475,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                 Integer optimizePlanCount = Integer.valueOf(configService.getConfig("KeywordEffectOptimizePlanCount", "ImportantKeyword").getValue());
                 customerKeyword.setOptimizePlanCount(optimizePlanCount);
             } else {
-                customerKeyword.setOptimizePlanCount(10);
+                customerKeyword.setOptimizePlanCount(50);
             }
         }
         customerKeyword.setQueryInterval(queryInterval);
