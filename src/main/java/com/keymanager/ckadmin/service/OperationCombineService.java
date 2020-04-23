@@ -39,4 +39,5 @@ public interface OperationCombineService extends IService<OperationCombine> {
     public List<OperationCombine> searchOperationCombines(Page<OperationCombine> page, GroupSettingCriteria groupSettingCriteria);
     public List<OperationCombine> getCombinesUser(String terminal);
     void alterDefaultSearchEngine(Long uuid,int status);
+    void updateSearchEngine(OperationCombine oc);
 }

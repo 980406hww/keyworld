@@ -149,6 +149,10 @@ public class OperationCombineController {
         ResultBean resultBean = new ResultBean(200,"success");
         try {
             operationCombineService.updateOperationCombine(operationCombineUuid, updateGroupSettingCriteria);
+            OperationCombine oc=new OperationCombine();
+            oc.setSearchEngine(updateGroupSettingCriteria.getSearchEngine());
+            oc.setUuid(operationCombineUuid);
+            operationCombineService.updateSearchEngine(oc);
             return resultBean;
         } catch (Exception e) {
             logger.error(e.getMessage());

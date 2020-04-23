@@ -56,7 +56,15 @@
                     </div>
                 </div>
             </div>
-
+            <div class="layui-col-md6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">搜索引擎</label>
+                    <div class="layui-input-block" onclick="checkItem(this)">
+                        <select name="searchEngine" lay-search id="searchEngine" >
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div class="layui-col-md6">
                 <div class="layui-form-item">
                     <label class="layui-form-label">操作类型</label>
@@ -292,12 +300,15 @@
     let uuids_ = null;
     let operationCombineUuid_ = null;
     let operationTypes = null;
-
+    let teminalType=null;
+    let searchEngine=null;
     function initForm(data) {
         uuid_ = data.uuid;
         uuids_ = data.uuids;
         operationCombineUuid_ = data.operationCombineUuid;
         operationTypes = data.operationTypes;
+        teminalType=data.terminalType;
+        searchEngine=data.searchEngine;
         document.getElementById('uuid').value = data.uuid;
         document.getElementById('settingOperationCombineName').value = data.operationCombineName;
         document.getElementById('operationCombineUuid').value = data.operationCombineUuid;
@@ -315,7 +326,9 @@
                 init_operationCombineCount(layui_, data.operationCombineUuid);
             }
         }
-
+        if(layui_!=null){
+            get_searchEngine(layui_,teminalType,searchEngine);
+        }
     }
 
     function init_operationCombineCount(layui_, operationCombineUuid){
@@ -353,7 +366,42 @@
             }
         });
     }
+    function get_searchEngine(layui_,terminalType,searchEngine){
 
+        let $ = layui_.jquery;
+        let form = layui_.form;
+        $.ajax({
+            url: "/internal/groupsetting/getSearchEngine/"+terminalType,
+            type: 'get',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            success: function (res) {
+                var items =res.data;
+                if (res.code === 200) {
+                    if(searchEngine =='null'){
+                        $('#searchEngine').append('<option  value="无" selected>无</option>');// 下拉菜单里添加元素
+                        $.each(items, function (index,item){
+                            $('#searchEngine').append('<option value="' + item + '">' + item + '</option>');
+                        });
+                    }else{
+                        $.each(items, function (index,item){
+                            if(item==searchEngine)
+                                $('#searchEngine').append('<option  selected value="' + item + '">' + item + '</option>');
+                            else
+                                $('#searchEngine').append('<option   value="' + item + '">' + item + '</option>');
+                        });
+                    }
+
+                    form.render("select");
+                } else {
+                    common.showFailMsg(res.msg);
+                }
+            }
+        });
+
+    }
     function init_operationType(layui_, operationTypes) {
         let $ = layui_.jquery;
         let form = layui_.form;
@@ -391,7 +439,7 @@
                 }
             }
         };
-
+        get_searchEngine(layui,teminalType,searchEngine);
         if (operationTypes != null) {
             init_operationType(layui, operationTypes)
         } else {
@@ -448,6 +496,7 @@
         form.on("submit(save)", function (data) {
             let data_ = data.field;
             let postData = {};
+            postData.searchEngine=data_.searchEngine;
             let groupSetting = data_;
             groupSetting.remainingAccount = parseInt($('#unusedPercent').text());
             groupSetting.operationCombineName = data_.settingOperationCombineName;

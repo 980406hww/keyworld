@@ -132,7 +132,6 @@ public class OperationCombineServiceImpl extends
     public void alterDefaultSearchEngine(Long uuid, int status) {
        OperationCombine oc= operationCombineDao.getOperationCombineById(uuid);
        List<OperationCombine> ocs=operationCombineDao.getOperationCombineByEngine(oc.getSearchEngine(),oc.getTerminalType());
-      int is=ocs.size();
        if(status==0){
            oc.setSearchEngine("0");
            operationCombineDao.alterDefaultSearchEngine(oc);
@@ -148,6 +147,13 @@ public class OperationCombineServiceImpl extends
        }
 
 
+    }
+
+    @Override
+    public void updateSearchEngine(OperationCombine oc) {
+        //默认修改为0
+        oc.setDefaultEngine(0);
+        operationCombineDao.updateSearchEngine(oc);
     }
 
 }

@@ -63,5 +63,5 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
      */
     void alterDefaultSearchEngine(@Param("oc") OperationCombine oc);
     OperationCombine getOperationCombineById(@Param("uuid") long uuid);
-
+    void updateSearchEngine(@Param("oc") OperationCombine oc);
 }

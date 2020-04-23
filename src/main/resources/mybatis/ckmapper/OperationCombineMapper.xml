@@ -59,12 +59,14 @@
         </if>
         where fUuid =#{oc.uuid}
     </update>
-
+    <update id="updateSearchEngine">
+        update t_operation_combine set fSearchEngine =#{oc.searchEngine} , fDefaultEngine =#{oc.defaultEngine} where fUuid=#{oc.uuid}
+    </update>
     <select id="getOperationCombineByEngine" resultType="com.keymanager.ckadmin.entity.OperationCombine">
-        select  fuuid  from t_operation_combine where fsearchEngine like '${searchEngine}' and fTerminalType like '${terminalType}'
+        select  fuuid as "uuid" from t_operation_combine where fsearchEngine like '${searchEngine}' and fTerminalType like '${terminalType}'
     </select>
     <select id="getOperationCombineById" resultType="com.keymanager.ckadmin.entity.OperationCombine">
-        select toc.fSearchEngine as "searchEngine" ,toc.fDefaultEngine as  "defaultEngine",toc.fUuid as "uuid" ,toc.fTerminalType as "terminalType" from  t_operation_combine toc where toc.fUuid=#{uuid}
+        select toc.fSearchEngine as "searchEngine" ,toc.fDefaultEngine as  "defaultEngine",toc.fUuid as "uuid" ,toc.fTerminalType as "terminalType",toc.fDefaultEngine as "defaultEngine" from  t_operation_combine toc where toc.fUuid=#{uuid}
     </select>
 
     <select id="getUserName" resultType="com.keymanager.ckadmin.entity.OperationCombine">

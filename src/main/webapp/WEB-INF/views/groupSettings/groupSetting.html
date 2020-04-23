@@ -306,9 +306,10 @@
             });
         };
 
-        window.toGroupSettingUpdate = function(operationCombineUuid, operationCombineName, remainingAccount, machineUsedPercent, uuid){
+        window.toGroupSettingUpdate = function(operationCombineUuid, operationCombineName, remainingAccount, machineUsedPercent, uuid,searchEngine){
             let data = {};
             data.uuid = uuid;
+            data.searchEngine=searchEngine;
             data.operationCombineName = operationCombineName;
             data.operationCombineUuid = operationCombineUuid;
             data.operationTypes = operationTypes;
@@ -332,9 +333,10 @@
             });
         };
 
-        window.toGroupSettingBatchUpdate = function(operationCombineUuid, operationCombineName){
+        window.toGroupSettingBatchUpdate = function(operationCombineUuid, operationCombineName,searchEngine){
             let data = {};
             data.uuid = null;
+            data.searchEngine=searchEngine;
             data.operationCombineName = operationCombineName;
             data.operationCombineUuid = operationCombineUuid;
             data.operationTypes = operationTypes;
@@ -417,7 +419,7 @@
                     + '                            <div class="layui-col-md12">\n'
                     + '                                <div class="data-head">\n'
                     + '                                     <div class="layui-col-md2 skip importantText" title="'+item.operationCombineName+'---'+item.remainingAccount+'%">'+ item.creator + '&nbsp;&nbsp;&nbsp;&nbsp;' + item.operationCombineName+'</div>\n'
-                    + '                                     <div class="layui-col-md1" onclick=changeDefaultSearchEngine("'+item.uuid+'","'+item.defaultEngine+'")>組搜索引擎:<span style="color: #00a65a" id="defaultSearchEngine'+item.uuid+'">'+item.searchEngine+'</span></div>\n'
+                    + '                                     <div class="layui-col-md1" onclick=changeDefaultSearchEngine("'+item.uuid+'","'+item.defaultEngine+'")>组搜索引擎:<span style="color: #00a65a" id="defaultSearchEngine'+item.uuid+'">'+item.searchEngine+'</span></div>\n'
                     + '                                     <div class="layui-col-md1" onclick=changeMaxInvalidCount("'+item.uuid+'")>最大无效点击数:<span style="color: #00a65a" id="maxInvalidCount'+item.uuid+'">'+item.maxInvalidCount+'</span></div>\n'
                     + '                                     <div class="layui-col-md6 skip" onclick=changeGroupNames("'+item.uuid+'")>分组:<span style="color: #00a65a" id="groupNameStr'+item.uuid+'">'+getGroupNameStrByUuid(item.uuid)+'</span></div>\n'
                     + '                                     <div class="layui-col-md3 head-operation" title="操作">\n'
@@ -428,7 +430,7 @@
                     + '                                              <a href="javascript:void(0)" onclick=toGroupSettingAdd("' + item.uuid + '","' + item.operationCombineName + '","' + item.maxInvalidCount + '","'+item.remainingAccount+'")>新增操作组 </a>'
                     + '                                         </div>\n'
                     + '                                         <div class="layui-col-md4">'
-                    + '                                              <a href="javascript:void(0)" onclick=toGroupSettingBatchUpdate("' + item.uuid +'","' + item.operationCombineName +'")>批量修改操作组 </a>'
+                    + '                                              <a href="javascript:void(0)" onclick=toGroupSettingBatchUpdate("' + item.uuid +'","' + item.operationCombineName +'","' + item.searchEngine +'")>批量修改操作组 </a>'
                     + '                                         </div>\n'
                     + '                                         <div class="layui-col-md3">'
                     + '                                              <a href="javascript:void(0)" onclick=delOperationCombine("' + item.uuid + '")>删除操作组合 </a>'
@@ -487,7 +489,7 @@
                             + '                                        <div class="layui-col-md1 body-operation" style="width: 10%">'
                             + '                                             <input type="hidden" value="'+item.groupSettings.length+'" id="groupSettingCount'+item.uuid+'"/>'
                             <@shiro.hasPermission name="/internal/groupsetting/updateGroupSetting">
-                            + '                                             <a href="javascript:void(0)" onclick=toGroupSettingUpdate("' + item.uuid +'","' + item.operationCombineName +'","' + item.remainingAccount +'","' + groupSetting.machineUsedPercent +'","' + groupSetting.uuid +'")>修改 </a>'
+                            + '                                             <a href="javascript:void(0)" onclick=toGroupSettingUpdate("' + item.uuid +'","' + item.operationCombineName +'","' + item.remainingAccount +'","' + groupSetting.machineUsedPercent +'","' + groupSetting.uuid +'","' + item.searchEngine +'")>修改 </a>'
                             </@shiro.hasPermission>
                             <@shiro.hasPermission name="/internal/groupsetting/delGroupSetting">
 
@@ -527,9 +529,9 @@
             layer.open({
                 type:1,
                 area:['200px','200px'],
-                title:"修改默認",
+                title:"修改为组默认",
                 shadeClose:true,
-                content: '<div class="skip" style="height: 34px;margin: -1px 0"><span style="position: relative;top: 1px">引擎默認: </span>'+generate_customer_status(uuid,statu) + '</div>'
+                content: '<div class="skip" style="height: 34px;margin: -1px 0"><span style="position: relative;top: 1px">组默认: </span>'+generate_customer_status(uuid,statu) + '</div>'
         });
         };
 
@@ -551,8 +553,13 @@
                 success: function (result) {
                     if (result.code === 200) {
                         common.showSuccessMsg('操作成功');
-                        var form =document.getElementById("searchForm");
-                        form.submit();
+                        let pageConf = common.formToJsonObject('searchForm');
+                        if (pageConf.hasRemainingAccount){
+                            pageConf.hasRemainingAccount = true;
+                        }else{
+                            pageConf.hasRemainingAccount = false;
+                        }
+                        initLayPage(pageConf);
                         if (newStatus === 0) {
                             ele.classList.remove('layui-form-onswitch');
                             ele.children[0].innerHTML = '取消';

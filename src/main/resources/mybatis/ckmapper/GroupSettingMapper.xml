@@ -204,4 +204,8 @@
         FROM t_group_setting gs
         WHERE gs.fUuid = #{uuid}
     </select>
+    
+    <select id="getGroupSettingSearchEngine" resultType="java.lang.String">
+        select fValue from t_config where fConfigType ="SearchEngine" and fKey=#{terminalType}
+    </select>
 </mapper>
