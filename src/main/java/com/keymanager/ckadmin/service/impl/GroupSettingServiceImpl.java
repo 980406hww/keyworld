@@ -45,21 +45,6 @@ public class GroupSettingServiceImpl extends ServiceImpl<GroupSettingDao, GroupS
         operationCombineService.updateById(operationCombine);
         groupSettingDao.deleteById(uuid);
     }
-
-    /**
-     * 根据终端类型来获取搜索引擎类型
-     * @param terminalType
-     * @return
-     */
-    public List<String> groupSettingSearchEngine(String terminalType){
-        String searchEngineStr=groupSettingDao.getGroupSettingSearchEngine(terminalType);
-        String[] searchEngines=searchEngineStr.split(",");
-        List<String> lst=new ArrayList<>(Arrays.asList(searchEngines));
-        return lst;
-
-    }
-
-
     @Override
     public GroupSetting findGroupSetting (long uuid) {
         return groupSettingDao.selectById(uuid);

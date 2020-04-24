@@ -73,23 +73,6 @@ public class GroupSettingController {
         return resultBean;
     }
 
-    //获取搜索引擎类型
-    @GetMapping("/getSearchEngine/{terminalType}")
-    public ResultBean getSearchEngine(@PathVariable(name = "terminalType") String terminalType){
-        ResultBean resultBean=new ResultBean(200,"sucess");
-        try {
-            List<String> searchEngines = groupSettingService.groupSettingSearchEngine(terminalType);
-            resultBean.setData(searchEngines);
-            return resultBean;
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            resultBean.setCode(400);
-            resultBean.setMsg(e.getMessage());
-            return resultBean;
-        }
-    }
-
-
     @PostMapping("/getOperationTypes/{terminalType}")
     public ResultBean getOperationTypes(@PathVariable(name = "terminalType") String terminalType){
         ResultBean resultBean = new ResultBean(200, "success");

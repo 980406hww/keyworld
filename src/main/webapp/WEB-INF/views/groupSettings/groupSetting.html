@@ -417,7 +417,7 @@
                     + '                            <div class="layui-col-md12">\n'
                     + '                                <div class="data-head">\n'
                     + '                                     <div class="layui-col-md2 skip importantText" title="'+item.operationCombineName+'---'+item.remainingAccount+'%">'+ item.creator + '&nbsp;&nbsp;&nbsp;&nbsp;' + item.operationCombineName+'</div>\n'
-                    + '                                     <div class="layui-col-md1" onclick=changeDefaultSearchEngine("'+item.uuid+'","'+item.defaultEngine+'")>组搜索引擎:<span style="color: #00a65a" id="defaultSearchEngine'+item.uuid+'">'+item.searchEngine+'</span></div>\n'
+                    + '                                     <div class="layui-col-md1" onclick=changeDefaultSearchEngine("'+item.uuid+'","'+item.defaultEngine+'")><span  id="defaultSearchEngine'+item.uuid+'">'+item.searchEngine+'</span></div>\n'
 
                     + '                                     <div class="layui-col-md1" onclick=changeMaxInvalidCount("'+item.uuid+'")>最大无效点击数:<span style="color: #00a65a" id="maxInvalidCount'+item.uuid+'">'+item.maxInvalidCount+'</span></div>\n'
                     + '                                     <div class="layui-col-md2 skip" onclick=changeGroupNames("'+item.uuid+'")>分组:<span style="color: #00a65a" id="groupNameStr'+item.uuid+'">'+getGroupNameStrByUuid(item.uuid)+'</span></div>\n'
@@ -538,44 +538,46 @@
 
         // 改变浏览器默认状态
         window.changeCustomerStatus = function (uuid, ele) {
-
             let newStatus = ele.children[0].innerHTML === '默认' ? 0: 1;
-            var postData = {};
-            postData.uuid = uuid;
-            postData.statu = newStatus;
-            $.ajax({
-                url: '/internal/operationcombine/alterDefaultSearchEngine',
-                type: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                data: JSON.stringify(postData),
-                success: function (result) {
-                    if (result.code === 200) {
-                        common.showSuccessMsg('操作成功');
-                        let pageConf = common.formToJsonObject('searchForm');
-                        if (pageConf.hasRemainingAccount){
-                            pageConf.hasRemainingAccount = true;
-                        }else{
-                            pageConf.hasRemainingAccount = false;
-                        }
-                        initLayPage(pageConf);
-                        if (newStatus === 0) {
-                            ele.classList.remove('layui-form-onswitch');
-                            ele.children[0].innerHTML = '取消';
+            if(newStatus==1){
+                var postData = {};
+                postData.uuid = uuid;
+                postData.statu = newStatus;
+                $.ajax({
+                    url: '/internal/operationcombine/alterDefaultSearchEngine',
+                    type: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(postData),
+                    success: function (result) {
+                        if (result.code === 200) {
+                            common.showSuccessMsg('操作成功');
+                            let pageConf = common.formToJsonObject('searchForm');
+                            if (pageConf.hasRemainingAccount){
+                                pageConf.hasRemainingAccount = true;
+                            }else{
+                                pageConf.hasRemainingAccount = false;
+                            }
+                            initLayPage(pageConf);
+                            if (newStatus === 0) {
+                                ele.classList.remove('layui-form-onswitch');
+                                ele.children[0].innerHTML = '取消';
+                            } else {
+                                ele.classList.add('layui-form-onswitch');
+                                ele.children[0].innerHTML = '默认';
+                            }
                         } else {
-                            ele.classList.add('layui-form-onswitch');
-                            ele.children[0].innerHTML = '默认';
+                            common.showFailMsg('操作失败');
                         }
-                    } else {
+                    },
+                    error: function () {
                         common.showFailMsg('操作失败');
                     }
-                },
-                error: function () {
-                    common.showFailMsg('操作失败');
-                }
-            });
+                });
+            }
+
         };
 
         window.getGroupNameStrByUuid = function(uuid){
@@ -657,14 +659,17 @@
 
         window.alterSearchEngine = function searchEngine(uuid,searchEngine) {
             var termialType= $('#terminalType').val();
+            var postData={};
+            postData.terminalType=termialType;
             $.ajax({
-                url: '/internal/groupsetting/getSearchEngine/'+termialType,
+                url: '/internal/common/getSearchEngines',
+                data:JSON.stringify(postData),
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
                 timeout: 5000,
-                type: 'GET',
+                type: 'Post',
                 success: function (result) {
                     var items=result.data;
                     if (result.code === 200) {

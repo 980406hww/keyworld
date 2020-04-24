@@ -22,7 +22,6 @@ public interface GroupSettingDao extends BaseMapper<GroupSetting> {
     List<Long> getGroupSettingUuids (@Param("operationCombineUuid") long operationCombineUuid);
 
     void deleteGroupSettingByOperationCombineUuid (@Param("operationCombineUuid") long operationCombineUuid);
-    String getGroupSettingSearchEngine (@Param("terminalType") String terminalType);
 
 
 }

@@ -357,9 +357,12 @@
     function get_searchEngine(layui_,terminalType){
         let $ = layui_.jquery;
         let form = layui_.form;
+        var postData={};
+        postData.terminalType=terminalType;
         $.ajax({
-            url: "/internal/groupsetting/getSearchEngine/"+terminalType,
-            type: 'get',
+            url: '/internal/common/getSearchEngines',
+            data:JSON.stringify(postData),
+            type: 'Post',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'

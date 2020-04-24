@@ -57,11 +57,12 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
      */
     List<OperationCombine> getOperationCombineByEngine(@Param("searchEngine")String searchEngine,@Param("terminalType") String terminalType);
 
+    void updateOperationCombineBySearchEngine(@Param("searchEngine") String searchEngine);
+
     /**
      * 更改默认的搜索引擎
      * @param oc
      */
     void alterDefaultSearchEngine(@Param("oc") OperationCombine oc);
-    OperationCombine getOperationCombineById(@Param("uuid") long uuid);
     void updateSearchEngine(@Param("oc") OperationCombine oc);
 }

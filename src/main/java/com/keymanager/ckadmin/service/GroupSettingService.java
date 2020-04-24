@@ -31,6 +31,5 @@ public interface GroupSettingService extends IService<GroupSetting> {
     void deleteGroupSettingByOperationCombineUuid(long operationCombineUuid);
 
     GroupSetting getGroupSettingByUuid(Long uuid);
-    List<String> groupSettingSearchEngine(String terminalType);
 
 }
