@@ -682,11 +682,19 @@
                         });
                         layer.open({
                             type:1,
-                            area:['200px','200px'],
+                            area:['400px','200px'],
                             title:"修改搜索引擎",
                             shadeClose:true,
-                            content:' <select id="alterSearchEngine" style=" margin: auto; height: 40px;width: 130px; border-radius:10px; text-align: center; text-align-last: center;" onchange="updateSearchEngine(\'' + uuid + '\',this)" lay-search>'+ stat+'</select>'
+                            content:' <form class="layui-form"><div class="layui-form-item"><label class="layui-form-label">搜索引擎</label><div class="layui-input-inline"><select id="alterSearchEngine" name ="searchEngine" lay-search=""  onchange="updateSearchEngine(\'' + uuid + '\',this)" >'+ stat+'</select></div></div>' +
+                                '<div class="layui-form-item">\n' +
+                                '    <button class="layui-btn" lay-submit="" lay-filter="searchUp">确认修改</button>\n' +
+                                '  </div></form>'
                         });
+                        form.render();
+                        form.on("submit(searchUp)",function(data){
+                            updateSearchEngine(uuid,data.field.searchEngine);
+                            return false;
+                        })
                     } else {
                         common.showFailMsg('获取数据失败');
                     }
@@ -698,10 +706,10 @@
 
         };
 
-        window.updateSearchEngine=function(uuid,ele){
-           var val= ele.options[ele.options.selectedIndex].value;
+        window.updateSearchEngine=function(uuid,searchEngine){
+
            var postData={};
-           postData.searchEngine=val;
+           postData.searchEngine=searchEngine;
            postData.uuid=uuid;
             $.ajax({
                 url: '/internal/operationcombine/updateSearchEngine',
