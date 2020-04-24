@@ -194,7 +194,7 @@
                         $("#ownerSelect").empty().append('<option value="">归属人</option>');
                         $.each(data, function (index, item) {
                             $('#ownerSelect').append(
-                                '<option value="' + item.uuid + '">' + item.creator + '</option>');// 下拉菜单里添加元素
+                                '<option value="' + item.username + '">' + item.creator + '</option>');// 下拉菜单里添加元素
                         });
                         form.render("select");
                     }
@@ -418,20 +418,21 @@
                     + '                                <div class="data-head">\n'
                     + '                                     <div class="layui-col-md2 skip importantText" title="'+item.operationCombineName+'---'+item.remainingAccount+'%">'+ item.creator + '&nbsp;&nbsp;&nbsp;&nbsp;' + item.operationCombineName+'</div>\n'
                     + '                                     <div class="layui-col-md1" onclick=changeDefaultSearchEngine("'+item.uuid+'","'+item.defaultEngine+'")>组搜索引擎:<span style="color: #00a65a" id="defaultSearchEngine'+item.uuid+'">'+item.searchEngine+'</span></div>\n'
-                    + '                                     <div class="layui-col-md1" onclick=alterSearchEngine("'+item.uuid+'","'+item.searchEngine+'")>修改搜索引擎</div>\n'
+
                     + '                                     <div class="layui-col-md1" onclick=changeMaxInvalidCount("'+item.uuid+'")>最大无效点击数:<span style="color: #00a65a" id="maxInvalidCount'+item.uuid+'">'+item.maxInvalidCount+'</span></div>\n'
-                    + '                                     <div class="layui-col-md6 skip" onclick=changeGroupNames("'+item.uuid+'")>分组:<span style="color: #00a65a" id="groupNameStr'+item.uuid+'">'+getGroupNameStrByUuid(item.uuid)+'</span></div>\n'
-                    + '                                     <div class="layui-col-md3 head-operation" title="操作">\n'
+                    + '                                     <div class="layui-col-md2 skip" onclick=changeGroupNames("'+item.uuid+'")>分组:<span style="color: #00a65a" id="groupNameStr'+item.uuid+'">'+getGroupNameStrByUuid(item.uuid)+'</span></div>\n'
+                    + '                                     <div class="layui-col-md6 head-operation" title="操作">\n'
                     + '                                         <div class="layui-col-md2">'
                     + '                                              <a href="javascript:void(0)" onclick=showGroupQueueDialog("' + item.uuid + '")>分组详情 </a>'
                     + '                                          </div>\n'
-                    + '                                         <div class="layui-col-md3">'
+                    + '                                         <div class="layui-col-md2" )><a href="javascript:void(0)" onclick=alterSearchEngine("'+item.uuid+'","'+item.searchEngine+'")>修改搜索引擎</a></div>\n'
+                    + '                                         <div class="layui-col-md2">'
                     + '                                              <a href="javascript:void(0)" onclick=toGroupSettingAdd("' + item.uuid + '","' + item.operationCombineName + '","' + item.maxInvalidCount + '","'+item.remainingAccount+'")>新增操作组 </a>'
                     + '                                         </div>\n'
-                    + '                                         <div class="layui-col-md4">'
+                    + '                                         <div class="layui-col-md2">'
                     + '                                              <a href="javascript:void(0)" onclick=toGroupSettingBatchUpdate("' + item.uuid +'","' + item.operationCombineName +'")>批量修改操作组 </a>'
                     + '                                         </div>\n'
-                    + '                                         <div class="layui-col-md3">'
+                    + '                                         <div class="layui-col-md2">'
                     + '                                              <a href="javascript:void(0)" onclick=delOperationCombine("' + item.uuid + '")>删除操作组合 </a>'
                     + '                                         </div>\n'
                     + '                                     </div>\n'
@@ -531,7 +532,7 @@
                 area:['200px','200px'],
                 title:"修改为组默认",
                 shadeClose:true,
-                content: '<div class="skip" style="height: 34px;margin: -1px 0"><span style="position: relative;top: 1px">组默认: </span>'+generate_customer_status(uuid,statu) + '</div>'
+                content: '<div class="skip" style="height: 34px;margin: -1px 0"><span style="position: relative;top: 6px">组默认: </span>'+generate_customer_status(uuid,statu) + '</div>'
         });
         };
 
@@ -679,7 +680,7 @@
                             area:['200px','200px'],
                             title:"修改搜索引擎",
                             shadeClose:true,
-                            content: '<select id="alterSearchEngine" onchange="updateSearchEngine(\'' + uuid + '\',this)" lay-search>'+ stat+'</select>'
+                            content:' <select id="alterSearchEngine" style=" margin: auto; height: 40px;width: 130px; border-radius:10px; text-align: center; text-align-last: center;" onchange="updateSearchEngine(\'' + uuid + '\',this)" lay-search>'+ stat+'</select>'
                         });
                     } else {
                         common.showFailMsg('获取数据失败');

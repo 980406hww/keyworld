@@ -125,7 +125,7 @@ public class OperationCombineServiceImpl extends
     }
 
     @Override
-    public List<OperationCombine> getCombinesUser(String terminal) {
+    public List<Map<String ,Object>> getCombinesUser(String terminal) {
         return operationCombineDao.getUserName(terminal);
     }
     @Override

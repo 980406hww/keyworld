@@ -48,7 +48,7 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
      * @param terminal
      * @return
      */
-    List<OperationCombine> getUserName(@Param("terminal") String terminal);
+    List<Map<String,Object>> getUserName(@Param("terminal") String terminal);
 
     /**
      * 根据搜索引擎获取用户的iid

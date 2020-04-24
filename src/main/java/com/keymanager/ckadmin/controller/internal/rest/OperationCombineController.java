@@ -63,7 +63,7 @@ public class OperationCombineController {
     public ResultBean getCombineUser(@PathVariable(name="terminalType") String terminalType){
         ResultBean result =new ResultBean(200,"success");
         try {
-            List<OperationCombine> ops=operationCombineService.getCombinesUser(terminalType);
+            List<Map<String,Object>> ops=operationCombineService.getCombinesUser(terminalType);
             result.setData(ops);
             return result;
         } catch (Exception e) {

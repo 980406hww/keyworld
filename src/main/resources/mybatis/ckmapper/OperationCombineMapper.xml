@@ -30,7 +30,7 @@
             g.fGroupName LIKE '${groupSettingCriteria.optimizedGroupName}%')
         </if>
         <if test="groupSettingCriteria.ownerSelect !=null and  groupSettingCriteria.ownerSelect != ''">
-            and toc.fUuid= #{groupSettingCriteria.ownerSelect}
+            and toc.fCreator= #{groupSettingCriteria.ownerSelect}
         </if>
         AND toc.fTerminalType = #{groupSettingCriteria.terminalType}
         AND EXISTS (
@@ -69,8 +69,8 @@
         select toc.fSearchEngine as "searchEngine" ,toc.fDefaultEngine as  "defaultEngine",toc.fUuid as "uuid" ,toc.fTerminalType as "terminalType",toc.fDefaultEngine as "defaultEngine" from  t_operation_combine toc where toc.fUuid=#{uuid}
     </select>
 
-    <select id="getUserName" resultType="com.keymanager.ckadmin.entity.OperationCombine">
-      select toc.fUuid AS "uuid",
+    <select id="getUserName" resultType="java.util.Map">
+      select distinct  toc.fCreator AS "username",
         u.fUserName AS "creator"
         FROM t_operation_combine toc
         LEFT JOIN t_userinfo u
