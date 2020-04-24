@@ -56,7 +56,7 @@ public class OperationCombineServiceImpl extends
     @Override
     public void saveOperationCombine (OperationCombineCriteria operationCombineCriteria) {
         operationCombineDao.saveOperationCombine(operationCombineCriteria.getOperationCombineName(), operationCombineCriteria.getTerminalType(),
-                operationCombineCriteria.getCreator(), operationCombineCriteria.getMaxInvalidCount(), operationCombineCriteria.getRemainingAccount());
+                operationCombineCriteria.getCreator(), operationCombineCriteria.getMaxInvalidCount(), operationCombineCriteria.getRemainingAccount(),operationCombineCriteria.getSearchEngine());
         long lastInsertID = operationCombineDao.lastInsertID();
         operationCombineCriteria.setOperationCombineUuid(lastInsertID);
         groupService.saveGroupsBelowOperationCombine(operationCombineCriteria);

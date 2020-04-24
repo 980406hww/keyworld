@@ -306,10 +306,9 @@
             });
         };
 
-        window.toGroupSettingUpdate = function(operationCombineUuid, operationCombineName, remainingAccount, machineUsedPercent, uuid,searchEngine){
+        window.toGroupSettingUpdate = function(operationCombineUuid, operationCombineName, remainingAccount, machineUsedPercent, uuid){
             let data = {};
             data.uuid = uuid;
-            data.searchEngine=searchEngine;
             data.operationCombineName = operationCombineName;
             data.operationCombineUuid = operationCombineUuid;
             data.operationTypes = operationTypes;
@@ -333,10 +332,9 @@
             });
         };
 
-        window.toGroupSettingBatchUpdate = function(operationCombineUuid, operationCombineName,searchEngine){
+        window.toGroupSettingBatchUpdate = function(operationCombineUuid, operationCombineName){
             let data = {};
             data.uuid = null;
-            data.searchEngine=searchEngine;
             data.operationCombineName = operationCombineName;
             data.operationCombineUuid = operationCombineUuid;
             data.operationTypes = operationTypes;
@@ -420,6 +418,7 @@
                     + '                                <div class="data-head">\n'
                     + '                                     <div class="layui-col-md2 skip importantText" title="'+item.operationCombineName+'---'+item.remainingAccount+'%">'+ item.creator + '&nbsp;&nbsp;&nbsp;&nbsp;' + item.operationCombineName+'</div>\n'
                     + '                                     <div class="layui-col-md1" onclick=changeDefaultSearchEngine("'+item.uuid+'","'+item.defaultEngine+'")>组搜索引擎:<span style="color: #00a65a" id="defaultSearchEngine'+item.uuid+'">'+item.searchEngine+'</span></div>\n'
+                    + '                                     <div class="layui-col-md1" onclick=alterSearchEngine("'+item.uuid+'","'+item.searchEngine+'")>修改搜索引擎</div>\n'
                     + '                                     <div class="layui-col-md1" onclick=changeMaxInvalidCount("'+item.uuid+'")>最大无效点击数:<span style="color: #00a65a" id="maxInvalidCount'+item.uuid+'">'+item.maxInvalidCount+'</span></div>\n'
                     + '                                     <div class="layui-col-md6 skip" onclick=changeGroupNames("'+item.uuid+'")>分组:<span style="color: #00a65a" id="groupNameStr'+item.uuid+'">'+getGroupNameStrByUuid(item.uuid)+'</span></div>\n'
                     + '                                     <div class="layui-col-md3 head-operation" title="操作">\n'
@@ -430,7 +429,7 @@
                     + '                                              <a href="javascript:void(0)" onclick=toGroupSettingAdd("' + item.uuid + '","' + item.operationCombineName + '","' + item.maxInvalidCount + '","'+item.remainingAccount+'")>新增操作组 </a>'
                     + '                                         </div>\n'
                     + '                                         <div class="layui-col-md4">'
-                    + '                                              <a href="javascript:void(0)" onclick=toGroupSettingBatchUpdate("' + item.uuid +'","' + item.operationCombineName +'","' + item.searchEngine +'")>批量修改操作组 </a>'
+                    + '                                              <a href="javascript:void(0)" onclick=toGroupSettingBatchUpdate("' + item.uuid +'","' + item.operationCombineName +'")>批量修改操作组 </a>'
                     + '                                         </div>\n'
                     + '                                         <div class="layui-col-md3">'
                     + '                                              <a href="javascript:void(0)" onclick=delOperationCombine("' + item.uuid + '")>删除操作组合 </a>'
@@ -489,7 +488,7 @@
                             + '                                        <div class="layui-col-md1 body-operation" style="width: 10%">'
                             + '                                             <input type="hidden" value="'+item.groupSettings.length+'" id="groupSettingCount'+item.uuid+'"/>'
                             <@shiro.hasPermission name="/internal/groupsetting/updateGroupSetting">
-                            + '                                             <a href="javascript:void(0)" onclick=toGroupSettingUpdate("' + item.uuid +'","' + item.operationCombineName +'","' + item.remainingAccount +'","' + groupSetting.machineUsedPercent +'","' + groupSetting.uuid +'","' + item.searchEngine +'")>修改 </a>'
+                            + '                                             <a href="javascript:void(0)" onclick=toGroupSettingUpdate("' + item.uuid +'","' + item.operationCombineName +'","' + item.remainingAccount +'","' + groupSetting.machineUsedPercent +'","' + groupSetting.uuid +'")>修改 </a>'
                             </@shiro.hasPermission>
                             <@shiro.hasPermission name="/internal/groupsetting/delGroupSetting">
 
@@ -507,6 +506,7 @@
                 $("#data_list").append(htm);
             })
         }
+
 
         function generate_customer_status(uuid, status) {
 
@@ -653,6 +653,78 @@
                 }
             });
         };
+
+        window.alterSearchEngine = function searchEngine(uuid,searchEngine) {
+            var termialType= $('#terminalType').val();
+            $.ajax({
+                url: '/internal/groupsetting/getSearchEngine/'+termialType,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'GET',
+                success: function (result) {
+                    var items=result.data;
+                    if (result.code === 200) {
+                        var stat='';
+                        $.each(items, function (index,item){
+                            if(item=== searchEngine)
+                                stat+='<option  selected value="' + item + '">' + item + '</option>';
+                            else
+                                stat+='<option  value="' + item + '">' + item + '</option>';
+                        });
+                        layer.open({
+                            type:1,
+                            area:['200px','200px'],
+                            title:"修改搜索引擎",
+                            shadeClose:true,
+                            content: '<select id="alterSearchEngine" onchange="updateSearchEngine(\'' + uuid + '\',this)" lay-search>'+ stat+'</select>'
+                        });
+                    } else {
+                        common.showFailMsg('获取数据失败');
+                    }
+                },
+                error: function () {
+                    common.showFailMsg('未知错误，请稍后重试');
+                }
+            });
+
+        };
+
+        window.updateSearchEngine=function(uuid,ele){
+           var val= ele.options[ele.options.selectedIndex].value;
+           var postData={};
+           postData.searchEngine=val;
+           postData.uuid=uuid;
+            $.ajax({
+                url: '/internal/operationcombine/updateSearchEngine',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'Post',
+                success: function (result) {
+                    if (result.code === 200) {
+                        common.showSuccessMsg('操作成功');
+                        let pageConf = common.formToJsonObject('searchForm');
+                        if (pageConf.hasRemainingAccount){
+                            pageConf.hasRemainingAccount = true;
+                        }else{
+                            pageConf.hasRemainingAccount = false;
+                        }
+                        initLayPage(pageConf);
+                    } else {
+                        common.showFailMsg('操作成功');
+                    }
+                },
+                error: function () {
+                    common.showFailMsg('未知错误，请稍后重试');
+                }
+            });
+        }
 
         window.uniqueGroupName = function unique(a) {
             let seen = {};

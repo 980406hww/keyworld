@@ -22,7 +22,7 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
         @Param("terminalType") String terminalType,
         @Param("creator") String creator,
         @Param("maxInvalidCount") int maxInvalidCount,
-        @Param("remainingCount") int remainingCount);
+        @Param("remainingCount") int remainingCount,@Param("searchEngine") String searchEngine);
 
     long lastInsertID();
 

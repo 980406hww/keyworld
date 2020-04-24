@@ -24,6 +24,15 @@ public class OperationCombineCriteria {
     private int remainingAccount;
 
     private boolean onlySaveStatus;
+    private String searchEngine;
+
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
+    }
 
     private GroupSetting groupSetting;
 

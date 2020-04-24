@@ -92,8 +92,8 @@
     </select>
 
     <insert id="saveOperationCombine">
-        INSERT INTO t_operation_combine(fOperationCombineName, fTerminalType, fCreator, fMaxInvalidCount)
-        VALUES(#{operationCombineName}, #{terminalType}, #{creator}, #{maxInvalidCount})
+        INSERT INTO t_operation_combine(fOperationCombineName, fTerminalType, fCreator, fMaxInvalidCount,fSearchEngine,fDefaultEngine)
+        VALUES(#{operationCombineName}, #{terminalType}, #{creator}, #{maxInvalidCount},#{searchEngine},0)
     </insert>
 
     <select id="lastInsertID" resultType="java.lang.Long">

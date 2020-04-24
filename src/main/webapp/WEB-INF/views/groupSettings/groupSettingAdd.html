@@ -42,6 +42,21 @@
         <input type="hidden" name="terminalType" id="terminalType" value=""/>
         <input type="hidden" name="operationCombineUuid" id="operationCombineUuid" value=""/>
         <div class="layui-row">
+            <div class="layui-col-md12,classInfo" id="classInfo" >
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 100%"><h3>组信息</h3></label>
+                </div>
+            </div>
+
+            <div class="layui-col-md6,classInfo" id="contentSearch" >
+                <div class="layui-form-item">
+                    <label class="layui-form-label">搜索引擎</label>
+                    <div class="layui-input-block">
+                        <select name="searchEngine" id="searchEngine" >
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div class="layui-col-md12">
                 <div class="layui-form-item">
                     <label class="layui-form-label" style="width: 100%"><h3>基本信息</h3></label>
@@ -296,18 +311,25 @@
     let operationTypes = null;
     let operationCombineUuid_ = null;
     let data_ = null;
+    let terminalType= null;
     function initForm(data) {
         data_ = data;
         operationTypes = data.operationTypes;
         operationCombineUuid_ = data.operationCombineUuid;
+        terminalType=data.terminalType;
         document.getElementById('terminalType').value = data.terminalType;
         document.getElementById('operationCombineUuid').value = data.operationCombineUuid;
         document.getElementById('remainAccount').value = data.remainAccount;
         document.getElementById('unusedPercent').innerHTML = data.remainAccount;
         document.getElementById('currentAccount').value = data.currentAccount;
         document.getElementById('machineUsedPercent').value = data.currentAccount;
+        if(operationCombineUuid_!=null){
+            document.getElementById('contentSearch').style.display="none";
+            document.getElementById('classInfo').style.display="none";
+        }
         if (layui_ != null) {
             init_operationType(layui_, operationTypes);
+            get_searchEngine(layui_,terminalType,searchEngine);
             setForm(data)
         }
     }
@@ -331,12 +353,36 @@
         });
         form.render("select");
     }
+    //获取搜索引擎类型
+    function get_searchEngine(layui_,terminalType){
+        let $ = layui_.jquery;
+        let form = layui_.form;
+        $.ajax({
+            url: "/internal/groupsetting/getSearchEngine/"+terminalType,
+            type: 'get',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            success: function (res) {
+                var items =res.data;
+                if (res.code === 200) {
+                    $.each(items, function (index,item){
+                        $('#searchEngine').append('<option   value="' + item + '">' + item + '</option>');
+                    });
+                    form.render("select");
+                } else {
+                    common.showFailMsg(res.msg);
+                }
+            }
+        });
 
+    }
     layui.use(["form", "jquery", "layer", "common"], function () {
         let form = layui.form;
         let $ = layui.jquery;
         let common = layui.common;
-
+        get_searchEngine(layui,terminalType)
         if (operationTypes != null) {
             init_operationType(layui, operationTypes)
         } else {
@@ -361,10 +407,11 @@
         form.on("submit(save)", function (data) {
             let field = data.field;
             let operationCombine = {};
+
             let url = '/internal/groupsetting/saveGroupSetting2';
             if (operationCombineUuid_ == null){
                 url = '/internal/operationcombine/saveOperationCombine2';
-
+                operationCombine.searchEngine=field.searchEngine;
                 operationCombine.operationCombineName = field.settingOperationCombineName;
                 operationCombine.terminalType = field.terminalType;
                 operationCombine.maxInvalidCount = field.maxInvalidCount === "" ? 8 : field.maxInvalidCount;

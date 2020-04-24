@@ -141,6 +141,28 @@ public class OperationCombineController {
         }
     }
 
+    /**
+     * 更新搜索引擎
+     * @param resultMap
+     * @return
+     */
+    @PostMapping("/updateSearchEngine")
+    public ResultBean updateSearchEngine(@RequestBody Map resultMap){
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            long uuid=Long.valueOf((String) resultMap.get("uuid"));
+            OperationCombine oc=new OperationCombine();
+            oc.setUuid(uuid);
+            oc.setSearchEngine((String)resultMap.get("searchEngine"));
+            operationCombineService.updateSearchEngine(oc);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+            return resultBean;
+        }
+    }
 
     @RequiresPermissions("/internal/operationCombine/updateOperationCombine")
     @PostMapping("/updateOperationCombine2/{operationCombineUuid}")
@@ -149,10 +171,6 @@ public class OperationCombineController {
         ResultBean resultBean = new ResultBean(200,"success");
         try {
             operationCombineService.updateOperationCombine(operationCombineUuid, updateGroupSettingCriteria);
-            OperationCombine oc=new OperationCombine();
-            oc.setSearchEngine(updateGroupSettingCriteria.getSearchEngine());
-            oc.setUuid(operationCombineUuid);
-            operationCombineService.updateSearchEngine(oc);
             return resultBean;
         } catch (Exception e) {
             logger.error(e.getMessage());
