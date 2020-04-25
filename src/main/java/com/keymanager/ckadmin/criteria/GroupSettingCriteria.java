@@ -18,6 +18,16 @@ public class GroupSettingCriteria extends BaseCriteria {
     /**
      * 用户id
      */
+    private String searchEngine;
+
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
+    }
+
     private long uuid;
 
     private String ownerSelect;

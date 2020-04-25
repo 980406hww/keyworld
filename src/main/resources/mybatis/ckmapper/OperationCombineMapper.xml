@@ -32,6 +32,9 @@
         <if test="groupSettingCriteria.ownerSelect !=null and  groupSettingCriteria.ownerSelect != ''">
             and toc.fCreator= #{groupSettingCriteria.ownerSelect}
         </if>
+        <if test="groupSettingCriteria.searchEngine !=null and  groupSettingCriteria.searchEngine != ''">
+            and toc.fSearchEngine= #{groupSettingCriteria.searchEngine}
+        </if>
         AND toc.fTerminalType = #{groupSettingCriteria.terminalType}
         AND EXISTS (
         SELECT 1
