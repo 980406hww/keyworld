@@ -727,6 +727,7 @@
                         form.render();
                         form.on("submit(searchUp)",function(data){
                             updateSearchEngine(uuid,data.field.searchEngine);
+                            layer.closeAll()
                             return false;
                         })
                     } else {
