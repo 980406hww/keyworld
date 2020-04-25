@@ -51,7 +51,7 @@
 
     <update id="alterDefaultSearchEngine">
         update t_operation_combine
-        set fDefaultEngine=#{oc.searchEngine}
+        set fDefaultEngine=#{oc.defaultEngine}
         where fUuid =#{oc.uuid}
     </update>
 
