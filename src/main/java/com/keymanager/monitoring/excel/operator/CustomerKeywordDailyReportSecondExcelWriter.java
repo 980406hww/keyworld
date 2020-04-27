@@ -7,6 +7,7 @@ import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import com.keymanager.util.excel.ExcelWriteException;
 import com.keymanager.util.excel.JXLExcelWriter;
+import jxl.Cell;
 import jxl.Sheet;
 import jxl.read.biff.BiffException;
 import org.apache.commons.lang.time.DateUtils;
@@ -77,6 +78,7 @@ public class CustomerKeywordDailyReportSecondExcelWriter {
 
 	private double writeDailyDetail(List<CustomerKeyword> views) throws Exception {
 		if(!Utils.isEmpty(views)){
+			removeExpiredSheet(5);
 			String sheetName = Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "";
 			createOrReplaceSheet(sheetName, writer.getNumberOfSheets());
 
@@ -213,6 +215,27 @@ public class CustomerKeywordDailyReportSecondExcelWriter {
 		urlWidth = calculateWidth(keywordWidth, view.getUrl());
 		writer.addLabelCell(CustomerKeywordDailyReportSecondDefinition.Price1.getColumnIndex(), rowIndex, view.getPositionFirstFeeString());
 		writer.addLabelCell(CustomerKeywordDailyReportSecondDefinition.Price4.getColumnIndex(), rowIndex, view.getPositionForthFeeString());
+	}
+
+	private void removeExpiredSheet(int expiredDay) throws ExcelWriteException{
+		writer.setCurrentWorkSheetWithName("小计");
+		Calendar calendar = Calendar.getInstance();
+		int today = calendar.get(Calendar.DAY_OF_MONTH);
+		if (today > expiredDay){
+			for (int i=today-expiredDay; i>0; i--){
+				// switch
+				Cell cell = writer.getCell(1, i);
+				if (cell != null && !Utils.isNullOrEmpty(cell.getContents())){
+					double expiredCellValue = Double.parseDouble(cell.getContents().trim());
+					writer.addLabelCell(1, i, expiredCellValue);
+				}
+				String expiredSheetName = i + "";
+				Sheet expiredSheet = writer.getSheetByName(expiredSheetName);
+				if (expiredSheet != null){
+					writer.removeSheet(expiredSheetName);
+				}
+			}
+		}
 	}
 
 	public double writeDataToExcel(List<CustomerKeyword> views, String loginName, String contactPerson, String terminalType) throws Exception {
