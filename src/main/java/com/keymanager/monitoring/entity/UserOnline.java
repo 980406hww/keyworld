@@ -1,6 +1,6 @@
 package com.keymanager.monitoring.entity;
 
-import com.keymanager.monitoring.common.shiro.ShiroUser;
+import com.keymanager.ckadmin.common.shiro.ShiroUser;
 
 import java.io.Serializable;
 import java.util.Date;

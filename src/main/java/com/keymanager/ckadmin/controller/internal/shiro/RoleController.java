@@ -1,9 +1,10 @@
-package com.keymanager.monitoring.controller.rest.shiro;
+package com.keymanager.ckadmin.controller.internal.shiro;
 
 import com.keymanager.monitoring.common.base.BaseController;
 import com.keymanager.monitoring.common.result.PageInfo;
 import com.keymanager.monitoring.entity.Role;
 import com.keymanager.monitoring.service.IRoleService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +35,7 @@ public class RoleController extends BaseController {
      *
      * @return
      */
+    @RequiresPermissions("/role/manager")
     @GetMapping("/manager")
     public String manager(HttpServletRequest request, String resource) {
         String requestURI=request.getRequestURI();
@@ -54,6 +56,7 @@ public class RoleController extends BaseController {
      * @param order
      * @return
      */
+    @RequiresPermissions("/role/manager")
     @PostMapping("/dataGrid")
     @ResponseBody
     public Object dataGrid(Integer page, Integer rows, String sort, String order) {
@@ -67,6 +70,7 @@ public class RoleController extends BaseController {
      *
      * @return
      */
+    @RequiresPermissions("/role/manager")
     @PostMapping("/tree")
     @ResponseBody
     public Object tree() {
@@ -78,6 +82,7 @@ public class RoleController extends BaseController {
      *
      * @return
      */
+    @RequiresPermissions("/role/manager")
     @GetMapping("/addPage")
     public String addPage() {
         return "/views/admin/role/roleAdd";
@@ -89,6 +94,7 @@ public class RoleController extends BaseController {
      * @param role
      * @return
      */
+    @RequiresPermissions("/role/manager")
     @PostMapping("/add")
     @ResponseBody
     public Object add(@Valid Role role) {
@@ -102,6 +108,7 @@ public class RoleController extends BaseController {
      * @param id
      * @return
      */
+    @RequiresPermissions("/role/manager")
     @RequestMapping("/delete")
     @ResponseBody
     public Object delete(Long id) {
@@ -116,6 +123,7 @@ public class RoleController extends BaseController {
      * @param id
      * @return
      */
+    @RequiresPermissions("/role/manager")
     @RequestMapping("/editPage")
     public String editPage(Model model, Long id) {
         Role role = roleService.selectById(id);
@@ -129,6 +137,7 @@ public class RoleController extends BaseController {
      * @param role
      * @return
      */
+    @RequiresPermissions("/role/manager")
     @RequestMapping("/edit")
     @ResponseBody
     public Object edit(@Valid Role role) {
@@ -143,6 +152,7 @@ public class RoleController extends BaseController {
      * @param model
      * @return
      */
+    @RequiresPermissions("/role/manager")
     @GetMapping("/grantPage")
     public String grantPage(Model model, Long id) {
         model.addAttribute("id", id);
@@ -155,6 +165,7 @@ public class RoleController extends BaseController {
      * @param id
      * @return
      */
+    @RequiresPermissions("/role/manager")
     @RequestMapping("/findResourceIdListByRoleId")
     @ResponseBody
     public Object findResourceByRoleId(Long id) {
@@ -169,6 +180,7 @@ public class RoleController extends BaseController {
      * @param resourceIds
      * @return
      */
+    @RequiresPermissions("/role/manager")
     @RequiresRoles("admin")
     @RequestMapping("/grant")
     @ResponseBody

@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.controller.rest.shiro;
+package com.keymanager.ckadmin.controller.internal.shiro;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

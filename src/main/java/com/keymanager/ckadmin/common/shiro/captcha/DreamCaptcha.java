@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.common.shiro.captcha;
+package com.keymanager.ckadmin.common.shiro.captcha;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

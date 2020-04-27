@@ -1,6 +1,6 @@
-package com.keymanager.monitoring.controller.rest.shiro;
+package com.keymanager.ckadmin.controller.internal.shiro;
 
-import com.keymanager.monitoring.common.shiro.captcha.DreamCaptcha;
+import com.keymanager.ckadmin.common.shiro.captcha.DreamCaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.keymanager.monitoring.common.shiro;
+package com.keymanager.ckadmin.common.shiro;
 
 import java.io.Serializable;
 import java.util.Set;

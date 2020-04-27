@@ -168,6 +168,10 @@ layui.define(["element", "jquery"], function (exports) {
     okTab.prototype.tabAdd = function (_thisa, tit) {
         var _this = $(_thisa).clone(true);//拷贝dom（js： _this.cloneNode(true) ）
         var url = _this.attr("data-url");//选项卡的页面路径
+        if(url =='/index'){
+            window.open(url, "_blank");
+            return;
+        }
         var needTab = window.localStorage.getItem("needTab");
         if (needTab !== 'need') {
             url = '/internal/layer/index?url=' + url;

@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.controller.rest.shiro;
+package com.keymanager.ckadmin.controller.internal.shiro;
 
 import com.keymanager.monitoring.common.result.PageInfo;
 import com.keymanager.monitoring.service.ISysLogService;

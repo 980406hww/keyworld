@@ -7,7 +7,7 @@
 
 	<description>Shiro安全配置</description>
 
-	<bean class="com.keymanager.monitoring.common.shiro.captcha.DreamCaptcha">
+	<bean class="com.keymanager.ckadmin.common.shiro.captcha.DreamCaptcha">
 		<property name="cacheManager" ref="shiroSpringCacheManager"/>
 		<!-- 复用半小时缓存 -->
 		<property name="cacheName" value="halfHour"/>
@@ -31,7 +31,7 @@
 	</bean>
 
 	<!--多个realm 的集中管理  -->
-	<bean id="defineModularRealmAuthenticator" class="com.keymanager.monitoring.common.shiro.CustomizedModularRealmAuthenticator">
+	<bean id="defineModularRealmAuthenticator" class="com.keymanager.ckadmin.common.shiro.CustomizedModularRealmAuthenticator">
 		<property name="definedRealms">
 			<map>
 				<entry key="shiroDbRealm" value-ref="shiroDbRealm" />
@@ -44,7 +44,7 @@
 	</bean>
 
 	<!-- 項目自定义的shiroDbRealm -->
-	<bean id="shiroDbRealm" class="com.keymanager.monitoring.common.shiro.ShiroDbRealm">
+	<bean id="shiroDbRealm" class="com.keymanager.ckadmin.common.shiro.ShiroDbRealm">
 		<constructor-arg index="0" name="cacheManager" ref="shiroSpringCacheManager"/>
 		<constructor-arg index="1" name="matcher" ref="credentialsMatcher"/>
 		<!-- 启用身份验证缓存，即缓存AuthenticationInfo信息，默认false -->
@@ -56,7 +56,7 @@
 	</bean>
 
 	<!-- 項目自定义的ExternalControllerRealm -->
-	<bean id="ExternalControllerRealm" class="com.keymanager.monitoring.common.shiro.ExternalControllerRealm">
+	<bean id="ExternalControllerRealm" class="com.keymanager.ckadmin.common.shiro.ExternalControllerRealm">
 		<constructor-arg index="0" name="cacheManager" ref="shiroSpringCacheManager"/>
 		<constructor-arg index="1" name="matcher" ref="credentialsMatcher"/>
 		<!-- 启用身份验证缓存，即缓存AuthenticationInfo信息，默认false -->
@@ -101,18 +101,12 @@
 				/captcha = anon
 				/commons/** = anon
 				/static/** = anon
-				/webhooks = anon
 				/external/** = anon
 				/login = anon
 				/loginOldVersion = anon
-				/internal/useronline/** = anon
-				/internal/terminalSetting/** = anon
-				/internal/user/** = anon
-				/tj.js =anon
-				/terminalSetting/test.jsp = anon
+				<!--/internal/terminalSetting/** = anon-->
+				<!--/tj.js = anon-->
 				/** = userInfo
-				/vnc.zip = authc
-				/vncAll.zip = authc
 			</value>
 		</property>
 		<property name="filters">
@@ -122,10 +116,10 @@
 		</property>
 	</bean>
 	<!-- ajax session超时时处理 -->
-	<bean id="ajaxSessionFilter" class="com.keymanager.monitoring.common.shiro.NewShiroAjaxSessionFilter"/>
+	<bean id="ajaxSessionFilter" class="com.keymanager.ckadmin.common.shiro.NewShiroAjaxSessionFilter"/>
 
 	<!-- 用户授权信息Cache, 采用spring-cache, 具体请查看spring-ehcache.xml、spring-redis.xml -->
-	<bean id="shiroSpringCacheManager" class="com.keymanager.monitoring.common.shiro.cache.ShiroSpringCacheManager">
+	<bean id="shiroSpringCacheManager" class="com.keymanager.ckadmin.common.shiro.cache.ShiroSpringCacheManager">
 		<property name="cacheManager" ref="cacheManager"/>
 	</bean>
 
@@ -146,7 +140,7 @@
 		<property name="sessionListeners" ref="shiroSessionListener"/>
 	</bean>
 
-	<bean id="shiroSessionListener" class="com.keymanager.monitoring.common.shiro.listener.ShiroSessionListener" />
+	<bean id="shiroSessionListener" class="com.keymanager.ckadmin.common.shiro.listener.ShiroSessionListener" />
 
 	<!-- 指定本系统SESSIONID, 默认为: JSESSIONID 问题: 与SERVLET容器名冲突, 如JETTY, TOMCAT 等默认JSESSIONID,
         当跳出SHIRO SERVLET时如ERROR-PAGE容器会为JSESSIONID重新分配值导致登录会话丢失! -->
@@ -164,14 +158,14 @@
 	</bean>
 
 	<!-- shiro密码加密配置 -->
-	<bean id="passwordHash" class="com.keymanager.monitoring.common.shiro.PasswordHash">
+	<bean id="passwordHash" class="com.keymanager.ckadmin.common.shiro.PasswordHash">
 		<!-- 密码加密 1次md5,增强密码可修改此处 -->
 		<property name="algorithmName" value="md5"/>
 		<property name="hashIterations" value="1"/>
 	</bean>
 
 	<!-- 密码错误5次锁定半小时 -->
-	<bean id="credentialsMatcher" class="com.keymanager.monitoring.common.shiro.RetryLimitCredentialsMatcher">
+	<bean id="credentialsMatcher" class="com.keymanager.ckadmin.common.shiro.RetryLimitCredentialsMatcher">
 		<constructor-arg ref="shiroSpringCacheManager"/>
 		<property name="retryLimitCacheName" value="halfHour"/>
 		<property name="passwordHash" ref="passwordHash"/>

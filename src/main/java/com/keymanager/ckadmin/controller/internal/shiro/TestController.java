@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.controller.rest.shiro;
+package com.keymanager.ckadmin.controller.internal.shiro;
 
 import com.keymanager.monitoring.common.base.BaseController;
 import org.apache.shiro.authz.annotation.RequiresRoles;

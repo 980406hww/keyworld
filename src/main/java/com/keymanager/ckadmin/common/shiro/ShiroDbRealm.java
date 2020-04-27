@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.common.shiro;
+package com.keymanager.ckadmin.common.shiro;
 
 import java.util.List;
 import java.util.Map;

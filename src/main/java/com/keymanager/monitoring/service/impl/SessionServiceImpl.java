@@ -1,6 +1,6 @@
 package com.keymanager.monitoring.service.impl;
 
-import com.keymanager.monitoring.common.shiro.ShiroUser;
+import com.keymanager.ckadmin.common.shiro.ShiroUser;
 import com.keymanager.monitoring.entity.UserOnline;
 import com.keymanager.monitoring.service.SessionService;
 import org.apache.shiro.session.Session;

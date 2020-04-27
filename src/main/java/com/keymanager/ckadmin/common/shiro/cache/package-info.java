@@ -25,4 +25,4 @@
  * @author L.cm
  *
  */
-package com.keymanager.monitoring.common.shiro.cache;
+package com.keymanager.ckadmin.common.shiro.cache;

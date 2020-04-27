@@ -3,7 +3,7 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.enums.KeywordEffectEnum;
 import com.keymanager.ckadmin.service.ConfigService;
-import com.keymanager.monitoring.common.shiro.ShiroUser;
+import com.keymanager.ckadmin.common.shiro.ShiroUser;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

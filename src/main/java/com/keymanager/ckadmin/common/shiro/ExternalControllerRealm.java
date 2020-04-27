@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.common.shiro;
+package com.keymanager.ckadmin.common.shiro;
 
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.service.IRoleService;
@@ -11,18 +11,14 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @description：用于外部使用shiro权限认证

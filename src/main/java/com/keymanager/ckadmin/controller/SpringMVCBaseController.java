@@ -1,6 +1,6 @@
 package com.keymanager.ckadmin.controller;
 
-import com.keymanager.monitoring.common.shiro.ShiroUser;
+import com.keymanager.ckadmin.common.shiro.ShiroUser;
 import com.keymanager.monitoring.vo.ExtendedUsernamePasswordToken;
 import com.keymanager.util.Utils;
 import com.keymanager.util.ZipCompressor;

@@ -33,7 +33,7 @@ import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
-import com.keymanager.monitoring.common.shiro.ShiroUser;
+import com.keymanager.ckadmin.common.shiro.ShiroUser;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

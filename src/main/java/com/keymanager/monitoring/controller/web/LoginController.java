@@ -3,7 +3,7 @@ package com.keymanager.monitoring.controller.web;
 import com.keymanager.monitoring.common.base.BaseController;
 import com.keymanager.monitoring.common.csrf.CsrfToken;
 import com.keymanager.monitoring.common.result.Tree;
-import com.keymanager.monitoring.common.shiro.captcha.DreamCaptcha;
+import com.keymanager.ckadmin.common.shiro.captcha.DreamCaptcha;
 import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.service.IResourceService;
 import com.keymanager.monitoring.service.IUserInfoService;
@@ -51,7 +51,7 @@ public class LoginController extends BaseController {
      */
     @GetMapping("/")
     public String index() {
-        return "redirect:/index";
+        return "redirect:/login";
     }
 
     /**

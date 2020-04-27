@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.common.shiro.listener;
+package com.keymanager.ckadmin.common.shiro.listener;
 
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.SessionListener;

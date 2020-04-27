@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.common.shiro;
+package com.keymanager.ckadmin.common.shiro;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;

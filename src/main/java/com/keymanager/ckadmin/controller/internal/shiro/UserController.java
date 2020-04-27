@@ -1,13 +1,14 @@
-package com.keymanager.monitoring.controller.rest.shiro;
+package com.keymanager.ckadmin.controller.internal.shiro;
 
 import com.keymanager.monitoring.common.base.BaseController;
 import com.keymanager.monitoring.common.result.PageInfo;
-import com.keymanager.monitoring.common.shiro.PasswordHash;
+import com.keymanager.ckadmin.common.shiro.PasswordHash;
 import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.entity.Role;
 import com.keymanager.monitoring.entity.UserInfo;
 import com.keymanager.monitoring.service.IUserInfoService;
 import com.keymanager.monitoring.vo.UserVO;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,6 +40,7 @@ public class UserController extends BaseController {
      *
      * @return
      */
+    @RequiresPermissions("/user/manager")
     @GetMapping("/manager")
     public String manager(HttpServletRequest request, String resource) {
         String requestURI=request.getRequestURI();
@@ -60,6 +62,7 @@ public class UserController extends BaseController {
      * @param order
      * @return
      */
+    @RequiresPermissions("/user/manager")
     @PostMapping("/dataGrid")
     @ResponseBody
     public Object dataGrid(UserVO userVo, Integer page, Integer rows, String sort, String order) {
@@ -85,6 +88,7 @@ public class UserController extends BaseController {
      *
      * @return
      */
+    @RequiresPermissions("/user/manager")
     @GetMapping("/addPage")
     public String addPage() {
         return "/views/admin/user/userAdd";
@@ -96,6 +100,7 @@ public class UserController extends BaseController {
      * @param userVo
      * @return
      */
+    @RequiresPermissions("/user/manager")
     @PostMapping("/add")
     @ResponseBody
     public Object add(@Valid UserVO userVo) {
@@ -118,6 +123,7 @@ public class UserController extends BaseController {
      * @param model
      * @return
      */
+    @RequiresPermissions("/user/manager")
     @GetMapping("/editPage")
     public String editPage(Model model, Long id) {
         UserVO userVo = userInfoService.selectVoById(id);
@@ -137,6 +143,7 @@ public class UserController extends BaseController {
      * @param userVo
      * @return
      */
+    @RequiresPermissions("/user/manager")
     @RequiresRoles("admin")
     @PostMapping("/edit")
     @ResponseBody
@@ -161,6 +168,7 @@ public class UserController extends BaseController {
      *
      * @return
      */
+    @RequiresPermissions("/user/manager")
     @GetMapping("/editPwdPage")
     public String editPwdPage() {
         return "/views/admin/user/userEditPwd";
@@ -173,6 +181,7 @@ public class UserController extends BaseController {
      * @param pwd
      * @return
      */
+    @RequiresPermissions("/user/manager")
     @PostMapping("/editUserPwd")
     @ResponseBody
     public Object editUserPwd(String oldPwd, String pwd) {
@@ -191,6 +200,7 @@ public class UserController extends BaseController {
      * @param id
      * @return
      */
+    @RequiresPermissions("/user/manager")
     @RequiresRoles("admin")
     @PostMapping("/delete")
     @ResponseBody
