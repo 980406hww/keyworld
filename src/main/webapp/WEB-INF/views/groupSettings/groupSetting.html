@@ -545,71 +545,32 @@
                 $("#data_list").append(htm);
             })
         }
-
-
-        function generate_customer_status(uuid, status) {
-
-            let stat = '<div onclick=changeCustomerStatus(\'' + uuid + '\',this) class="layui-unselect layui-form-switch ';
-            if (parseInt(status)  === 1) {
-                stat += 'layui-form-onswitch';
-            }
-            stat += '" lay-skin="_switch"><em>';
-            if (parseInt(status) === 1) {
-                stat += '默认';
-            }else {
-                stat += '取消';
-            }
-            stat += '</em><i></i></div>';
-            return stat;
-        }
         // 改变浏览器默认状态
-        window.changeCustomerStatus = function (uuid, ele) {
-            let newStatus = ele.children[0].innerHTML === '默认' ? 0: 1;
-            if(newStatus==1){
-                layer.confirm('您确认修改默认吗？',{
-                    btn:['确认','取消']
-                },function(){
-                    var postData = {};
-                    postData.uuid = uuid;
-                    postData.statu = newStatus;
-                    $.ajax({
-                        url: '/internal/operationcombine/alterDefaultSearchEngine',
-                        type: 'POST',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        data: JSON.stringify(postData),
-                        success: function (result) {
-                            if (result.code === 200) {
-                                common.showSuccessMsg('操作成功');
-                                let pageConf = common.formToJsonObject('searchForm');
-                                if (pageConf.hasRemainingAccount){
-                                    pageConf.hasRemainingAccount = true;
-                                }else{
-                                    pageConf.hasRemainingAccount = false;
-                                }
-                                initLayPage(pageConf);
-                                if (newStatus === 0) {
-                                    ele.classList.remove('layui-form-onswitch');
-                                    ele.children[0].innerHTML = '取消';
-                                } else {
-                                    ele.classList.add('layui-form-onswitch');
-                                    ele.children[0].innerHTML = '默认';
-                                }
-                            } else {
-                                common.showFailMsg('操作失败');
-                            }
-                        },
-                        error: function () {
-                            common.showFailMsg('操作失败');
-                        }
-                    });
-                },function(){
+        function changeCustomerStatus (uuid,newStatus) {
+            var postData = {};
+            postData.uuid = uuid;
+            postData.statu = newStatus;
+            $.ajax({
+                url: '/internal/operationcombine/alterDefaultSearchEngine',
+                type: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(postData),
+                success: function (result) {
+                    if (result.code === 200) {
+                        common.showSuccessMsg('操作成功');
 
-                })
+                    } else {
+                        common.showFailMsg('操作失败');
+                    }
+                },
+                error: function () {
+                    common.showFailMsg('操作失败');
+                }
+            });
 
-            }
 
         };
 
@@ -706,6 +667,9 @@
                 success: function (result) {
                     var items=result.data;
                     if (result.code === 200) {
+                        var isDefault='checked disabled';
+                        if(statu==0)
+                            isDefault='';
                         var stat='';
                         $.each(items, function (index,item){
                             if(item=== searchEngine)
@@ -715,21 +679,38 @@
                         });
                         layer.open({
                             type:1,
-                            area:['400px','200px'],
+                            area:['400px','410px'],
                             title:"修改搜索引擎",
                             shadeClose:true,
-                            content:'<div class="skip layui-input-block layui-col-md-offset3" style="height: 34px;margin-left: 40px; "><span style="position: relative;top: 6px;margin-right: 20px">组默认: </span>'+generate_customer_status(uuid,statu) + '</div>'+
-                                ' <form class="layui-form"><div class="layui-form-item"><label class="layui-form-label">搜索引擎</label><div class="layui-input-inline"><select id="alterSearchEngine" name ="searchEngine" lay-search=""  onchange="updateSearchEngine(\'' + uuid + '\',this)" >'+ stat+'</select></div></div>' +
-                                '<div class="layui-form-item layui-input-block">\n' +
-                                '  <button class="layui-btn" lay-submit="" lay-filter="searchUp">确认修改</button>\n' +
-                                '  </div></form>'
+                            content:
+                                ' <form class="layui-form" style="margin-top: 10px"><div class="layui-form-item"><label class="layui-form-label">搜索引擎</label><div class="layui-input-inline"><select id="alterSearchEngine" name ="searchEngine" lay-search=""  onchange="updateSearchEngine(\'' + uuid + '\',this)" >'+ stat+'</select></div></div>' +
+                               '<div class="layui-form-item"><label class="layui-form-label">是否默认</label> <div class="layui-input-block"> <input type="checkbox" '+isDefault+' name="defaultEngine" lay-skin="switch" lay-filter="switchTest" lay-text="是|否"></div></div>'+
+                                '<div style="bottom: 0;width: 400px;background:#fff;text-align: right; margin-top: 220px;">\n' +
+                                ' <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6"> <button class="layui-btn" lay-submit="" lay-filter="searchUp">确认修改</button>\n' +
+                                ' <div class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px " >取消</div></div></div></form>'
                         });
                         form.render();
                         form.on("submit(searchUp)",function(data){
-                            updateSearchEngine(uuid,data.field.searchEngine);
-                            layer.closeAll()
+                            if(data.field.defaultEngine ==="on"){
+                                updateSearchEngine(uuid,data.field.searchEngine);
+                                if(searchEngine!=data.field.searchEngine)
+                                    changeCustomerStatus(uuid,0);
+                            }else{
+                                updateSearchEngine(uuid,data.field.searchEngine);
+                            }
+                            let pageConf = common.formToJsonObject('searchForm');
+                            if (pageConf.hasRemainingAccount){
+                                pageConf.hasRemainingAccount = true;
+                            }else{
+                                pageConf.hasRemainingAccount = false;
+                            }
+                            initLayPage(pageConf);
+                            layer.closeAll();
                             return false;
                         })
+                        layui.$('#close').on('click', function(){
+                            layer.closeAll();
+                        });
                     } else {
                         common.showFailMsg('获取数据失败');
                     }
