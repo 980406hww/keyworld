@@ -4,6 +4,7 @@ import com.keymanager.monitoring.common.base.BaseController;
 import com.keymanager.monitoring.entity.Organization;
 import com.keymanager.monitoring.service.IOrganizationService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,7 +33,7 @@ public class OrganizationController extends BaseController {
      *
      * @return
      */
-    @RequiresPermissions("/organization/manager")
+    @RequiresRoles("admin")
     @GetMapping(value = "/manager")
     public String manager(HttpServletRequest request, String resource) {
         String requestURI=request.getRequestURI();
@@ -49,7 +50,7 @@ public class OrganizationController extends BaseController {
      *
      * @return
      */
-    @RequiresPermissions("/organization/manager")
+    @RequiresRoles("admin")
     @PostMapping(value = "/tree")
     @ResponseBody
     public Object tree() {
@@ -61,7 +62,7 @@ public class OrganizationController extends BaseController {
      *
      * @return
      */
-    @RequiresPermissions("/organization/manager")
+    @RequiresRoles("admin")
     @RequestMapping("/treeGrid")
     @ResponseBody
     public Object treeGrid() {
@@ -73,7 +74,7 @@ public class OrganizationController extends BaseController {
      *
      * @return
      */
-    @RequiresPermissions("/organization/manager")
+    @RequiresRoles("admin")
     @RequestMapping("/addPage")
     public String addPage() {
         return "/views/admin/organization/organizationAdd";
@@ -85,7 +86,7 @@ public class OrganizationController extends BaseController {
      * @param organization
      * @return
      */
-    @RequiresPermissions("/organization/manager")
+    @RequiresRoles("admin")
     @RequestMapping("/add")
     @ResponseBody
     public Object add(@Valid Organization organization) {
@@ -100,7 +101,7 @@ public class OrganizationController extends BaseController {
      * @param id
      * @return
      */
-    @RequiresPermissions("/organization/manager")
+    @RequiresRoles("admin")
     @GetMapping("/editPage")
     public String editPage(Model model, Long id) {
         Organization organization = organizationService.selectById(id);
@@ -114,7 +115,7 @@ public class OrganizationController extends BaseController {
      * @param organization
      * @return
      */
-    @RequiresPermissions("/organization/manager")
+    @RequiresRoles("admin")
     @RequestMapping("/edit")
     @ResponseBody
     public Object edit(@Valid Organization organization) {
@@ -128,7 +129,7 @@ public class OrganizationController extends BaseController {
      * @param id
      * @return
      */
-    @RequiresPermissions("/organization/manager")
+    @RequiresRoles("admin")
     @RequestMapping("/delete")
     @ResponseBody
     public Object delete(Long id) {

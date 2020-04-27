@@ -35,7 +35,7 @@ public class RoleController extends BaseController {
      *
      * @return
      */
-    @RequiresPermissions("/role/manager")
+    @RequiresRoles("admin")
     @GetMapping("/manager")
     public String manager(HttpServletRequest request, String resource) {
         String requestURI=request.getRequestURI();
@@ -56,7 +56,7 @@ public class RoleController extends BaseController {
      * @param order
      * @return
      */
-    @RequiresPermissions("/role/manager")
+    @RequiresRoles("admin")
     @PostMapping("/dataGrid")
     @ResponseBody
     public Object dataGrid(Integer page, Integer rows, String sort, String order) {
@@ -70,7 +70,7 @@ public class RoleController extends BaseController {
      *
      * @return
      */
-    @RequiresPermissions("/role/manager")
+    @RequiresRoles("admin")
     @PostMapping("/tree")
     @ResponseBody
     public Object tree() {
@@ -82,7 +82,7 @@ public class RoleController extends BaseController {
      *
      * @return
      */
-    @RequiresPermissions("/role/manager")
+    @RequiresRoles("admin")
     @GetMapping("/addPage")
     public String addPage() {
         return "/views/admin/role/roleAdd";
@@ -94,7 +94,7 @@ public class RoleController extends BaseController {
      * @param role
      * @return
      */
-    @RequiresPermissions("/role/manager")
+    @RequiresRoles("admin")
     @PostMapping("/add")
     @ResponseBody
     public Object add(@Valid Role role) {
@@ -108,7 +108,7 @@ public class RoleController extends BaseController {
      * @param id
      * @return
      */
-    @RequiresPermissions("/role/manager")
+    @RequiresRoles("admin")
     @RequestMapping("/delete")
     @ResponseBody
     public Object delete(Long id) {
@@ -123,7 +123,7 @@ public class RoleController extends BaseController {
      * @param id
      * @return
      */
-    @RequiresPermissions("/role/manager")
+    @RequiresRoles("admin")
     @RequestMapping("/editPage")
     public String editPage(Model model, Long id) {
         Role role = roleService.selectById(id);
@@ -137,7 +137,7 @@ public class RoleController extends BaseController {
      * @param role
      * @return
      */
-    @RequiresPermissions("/role/manager")
+    @RequiresRoles("admin")
     @RequestMapping("/edit")
     @ResponseBody
     public Object edit(@Valid Role role) {
@@ -152,7 +152,7 @@ public class RoleController extends BaseController {
      * @param model
      * @return
      */
-    @RequiresPermissions("/role/manager")
+    @RequiresRoles("admin")
     @GetMapping("/grantPage")
     public String grantPage(Model model, Long id) {
         model.addAttribute("id", id);
@@ -165,7 +165,7 @@ public class RoleController extends BaseController {
      * @param id
      * @return
      */
-    @RequiresPermissions("/role/manager")
+    @RequiresRoles("admin")
     @RequestMapping("/findResourceIdListByRoleId")
     @ResponseBody
     public Object findResourceByRoleId(Long id) {
@@ -180,7 +180,7 @@ public class RoleController extends BaseController {
      * @param resourceIds
      * @return
      */
-    @RequiresPermissions("/role/manager")
+
     @RequiresRoles("admin")
     @RequestMapping("/grant")
     @ResponseBody

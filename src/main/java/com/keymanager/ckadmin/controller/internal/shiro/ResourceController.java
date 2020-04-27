@@ -5,6 +5,7 @@ import com.keymanager.ckadmin.common.shiro.ShiroUser;
 import com.keymanager.monitoring.entity.Resource;
 import com.keymanager.monitoring.service.IResourceService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +32,7 @@ public class ResourceController extends BaseController {
     /**
      * 菜单树
      */
-    @RequiresPermissions("/resource/manager")
+    @RequiresRoles("admin")
     @PostMapping("/tree")
     @ResponseBody
     public Object tree() {
@@ -42,7 +43,7 @@ public class ResourceController extends BaseController {
     /**
      * 资源管理页
      */
-    @RequiresPermissions("/resource/manager")
+    @RequiresRoles("admin")
     @GetMapping("/manager")
     public String manager(HttpServletRequest request, String resource) {
         String requestURI = request.getRequestURI();
@@ -56,7 +57,7 @@ public class ResourceController extends BaseController {
     /**
      * 资源管理列表
      */
-    @RequiresPermissions("/resource/manager")
+    @RequiresRoles("admin")
     @PostMapping("/treeGrid")
     @ResponseBody
     public Object treeGrid() {
@@ -66,7 +67,7 @@ public class ResourceController extends BaseController {
     /**
      * 添加资源页
      */
-    @RequiresPermissions("/resource/manager")
+    @RequiresRoles("admin")
     @GetMapping("/addPage")
     public String addPage() {
         return "/views/admin/resource/resourceAdd";
@@ -75,7 +76,7 @@ public class ResourceController extends BaseController {
     /**
      * 添加资源
      */
-    @RequiresPermissions("/resource/manager")
+    @RequiresRoles("admin")
     @RequestMapping("/add")
     @ResponseBody
     public Object add(@Valid Resource resource) {
@@ -91,7 +92,7 @@ public class ResourceController extends BaseController {
     /**
      * 查询所有的菜单
      */
-    @RequiresPermissions("/resource/manager")
+    @RequiresRoles("admin")
     @RequestMapping("/allTree")
     @ResponseBody
     public Object allMenu() {
@@ -101,7 +102,7 @@ public class ResourceController extends BaseController {
     /**
      * 查询所有的资源tree
      */
-    @RequiresPermissions("/resource/manager")
+    @RequiresRoles("admin")
     @RequestMapping("/allTrees")
     @ResponseBody
     public Object allTree() {
@@ -111,7 +112,7 @@ public class ResourceController extends BaseController {
     /**
      * 编辑资源页
      */
-    @RequiresPermissions("/resource/manager")
+    @RequiresRoles("admin")
     @RequestMapping("/editPage")
     public String editPage(Model model, Long id) {
         Resource resource = resourceService.selectById(id);
@@ -122,7 +123,7 @@ public class ResourceController extends BaseController {
     /**
      * 编辑资源
      */
-    @RequiresPermissions("/resource/manager")
+    @RequiresRoles("admin")
     @RequestMapping("/edit")
     @ResponseBody
     public Object edit(@Valid Resource resource) {
@@ -138,7 +139,7 @@ public class ResourceController extends BaseController {
     /**
      * 删除资源
      */
-    @RequiresPermissions("/resource/manager")
+    @RequiresRoles("admin")
     @RequestMapping("/delete")
     @ResponseBody
     public Object delete(Long id) {
