@@ -63,7 +63,7 @@ public class RefreshStatisticsController {
                 criteria.setUserName(userName);
             }
             List<RefreshStatRecord> refreshStatRecords;
-            if (criteria.getDayNum() > 0) {
+            if (criteria.getHistoryDate() != null || criteria.getHistoryDate() !="") {
                 refreshStatRecords = refreshStatRecordService.getHistoryTerminalRefreshStatRecord(criteria);
             } else {
                 refreshStatRecords = refreshStatInfoService.generateCustomerKeywordStatInfo(criteria);
