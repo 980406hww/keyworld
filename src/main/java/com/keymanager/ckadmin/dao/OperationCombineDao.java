@@ -51,18 +51,8 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
     List<Map<String,Object>> getUserName(@Param("terminal") String terminal);
 
     /**
-     * 根据搜索引擎获取用户的iid
-     * @param searchEngine
-     * @return
-     */
-    List<OperationCombine> getOperationCombineByEngine(@Param("searchEngine")String searchEngine,@Param("terminalType") String terminalType);
-
-    void updateOperationCombineBySearchEngine(@Param("searchEngine") String searchEngine);
-
-    /**
      * 更改默认的搜索引擎
      * @param oc
      */
-    void alterDefaultSearchEngine(@Param("oc") OperationCombine oc);
     void updateSearchEngine(@Param("oc") OperationCombine oc);
 }

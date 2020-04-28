@@ -15,38 +15,9 @@ public class GroupSettingCriteria extends BaseCriteria {
     /**
      * 操作类型
      */
-    /**
-     * 用户id
-     */
     private String searchEngine;
 
-    public String getSearchEngine() {
-        return searchEngine;
-    }
-
-    public void setSearchEngine(String searchEngine) {
-        this.searchEngine = searchEngine;
-    }
-
-    private long uuid;
-
     private String ownerSelect;
-
-    public String getOwnerSelect() {
-        return ownerSelect;
-    }
-
-    public void setOwnerSelect(String ownerSelect) {
-        this.ownerSelect = ownerSelect;
-    }
-
-    public long getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(long uuid) {
-        this.uuid = uuid;
-    }
 
     private String operationType;
     /**
@@ -108,5 +79,21 @@ public class GroupSettingCriteria extends BaseCriteria {
 
     public void setOptimizedGroupNameSearchSource(Boolean optimizedGroupNameSearchSource) {
         this.optimizedGroupNameSearchSource = optimizedGroupNameSearchSource;
+    }
+
+    public String getOwnerSelect() {
+        return ownerSelect;
+    }
+
+    public void setOwnerSelect(String ownerSelect) {
+        this.ownerSelect = ownerSelect;
+    }
+
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
     }
 }

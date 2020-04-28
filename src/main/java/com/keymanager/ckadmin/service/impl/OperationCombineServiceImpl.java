@@ -128,23 +128,9 @@ public class OperationCombineServiceImpl extends
     public List<Map<String ,Object>> getCombinesUser(String terminal) {
         return operationCombineDao.getUserName(terminal);
     }
-    @Override
-    public void alterDefaultSearchEngine(Long uuid, int status) {
-        OperationCombine oc=operationCombineDao.selectById(uuid);
-       if(status==0){
-           oc.setDefaultEngine(0);
-           operationCombineDao.alterDefaultSearchEngine(oc);
-       }else{
-           operationCombineDao.updateOperationCombineBySearchEngine(oc.getSearchEngine());
-           oc.setDefaultEngine(1);
-           operationCombineDao.alterDefaultSearchEngine(oc);
-       }
-    }
 
     @Override
     public void updateSearchEngine(OperationCombine oc) {
-        //默认修改为0
-        oc.setDefaultEngine(0);
         operationCombineDao.updateSearchEngine(oc);
     }
 

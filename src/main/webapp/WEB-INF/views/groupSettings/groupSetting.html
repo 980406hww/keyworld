@@ -545,35 +545,6 @@
                 $("#data_list").append(htm);
             })
         }
-        // 改变浏览器默认状态
-        function changeCustomerStatus (uuid,newStatus) {
-            var postData = {};
-            postData.uuid = uuid;
-            postData.statu = newStatus;
-            $.ajax({
-                url: '/internal/operationcombine/alterDefaultSearchEngine',
-                type: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                data: JSON.stringify(postData),
-                success: function (result) {
-                    if (result.code === 200) {
-                        common.showSuccessMsg('操作成功');
-
-                    } else {
-                        common.showFailMsg('操作失败');
-                    }
-                },
-                error: function () {
-                    common.showFailMsg('操作失败');
-                }
-            });
-
-
-        };
-
         window.getGroupNameStrByUuid = function(uuid){
             $.ajax({
                 url: '/internal/operationcombine/getGroupNames2/' + uuid,
@@ -691,14 +662,11 @@
                         });
                         form.render();
                         form.on("submit(searchUp)",function(data){
-                            if(data.field.defaultEngine ==="on"){
-                                updateSearchEngine(uuid,data.field.searchEngine);
-                                if(searchEngine!=data.field.searchEngine)
-                                    changeCustomerStatus(uuid,0);
-                                else
-                                    changeCustomerStatus(uuid,1);
-                            }else{
-                                updateSearchEngine(uuid,data.field.searchEngine);
+                            if(data.field.defaultEngine==='on'){
+                                updateSearchEngine(uuid,data.field.searchEngine,1);
+                            }
+                            else{
+                                updateSearchEngine(uuid,data.field.searchEngine,0);
                             }
                             let pageConf = common.formToJsonObject('searchForm');
                             if (pageConf.hasRemainingAccount){
@@ -724,11 +692,12 @@
 
         };
 
-        window.updateSearchEngine=function(uuid,searchEngine){
+        window.updateSearchEngine=function(uuid,searchEngine,defaultEngine){
 
-           var postData={};
-           postData.searchEngine=searchEngine;
-           postData.uuid=uuid;
+            var postData = {};
+            postData.searchEngine = searchEngine;
+            postData.defaultEngine = defaultEngine;
+            postData.uuid = uuid;
             $.ajax({
                 url: '/internal/operationcombine/updateSearchEngine',
                 data: JSON.stringify(postData),

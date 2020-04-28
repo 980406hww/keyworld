@@ -4,15 +4,6 @@ import com.keymanager.ckadmin.entity.GroupSetting;
 
 public class UpdateGroupSettingCriteria {
     private GroupSetting gs;
-    private String searchEngine;
-
-    public String getSearchEngine() {
-        return searchEngine;
-    }
-
-    public void setSearchEngine(String searchEngine) {
-        this.searchEngine = searchEngine;
-    }
 
     private GroupSetting groupSetting;
 

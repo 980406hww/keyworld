@@ -306,6 +306,13 @@
 <!--<script src="/static/ok-admin/page/customer/customerAdd.js"></script>-->
 <script>
 
+    // initForm一个提供其他窗口调用的初始化方法，好处是可以从其他窗口传递数据到这个窗口
+    // 但是对于layui.use，initForm两个都是基于异步回调的方式实现的？
+    // 是否initForm(同步代码块)一定会比layui.use的回调函数先执行？
+
+    // 规定initForm中不要使用异步填充数据，只是做data数据赋值给本页面的数据
+    // 在layui.use的回调事件中使用异步填充数据
+
     let layui_ = null;
     let uuid_ = null;
     let operationTypes = null;
@@ -329,7 +336,7 @@
         }
         if (layui_ != null) {
             init_operationType(layui_, operationTypes);
-            get_searchEngine(layui_,terminalType,searchEngine);
+            get_searchEngine(layui_,terminalType);
             setForm(data)
         }
     }
