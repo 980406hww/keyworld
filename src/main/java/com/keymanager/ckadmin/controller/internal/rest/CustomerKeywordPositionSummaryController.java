@@ -114,6 +114,17 @@ public class CustomerKeywordPositionSummaryController extends SpringMVCBaseContr
     }
 
     @RequiresPermissions("/internal/ckpositionsummary/toCustomerKeywordPositionSummary")
+    @GetMapping(value = "/toStatisticCenter/{uuid}/{type}/{terminal}")
+    public ModelAndView toStatisticCenter(@PathVariable String uuid,@PathVariable String type,@PathVariable  String terminal){
+        ModelAndView mv=new ModelAndView();
+        mv.setViewName("ckPositionSummary/ckPositionSummary");
+        mv.addObject("cusuid", uuid);
+        mv.addObject("type", type);
+        mv.addObject("terminal", terminal);
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/ckpositionsummary/toCustomerKeywordPositionSummary")
     @GetMapping(value = {"/toCustomerKeywordPositionSummary/{time}/{terminal}/{search}", "/toCustomerKeywordPositionSummary/{time}/{terminal}",
         "/toCustomerKeywordPositionSummary/{time}/{search}", "/toCustomerKeywordPositionSummary/{time}"})
     public ModelAndView toCustomerKeywordPositionSummary(@PathVariable(name = "time") String time, @PathVariable(name = "terminal", required = false) String terminal,

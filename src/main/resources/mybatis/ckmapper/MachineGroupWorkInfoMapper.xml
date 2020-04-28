@@ -54,7 +54,7 @@
             mgwi.fMaxInvalidCount AS 'maxInvalidCount',
             mgwi.fIdleTotalMinutes AS 'idleTotalMinutes'
         FROM t_machine_group_work_info mgwi
-        WHERE DATE_SUB(CURDATE(), INTERVAL #{criteria.dayNum} DAY) = mgwi.fCreateDate
+        WHERE date_format(#{criteria.dayNum},'%Y-%m-%d')  = mgwi.fCreateDate
         AND mgwi.fType = #{criteria.entryType}
         AND mgwi.fTerminalType = #{criteria.terminalType}
         <if test="criteria.machineGroup!=null and criteria.machineGroup!=''">
@@ -62,5 +62,13 @@
         </if>
         GROUP BY mgwi.fUuid
         ORDER BY mgwi.fMachineGroup
+    </select>
+
+    <select id="findMostDistantMachineGroupWorkInfo" resultType="java.lang.Integer">
+        SELECT
+          mgwi.fUuid AS 'uuid'
+        FROM t_machine_group_work_info mgwi
+        WHERE DATE_SUB(CURDATE(), INTERVAL 6 DAY) <![CDATA[>=]]> mgwi.fCreateDate
+        GROUP BY mgwi.fUuid
     </select>
 </mapper>

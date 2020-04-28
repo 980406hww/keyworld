@@ -3,7 +3,7 @@ package com.keymanager.monitoring.service.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.common.result.Tree;
-import com.keymanager.monitoring.common.shiro.ShiroUser;
+import com.keymanager.ckadmin.common.shiro.ShiroUser;
 import com.keymanager.monitoring.dao.ResourceDao;
 import com.keymanager.monitoring.dao.RoleDao;
 import com.keymanager.monitoring.dao.RoleResourceDao;

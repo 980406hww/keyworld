@@ -3,7 +3,7 @@ package com.keymanager.monitoring.controller.web;
 import com.keymanager.monitoring.common.base.BaseController;
 import com.keymanager.monitoring.common.csrf.CsrfToken;
 import com.keymanager.monitoring.common.result.Tree;
-import com.keymanager.monitoring.common.shiro.captcha.DreamCaptcha;
+import com.keymanager.ckadmin.common.shiro.captcha.DreamCaptcha;
 import com.keymanager.monitoring.common.utils.StringUtils;
 import com.keymanager.monitoring.service.IResourceService;
 import com.keymanager.monitoring.service.IUserInfoService;
@@ -16,6 +16,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,12 +52,13 @@ public class LoginController extends BaseController {
      */
     @GetMapping("/")
     public String index() {
-        return "redirect:/index";
+        return "redirect:/login";
     }
 
     /**
      * 首页
      */
+    @RequiresRoles("admin")
     @GetMapping("/index")
     public String index(Model model) {
         return "/views/index";

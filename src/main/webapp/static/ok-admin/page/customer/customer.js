@@ -42,6 +42,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
         if (!pageConf.limit) {
             pageConf.limit = 51;
         }
+
         $.ajax({
             url: '/internal/customer/getCustomers',
             data: JSON.stringify(pageConf),
@@ -70,6 +71,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
                         }
                     }
                 });
+
                 init_data(result.data);
                 call(result.data);
                 layer.close(load_index);
@@ -164,6 +166,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
     }
 
     function getOtherMsg(data) {
+
         $.each(data, function (index, obj) {
             let customerBusinessList = obj.customerBusinessList;
             if (customerBusinessList !== null && customerBusinessList.length > 0) {
@@ -1190,8 +1193,26 @@ function downEnter(ele) {
 }
 
 function generate_qzsetting_info(contactPerson, data, terminalType, customerUuid) {
+
+    let toStatisticCenterTitle=contactPerson+"-排名漲幅詳情"
+    let toStatisticCenterId=customerUuid+'-qz-'+terminalType;
+    let computerUrl="/internal/ckpositionsummary/toStatisticCenter/"+customerUuid+"/qz/PC/";
+    let mobileUrl="/internal/ckpositionsummary/toStatisticCenter/"+customerUuid+"/qz/Phone/";
     let htm = '';
-    let terminalTypeName = terminalType === "PC" ? "电脑端" : "移动端";
+    let terminalTypeName = '';
+    //terminalType === 'PC' ?'<a href="javascript:void(0)"  onclick=updateOrNewTab("' + computerUrl + '","' +toStatisticTitle+ '","' + toStatisticCenterId+ '") > 电脑端</a> ': '<a  href="javascript:void(0)"   onclick=updateOrNewTab("' + mobileUrl + '","' +toStatisticTitle+ '","' + toStatisticCenterId+ '")  >移动端</a>';
+
+    if(terminalType==='PC'){
+        if(hasToStatic)
+            terminalTypeName='<a href="javascript:void(0)"  onclick=updateOrNewTab("' + computerUrl + '","' +toStatisticCenterTitle+ '","' + toStatisticCenterId+ '") > 电脑端</a> ';
+        else
+            terminalTypeName='电脑端'
+    }else{
+        if(hasToStatic)
+            terminalTypeName='<a  href="javascript:void(0)"   onclick=updateOrNewTab("' + mobileUrl + '","' +toStatisticCenterTitle+ '","' + toStatisticCenterId+ '")  >移动端</a>';
+        else
+            terminalTypeName='移动端'
+    }
     if (data != null) {
         if (data["count"] > 0) {
             let url = '/internal/qzsetting/toQZSettingsWithCustomerUuid/' + customerUuid + '/' + terminalType;
@@ -1233,7 +1254,27 @@ function generate_customer_info(contactPerson, data, terminalType, type, custome
     contactPerson = contactPerson.replace(/\s+/g, "");
     let title = contactPerson + '-关键字列表';
     let id = contactPerson + '-' + type + '-' + terminalType;
-    let terminalTypeName = terminalType === 'PC' ? "电脑端" : "移动端";
+
+    let toStatisticTitle=contactPerson+"-排名漲幅詳情"
+    let computerUrl="/internal/ckpositionsummary/toStatisticCenter/"+customerUuid+"/"+type+"/PC/";
+    let mobileUrl="/internal/ckpositionsummary/toStatisticCenter/"+customerUuid+"/"+type+"/Phone/";
+    let toStatisticCenterId=customerUuid+'-'+type+'-'+terminalType;
+
+    let terminalTypeName = '';
+    //terminalType === 'PC' ?'<a href="javascript:void(0)"  onclick=updateOrNewTab("' + computerUrl + '","' +toStatisticTitle+ '","' + toStatisticCenterId+ '") > 电脑端</a> ': '<a  href="javascript:void(0)"   onclick=updateOrNewTab("' + mobileUrl + '","' +toStatisticTitle+ '","' + toStatisticCenterId+ '")  >移动端</a>';
+
+    if(terminalType==='PC'){
+        if(hasToStatic)
+            terminalTypeName='<a href="javascript:void(0)"  onclick=updateOrNewTab("' + computerUrl + '","' +toStatisticTitle+ '","' + toStatisticCenterId+ '") > 电脑端</a> ';
+        else
+            terminalTypeName='电脑端'
+    }else{
+        if(hasToStatic)
+            terminalTypeName='<a  href="javascript:void(0)"   onclick=updateOrNewTab("' + mobileUrl + '","' +toStatisticTitle+ '","' + toStatisticCenterId+ '")  >移动端</a>';
+        else
+            terminalTypeName='移动端'
+    }
+
     if (data !== null) {
         if (data.totalCount > 0) {
             htm += '<span>' + terminalTypeName + ' : <a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")>' + data.totalCount + '</a></span><span>(';

@@ -3,7 +3,7 @@ package com.keymanager.monitoring.common.base;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.monitoring.common.result.PageInfo;
 import com.keymanager.monitoring.common.result.Result;
-import com.keymanager.monitoring.common.shiro.ShiroUser;
+import com.keymanager.ckadmin.common.shiro.ShiroUser;
 import com.keymanager.monitoring.common.utils.Charsets;
 import com.keymanager.monitoring.common.utils.StringEscapeEditor;
 import com.keymanager.monitoring.common.utils.URLUtils;

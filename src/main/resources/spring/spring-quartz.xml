@@ -358,16 +358,4 @@
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>
-
-	<!--清除超过一周的同步数据-->
-	<bean id="cronTriggerCleanSysCustomerKeywordOverOneWeek" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="cronTriggerCleanSysCustomerKeywordOverOneWeekSchedule" />
-		<property name="cronExpression" value="0 5 23 * * ?" />
-	</bean>
-
-	<bean id="cronTriggerCleanSysCustomerKeywordOverOneWeekSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="cleanSysCustomerKeywordOverOneWeekSchedule" />
-		<property name="targetMethod" value="runTask" />
-		<property name="concurrent" value="false" />
-	</bean>
 </beans>

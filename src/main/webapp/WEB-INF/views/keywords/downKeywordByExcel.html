@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>下架关键字</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+</head>
+<body>
+<style>
+    .layui-form-select dl { max-height:200px; }
+</style>
+<div class="ok-body">
+
+    <form class="layui-form layui-form-pane ok-form" enctype="multipart/form-data" id="downForm">
+        <input type="text" hidden value="" id="entryType" name="entryType"/>
+        <input type="text" hidden value="" id="terminalType" name="terminalType"/>
+        <input type="text" hidden value="" id="excelType" name="excelType"/>
+
+        <@shiro.hasRole name="DepartmentManager">
+        <div class="layui-form-item">
+            <label class="layui-form-label">关键词所属用户</label>
+            <div class="layui-input-block">
+                <select name="loginName" id="loginName">
+                    <option value="">所属用户</option>
+                </select>
+            </div>
+        </div>
+        </@shiro.hasRole>
+        <div class="layui-form-item">
+            <label class="layui-form-label">关键词Excel文件</label>
+            <div class="layui-upload">
+                <button type="button" class="layui-btn layui-btn-normal" id="down_excel">选择文件</button>
+            </div>
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <a class="layui-btn" href="/BatchDownKeywordList.xls">
+                    Excel模板下载
+                </a>
+                <button class="layui-btn" id="upload">上传</button>
+                <div class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">取消</div>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
+<script>
+
+    var belongUser = '<#if belongUser?exists>${belongUser}</#if>';
+    var choose_file = false;
+
+    function initForm(data) {
+        document.getElementById('entryType').value = data.type;
+        document.getElementById('terminalType').value = data.terminalType;
+        document.getElementById('excelType').value = data.excelType;
+    }
+
+    layui.use(["jquery", "layer", "upload", 'common', 'layer', 'form'], function () {
+        var $ = layui.jquery;
+        var form = layui.form;
+        var upload = layui.upload;
+        var common = layui.common;
+        var layer = layui.layer;
+
+        init_belong_user();
+
+        function init_belong_user() {
+            $.ajax({
+                url: '/internal/customer/getActiveUsers',
+                dataType: 'json',
+                type: 'get',
+                success: function (res) {
+                    if (res.code === 200) {
+                        let data = res.data;
+                        $("#loginName").empty();
+                        $("#loginName").append('<option value="">所属用户</option>');
+                        $.each(data, function (index, item) {
+                            $('#loginName').append(
+                                '<option value="' + item.loginName + '">'
+                                + item.userName
+                                + '</option>');// 下拉菜单里添加元素
+                        });
+                        if (belongUser !== '' || belongUser != null) {
+                            $("#loginName").val(belongUser)
+                        }
+                        form.render("select");
+                    } else {
+                        common.showFailMsg('获取用户列表失败');
+                    }
+                }
+            });
+        }
+
+        //选完文件后不自动上传
+        upload.render({
+            elem: '#down_excel',
+            auto: false,
+            accept: 'file',
+            exts: 'xls|xlsx',
+            acceptMime: 'application/vnd.ms-excel, ,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            choose: function (obj) {
+                obj.preview(function (index, file, result) {
+                    if (file.name.length > 0){
+                        $('div.layui-upload').append('<span class=\"layui-inline layui-upload-choose\">'+ file.name +'</span>');
+                        choose_file = true;
+                    }
+                });
+            }
+        });
+
+        $('#upload').click(function () {
+            let loginName = $("#loginName").val();
+            if (loginName === "") {
+                common.showFailMsg("请选择要下架关键词所属用户");
+                return false;
+            }
+            if (!choose_file){
+                common.showFailMsg("请选择上传的关键词文件");
+                return false;
+            }
+            var index = layer.load(2, {
+                shade: [0.5, 'gray'],
+                content: "上传中...",
+                success: function (layero) {
+                    layero.find('.layui-layer-content').css({
+                        'width': '100px',
+                        'line-height': '32px',
+                        'text-indent': '32px'
+                    });
+                }
+            });
+            var fs1 = new FormData($('#downForm')[0]);
+            $.ajax({
+                url: '/internal/customerKeyword/batchDownKeywords',
+                type: 'post',
+                data: fs1,
+                cache: false,
+                async: true,
+                contentType: false,   //ajax 中 contentType 设置为 false 是为了避免 JQuery 对其操作，从而失去分界符，而使服务器不能正常解析文件
+                processData: false,
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        common.showSuccessMsg(res.msg, function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        common.showFailMsg(res.msg);
+                    }
+                },
+                complete: function () {
+                    layer.close(index);
+                }
+            });
+            return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

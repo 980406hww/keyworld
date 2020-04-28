@@ -23,6 +23,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
     var table = layui.table;
     var form = layui.form;
     var $ = layui.jquery;
+    var okLayer = layui.okLayer;
     var laydate = layui.laydate;
     var common = layui.common;
 
@@ -295,6 +296,9 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
             case 'down_keyword':
                 updateCustomerKeywordStatus(3);
                 break;
+            case 'batch_down_keyword':
+                batchDownKeyword('BatchDown');
+                break;
             case 'active_keyword':
                 updateCustomerKeywordStatus(1);
                 break;
@@ -409,6 +413,24 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
             });
             layer.close(index);
         });
+    }
+
+    function batchDownKeyword(excelType) {
+        let type = $('#type').val();
+        let terminalType = $('#terminalType').val();
+        let data = {};
+        data.type = type;
+        data.terminalType = terminalType;
+        data.excelType = excelType;
+        let url = '/internal/customerKeyword/toDownKeywords';
+        okLayer.open("关键字管理 / 客户关键字 / Excel下架关键字", url, "30%", "40%", function (layero) {
+            window[layero.find("iframe")[0]["name"]].initForm(data);
+        }, function () {
+            if (sign) {
+                active['reload'].call(this);
+                sign = false;
+            }
+        }, '100px')
     }
 
     function change_selected_optimizedGroup() {

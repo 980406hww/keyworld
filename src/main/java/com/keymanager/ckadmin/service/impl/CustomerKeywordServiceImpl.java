@@ -27,6 +27,7 @@ import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.CodeNameVo;
 import com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
+import com.keymanager.ckadmin.vo.CustomerKeywordUploadVO;
 import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.vo.KeywordStandardVO;
@@ -70,6 +71,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     @Resource(name = "userRoleService2")
     private UserRoleService userRoleService;
+
+    @Resource(name = "roleService2")
+    private RoleService roleService;
 
     @Resource(name = "userInfoService2")
     private UserInfoService userInfoService;
@@ -455,6 +459,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         if (Utils.isNullOrEmpty(customerKeyword.getMachineGroup())) {
             customerKeyword.setMachineGroup(customerKeyword.getType());
         }
+        Map<String, Set<String>> resourceMap = roleService.selectResourceMapByUserId(userInfoService.getUuidByLoginName(userName), "2.0");
+        Set<String> urls = resourceMap.get("urls");
+        if (!urls.contains("/internal/customerKeyword/editOptimizePlanCount")){
+            customerKeyword.setOptimizePlanCount(50);
+        }
         int queryInterval = 24 * 60 * 60;
         if (null != customerKeyword.getOptimizePlanCount() && customerKeyword.getOptimizePlanCount() > 0) {
             int optimizeTodayCount = (int) Math.floor(Utils.getRoundValue(customerKeyword.getOptimizePlanCount() * (Math.random() * 0.7 + 0.5), 1));
@@ -466,7 +475,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                 Integer optimizePlanCount = Integer.valueOf(configService.getConfig("KeywordEffectOptimizePlanCount", "ImportantKeyword").getValue());
                 customerKeyword.setOptimizePlanCount(optimizePlanCount);
             } else {
-                customerKeyword.setOptimizePlanCount(10);
+                customerKeyword.setOptimizePlanCount(50);
             }
         }
         customerKeyword.setQueryInterval(queryInterval);
@@ -1300,6 +1309,37 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     public void deleteSysCustomerKeywordByQzId(Long uuid) {
         customerKeywordDao.deleteSysCustomerKeywordByQzId(uuid);
     }
+
+    @Override
+    public Boolean batchDownKeywordsForExcel(CustomerKeywordUploadVO customerKeywordUploadVO, String loginName) {
+        String type = customerKeywordUploadVO.getEntryType();
+        String excelType = customerKeywordUploadVO.getExcelType();
+        String terminalType = customerKeywordUploadVO.getTerminalType();
+        try{
+            AbstractExcelReader operator = AbstractExcelReader.createExcelOperator(customerKeywordUploadVO.getFile().getInputStream(), excelType);
+            if (null != operator) {
+                List<CustomerKeyword> customerKeywords = operator.readDataFromExcel();
+                List<Long> downUuids = new ArrayList<>();
+                for (CustomerKeyword customerKeyword : customerKeywords){
+                    customerKeyword.setType(type);
+                    customerKeyword.setTerminalType(terminalType);
+                    List<Long> uuids = customerKeywordDao.getCustomerKeywordUuidsForBDExcel(customerKeyword, loginName);
+                    if (uuids != null){
+                        downUuids.addAll(uuids);
+                    }
+                }
+                if (downUuids.size() > 0){
+                    customerKeywordDao.batchDownKeywordByExcel(downUuids);
+                }
+                return true;
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+        return false;
+    }
+
 }
 
 

@@ -33,7 +33,7 @@ import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
-import com.keymanager.monitoring.common.shiro.ShiroUser;
+import com.keymanager.ckadmin.common.shiro.ShiroUser;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -124,6 +124,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         mv.setViewName("keywords/keyword");
         return mv;
     }
+
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
     @PostMapping(value = "/getKeywords")
@@ -435,6 +436,37 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("keywords/uploadKeywordByExcel");
         return mv;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = "/toDownKeywords")
+    public ModelAndView toDownKeywords() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("keywords/downKeywordByExcel");
+        return mv;
+    }
+
+    @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordStatus")
+    @PostMapping(value = "/batchDownKeywords")
+    public ResultBean batchDownKeywords(CustomerKeywordUploadVO customerKeywordUploadVo, String loginName) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        if(StringUtils.isEmpty(loginName)){
+            loginName = getCurrentUser().getLoginName();
+        }
+        try {
+            boolean uploaded = customerKeywordService.batchDownKeywordsForExcel(customerKeywordUploadVo, loginName);
+            if (uploaded) {
+                resultBean.setMsg("批量下架成功");
+            } else {
+                resultBean.setMsg("文件解析异常");
+            }
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+            return resultBean;
+        }
     }
 
     /**

@@ -75,11 +75,13 @@
                                             <option value=''>搜索引擎</option>
                                         </select>
                                     </div>
+                                    <@shiro.hasRole name="DepartmentManager">
                                     <div class="layui-inline">
                                         <select name="userName" id="userName">
                                             <option value="">所属用户</option>
                                         </select>
                                     </div>
+                                    </@shiro.hasRole>
                                     <div class="layui-inline" style="width: 140px">
                                         <input type="text" name="keyword" id="keyword" value="<#if Keyword?exists>${Keyword}<#else></#if>" placeholder="请输入关键字"
                                                onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');"

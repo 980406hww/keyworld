@@ -24,6 +24,7 @@ public class Constants {
     public final static String EXCEL_TYPE_SUPER_USER_SIMPLE = "SuperUserSimple";
     public final static String EXCEL_TYPE_SUPER_USER_FULL = "SuperUserFull";
     public final static String EXCEL_TYPE_SUPER_INDUSTRY_SIMPLE = "SuperIndustrySimple";
+    public final static String EXCEL_TYPE_BATCH_DOWN = "BatchDown";
 
     public final static String CONFIG_TYPE_CAPTURE_RANKING = "CaptureRanking";
     public final static String CONFIG_TYPE_RANK_JOB_CITY = "RankJobCity";

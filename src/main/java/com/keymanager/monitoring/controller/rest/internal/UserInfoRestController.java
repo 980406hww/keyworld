@@ -1,7 +1,7 @@
 package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.common.email.ForgetPasswordMailService;
-import com.keymanager.monitoring.common.shiro.PasswordHash;
+import com.keymanager.ckadmin.common.shiro.PasswordHash;
 import com.keymanager.monitoring.common.sms.MD5;
 import com.keymanager.monitoring.dao.UserInfoDao;
 import com.keymanager.monitoring.entity.UserInfo;
