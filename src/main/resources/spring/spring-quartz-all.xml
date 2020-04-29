@@ -37,7 +37,6 @@
 				<ref bean="cronTriggerGenerateQZSettingKeywordCountCurve" />
 				<ref bean="cronTriggerAutoSaveTestDataStatisticsSchedule"/>
 				<ref bean="cronTriggerSyncQZCustomerData" />
-				<ref bean="cronTriggerCleanSysCustomerKeywordOverOneWeek" />
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
