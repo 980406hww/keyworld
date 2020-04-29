@@ -90,7 +90,9 @@ public class CustomerKeywordDailyReportExcelWriter {
 				}
 			}
 
-			writer.addFormulanCell(CustomerKeywordDailyReportDefinition.TodayPrice.getColumnIndex(), rowIndex, "SUM(H2:H" + rowIndex + ")");
+//			writer.addFormulanCell(CustomerKeywordDailyReportDefinition.TodayPrice.getColumnIndex(), rowIndex, "SUM(H2:H" + rowIndex + ")");
+			writer.addLabelCell(CustomerKeywordDailyReportDefinition.TodayPrice.getColumnIndex(), rowIndex, totalFee);
+
 			writer.setColumnView(CustomerKeywordDailyReportDefinition.Sequence.getColumnIndex(), sequenceWidth + 6);
 			writer.setColumnView(CustomerKeywordDailyReportDefinition.Keyword.getColumnIndex(), keywordWidth + 6);
 			writer.setColumnView(CustomerKeywordDailyReportDefinition.URL.getColumnIndex(), urlWidth + 6);
@@ -101,7 +103,7 @@ public class CustomerKeywordDailyReportExcelWriter {
 			writer.setColumnView(CustomerKeywordDailyReportDefinition.CurrentPosition.getColumnIndex(), currentPositionWidth + 6);
 			writer.setColumnView(CustomerKeywordDailyReportDefinition.TodayPrice.getColumnIndex(), todayPriceWidth + 6);
 
-			writeDailySubTotal(rowIndex);
+			writeDailySubTotal(rowIndex, totalFee);
 
 			return totalFee;
 		}
@@ -161,13 +163,14 @@ public class CustomerKeywordDailyReportExcelWriter {
 	}
 
 
-	private void writeDailySubTotal(int rowIndex) throws Exception {
+	private void writeDailySubTotal(int rowIndex, double totalFee) throws Exception {
 		writer.setCurrentWorkSheetWithName("小计");
 		Calendar calendar = Calendar.getInstance();
 		int day = calendar.get(Calendar.DAY_OF_MONTH);
 		int endOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 		writer.addLabelCell(0, day, day);
-		writer.addFormulanCell(1, day, "'" + day + "'!H" + (rowIndex + 1));
+//		writer.addFormulanCell(1, day, "'" + day + "'!H" + (rowIndex + 1));
+		writer.addLabelCell(1, day, totalFee);
 
 		if(day == 10){
 			writer.addFormulanCell(2, day, "SUM(B2:B11)");
