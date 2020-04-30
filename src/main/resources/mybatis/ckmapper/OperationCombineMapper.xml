@@ -81,7 +81,7 @@
 
     <insert id="saveOperationCombine">
         INSERT INTO t_operation_combine(fOperationCombineName, fTerminalType, fCreator, fMaxInvalidCount,fSearchEngine,fDefaultEngine)
-        VALUES(#{operationCombineName}, #{terminalType}, #{creator}, #{maxInvalidCount},#{searchEngine},if((select num from (select count(fUuid) as  num from t_operation_combine where fSearchEngine =#{searchEngine}) a)>0,0,1))
+        VALUES(#{operationCombineName}, #{terminalType}, #{creator}, #{maxInvalidCount},#{searchEngine},#{defaultEngine})
     </insert>
 
     <select id="lastInsertID" resultType="java.lang.Long">
@@ -112,6 +112,15 @@
         UPDATE t_operation_combine
         SET fMaxInvalidCount = #{maxInvalidCount}, fUpdateTime = NOW()
         WHERE fUuid = #{uuid}
+    </update>
+
+    <update id="resetDefaultEngine">
+        UPDATE t_operation_combine
+            SET fDefaultEngine = 0
+        WHERE
+            fTerminalType = #{terminalType}
+            AND
+            fSearchEngine = #{searchEngine}
     </update>
 
     <select id="getOperationCombineName" resultType="java.lang.String">

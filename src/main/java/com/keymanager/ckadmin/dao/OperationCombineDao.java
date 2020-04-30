@@ -22,7 +22,7 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
         @Param("terminalType") String terminalType,
         @Param("creator") String creator,
         @Param("maxInvalidCount") int maxInvalidCount,
-        @Param("remainingCount") int remainingCount,@Param("searchEngine") String searchEngine);
+        @Param("remainingCount") int remainingCount, @Param("searchEngine") String searchEngine,@Param("defaultEngine") int defaultEngine);
 
     long lastInsertID();
 
@@ -34,8 +34,6 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
 
     /**
      * 获取操作组合
-     * @param optimizeGroupName
-     * @return
      */
     String getOperationCombineName(@Param("optimizeGroupName") String optimizeGroupName);
 
@@ -45,14 +43,16 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
 
     /**
      * 获取用户名以及id
-     * @param terminal
-     * @return
      */
-    List<Map<String,Object>> getUserName(@Param("terminal") String terminal);
+    List<Map<String, Object>> getUserName(@Param("terminal") String terminal);
 
     /**
      * 更改默认的搜索引擎
-     * @param oc
      */
     void updateSearchEngine(@Param("oc") OperationCombine oc);
+
+    /**
+     * 重新设置terminalType，
+     */
+    void resetDefaultEngine(@Param("terminalType") String terminalType, @Param("searchEngine") String searchEngine);
 }

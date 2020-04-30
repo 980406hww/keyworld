@@ -638,7 +638,7 @@
                 success: function (result) {
                     var items=result.data;
                     if (result.code === 200) {
-                        var isDefault='checked disabled';
+                        var isDefault='checked';
                         if(statu==0)
                             isDefault='';
                         var stat='';
@@ -654,7 +654,7 @@
                             title:"修改搜索引擎",
                             shadeClose:true,
                             content:
-                                ' <form class="layui-form" style="margin-top: 10px"><div class="layui-form-item"><label class="layui-form-label">搜索引擎</label><div class="layui-input-inline"><select id="alterSearchEngine" name ="searchEngine" lay-search=""  onchange="updateSearchEngine(\'' + uuid + '\',this)" >'+ stat+'</select></div></div>' +
+                                ' <form class="layui-form" style="margin-top: 10px"><div class="layui-form-item"><label class="layui-form-label">搜索引擎</label><div class="layui-input-inline"><select id="alterSearchEngine" name ="searchEngine" lay-search="">'+ stat+'</select></div></div>' +
                                '<div class="layui-form-item"><label class="layui-form-label">是否默认</label> <div class="layui-input-block"> <input type="checkbox" '+isDefault+' name="defaultEngine" lay-skin="switch" lay-filter="switchTest" lay-text="是|否"></div></div>'+
                                 '<div style="bottom: 0;width: 400px;background:#fff;text-align: right; margin-top: 220px;">\n' +
                                 ' <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6"> <button class="layui-btn" lay-submit="" lay-filter="searchUp">确认修改</button>\n' +
@@ -663,10 +663,10 @@
                         form.render();
                         form.on("submit(searchUp)",function(data){
                             if(data.field.defaultEngine==='on'){
-                                updateSearchEngine(uuid,data.field.searchEngine,1);
+                                updateSearchEngine(uuid,termialType,data.field.searchEngine,1);
                             }
                             else{
-                                updateSearchEngine(uuid,data.field.searchEngine,0);
+                                updateSearchEngine(uuid,termialType,data.field.searchEngine,0);
                             }
                             let pageConf = common.formToJsonObject('searchForm');
                             if (pageConf.hasRemainingAccount){
@@ -692,10 +692,11 @@
 
         };
 
-        window.updateSearchEngine=function(uuid,searchEngine,defaultEngine){
+        window.updateSearchEngine=function(uuid,termialType,searchEngine,defaultEngine){
 
             var postData = {};
             postData.searchEngine = searchEngine;
+            postData.terminalType = termialType;
             postData.defaultEngine = defaultEngine;
             postData.uuid = uuid;
             $.ajax({
