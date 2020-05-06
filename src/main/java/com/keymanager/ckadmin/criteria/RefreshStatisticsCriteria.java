@@ -5,15 +5,8 @@ import com.keymanager.ckadmin.criteria.base.BaseCriteria;
 public class RefreshStatisticsCriteria extends BaseCriteria {
 
     private String entryType;
+
     private String historyDate;
-
-    public String getHistoryDate() {
-        return historyDate;
-    }
-
-    public void setHistoryDate(String historyDate) {
-        this.historyDate = historyDate;
-    }
 
     private String groupName;
 
@@ -26,8 +19,6 @@ public class RefreshStatisticsCriteria extends BaseCriteria {
     private String terminalType;
 
     private boolean fullMatchGroup;
-
-
 
     private String categoryTag;
 
@@ -112,5 +103,13 @@ public class RefreshStatisticsCriteria extends BaseCriteria {
 
     public void setMachineGroup(String machineGroup) {
         this.machineGroup = machineGroup;
+    }
+
+    public String getHistoryDate() {
+        return historyDate;
+    }
+
+    public void setHistoryDate(String historyDate) {
+        this.historyDate = historyDate;
     }
 }
