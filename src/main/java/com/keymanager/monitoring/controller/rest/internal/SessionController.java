@@ -2,6 +2,7 @@ package com.keymanager.monitoring.controller.rest.internal;
 
 import com.keymanager.monitoring.entity.UserOnline;
 import com.keymanager.monitoring.service.SessionService;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class SessionController {
     @Autowired
     private SessionService sessionService;
 
+    @RequiresRoles("admin")
     @RequestMapping("/list")
     public ModelAndView list() {
         return constructUserOnlineModelAndView();
@@ -36,6 +38,7 @@ public class SessionController {
         return modelAndView;
     }
 
+    @RequiresRoles("admin")
     @RequestMapping(value = "/forceLogout/{id}", method = RequestMethod.POST)
     public ResponseEntity<?> forceLogout(@PathVariable("id") String id) {
         try {
