@@ -138,20 +138,6 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
 
     private List<CustomerKeywordTerminalRefreshStatRecord> generateAllCustomerKeywordStatInfo(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
         List<CustomerKeywordTerminalRefreshStatRecord> customerKeywordStatInfoRecords = getCustomerKeywordStatInfoRecords(customerKeywordRefreshStatInfoCriteria);
-        Map<String, Map<String, Map<String, CustomerKeywordTerminalRefreshStatRecord>>> refreshStatInfoRecordGroupMap = new HashMap<String, Map<String, Map<String, CustomerKeywordTerminalRefreshStatRecord>>>();
-        for (CustomerKeywordTerminalRefreshStatRecord customerKeywordTerminalRefreshStatRecord : customerKeywordStatInfoRecords) {
-            Map<String, Map<String, CustomerKeywordTerminalRefreshStatRecord>> refreshStatInfoRecordTerminalTypeMap = refreshStatInfoRecordGroupMap.get(customerKeywordTerminalRefreshStatRecord.getGroup());
-            if (null == refreshStatInfoRecordTerminalTypeMap) {
-                refreshStatInfoRecordTerminalTypeMap = new HashMap<>();
-            }
-            Map<String, CustomerKeywordTerminalRefreshStatRecord> refreshStatInfoRecordTypeMap = refreshStatInfoRecordTerminalTypeMap.get(customerKeywordTerminalRefreshStatRecord.getTerminalType());
-            if (null == refreshStatInfoRecordTypeMap) {
-                refreshStatInfoRecordTypeMap = new HashMap<>();
-            }
-            refreshStatInfoRecordTypeMap.put(customerKeywordTerminalRefreshStatRecord.getType(), customerKeywordTerminalRefreshStatRecord);
-            refreshStatInfoRecordTerminalTypeMap.put(customerKeywordTerminalRefreshStatRecord.getTerminalType(), refreshStatInfoRecordTypeMap);
-            refreshStatInfoRecordGroupMap.put(customerKeywordTerminalRefreshStatRecord.getGroup(), refreshStatInfoRecordTerminalTypeMap);
-        }
         return customerKeywordStatInfoRecords;
     }
 }

@@ -91,6 +91,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
     }
 
     function init_belong_user() {
+        var userName= $("#userName").val();
         $.ajax({
             url: '/internal/customer/getActiveUsers',
             dataType: 'json',
@@ -101,10 +102,16 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                     $("#userName").empty();
                     $("#userName").append('<option value="">所属用户</option>');
                     $.each(data, function (index, item) {
+                     if(userName === item.loginName)
                         $('#userName').append(
-                            '<option value="' + item.loginName + '">'
+                            '<option  selected value="' + item.loginName + '">'
                             + item.userName
                             + '</option>');// 下拉菜单里添加元素
+                        else
+                         $('#userName').append(
+                             '<option value="' + item.loginName + '" >'
+                             + item.userName
+                             + '</option>');
                     });
                     if (belongUser !== '' || belongUser != null) {
                         $("#userName").val(belongUser)
@@ -631,7 +638,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
     }
 
     if (document.getElementById('keyword').value || document.getElementById('optimizeGroupName').value ||
-        document.getElementById('machineGroup').value || document.getElementById('invalidRefreshCount').value) {
+        document.getElementById('machineGroup').value || document.getElementById('invalidRefreshCount').value ||document.getElementById('userName').value) {
         $('#searchBtn').click();
     } else {
         get_keywords({init: 'init'});
