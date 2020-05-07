@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.criteria;
 
 import com.keymanager.ckadmin.criteria.base.BaseCriteria;
 
+//用户刷量统计查询
 public class UserRefreshStatisticCriteria extends BaseCriteria {
 
     private String entryType;
@@ -10,19 +11,11 @@ public class UserRefreshStatisticCriteria extends BaseCriteria {
 
     private String customerName;
 
-    private String configValue;
-
     private String terminalType;
 
-    private boolean fullMatchGroup;
-
-   private String historyDate;
-
-    private String categoryTag;
+    private String historyDate;
 
     private String userName;
-
-    private String password;
 
     public String getEntryType() {
         return entryType;
@@ -48,14 +41,6 @@ public class UserRefreshStatisticCriteria extends BaseCriteria {
         this.groupName = groupName;
     }
 
-    public String getConfigValue() {
-        return configValue;
-    }
-
-    public void setConfigValue(String configValue) {
-        this.configValue = configValue;
-    }
-
     public String getTerminalType() {
         return terminalType;
     }
@@ -64,36 +49,12 @@ public class UserRefreshStatisticCriteria extends BaseCriteria {
         this.terminalType = terminalType;
     }
 
-    public boolean isFullMatchGroup() {
-        return fullMatchGroup;
-    }
-
-    public void setFullMatchGroup(boolean fullMatchGroup) {
-        this.fullMatchGroup = fullMatchGroup;
-    }
-
-    public String getCategoryTag() {
-        return categoryTag;
-    }
-
-    public void setCategoryTag(String categoryTag) {
-        this.categoryTag = categoryTag;
-    }
-
     public String getUserName() {
         return userName;
     }
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getHistoryDate() {
