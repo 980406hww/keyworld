@@ -62,7 +62,7 @@ public class MachineGroupWorkInfoController {
             }
             List<MachineGroupWorkInfo> machineGroupWorkInfos;
 
-            if (("").equals(criteria.getDayNum()) || criteria.getDayNum()==null ||("null").equals(criteria.getDayNum())) {
+            if (("").equals(criteria.getHistoryDate()) || criteria.getHistoryDate()==null ||("null").equals(criteria.getHistoryDate())) {
                 machineGroupWorkInfos = machineGroupWorkInfoService.generateMachineGroupWorkInfo(criteria);
             } else {
                 machineGroupWorkInfos = machineGroupWorkInfoService.getHistoryMachineGroupWorkInfo(criteria);

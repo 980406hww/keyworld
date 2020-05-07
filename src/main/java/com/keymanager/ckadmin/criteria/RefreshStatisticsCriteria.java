@@ -6,6 +6,8 @@ public class RefreshStatisticsCriteria extends BaseCriteria {
 
     private String entryType;
 
+    private String historyDate;
+
     private String groupName;
 
     private String machineGroup;
@@ -17,8 +19,6 @@ public class RefreshStatisticsCriteria extends BaseCriteria {
     private String terminalType;
 
     private boolean fullMatchGroup;
-
-    private int dayNum;
 
     private String categoryTag;
 
@@ -41,15 +41,6 @@ public class RefreshStatisticsCriteria extends BaseCriteria {
     public void setUserName(String userName) {
         this.userName = userName;
     }
-
-    public int getDayNum() {
-        return dayNum;
-    }
-
-    public void setDayNum(int dayNum) {
-        this.dayNum = dayNum;
-    }
-
     public String getEntryType() {
         return entryType;
     }
@@ -112,5 +103,13 @@ public class RefreshStatisticsCriteria extends BaseCriteria {
 
     public void setMachineGroup(String machineGroup) {
         this.machineGroup = machineGroup;
+    }
+
+    public String getHistoryDate() {
+        return historyDate;
+    }
+
+    public void setHistoryDate(String historyDate) {
+        this.historyDate = historyDate;
     }
 }

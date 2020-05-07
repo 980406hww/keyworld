@@ -19,7 +19,7 @@
             ckrsr.fQueryCount AS 'queryCount',
             ckrsr.fMaxInvalidCount AS 'maxInvalidCount'
         FROM t_ck_refresh_stat_record ckrsr
-        WHERE DATE_SUB(CURDATE(), INTERVAL #{criteria.dayNum} DAY) = ckrsr.fCreateDate
+        WHERE  #{criteria.historyDate}  = ckrsr.fCreateDate
         AND ckrsr.fType = #{criteria.entryType}
         AND ckrsr.fTerminalType = #{criteria.terminalType}
         <if test="criteria.groupName!=null and criteria.groupName!=''">
