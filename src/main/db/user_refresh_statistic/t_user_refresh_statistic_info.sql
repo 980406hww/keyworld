@@ -1,4 +1,5 @@
 /*
+用户刷量统计表
  Navicat Premium Data Transfer
 
  Source Server         : server
