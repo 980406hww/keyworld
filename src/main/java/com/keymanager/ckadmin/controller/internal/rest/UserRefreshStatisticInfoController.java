@@ -7,6 +7,7 @@ import com.keymanager.ckadmin.entity.UserRefreshStatisticInfo;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRefreshStatisticService;
 import com.keymanager.ckadmin.service.UserRoleService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,7 @@ public class UserRefreshStatisticInfoController {
     /**
      * 跳转用户刷量统计
      */
+    @RequiresPermissions("/internal/userRefreshStatistic/toUserRefreshStatistic")
     @GetMapping(value = "/toUserRefreshStatistic")
     public ModelAndView toQzChargeStatus() {
         ModelAndView mv = new ModelAndView();
@@ -34,6 +36,12 @@ public class UserRefreshStatisticInfoController {
         return mv;
     }
 
+    /**
+     * 获取用户刷量信息
+     * @param criteria
+     * @return
+     */
+    @RequiresPermissions("/internal/userRefreshStatistic/toUserRefreshStatistic")
     @PostMapping(value = "/getUserRefreshInfo")
     public ResultBean getRefreshDataByCondition(@RequestBody UserRefreshStatisticCriteria criteria) {
         ResultBean resultBean = new ResultBean(0, "success");
