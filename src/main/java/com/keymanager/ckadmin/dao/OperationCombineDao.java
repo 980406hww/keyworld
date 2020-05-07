@@ -34,6 +34,8 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
 
     /**
      * 获取操作组合
+     * @param optimizeGroupName
+     * @return
      */
     String getOperationCombineName(@Param("optimizeGroupName") String optimizeGroupName);
 
@@ -47,7 +49,7 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
     List<Map<String, Object>> getUserName(@Param("terminal") String terminal);
 
     /**
-     * 更改默认的搜索引擎
+     * 更改是否为默认操作组
      */
     void updateSearchEngine(@Param("oc") OperationCombine oc);
 
@@ -55,4 +57,9 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
      * 重新设置terminalType，
      */
     void resetDefaultEngine(@Param("terminalType") String terminalType, @Param("searchEngine") String searchEngine);
+
+    /**
+     * 获取默认操作组合
+     */
+    OperationCombine getOperationCombineForSearchEngineDefaule(@Param("searchEngine") String searchEngine, @Param("terminal") String terminal);
 }

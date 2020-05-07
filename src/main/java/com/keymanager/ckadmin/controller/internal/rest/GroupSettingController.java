@@ -11,12 +11,16 @@ import com.keymanager.ckadmin.service.OperationCombineService;
 import com.keymanager.ckadmin.service.OperationTypeService;
 import com.keymanager.ckadmin.util.SQLFilterUtils;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Resource;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -76,7 +80,6 @@ public class GroupSettingController {
     @PostMapping("/getOperationTypes/{terminalType}")
     public ResultBean getOperationTypes(@PathVariable(name = "terminalType") String terminalType){
         ResultBean resultBean = new ResultBean(200, "success");
-
         try {
             List<String> operationTypeValues = operationTypeService.getOperationTypeValuesByRole(terminalType);
             resultBean.setData(operationTypeValues);

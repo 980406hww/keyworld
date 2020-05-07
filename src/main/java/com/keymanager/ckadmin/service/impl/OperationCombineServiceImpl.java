@@ -136,4 +136,9 @@ public class OperationCombineServiceImpl extends
         }
         operationCombineDao.updateSearchEngine(oc);
     }
+
+    @Override
+    public OperationCombine getOperationCombineForSearchEngineDefaule(String searchEngine, String terminal){
+        return operationCombineDao.getOperationCombineForSearchEngineDefaule(searchEngine, terminal);
+    }
 }
