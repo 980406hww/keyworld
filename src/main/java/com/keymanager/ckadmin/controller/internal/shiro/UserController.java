@@ -168,7 +168,7 @@ public class UserController extends BaseController {
      *
      * @return
      */
-    @RequiresRoles("admin")
+    @RequiresPermissions("/user/editPwdPage")
     @GetMapping("/editPwdPage")
     public String editPwdPage() {
         return "/views/admin/user/userEditPwd";
@@ -181,6 +181,7 @@ public class UserController extends BaseController {
      * @param pwd
      * @return
      */
+    @RequiresPermissions("/user/editPwdPage")
     @PostMapping("/editUserPwd")
     @ResponseBody
     public Object editUserPwd(String oldPwd, String pwd) {
