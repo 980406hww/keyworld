@@ -28,7 +28,7 @@ public interface IUserInfoService extends IService<UserInfo> {
 
     void updateByVo(UserVO userVo);
 
-    void updatePwdByUserId(Long userId, String md5Hex);
+    void updatePwdByUserId(Long userId, String md5Hex,String salt);
 
     void selectDataGrid(PageInfo pageInfo);
 
