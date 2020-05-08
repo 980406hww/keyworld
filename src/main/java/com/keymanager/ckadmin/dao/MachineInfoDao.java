@@ -10,10 +10,7 @@ import com.keymanager.ckadmin.entity.ClientUpgrade;
 import com.keymanager.ckadmin.entity.CustomerKeywordTerminalRefreshStatRecord;
 import com.keymanager.ckadmin.entity.MachineGroupWorkInfo;
 import com.keymanager.ckadmin.entity.MachineInfo;
-import com.keymanager.ckadmin.vo.CookieVO;
-import com.keymanager.ckadmin.vo.MachineInfoGroupSummaryVO;
-import com.keymanager.ckadmin.vo.MachineInfoMachineGroupSummaryVO;
-import com.keymanager.ckadmin.vo.MachineInfoSummaryVO;
+import com.keymanager.ckadmin.vo.*;
 
 import java.util.Collection;
 import java.util.Map;
@@ -93,6 +90,8 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
     List<CustomerKeywordTerminalRefreshStatRecord> searchMachineInfoForRefreshStat(@Param("criteria") RefreshStatisticsCriteria criteria);
 
     List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(@Param("clientIDPrefix") String clientIDPrefix, @Param("city") String city, @Param("switchGroupName") String switchGroupName);
+
+    List<MachineVersionVo> selectMachineVersionInfo(@Param("terminalType") String terminalType,@Param("programType") String programType);
 
     List<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(Page<MachineInfoGroupSummaryVO> page, @Param("machineInfoGroupStatCriteria") MachineInfoGroupStatCriteria machineInfoGroupStatCriteria);
 

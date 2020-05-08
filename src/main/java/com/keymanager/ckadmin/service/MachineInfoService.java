@@ -7,11 +7,8 @@ import com.keymanager.ckadmin.entity.ClientUpgrade;
 import com.keymanager.ckadmin.entity.CustomerKeywordTerminalRefreshStatRecord;
 import com.keymanager.ckadmin.entity.MachineGroupWorkInfo;
 import com.keymanager.ckadmin.entity.MachineInfo;
-import com.keymanager.ckadmin.vo.ClientStatusForOptimization;
-import com.keymanager.ckadmin.vo.CookieVO;
-import com.keymanager.ckadmin.vo.MachineInfoGroupSummaryVO;
-import com.keymanager.ckadmin.vo.MachineInfoMachineGroupSummaryVO;
-import com.keymanager.ckadmin.vo.MachineInfoSummaryVO;
+import com.keymanager.ckadmin.vo.*;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -122,6 +119,8 @@ public interface MachineInfoService extends IService<MachineInfo> {
     List<CustomerKeywordTerminalRefreshStatRecord> searchMachineInfoForRefreshStat(RefreshStatisticsCriteria criteria);
 
     List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(String clientIDPrefix, String city, String switchGroupName);
+
+    List<MachineVersionVo> getMachineVersion(String terminal,String programType);
 
     Page<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(Page<MachineInfoGroupSummaryVO> page, MachineInfoGroupStatCriteria machineInfoGroupStatCriteria);
 

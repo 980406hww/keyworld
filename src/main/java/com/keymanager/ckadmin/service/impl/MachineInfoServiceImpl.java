@@ -12,11 +12,7 @@ import com.keymanager.ckadmin.enums.ClientStartUpStatusEnum;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.MachineInfoService;
-import com.keymanager.ckadmin.vo.ClientStatusForOptimization;
-import com.keymanager.ckadmin.vo.CookieVO;
-import com.keymanager.ckadmin.vo.MachineInfoGroupSummaryVO;
-import com.keymanager.ckadmin.vo.MachineInfoMachineGroupSummaryVO;
-import com.keymanager.ckadmin.vo.MachineInfoSummaryVO;
+import com.keymanager.ckadmin.vo.*;
 import com.keymanager.util.DES;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
@@ -472,6 +468,78 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
             }
         }
         return pcMachineInfoSummaryVos;
+    }
+
+    @Override
+    public List<MachineVersionVo> getMachineVersion(String terminal, String programType) {
+        List<MachineVersionVo> machineVersionVos= machineInfoDao.selectMachineVersionInfo(terminal,programType);
+        Collections.sort(machineVersionVos);
+        MachineVersionVo versionVo=null;
+        MachineVersionVo terminalVo=null;
+        MachineVersionVo programTypeVo=null;
+        //将终端类型版本号的总数统计出来用于显示数据以及合并表格
+        for(MachineVersionVo machineVersionVo : machineVersionVos){
+            if(versionVo == null){
+                versionVo=machineVersionVo;
+                versionVo.setVersionCount(machineVersionVo.getVersionCount()+1);
+                versionVo.setVersionTotalCount(versionVo.getVersionTotalCount()+machineVersionVo.getCount());
+            }else if((versionVo.getVersion() !=null && machineVersionVo.getVersion() !=null) && versionVo.getVersion().equals(machineVersionVo.getVersion())){
+                versionVo.setVersionCount(versionVo.getVersionCount()+1);
+                versionVo.setVersionTotalCount(versionVo.getVersionTotalCount()+machineVersionVo.getCount());
+            }else if(versionVo.getVersion() == null ){
+                if(machineVersionVo.getVersion() ==null){
+                    versionVo.setVersionCount(versionVo.getVersionCount()+1);
+                    versionVo.setVersionTotalCount(versionVo.getVersionTotalCount()+machineVersionVo.getCount());
+                }else{
+                    versionVo=machineVersionVo;
+                    versionVo.setVersionCount(machineVersionVo.getVersionCount()+1);
+                    versionVo.setVersionTotalCount(versionVo.getVersionTotalCount()+machineVersionVo.getCount());
+                    terminalVo=null;
+                    programTypeVo=null;
+                }
+            }else{
+                versionVo=machineVersionVo;
+                versionVo.setVersionCount(machineVersionVo.getVersionCount()+1);
+                versionVo.setVersionTotalCount(versionVo.getVersionTotalCount()+machineVersionVo.getCount());
+                terminalVo=null;
+                programTypeVo=null;
+            }
+            if(terminalVo == null){
+                terminalVo=machineVersionVo;
+                terminalVo.setTerminalCount(machineVersionVo.getTerminalCount()+1);
+                terminalVo.setTerminalTotalCount(machineVersionVo.getCount()+terminalVo.getTerminalTotalCount());
+            }else if(terminalVo.getTerminal().equals(machineVersionVo.getTerminal())){
+                terminalVo.setTerminalCount(terminalVo.getTerminalCount()+1);
+                terminalVo.setTerminalTotalCount(terminalVo.getTerminalTotalCount()+machineVersionVo.getCount());
+            }else{
+                terminalVo=machineVersionVo;
+                terminalVo.setTerminalCount(machineVersionVo.getTerminalCount()+1);
+                terminalVo.setTerminalTotalCount(machineVersionVo.getCount()+terminalVo.getTerminalTotalCount());
+                programTypeVo=null;
+            }
+            if(programTypeVo == null){
+                programTypeVo=machineVersionVo;
+                programTypeVo.setProgramTypeCount(machineVersionVo.getProgramTypeCount()+1);
+                programTypeVo.setProgramTypeTotalCount(machineVersionVo.getCount()+programTypeVo.getProgramTypeCount());
+            }else if((programTypeVo.getProgramType() !=null && machineVersionVo.getProgramType() !=null ) && programTypeVo.getProgramType().equals(machineVersionVo.getProgramType())){
+                programTypeVo.setProgramTypeCount(programTypeVo.getProgramTypeCount()+1);
+                programTypeVo.setProgramTypeTotalCount(programTypeVo.getProgramTypeTotalCount()+machineVersionVo.getCount());
+            }else if(programTypeVo.getProgramType() == null){
+                if(machineVersionVo.getProgramType() == null){
+                    programTypeVo.setProgramTypeCount( programTypeVo.getProgramTypeCount()+1);
+                    programTypeVo.setTerminalTotalCount( programTypeVo.getProgramTypeTotalCount()+machineVersionVo.getCount());
+                }else{
+                    programTypeVo=machineVersionVo;
+                    programTypeVo.setProgramTypeCount(machineVersionVo.getProgramTypeCount()+1);
+                    programTypeVo.setProgramTypeTotalCount(machineVersionVo.getCount()+programTypeVo.getProgramTypeTotalCount());
+                }
+            }else{
+                programTypeVo=machineVersionVo;
+                programTypeVo.setProgramTypeCount(machineVersionVo.getProgramTypeCount()+1);
+                programTypeVo.setProgramTypeTotalCount(machineVersionVo.getCount()+programTypeVo.getProgramTypeTotalCount());
+            }
+        }
+        return machineVersionVos;
     }
 
     @Override

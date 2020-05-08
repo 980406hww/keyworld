@@ -717,6 +717,25 @@ public class MachineInfoController extends SpringMVCBaseController {
         return resultBean;
     }
 
+    @RequestMapping(value = "/machineVersionInfo" ,method = RequestMethod.POST)
+    public ResultBean machineVersionInfo(@RequestBody Map<String ,String> map){
+        ResultBean resultBean = new ResultBean(0, "success");
+        if ("init".equals(map.get("init"))) {
+            return resultBean;
+        }
+        try {
+            String terminal=map.get("terminal");
+            String programType=map.get("programType");
+            resultBean.setData(machineInfoService.getMachineVersion(terminal,programType));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+
+    }
+
     @GetMapping("/getMachineStatusCount")
     public ResultBean getMachineStatusCount(HttpSession session) {
         ResultBean resultBean = new ResultBean(200, "success");
