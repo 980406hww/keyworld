@@ -24,6 +24,8 @@ CREATE TABLE `t_user_refresh_statistic_info`  (
   `fMaxInvalidCount` int(11) NULL DEFAULT NULL COMMENT '最大无效数',
   `fIdleTotalMinutes` int(11) NULL DEFAULT NULL COMMENT '空闲总分钟数',
   `fCreateDate` date NULL DEFAULT NULL COMMENT '创建的日期',
+  `fGroupName` varchar(25)  NULL DEFAULT NULL COMMENT '组名',
+  `fCustomerName` varchar(25)  NULL DEFAULT NULL COMMENT '客户名',
   PRIMARY KEY (`fUuid`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8;
 

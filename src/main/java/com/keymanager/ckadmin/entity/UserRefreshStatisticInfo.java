@@ -65,6 +65,12 @@ public class UserRefreshStatisticInfo implements Serializable {
     @TableField(value = "fCreateDate")
     private Date createDate;
 
+    @TableField(value = "fGroupName")
+    private String groupName;
+
+    @TableField(value = "fCustomerName")
+    private String customerName;
+
     @TableField(exist = false)
     private Double reachStandardPercentage;
 
@@ -251,5 +257,21 @@ public class UserRefreshStatisticInfo implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 }
