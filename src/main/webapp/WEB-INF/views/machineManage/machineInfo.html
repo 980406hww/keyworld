@@ -165,6 +165,7 @@
     <ul class="layui-tab-title">
         <li lay-id="list" class="layui-this">列表展示</li>
         <li lay-id="map">地图展示</li>
+        <li lay-id="version">版本信息</li>
     </ul>
     <div class="layui-tab-content" style="height: 94%">
         <div class="layui-tab-item layui-show">
@@ -201,6 +202,33 @@
             <div style="height: 100%;width: 80%" id="container"></div>
             <div id="showData" class="show"></div>
         </div>
+        <div class="layui-tab-item layui-show">
+            <!--  条件搜索  -->
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <form class="layui-form layui-form-pane" id="versionForm">
+                        <div class="my-collapse">
+                            <div>
+                                <div class="layui-inline">
+                                    <input type="text" name="programType" placeholder="程序类型" class="layui-input" autocomplete="off">
+                                </div>
+                                <div class="layui-inline">
+                                    <input type="text" name="terminal" placeholder="终端类型" class="layui-input" autocomplete="off">
+                                </div>
+                                <div class="layui-inline">
+                                    <button class="layui-btn" lay-submit lay-filter="versionSearch">搜索</button>
+                                </div>
+                                <div class="layui-inline">
+                                    <button style="background: #897c00;color: #ffffff" class="layui-btn" type="reset">重置</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--数据表格-->
+            <table class="layui-hide" id="versionTable" lay-filter="table"></table>
+        </div>
     </div>
 </div>
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
@@ -230,6 +258,88 @@
         let $ = layui.jquery;
         let common = layui.common;
         let form = layui.form;
+
+        function tableVersionInit(condition) {
+            table.render({
+                elem: '#versionTable',
+                method: 'post',
+                url: '/internal/machineManage/machineVersionInfo',
+                page: false,
+                size: 'sm',
+                id: 'versionTable',
+                where: condition,
+                defaultToolbar: [],
+                contentType: 'application/json',
+                cols: [[
+                    {field: 'version', title: '版本号', width: '32%', align: 'left'},
+                    {field: 'versionTotalCount', title: '总数', width: '8%', align: 'center'},
+                    {field: 'terminal', title: '类型', width: '8%', align: 'center'},
+                    {field: 'terminalTotalCount', title: '小计', width: '8%', align: 'center'},
+                    {field: 'programType', title: '运行程序', width: '36%', align: 'left'},
+                    {field: 'count', title: '数量', width: '8%', align: 'center'}
+                ]],
+                height: 'full-112',
+                loading: true,
+                done: function (res, curr, count) {
+                    tableVersionRowSpan("versionTable", res.data);
+                }
+            });
+        }
+
+        function tableVersionRowSpan(tableId, data) {
+            let allTableNode = document.getElementsByClassName("layui-table-view");
+            // 获取lay-id属性为tableId的表格元素的
+            let targetTableNode = null;
+            if (allTableNode.length > 0) {
+                for (let index = 0, length = allTableNode.length; index < length; index++) {
+                    // 通过lay-id属性过滤表格元素
+                    let tableLayId = allTableNode[index].getAttribute("lay-id");
+                    if (tableLayId === tableId) {
+                        targetTableNode = allTableNode[index];
+                        break;
+                    }
+                }
+            }
+            if (!targetTableNode) {
+                common.showFailMsg('没有找到ID为：' + tableId + '的表格');
+                return false;
+            }
+            // 开始合并单元格操作
+            let tBodyNode = targetTableNode.getElementsByClassName("layui-table-body")[0];
+            let tdNodes = tBodyNode.getElementsByTagName("td");
+            let flag = true;
+            for (let i = 0, j = 0; i < tdNodes.length; i += 6, j++) {
+                if (data[j].versionCount && data[j].versionCount > 0) {
+                    tdNodes[i].setAttribute("rowspan", data[j].versionCount);
+                    tdNodes[i + 1].setAttribute("rowspan", data[j].versionCount);
+                    flag = !flag;
+                } else {
+                    tdNodes[i].style.display = "none";
+                    tdNodes[i + 1].style.display = "none";
+                }
+                if (data[j].terminalCount && data[j].terminalCount > 0) {
+                    tdNodes[i + 2].setAttribute("rowspan", data[j].terminalCount);
+                    tdNodes[i + 3].setAttribute("rowspan", data[j].terminalCount);
+                } else {
+                    tdNodes[i + 2].style.display = "none";
+                    tdNodes[i + 3].style.display = "none";
+                }
+
+                if (data[j].programTypeCount && data[j].programTypeCount > 0) {
+                    tdNodes[i + 4].setAttribute("rowspan", data[j].programTypeCount);
+                } else {
+                    tdNodes[i + 4].style.display = "none";
+                }
+                if (flag) {
+                    tdNodes[i].style.backgroundColor = '#f2f2f2';
+                    tdNodes[i + 1].style.backgroundColor = '#f2f2f2';
+                    tdNodes[i + 2].style.backgroundColor = '#f2f2f2';
+                    tdNodes[i + 3].style.backgroundColor = '#f2f2f2';
+                    tdNodes[i + 4].style.backgroundColor = '#f2f2f2';
+                    tdNodes[i + 5].style.backgroundColor = '#f2f2f2';
+                }
+            }
+        }
 
         function tableInit(condition) {
             table.render({
@@ -333,6 +443,11 @@
         });
 
         tableInit({init: 'init'});
+
+        form.on("submit(versionSearch)", function (data) {
+            tableVersionInit(common.formToJsonObject('versionForm'));
+            return false;
+        });
 
         function init(data) {
             let myChart = echarts.init(document.getElementById("container"));
@@ -482,6 +597,9 @@
             });
         }
     });
+
+
+
 </script>
 </body>
 </html>

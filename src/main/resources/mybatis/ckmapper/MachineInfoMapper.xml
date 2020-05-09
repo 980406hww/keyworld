@@ -560,6 +560,22 @@
         ORDER BY cs.fClientIDPrefix
     </select>
 
+    <select id="selectMachineVersionInfo" resultType="com.keymanager.ckadmin.vo.MachineVersionVo">
+        SELECT
+            cs.fVersion as 'version',
+            cs.fTerminalType as 'terminal',
+            cs.fRunningProgramType as 'programType',
+            COUNT(1) as 'count'
+        FROM t_machine_info cs
+        <where>
+            cs.fValid = 1
+            <if test="terminalType !=null and terminalType !=''"> and  cs.fTerminalType = #{terminalType}</if>
+            <if test="programType !=null and programType !=''"> and  cs.fRunningProgramType = #{programType}</if>
+        </where>
+		GROUP BY cs.fVersion, cs.fTerminalType, cs.fRunningProgramType
+        ORDER BY cs.fVersion
+    </select>
+
     <select id="searchMachineInfoGroupSummaryVO" resultType="com.keymanager.ckadmin.vo.MachineInfoGroupSummaryVO">
         SELECT cs.fGroup as 'group', cs.fTerminalType as terminalType, COUNT(1) AS 'count' FROM
         t_machine_info cs
