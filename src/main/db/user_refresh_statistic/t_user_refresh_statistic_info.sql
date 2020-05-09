@@ -30,7 +30,29 @@ CREATE TABLE `t_user_refresh_statistic_info`  (
 
 
 #赋予用户刷量统计权限
-insert into t_resourec_new (fResourceName,fUrl,fVersion) values("用户刷量统计","/internal/userRefreshStatistic/toUserRefreshStatistic","2.0");
+INSERT INTO t_resourec_new ( fResourceName, fUrl, fVersion, fIconCls, fParentID, fSequence, fStatus, fOpened, fResourceType, fCreateTime )
+VALUES
+	(
+		"用户刷量统计",
+		"/internal/userRefreshStatistic/toUserRefreshStatistic",
+		"2.0",
+		"fi-compass",
+		( SELECT r.fUuid FROM t_resource_new r WHERE r.fUrl = '#' AND r.fResourceName = "终端管理" ),
+		(
+		SELECT
+			IFNULL( MAX( tr.fSequence ) + 1, 1 )
+		FROM
+			t_resource_new r
+		WHERE
+			r.fUrl = '#'
+			AND r.fResourceName = "终端管理"
+		),
+		0,
+		1,
+		0,
+	NOW( )
+	);
+
 INSERT INTO t_role_resource_new(fRoleID, fResourceID) SELECT tem_role.fUuid, tem_resource.fUuid FROM (
       (SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN ('Technical', 'Operation', 'SEOSales', 'SEO')) tem_role,
       (SELECT tr.fUuid FROM t_resource_new tr WHERE tr.fResourceName = '用户刷量统计' AND fVersion = '2.0') tem_resource);
