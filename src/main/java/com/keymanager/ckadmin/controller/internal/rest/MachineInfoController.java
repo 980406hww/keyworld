@@ -716,7 +716,7 @@ public class MachineInfoController extends SpringMVCBaseController {
         }
         return resultBean;
     }
-
+    @RequiresPermissions("/internal/machineManage/machineVersionInfo")
     @RequestMapping(value = "/machineVersionInfo" ,method = RequestMethod.POST)
     public ResultBean machineVersionInfo(@RequestBody Map<String ,String> map){
         ResultBean resultBean = new ResultBean(0, "success");
