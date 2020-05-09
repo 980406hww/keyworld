@@ -78,7 +78,7 @@
                                     <@shiro.hasRole name="DepartmentManager">
                                     <div class="layui-inline">
                                         <select name="userName" id="userName">
-                                            <option value="">所属用户</option>
+                                            <option value="<#if userName?exists>${userName}<#else></#if>"><#if userName?exists>${userName}<#else>所属用户</#if></option>
                                         </select>
                                     </div>
                                     </@shiro.hasRole>

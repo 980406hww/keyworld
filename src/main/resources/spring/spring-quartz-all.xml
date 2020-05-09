@@ -126,6 +126,8 @@
 		<property name="cronExpression" value="0 30 0 * * ?" />
 	</bean>
 
+
+
 	<!-- JobDetajil, 基于MethodInvokingJobDetailFactoryBean调用普通Spring Bean -->
 	<bean id="cronJobDetailControlCustomerKeywordStatus" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="controlCustomerKeywordStatusSchedule" />
@@ -363,6 +365,18 @@
 		<property name="targetObject" ref="terminalRefreshStatInfoSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--更新用户刷量统计的信息-->
+	<bean id="cronTriggerUserRefreshStatistic" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronJobDetailUserRefreshStatistic"/>
+		<property name="cronExpression" value="0 40 23 * * ?"/>
+	</bean>
+
+	<bean id="cronJobDetailUserRefreshStatistic" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="userRefreshStatisticSchedule"/>
+		<property name="targetMethod" value="runTask"/>
+		<property name="concurrent" value="false"/>
 	</bean>
 
 	<!--自动触发每天的报表-->

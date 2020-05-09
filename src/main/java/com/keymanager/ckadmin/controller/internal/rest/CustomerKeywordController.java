@@ -935,9 +935,9 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = {"/toKeywordsFromRS/{businessType}/{terminalType}/{irc}/{group}", "/toKeywordsFromRS/{businessType}/{terminalType}/{irc}"})
+    @GetMapping(value = {"/toKeywordsFromRS/{businessType}/{terminalType}/{irc}/{group}", "/toKeywordsFromRS/{businessType}/{terminalType}/{irc}","/toKeywordsFromUS/{businessType}/{terminalType}/{irc}/{userName}"})
     public ModelAndView toKeywordsFromRS(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "group", required = false) String group, @PathVariable(name = "irc", required = false) Integer irc) {
+        @PathVariable(name = "group", required = false) String group, @PathVariable(name = "irc", required = false) Integer irc,@PathVariable(name="userName",required = false) String userName) {
         ModelAndView mv = null;
         try {
             mv = new ModelAndView();
@@ -947,6 +947,9 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             mv.addObject("status", "1");
             if (null != group) {
                 mv.addObject("groupTmp", group);
+            }
+            if(null != userName){
+                mv.addObject("userName",userName);
             }
             if (null != irc) {
                 mv.addObject("irc", irc == 0 ? "" : irc);
