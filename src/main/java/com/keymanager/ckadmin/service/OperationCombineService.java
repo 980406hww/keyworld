@@ -12,29 +12,35 @@ import java.util.Map;
 
 public interface OperationCombineService extends IService<OperationCombine> {
 
-    public List<String> getGroupNames (long uuid);
+    public List<String> getGroupNames(long uuid);
 
-    public List<OperationCombineVO> searchGroupsBelowOperationCombine (Long uuid, String groupName);
+    public List<OperationCombineVO> searchGroupsBelowOperationCombine(Long uuid, String groupName);
 
-    public List<Map<String, Object>> getOperationCombineNames (String terminalType);
+    public List<Map<String, Object>> getOperationCombineNames(String terminalType);
 
-    public void deleteOperationCombine (long uuid);
+    public void deleteOperationCombine(long uuid);
 
-    public void saveOperationCombine (OperationCombineCriteria operationCombineCriteria);
+    public void saveOperationCombine(OperationCombineCriteria operationCombineCriteria);
 
-    public void updateOperationCombineRemainingAccount (Long operationCombineUuid, int remainingAccount);
+    public void updateOperationCombineRemainingAccount(Long operationCombineUuid, int remainingAccount);
 
-    public void updateOperationCombine (long operationCombineUuid, UpdateGroupSettingCriteria updateGroupSettingCriteria);
+    public void updateOperationCombine(long operationCombineUuid, UpdateGroupSettingCriteria updateGroupSettingCriteria);
 
     public void updateOperationCombineName(long uuid, String operationCombineName);
 
-    public void updateOperationCombineUpdateTime (Long operationCombineUuid);
+    public void updateOperationCombineUpdateTime(Long operationCombineUuid);
 
-    public OperationCombine getOperationCombine (String groupName, String terminalType);
+    public OperationCombine getOperationCombine(String groupName, String terminalType);
 
-    public void updateMaxInvalidCount (long uuid, int maxInvalidCount);
+    public void updateMaxInvalidCount(long uuid, int maxInvalidCount);
 
-    public String getOperationCombineName (String optimizeGroupName);
+    public String getOperationCombineName(String optimizeGroupName);
 
     public List<OperationCombine> searchOperationCombines(Page<OperationCombine> page, GroupSettingCriteria groupSettingCriteria);
+
+    public List<Map<String, Object>> getCombinesUser(String terminal);
+
+    void updateSearchEngine(OperationCombine oc);
+
+    public OperationCombine getOperationCombineForSearchEngineDefaule(String searchEngine, String terminal);
 }

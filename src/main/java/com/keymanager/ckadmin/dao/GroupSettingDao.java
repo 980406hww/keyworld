@@ -23,4 +23,5 @@ public interface GroupSettingDao extends BaseMapper<GroupSetting> {
 
     void deleteGroupSettingByOperationCombineUuid (@Param("operationCombineUuid") long operationCombineUuid);
 
+
 }

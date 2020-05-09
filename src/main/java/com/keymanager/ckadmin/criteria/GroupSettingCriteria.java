@@ -28,6 +28,14 @@ public class GroupSettingCriteria extends BaseCriteria {
      * 查询来源 关键字 true/全站 false
      */
     private Boolean optimizedGroupNameSearchSource;
+    /**
+     * 搜索引擎
+     */
+    private String searchEngine;
+    /**
+     * 归属人
+     */
+    private String ownerSelect;
 
     public String getOperationCombineName() {
         return operationCombineName;
@@ -75,5 +83,21 @@ public class GroupSettingCriteria extends BaseCriteria {
 
     public void setOptimizedGroupNameSearchSource(Boolean optimizedGroupNameSearchSource) {
         this.optimizedGroupNameSearchSource = optimizedGroupNameSearchSource;
+    }
+
+    public String getOwnerSelect() {
+        return ownerSelect;
+    }
+
+    public void setOwnerSelect(String ownerSelect) {
+        this.ownerSelect = ownerSelect;
+    }
+
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
     }
 }

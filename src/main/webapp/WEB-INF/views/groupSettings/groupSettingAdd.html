@@ -42,6 +42,21 @@
         <input type="hidden" name="terminalType" id="terminalType" value=""/>
         <input type="hidden" name="operationCombineUuid" id="operationCombineUuid" value=""/>
         <div class="layui-row">
+            <div class="layui-col-md12,classInfo" id="classInfo" >
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 100%"><h3>组信息</h3></label>
+                </div>
+            </div>
+
+            <div class="layui-col-md6,classInfo" id="contentSearch" >
+                <div class="layui-form-item">
+                    <label class="layui-form-label">搜索引擎</label>
+                    <div class="layui-input-block">
+                        <select name="searchEngine" id="searchEngine" >
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div class="layui-col-md12">
                 <div class="layui-form-item">
                     <label class="layui-form-label" style="width: 100%"><h3>基本信息</h3></label>
@@ -291,23 +306,37 @@
 <!--<script src="/static/ok-admin/page/customer/customerAdd.js"></script>-->
 <script>
 
+    // initForm一个提供其他窗口调用的初始化方法，好处是可以从其他窗口传递数据到这个窗口
+    // 但是对于layui.use，initForm两个都是基于异步回调的方式实现的？
+    // 是否initForm(同步代码块)一定会比layui.use的回调函数先执行？
+
+    // 规定initForm中不要使用异步填充数据，只是做data数据赋值给本页面的数据
+    // 在layui.use的回调事件中使用异步填充数据
+
     let layui_ = null;
     let uuid_ = null;
     let operationTypes = null;
     let operationCombineUuid_ = null;
     let data_ = null;
+    let terminalType= null;
     function initForm(data) {
         data_ = data;
         operationTypes = data.operationTypes;
         operationCombineUuid_ = data.operationCombineUuid;
+        terminalType=data.terminalType;
         document.getElementById('terminalType').value = data.terminalType;
         document.getElementById('operationCombineUuid').value = data.operationCombineUuid;
         document.getElementById('remainAccount').value = data.remainAccount;
         document.getElementById('unusedPercent').innerHTML = data.remainAccount;
         document.getElementById('currentAccount').value = data.currentAccount;
         document.getElementById('machineUsedPercent').value = data.currentAccount;
+        if(operationCombineUuid_!=null){
+            document.getElementById('contentSearch').style.display="none";
+            document.getElementById('classInfo').style.display="none";
+        }
         if (layui_ != null) {
             init_operationType(layui_, operationTypes);
+            get_searchEngine(layui_,terminalType);
             setForm(data)
         }
     }
@@ -331,12 +360,43 @@
         });
         form.render("select");
     }
+    //获取搜索引擎类型
+    function get_searchEngine(layui_,terminalType){
+        let $ = layui_.jquery;
+        let form = layui_.form;
+        var postData={};
+        postData.terminalType=terminalType;
+        $.ajax({
+            url: '/internal/common/getSearchEngines',
+            data:JSON.stringify(postData),
+            type: 'Post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            success: function (res) {
+                var items =res.data;
+                if (res.code === 200) {
+                    $.each(items, function (index,item){
+                        if (item === "百度"){
+                            $('#searchEngine').append('<option selected value="' + item + '">' + item + '</option>');
+                        }else{
+                            $('#searchEngine').append('<option   value="' + item + '">' + item + '</option>');
+                        }
+                    });
+                    form.render("select");
+                } else {
+                    common.showFailMsg(res.msg);
+                }
+            }
+        });
 
+    }
     layui.use(["form", "jquery", "layer", "common"], function () {
         let form = layui.form;
         let $ = layui.jquery;
         let common = layui.common;
-
+        get_searchEngine(layui,terminalType)
         if (operationTypes != null) {
             init_operationType(layui, operationTypes)
         } else {
@@ -361,10 +421,11 @@
         form.on("submit(save)", function (data) {
             let field = data.field;
             let operationCombine = {};
+
             let url = '/internal/groupsetting/saveGroupSetting2';
             if (operationCombineUuid_ == null){
                 url = '/internal/operationcombine/saveOperationCombine2';
-
+                operationCombine.searchEngine=field.searchEngine;
                 operationCombine.operationCombineName = field.settingOperationCombineName;
                 operationCombine.terminalType = field.terminalType;
                 operationCombine.maxInvalidCount = field.maxInvalidCount === "" ? 8 : field.maxInvalidCount;

@@ -56,6 +56,20 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="layui-inline" style="width: 160px">
+                            <div class="layui-input-inline">
+                                <select name="ownerSelect" lay-search id="ownerSelect" lay-filter="operationTypeFilter">
+                                    <option value="">归属人</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline" style="width: 160px">
+                            <div class="layui-input-inline">
+                                <select name="searchEngine" lay-search id="searchEngine" lay-filter="operationTypeFilter">
+                                    <option value="">搜索引擎</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="layui-inline">
                             <div class="layui-input-inline">
                                 <input type="checkbox" name="hasRemainingAccount" id="hasRemainingAccount" title="剩分组设置占比" lay-filter="oneChecked"/>
@@ -124,6 +138,7 @@
         var laypage = layui.laypage;
         var common = layui.common;
         var operationTypes ;
+        var combineUsers ;
 
         let ternimalType225 = $('#terminalType').val();
 
@@ -149,7 +164,8 @@
         });
 
         init_operationType();
-
+        init_combineUser();
+        init_searchEngine();
         function init_operationType(){
             let terminalType = $('#terminalType').val();
             $.ajax({
@@ -165,6 +181,54 @@
                         $.each(data, function (index, item) {
                             $('#operationType').append(
                                 '<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
+                        });
+                        form.render("select");
+                    }
+                }
+            });
+        }
+        function init_searchEngine(){
+            let terminalType = $('#terminalType').val();
+            var postData={}
+            postData.terminalType=terminalType
+            $.ajax({
+                url: '/internal/common/getSearchEngines',
+                dataType: 'json',
+                data:JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: 'POST',
+                async: false,
+                success: function (res) {
+                    if (res.code === 200){
+                        let data =res.data;
+                        $("#searchEngine").empty().append('<option value="">搜索引擎</option>');
+                        $.each(data, function (index, item) {
+                            $('#searchEngine').append(
+                                '<option value="' + item + '">' + item + '</option>');// 下拉菜单里添加元素
+                        });
+                        form.render("select");
+                    }
+                }
+            });
+        }
+        function init_combineUser(){
+            let terminalType = $('#terminalType').val();
+            $.ajax({
+                url: '/internal/operationcombine/getCombineUser/'+terminalType,
+                dataType: 'json',
+                type: 'get',
+                async: false,
+                success: function (res) {
+                    if (res.code === 200){
+                        let data =res.data;
+                        combineUsers = data;
+                        $("#ownerSelect").empty().append('<option value="">归属人</option>');
+                        $.each(data, function (index, item) {
+                            $('#ownerSelect').append(
+                                '<option value="' + item.username + '">' + item.creator + '</option>');// 下拉菜单里添加元素
                         });
                         form.render("select");
                     }
@@ -254,12 +318,13 @@
             data.operationCombineUuid = operationCombineUuid;
             data.operationCombineName = operationCombineName;
             data.maxInvalidCount = maxInvalidCount;
+            data.combineUsers=combineUsers
             data.groupNames = groupNames;
             data.operationTypes = operationTypes;
             data.remainAccount = remainAccount;
             data.currentAccount = 0;
             data.terminalType = $('#terminalType').val();
-            okLayer.open("终端管理 / 分组信息 / 添加操作组合", "/internal/groupsetting/toGroupSettingAdd", "60%", "90%", function(layero){
+            okLayer.open("终端管理 / 分组信息 / 新增操作组", "/internal/groupsetting/toGroupSettingAdd", "60%", "90%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             }, function () {
                 if (sign) {
@@ -281,6 +346,7 @@
             data.operationCombineName = operationCombineName;
             data.operationCombineUuid = operationCombineUuid;
             data.operationTypes = operationTypes;
+            data.combineUsers=combineUsers
             data.remainAccount = remainingAccount;
             data.currentAccount = machineUsedPercent;
             data.terminalType = $('#terminalType').val();
@@ -306,6 +372,7 @@
             data.operationCombineName = operationCombineName;
             data.operationCombineUuid = operationCombineUuid;
             data.operationTypes = operationTypes;
+            data.combineUsers=combineUsers
             data.remainAccount = 100;
             data.currentAccount = 0;
             data.terminalType = $('#terminalType').val();
@@ -378,22 +445,29 @@
             $("#data_list").html('');
             $.each(data, function (index, item) {
                 let htm = '';
+                let color ='';
+                if(item.engineDefault === 1)
+                    color='#CF1900'
                 htm += '<div class="data-item">\n'
                     +'<input type="hidden" name="operationCombineUuid" value="'+item.uuid+'">'
                     + '                        <div class="layui-row">\n'
                     + '                            <div class="layui-col-md12">\n'
                     + '                                <div class="data-head">\n'
                     + '                                     <div class="layui-col-md2 skip importantText" title="'+item.operationCombineName+'---'+item.remainingAccount+'%">'+ item.creator + '&nbsp;&nbsp;&nbsp;&nbsp;' + item.operationCombineName+'</div>\n'
+                    + '                                     <div class="layui-col-md1" ><span style="color:'+color+' " id="defaultSearchEngine'+item.uuid+'">'+item.searchEngine+'</span></div>\n'
+
                     + '                                     <div class="layui-col-md1" onclick=changeMaxInvalidCount("'+item.uuid+'")>最大无效点击数:<span style="color: #00a65a" id="maxInvalidCount'+item.uuid+'">'+item.maxInvalidCount+'</span></div>\n'
-                    + '                                     <div class="layui-col-md6 skip" onclick=changeGroupNames("'+item.uuid+'")>分组:<span style="color: #00a65a" id="groupNameStr'+item.uuid+'">'+getGroupNameStrByUuid(item.uuid)+'</span></div>\n'
-                    + '                                     <div class="layui-col-md3 head-operation" title="操作">\n'
-                    + '                                         <div class="layui-col-md2">'
+                    + '                                     <div class="layui-col-md2 skip" onclick=changeGroupNames("'+item.uuid+'")>分组:<span style="color: #00a65a" id="groupNameStr'+item.uuid+'">'+getGroupNameStrByUuid(item.uuid)+'</span></div>\n'
+
+                    + '                                     <div class="layui-col-md6   head-operation" title="操作" style="float: right;margin-left: 55px">\n'
+                    + '                                         <div class="layui-col-md2" >'
                     + '                                              <a href="javascript:void(0)" onclick=showGroupQueueDialog("' + item.uuid + '")>分组详情 </a>'
                     + '                                          </div>\n'
-                    + '                                         <div class="layui-col-md3">'
+                    + '                                         <div class="layui-col-md2" )><a href="javascript:void(0)" onclick=alterSearchEngine("'+item.uuid+'","'+item.searchEngine+'","'+item.engineDefault+'")>修改搜索引擎</a></div>\n'
+                    + '                                         <div class="layui-col-md2">'
                     + '                                              <a href="javascript:void(0)" onclick=toGroupSettingAdd("' + item.uuid + '","' + item.operationCombineName + '","' + item.maxInvalidCount + '","'+item.remainingAccount+'")>新增操作组 </a>'
                     + '                                         </div>\n'
-                    + '                                         <div class="layui-col-md4">'
+                    + '                                         <div class="layui-col-md3">'
                     + '                                              <a href="javascript:void(0)" onclick=toGroupSettingBatchUpdate("' + item.uuid +'","' + item.operationCombineName +'")>批量修改操作组 </a>'
                     + '                                         </div>\n'
                     + '                                         <div class="layui-col-md3">'
@@ -471,7 +545,6 @@
                 $("#data_list").append(htm);
             })
         }
-
         window.getGroupNameStrByUuid = function(uuid){
             $.ajax({
                 url: '/internal/operationcombine/getGroupNames2/' + uuid,
@@ -548,6 +621,112 @@
                 }
             });
         };
+
+        window.alterSearchEngine = function searchEngine(uuid,searchEngine,statu) {
+            var termialType= $('#terminalType').val();
+            var postData={};
+            postData.terminalType=termialType;
+            $.ajax({
+                url: '/internal/common/getSearchEngines',
+                data:JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'Post',
+                success: function (result) {
+                    var items=result.data;
+                    if (result.code === 200) {
+                        var isDefault='checked';
+                        if(statu==0)
+                            isDefault='';
+                        var stat='';
+                        $.each(items, function (index,item){
+                            if(item=== searchEngine)
+                                stat+='<option  selected value="' + item + '">' + item + '</option>';
+                            else
+                                stat+='<option  value="' + item + '">' + item + '</option>';
+                        });
+                        layer.open({
+                            type:1,
+                            area:['400px','410px'],
+                            title:"修改搜索引擎",
+                            shadeClose:true,
+                            content:
+                                ' <form class="layui-form" style="margin-top: 10px"><div class="layui-form-item"><label class="layui-form-label">搜索引擎</label><div class="layui-input-inline"><select id="alterSearchEngine" name ="searchEngine" lay-search="">'+ stat+'</select></div></div>' +
+                               '<div class="layui-form-item"><label class="layui-form-label">是否默认</label> <div class="layui-input-block"> <input type="checkbox" '+isDefault+' name="engineDefault" lay-skin="switch" lay-filter="switchTest" lay-text="是|否"></div></div>'+
+                                '<div style="bottom: 0;width: 400px;background:#fff;text-align: right; margin-top: 220px;">\n' +
+                                ' <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6"> <button class="layui-btn" lay-submit="" lay-filter="searchUp">确认修改</button>\n' +
+                                ' <div class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px " >取消</div></div></div></form>'
+                        });
+                        form.render();
+                        form.on("submit(searchUp)",function(data){
+                            if(data.field.engineDefault==='on'){
+                                updateSearchEngine(uuid,termialType,data.field.searchEngine,1);
+                            }
+                            else{
+                                updateSearchEngine(uuid,termialType,data.field.searchEngine,0);
+                            }
+                            let pageConf = common.formToJsonObject('searchForm');
+                            if (pageConf.hasRemainingAccount){
+                                pageConf.hasRemainingAccount = true;
+                            }else{
+                                pageConf.hasRemainingAccount = false;
+                            }
+                            initLayPage(pageConf);
+                            layer.closeAll();
+                            return false;
+                        })
+                        layui.$('#close').on('click', function(){
+                            layer.closeAll();
+                        });
+                    } else {
+                        common.showFailMsg('获取数据失败');
+                    }
+                },
+                error: function () {
+                    common.showFailMsg('未知错误，请稍后重试');
+                }
+            });
+
+        };
+
+        window.updateSearchEngine=function(uuid,termialType,searchEngine,engineDefault){
+
+            var postData = {};
+            postData.searchEngine = searchEngine;
+            postData.terminalType = termialType;
+            postData.engineDefault = engineDefault;
+            postData.uuid = uuid;
+            $.ajax({
+                url: '/internal/operationcombine/updateSearchEngine',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'Post',
+                success: function (result) {
+                    if (result.code === 200) {
+                        common.showSuccessMsg('操作成功');
+                        let pageConf = common.formToJsonObject('searchForm');
+                        if (pageConf.hasRemainingAccount){
+                            pageConf.hasRemainingAccount = true;
+                        }else{
+                            pageConf.hasRemainingAccount = false;
+                        }
+                        initLayPage(pageConf);
+                    } else {
+                        common.showFailMsg('操作成功');
+                    }
+                },
+                error: function () {
+                    common.showFailMsg('未知错误，请稍后重试');
+                }
+            });
+        }
 
         window.uniqueGroupName = function unique(a) {
             let seen = {};

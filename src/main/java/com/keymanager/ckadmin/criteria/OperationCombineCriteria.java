@@ -25,6 +25,10 @@ public class OperationCombineCriteria {
 
     private boolean onlySaveStatus;
 
+    private String searchEngine;
+
+
+
     private GroupSetting groupSetting;
 
     public long getOperationCombineUuid () {
@@ -97,5 +101,13 @@ public class OperationCombineCriteria {
 
     public void setGroupSetting (GroupSetting groupSetting) {
         this.groupSetting = groupSetting;
+    }
+
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
     }
 }

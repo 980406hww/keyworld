@@ -10,6 +10,9 @@ import com.keymanager.ckadmin.entity.GroupSetting;
 import com.keymanager.ckadmin.entity.OperationCombine;
 import com.keymanager.ckadmin.service.GroupSettingService;
 import com.keymanager.ckadmin.service.OperationCombineService;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import javax.annotation.Resource;
@@ -42,7 +45,6 @@ public class GroupSettingServiceImpl extends ServiceImpl<GroupSettingDao, GroupS
         operationCombineService.updateById(operationCombine);
         groupSettingDao.deleteById(uuid);
     }
-
     @Override
     public GroupSetting findGroupSetting (long uuid) {
         return groupSettingDao.selectById(uuid);

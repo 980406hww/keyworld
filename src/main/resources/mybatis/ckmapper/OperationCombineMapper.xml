@@ -6,6 +6,8 @@
     <select id="searchOperationCombines" resultType="com.keymanager.ckadmin.entity.OperationCombine">
         SELECT
         toc.fUuid AS "uuid",
+        toc.fSearchEngine as "searchEngine",
+        toc.fEngineDefault as "engineDefault",
         toc.fOperationCombineName AS "operationCombineName",
         u.fUserName AS "creator",
         toc.fRemainingAccount AS "remainingAccount",
@@ -27,6 +29,12 @@
             AND EXISTS(SELECT 1 FROM t_group g WHERE toc.fUuid = g.fOperationCombineUuid AND
             g.fGroupName LIKE '${groupSettingCriteria.optimizedGroupName}%')
         </if>
+        <if test="groupSettingCriteria.ownerSelect !=null and  groupSettingCriteria.ownerSelect != ''">
+            and toc.fCreator= #{groupSettingCriteria.ownerSelect}
+        </if>
+        <if test="groupSettingCriteria.searchEngine !=null and  groupSettingCriteria.searchEngine != ''">
+            and toc.fSearchEngine= #{groupSettingCriteria.searchEngine}
+        </if>
         AND toc.fTerminalType = #{groupSettingCriteria.terminalType}
         AND EXISTS (
         SELECT 1
@@ -44,6 +52,18 @@
         ORDER BY toc.fCreateTime DESC
     </select>
 
+
+    <update id="updateSearchEngine">
+        update t_operation_combine set fSearchEngine =#{oc.searchEngine} , fEngineDefault =#{oc.engineDefault} where fUuid=#{oc.uuid}
+    </update>
+
+    <select id="getUserName" resultType="java.util.Map">
+      select distinct  toc.fCreator AS "username",
+        u.fUserName AS "creator"
+        FROM t_operation_combine toc
+        LEFT JOIN t_userinfo u
+        ON u.fLoginName = toc.fCreator where toc.fTerminalType=#{terminal}
+    </select>
     <select id="getOperationCombineNames" resultType="java.util.Map">
         SELECT
             toc.fUuid AS 'uuid',
@@ -60,8 +80,8 @@
     </select>
 
     <insert id="saveOperationCombine">
-        INSERT INTO t_operation_combine(fOperationCombineName, fTerminalType, fCreator, fMaxInvalidCount)
-        VALUES(#{operationCombineName}, #{terminalType}, #{creator}, #{maxInvalidCount})
+        INSERT INTO t_operation_combine(fOperationCombineName, fTerminalType, fCreator, fMaxInvalidCount,fSearchEngine,fEngineDefault)
+        VALUES(#{operationCombineName}, #{terminalType}, #{creator}, #{maxInvalidCount},#{searchEngine},#{engineDefault})
     </insert>
 
     <select id="lastInsertID" resultType="java.lang.Long">
@@ -94,6 +114,15 @@
         WHERE fUuid = #{uuid}
     </update>
 
+    <update id="resetEngineDefault">
+        UPDATE t_operation_combine
+            SET fEngineDefault = 0
+        WHERE
+            fTerminalType = #{terminalType}
+            AND
+            fSearchEngine = #{searchEngine}
+    </update>
+
     <select id="getOperationCombineName" resultType="java.lang.String">
         SELECT
             toc.fOperationCombineName AS 'operationCombineName'
@@ -107,4 +136,19 @@
     <update id="updateOperationCombineName">
         UPDATE t_operation_combine SET fOperationCombineName = #{operationCombineName} WHERE fUuid = #{uuid}
     </update>
+
+    <select id="getOperationCombineForSearchEngineDefaule" resultType="com.keymanager.ckadmin.entity.OperationCombine">
+        SELECT
+            toc.fUuid AS 'uuid',
+            toc.fRemainingAccount AS 'remainingAccount',
+            toc.fMaxInvalidCount AS 'maxInvalidCount',
+            toc.fUpdateTime AS 'updateTime'
+        FROM
+            t_operation_combine toc
+        WHERE
+            toc.fTerminalType = #{terminal}
+            AND toc.fSearchEngine = #{searchEngine}
+            AND toc.fEngineDefault = 1
+            LIMIT 1
+    </select>
 </mapper>

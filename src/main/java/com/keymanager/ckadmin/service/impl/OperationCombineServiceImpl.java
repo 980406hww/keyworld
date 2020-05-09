@@ -56,7 +56,7 @@ public class OperationCombineServiceImpl extends
     @Override
     public void saveOperationCombine (OperationCombineCriteria operationCombineCriteria) {
         operationCombineDao.saveOperationCombine(operationCombineCriteria.getOperationCombineName(), operationCombineCriteria.getTerminalType(),
-                operationCombineCriteria.getCreator(), operationCombineCriteria.getMaxInvalidCount(), operationCombineCriteria.getRemainingAccount());
+                operationCombineCriteria.getCreator(), operationCombineCriteria.getMaxInvalidCount(), operationCombineCriteria.getRemainingAccount(),operationCombineCriteria.getSearchEngine(),0);
         long lastInsertID = operationCombineDao.lastInsertID();
         operationCombineCriteria.setOperationCombineUuid(lastInsertID);
         groupService.saveGroupsBelowOperationCombine(operationCombineCriteria);
@@ -122,5 +122,23 @@ public class OperationCombineServiceImpl extends
     @Override
     public List<OperationCombine> searchOperationCombines(Page<OperationCombine> page, GroupSettingCriteria groupSettingCriteria) {
         return operationCombineDao.searchOperationCombines(page, groupSettingCriteria);
+    }
+
+    @Override
+    public List<Map<String ,Object>> getCombinesUser(String terminal) {
+        return operationCombineDao.getUserName(terminal);
+    }
+
+    @Override
+    public void updateSearchEngine(OperationCombine oc) {
+        if(oc.getEngineDefault() == 1){
+            operationCombineDao.resetEngineDefault(oc.getTerminalType(),oc.getSearchEngine());
+        }
+        operationCombineDao.updateSearchEngine(oc);
+    }
+
+    @Override
+    public OperationCombine getOperationCombineForSearchEngineDefaule(String searchEngine, String terminal){
+        return operationCombineDao.getOperationCombineForSearchEngineDefaule(searchEngine, terminal);
     }
 }
