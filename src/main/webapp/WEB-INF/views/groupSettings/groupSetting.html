@@ -324,7 +324,7 @@
             data.remainAccount = remainAccount;
             data.currentAccount = 0;
             data.terminalType = $('#terminalType').val();
-            okLayer.open("终端管理 / 分组信息 / 添加操作组合", "/internal/groupsetting/toGroupSettingAdd", "60%", "90%", function(layero){
+            okLayer.open("终端管理 / 分组信息 / 新增操作组", "/internal/groupsetting/toGroupSettingAdd", "60%", "90%", function(layero){
                 window[layero.find("iframe")[0]["name"]].initForm(data);
             }, function () {
                 if (sign) {
@@ -446,7 +446,7 @@
             $.each(data, function (index, item) {
                 let htm = '';
                 let color ='';
-                if(item.defaultEngine==1)
+                if(item.engineDefault === 1)
                     color='#CF1900'
                 htm += '<div class="data-item">\n'
                     +'<input type="hidden" name="operationCombineUuid" value="'+item.uuid+'">'
@@ -463,7 +463,7 @@
                     + '                                         <div class="layui-col-md2" >'
                     + '                                              <a href="javascript:void(0)" onclick=showGroupQueueDialog("' + item.uuid + '")>分组详情 </a>'
                     + '                                          </div>\n'
-                    + '                                         <div class="layui-col-md2" )><a href="javascript:void(0)" onclick=alterSearchEngine("'+item.uuid+'","'+item.searchEngine+'","'+item.defaultEngine+'")>修改搜索引擎</a></div>\n'
+                    + '                                         <div class="layui-col-md2" )><a href="javascript:void(0)" onclick=alterSearchEngine("'+item.uuid+'","'+item.searchEngine+'","'+item.engineDefault+'")>修改搜索引擎</a></div>\n'
                     + '                                         <div class="layui-col-md2">'
                     + '                                              <a href="javascript:void(0)" onclick=toGroupSettingAdd("' + item.uuid + '","' + item.operationCombineName + '","' + item.maxInvalidCount + '","'+item.remainingAccount+'")>新增操作组 </a>'
                     + '                                         </div>\n'
@@ -655,14 +655,14 @@
                             shadeClose:true,
                             content:
                                 ' <form class="layui-form" style="margin-top: 10px"><div class="layui-form-item"><label class="layui-form-label">搜索引擎</label><div class="layui-input-inline"><select id="alterSearchEngine" name ="searchEngine" lay-search="">'+ stat+'</select></div></div>' +
-                               '<div class="layui-form-item"><label class="layui-form-label">是否默认</label> <div class="layui-input-block"> <input type="checkbox" '+isDefault+' name="defaultEngine" lay-skin="switch" lay-filter="switchTest" lay-text="是|否"></div></div>'+
+                               '<div class="layui-form-item"><label class="layui-form-label">是否默认</label> <div class="layui-input-block"> <input type="checkbox" '+isDefault+' name="engineDefault" lay-skin="switch" lay-filter="switchTest" lay-text="是|否"></div></div>'+
                                 '<div style="bottom: 0;width: 400px;background:#fff;text-align: right; margin-top: 220px;">\n' +
                                 ' <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6"> <button class="layui-btn" lay-submit="" lay-filter="searchUp">确认修改</button>\n' +
                                 ' <div class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px " >取消</div></div></div></form>'
                         });
                         form.render();
                         form.on("submit(searchUp)",function(data){
-                            if(data.field.defaultEngine==='on'){
+                            if(data.field.engineDefault==='on'){
                                 updateSearchEngine(uuid,termialType,data.field.searchEngine,1);
                             }
                             else{
@@ -692,12 +692,12 @@
 
         };
 
-        window.updateSearchEngine=function(uuid,termialType,searchEngine,defaultEngine){
+        window.updateSearchEngine=function(uuid,termialType,searchEngine,engineDefault){
 
             var postData = {};
             postData.searchEngine = searchEngine;
             postData.terminalType = termialType;
-            postData.defaultEngine = defaultEngine;
+            postData.engineDefault = engineDefault;
             postData.uuid = uuid;
             $.ajax({
                 url: '/internal/operationcombine/updateSearchEngine',

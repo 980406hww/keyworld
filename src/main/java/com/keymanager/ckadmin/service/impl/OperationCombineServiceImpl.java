@@ -131,8 +131,8 @@ public class OperationCombineServiceImpl extends
 
     @Override
     public void updateSearchEngine(OperationCombine oc) {
-        if(oc.getDefaultEngine() == 1){
-            operationCombineDao.resetDefaultEngine(oc.getTerminalType(),oc.getSearchEngine());
+        if(oc.getEngineDefault() == 1){
+            operationCombineDao.resetEngineDefault(oc.getTerminalType(),oc.getSearchEngine());
         }
         operationCombineDao.updateSearchEngine(oc);
     }

@@ -7,7 +7,7 @@
         SELECT
         toc.fUuid AS "uuid",
         toc.fSearchEngine as "searchEngine",
-        toc.fDefaultEngine as "defaultEngine",
+        toc.fEngineDefault as "engineDefault",
         toc.fOperationCombineName AS "operationCombineName",
         u.fUserName AS "creator",
         toc.fRemainingAccount AS "remainingAccount",
@@ -54,7 +54,7 @@
 
 
     <update id="updateSearchEngine">
-        update t_operation_combine set fSearchEngine =#{oc.searchEngine} , fDefaultEngine =#{oc.defaultEngine} where fUuid=#{oc.uuid}
+        update t_operation_combine set fSearchEngine =#{oc.searchEngine} , fEngineDefault =#{oc.engineDefault} where fUuid=#{oc.uuid}
     </update>
 
     <select id="getUserName" resultType="java.util.Map">
@@ -80,8 +80,8 @@
     </select>
 
     <insert id="saveOperationCombine">
-        INSERT INTO t_operation_combine(fOperationCombineName, fTerminalType, fCreator, fMaxInvalidCount,fSearchEngine,fDefaultEngine)
-        VALUES(#{operationCombineName}, #{terminalType}, #{creator}, #{maxInvalidCount},#{searchEngine},#{defaultEngine})
+        INSERT INTO t_operation_combine(fOperationCombineName, fTerminalType, fCreator, fMaxInvalidCount,fSearchEngine,fEngineDefault)
+        VALUES(#{operationCombineName}, #{terminalType}, #{creator}, #{maxInvalidCount},#{searchEngine},#{engineDefault})
     </insert>
 
     <select id="lastInsertID" resultType="java.lang.Long">
@@ -114,9 +114,9 @@
         WHERE fUuid = #{uuid}
     </update>
 
-    <update id="resetDefaultEngine">
+    <update id="resetEngineDefault">
         UPDATE t_operation_combine
-            SET fDefaultEngine = 0
+            SET fEngineDefault = 0
         WHERE
             fTerminalType = #{terminalType}
             AND
@@ -148,7 +148,7 @@
         WHERE
             toc.fTerminalType = #{terminal}
             AND toc.fSearchEngine = #{searchEngine}
-            AND toc.fDefaultEngine = 1
+            AND toc.fEngineDefault = 1
             LIMIT 1
     </select>
 </mapper>

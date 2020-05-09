@@ -133,7 +133,7 @@ public class OperationCombineController {
             long uuid=Long.valueOf((String) resultMap.get("uuid"));
             OperationCombine oc=new OperationCombine();
             oc.setUuid(uuid);
-            oc.setDefaultEngine((Integer) resultMap.get("defaultEngine"));
+            oc.setEngineDefault((Integer) resultMap.get("engineDefault"));
             oc.setTerminalType((String) resultMap.get("terminalType"));
             oc.setSearchEngine((String)resultMap.get("searchEngine"));
             operationCombineService.updateSearchEngine(oc);

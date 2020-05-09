@@ -22,9 +22,8 @@ public class OperationCombine extends BaseEntity {
     @TableField(value = "fSearchEngine")
     private String searchEngine;
 
-
-    @TableField(value = "fDefaultEngine")
-    private int defaultEngine;
+    @TableField(value = "fEngineDefault")
+    private int engineDefault;
 
     @TableField(value = "fMaxInvalidCount")
     private int maxInvalidCount;
@@ -88,11 +87,11 @@ public class OperationCombine extends BaseEntity {
         this.searchEngine = searchEngine;
     }
 
-    public int getDefaultEngine() {
-        return defaultEngine;
+    public int getEngineDefault() {
+        return engineDefault;
     }
 
-    public void setDefaultEngine(int defaultEngine) {
-        this.defaultEngine = defaultEngine;
+    public void setEngineDefault(int engineDefault) {
+        this.engineDefault = engineDefault;
     }
 }

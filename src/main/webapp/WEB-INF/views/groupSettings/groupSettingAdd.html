@@ -378,7 +378,11 @@
                 var items =res.data;
                 if (res.code === 200) {
                     $.each(items, function (index,item){
-                        $('#searchEngine').append('<option   value="' + item + '">' + item + '</option>');
+                        if (item === "百度"){
+                            $('#searchEngine').append('<option selected value="' + item + '">' + item + '</option>');
+                        }else{
+                            $('#searchEngine').append('<option   value="' + item + '">' + item + '</option>');
+                        }
                     });
                     form.render("select");
                 } else {

@@ -22,7 +22,7 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
         @Param("terminalType") String terminalType,
         @Param("creator") String creator,
         @Param("maxInvalidCount") int maxInvalidCount,
-        @Param("remainingCount") int remainingCount, @Param("searchEngine") String searchEngine,@Param("defaultEngine") int defaultEngine);
+        @Param("remainingCount") int remainingCount, @Param("searchEngine") String searchEngine,@Param("engineDefault") int engineDefault);
 
     long lastInsertID();
 
@@ -56,7 +56,7 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
     /**
      * 重新设置terminalType，
      */
-    void resetDefaultEngine(@Param("terminalType") String terminalType, @Param("searchEngine") String searchEngine);
+    void resetEngineDefault(@Param("terminalType") String terminalType, @Param("searchEngine") String searchEngine);
 
     /**
      * 获取默认操作组合
