@@ -16,8 +16,3 @@ INSERT INTO t_role_resource_new(fRoleID, fResourceID) SELECT tem_role.fUuid, tem
       (SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN ('SEOSales', 'Operation', 'Maintenance', 'SEO')) tem_role,
       (SELECT tr.fUuid FROM t_resource_new tr WHERE tr.fResourceName = '每日排名涨幅详情' AND fVersion = '2.0') tem_resource);
 
-#赋予用户刷量统计权限
-insert into t_resourec_new (fResourceName,fUrl,fVersion) values("用户刷量统计","/internal/userRefreshStatistic/toUserRefreshStatistic","2.0");
-INSERT INTO t_role_resource_new(fRoleID, fResourceID) SELECT tem_role.fUuid, tem_resource.fUuid FROM (
-      (SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN ('Technical', 'Operation', 'SEOSales', 'SEO')) tem_role,
-      (SELECT tr.fUuid FROM t_resource_new tr WHERE tr.fResourceName = '用户刷量统计' AND fVersion = '2.0') tem_resource);
