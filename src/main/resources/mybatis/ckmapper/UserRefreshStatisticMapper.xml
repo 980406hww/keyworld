@@ -3,8 +3,11 @@
 <mapper namespace="com.keymanager.ckadmin.dao.UserRefreshStatisticDao">
     <select id="getUserRefreshStatisticInfo" resultType="com.keymanager.ckadmin.entity.UserRefreshStatisticInfo">
          SELECT
-
+        ck.fOptimizeGroupName AS "groupName",
+        ck.fType AS "type",
+        ck.fTerminalType AS "terminalType",
         tu.fLoginName as "userName",
+        tc.fContactPerson as "customerName",
         COUNT(1) AS "totalKeywordCount",
         SUM(IF(ck.fOptimizeRemainingCount > 0, 1, 0)) AS "needOptimizeKeywordCount",
         SUM(IF(ck.fFailedCause > '', 1, 0)) AS "failedKeywordCount",
@@ -48,6 +51,9 @@
         WHERE date_format(#{criteria.historyDate},'%Y-%m-%d') = ursi.fCreateDate
         AND ursi.fType = #{criteria.entryType}
         AND ursi.fTerminalType = #{criteria.terminalType}
+        <if test="criteria.groupName !=null and criteria.groupName != '' "> and fGroupName =#{criteria.groupName} </if>
+        <if test="criteria.userName !=null and criteria.userName != ''"> and  fUserName =#{criteria.userName}</if>
+        <if test="criteria.customerName !=null and criteria.customerName != ''"> and fCustomerName =#{criteria.customerName} </if>
         GROUP BY ursi.fUuid
         ORDER BY ursi.fUserName
     </select>
