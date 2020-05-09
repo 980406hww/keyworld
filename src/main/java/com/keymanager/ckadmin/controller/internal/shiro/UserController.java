@@ -154,8 +154,9 @@ public class UserController extends BaseController {
         // 更新密码
         if (StringUtils.isNotBlank(userVo.getPassword())) {
             UserInfo user = userInfoService.selectById(userVo.getUserUuid());
-            String salt = user.getSalt();
-            String pwd = passwordHash.toHex(userVo.getPassword(), salt);
+            String newSalt = StringUtils.getUUId();
+            userVo.setSalt(newSalt);
+            String pwd = passwordHash.toHex(userVo.getPassword(), newSalt);
             userVo.setPassword(pwd);
         }
         userInfoService.updateByVo(userVo);
@@ -167,7 +168,7 @@ public class UserController extends BaseController {
      *
      * @return
      */
-    @RequiresRoles("admin")
+    @RequiresPermissions("/user/editPwdPage")
     @GetMapping("/editPwdPage")
     public String editPwdPage() {
         return "/views/admin/user/userEditPwd";
@@ -180,7 +181,7 @@ public class UserController extends BaseController {
      * @param pwd
      * @return
      */
-    @RequiresRoles("admin")
+    @RequiresPermissions("/user/editPwdPage")
     @PostMapping("/editUserPwd")
     @ResponseBody
     public Object editUserPwd(String oldPwd, String pwd) {
@@ -189,7 +190,8 @@ public class UserController extends BaseController {
         if (!user.getPassword().equals(passwordHash.toHex(oldPwd, salt))) {
             return renderError("原始密码不正确!");
         }
-        userInfoService.updatePwdByUserId(getUserId(), passwordHash.toHex(pwd, salt));
+        String newSalt = StringUtils.getUUId();
+        userInfoService.updatePwdByUserId(getUserId(), passwordHash.toHex(pwd, newSalt),newSalt);
         return renderSuccess("密码修改成功,请重新登录!");
     }
 

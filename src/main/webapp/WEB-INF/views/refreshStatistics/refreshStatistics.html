@@ -144,15 +144,10 @@
                                         <input type="text" name="customerName" id="customerName" autocomplete="off" placeholder="请输入客户名称" class="layui-input">
                                     </div>
                                     <div class="layui-inline">
-                                        <select name="dayNum">
-                                            <option value="">历史记录</option>
-                                            <option value="1">一天前</option>
-                                            <option value="2">两天前</option>
-                                            <option value="3">三天前</option>
-                                            <option value="4">四天前</option>
-                                            <option value="5">五天前</option>
-                                            <option value="6">六天前</option>
-                                        </select>
+
+                                        <div class="layui-input-inline">
+                                            <input type="text" class="layui-input" name="historyDate" id="historyDate" placeholder="历史记录">
+                                        </div>
                                     </div>
                                     <div class="layui-inline">
                                         <button class="layui-btn" lay-submit lay-filter="search" id="searchBtn">搜索
@@ -185,13 +180,22 @@
     };
 
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'common'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'common','laydate'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
         var common = layui.common;
-
+        var layDate=layui.laydate;
+        function setHistoryDate(){
+            var nowTime=new Date()
+            layDate.render({
+                elem:"#historyDate",
+                them:"#393D49",
+                max:'nowTime',
+            });
+        };
+        setHistoryDate();
         <@shiro.hasPermission name = "/internal/customerKeyword/searchCustomerKeywordLists" >
         window.searchCustomerKeywords = function (group) {
             let data = {
@@ -209,6 +213,7 @@
 
         <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
         window.findKeyword = function (optimizeGroupName, invalidRefreshCount) {
+
             let data = {
                 type: document.getElementById('entryType').value,
                 terminal: document.getElementById('terminalType').value,

@@ -13,7 +13,7 @@ public class MachineGroupWorkInfoCriteria extends BaseCriteria {
 
     private String terminalType;
 
-    private String dayNum;
+    private String historyDate;
 
     private String userName;
 
@@ -67,11 +67,11 @@ public class MachineGroupWorkInfoCriteria extends BaseCriteria {
         this.terminalType = terminalType;
     }
 
-    public String getDayNum() {
-        return dayNum;
+    public String getHistoryDate() {
+        return historyDate;
     }
 
-    public void setDayNum(String dayNum) {
-        this.dayNum = dayNum;
+    public void setHistoryDate(String historyDate) {
+        this.historyDate = historyDate;
     }
 }

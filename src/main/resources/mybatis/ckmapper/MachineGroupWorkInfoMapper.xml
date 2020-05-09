@@ -54,7 +54,7 @@
             mgwi.fMaxInvalidCount AS 'maxInvalidCount',
             mgwi.fIdleTotalMinutes AS 'idleTotalMinutes'
         FROM t_machine_group_work_info mgwi
-        WHERE date_format(#{criteria.dayNum},'%Y-%m-%d')  = mgwi.fCreateDate
+        WHERE date_format(#{criteria.historyDate},'%Y-%m-%d')  = mgwi.fCreateDate
         AND mgwi.fType = #{criteria.entryType}
         AND mgwi.fTerminalType = #{criteria.terminalType}
         <if test="criteria.machineGroup!=null and criteria.machineGroup!=''">

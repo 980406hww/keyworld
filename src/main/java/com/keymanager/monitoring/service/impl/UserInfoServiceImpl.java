@@ -110,9 +110,10 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
     }
 
     @Override
-    public void updatePwdByUserId(Long userUuid, String md5Hex) {
+    public void updatePwdByUserId(Long userUuid, String md5Hex,String salt) {
         UserInfo user = new UserInfo();
         user.setUuid(userUuid);
+        user.setSalt(salt);
         user.setPassword(md5Hex);
         this.updateById(user);
     }
