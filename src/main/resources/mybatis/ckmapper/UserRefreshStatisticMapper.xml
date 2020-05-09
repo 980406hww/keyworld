@@ -3,7 +3,8 @@
 <mapper namespace="com.keymanager.ckadmin.dao.UserRefreshStatisticDao">
     <select id="getUserRefreshStatisticInfo" resultType="com.keymanager.ckadmin.entity.UserRefreshStatisticInfo">
          SELECT
-
+        ck.fType AS "type",
+        ck.fTerminalType AS "terminalType",
         tu.fLoginName as "userName",
         COUNT(1) AS "totalKeywordCount",
         SUM(IF(ck.fOptimizeRemainingCount > 0, 1, 0)) AS "needOptimizeKeywordCount",
