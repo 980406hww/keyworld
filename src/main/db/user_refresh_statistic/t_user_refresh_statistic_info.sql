@@ -6,7 +6,7 @@
 -- ----------------------------
 DROP TABLE IF EXISTS `t_user_refresh_statistic_info`;
 CREATE TABLE `t_user_refresh_statistic_info`  (
-  `fUuid` int(11) NOT NULL,
+  `fUuid` int(11) NOT NULL AUTO_INCREMENT,
   `fUserName` varchar(25) NULL DEFAULT NULL COMMENT '用户的登录名',
   `fType` varchar(50) NULL DEFAULT NULL COMMENT '链接类型',
   `fTerminalType` varchar(50)  NULL DEFAULT NULL COMMENT '终端类型',
