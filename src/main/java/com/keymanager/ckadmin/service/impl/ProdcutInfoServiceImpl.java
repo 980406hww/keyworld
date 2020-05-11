@@ -1,4 +1,20 @@
 package com.keymanager.ckadmin.service.impl;
 
-public class ProdcutInfoServiceImpl {
+import com.keymanager.ckadmin.dao.ProductInfoDao;
+import com.keymanager.ckadmin.entity.ProductInfo;
+import com.keymanager.ckadmin.service.ProductInfoService;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+
+@Service(value = "productInfoService")
+public class ProdcutInfoServiceImpl implements ProductInfoService {
+
+    @Resource
+    private ProductInfoDao productInfoDao;
+
+    @Override
+    public ProductInfo getProductInfo(int id) {
+        return productInfoDao.selectById(id);
+    }
 }

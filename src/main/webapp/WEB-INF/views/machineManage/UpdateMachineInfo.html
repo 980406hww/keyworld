@@ -31,6 +31,18 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">产品名</label>
+            <div class="layui-input-block">
+                <input type="text" id="productName" name="productName" lay-verify="required"  disabled autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">开通日期</label>
+            <div class="layui-input-block">
+                <input type="text" id="openDate" name="openDate" lay-verify="required"  disabled autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">主机</label>
             <div class="layui-input-block">
                 <input type="text" id="host" name="host" lay-verify="required" placeholder="请输入主机" autocomplete="off" class="layui-input">
@@ -88,6 +100,18 @@
     let clientID_ = null;
     let terminalType_ = null;
 
+    function timestampToTime(timestamp) {
+        var date = new Date(timestamp );//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        var Y = date.getFullYear() + '-';
+        var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+        var D = date.getDate() + ' ';
+        var h = date.getHours() + ':';
+        var m = date.getMinutes() + ':';
+        var s = date.getSeconds();
+        return Y+M+D+h+m+s;
+    }
+
+
     function initMachineInfo(data) {
         clientID_ = data.clientID;
         terminalType_ = data.terminalType;
@@ -112,6 +136,9 @@
                 success: function (res) {
                     var data = res.data;
                     if (res.code === 200) {
+                        if(data.openDate !=null){
+                           data.openDate= timestampToTime(data.openDate)
+                        }
                         layui.form.val("UpdateMachineInfo", data);
                     } else {
                         l.layer.msg(res.msg, {icon: 5, time: 3000});
@@ -199,6 +226,7 @@
                 "密码必须为字母、数字或下划线"
             ]
         });
+
 
     });
 </script>

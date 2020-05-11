@@ -4,14 +4,12 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.*;
 import com.keymanager.ckadmin.dao.MachineInfoDao;
-import com.keymanager.ckadmin.entity.ClientUpgrade;
-import com.keymanager.ckadmin.entity.CustomerKeywordTerminalRefreshStatRecord;
-import com.keymanager.ckadmin.entity.MachineGroupWorkInfo;
-import com.keymanager.ckadmin.entity.MachineInfo;
+import com.keymanager.ckadmin.entity.*;
 import com.keymanager.ckadmin.enums.ClientStartUpStatusEnum;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.MachineInfoService;
+import com.keymanager.ckadmin.service.ProductInfoService;
 import com.keymanager.ckadmin.vo.*;
 import com.keymanager.util.DES;
 import com.keymanager.util.FileUtil;
@@ -38,6 +36,9 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     @Resource(name = "customerKeywordService2")
     private CustomerKeywordService customerKeywordService;
 
+    @Resource
+    private ProductInfoService productInfoService;
+
     @Override
     public Integer getUpgradingMachineCount(ClientUpgrade clientUpgrade) {
         return machineInfoDao.getUpgradingMachineCount(clientUpgrade);
@@ -55,7 +56,15 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     @Override
     public Page<MachineInfo> searchMachineInfos(Page<MachineInfo> page, MachineInfoCriteria machineInfoCriteria, boolean normalSearchFlag) {
         if (normalSearchFlag) {
-            page.setRecords(machineInfoDao.searchMachineInfos(page, machineInfoCriteria));
+           List<MachineInfo> machineInfos= machineInfoDao.searchMachineInfos(page, machineInfoCriteria);
+           for(MachineInfo machineInfo :machineInfos){
+              ProductInfo productInfo= productInfoService.getProductInfo(machineInfo.getProductId());
+              if(productInfo !=null){
+                  machineInfo.setPrice(productInfo.getProductPrice());
+                  machineInfo.setProductName(productInfo.getProductName());
+              }
+           }
+            page.setRecords(machineInfos);
         } else {
             page.setRecords(machineInfoDao.searchBadMachineInfo(page, machineInfoCriteria));
         }
@@ -159,6 +168,11 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     @Override
     public MachineInfo getMachineInfo(String clientID, String terminalType) {
         MachineInfo machineInfo = machineInfoDao.getMachineInfoByMachineID(clientID, terminalType);
+        ProductInfo productInfo=productInfoService.getProductInfo(machineInfo.getProductId());
+        if(productInfo !=null){
+            machineInfo.setProductName(productInfo.getProductName());
+            machineInfo.setPrice(productInfo.getProductPrice());
+        }
         return machineInfo;
     }
 
@@ -541,6 +555,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
         }
         return machineVersionVos;
     }
+
 
     @Override
     public Page<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(Page<MachineInfoGroupSummaryVO> page,

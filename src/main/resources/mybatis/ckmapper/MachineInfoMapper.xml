@@ -46,7 +46,9 @@
         mi.fRemainingKeyword AS "remainingKeyword",
         mi.fCreateTime AS "createTime",
         mi.fCpuCount AS "cpuCount",
-        mi.fMemory AS "memory"
+        mi.fMemory AS "memory",
+        mi.fProductID as "productId",
+        mi.fOpenDate as "openDate"
     </sql>
 
     <update id="updateOptimizationResultFromCache" parameterType="java.util.Collection">
@@ -558,22 +560,6 @@
         </where>
         GROUP BY cs.fClientIDPrefix, cs.fTerminalType, cs.fCity, cs.fSwitchGroupName
         ORDER BY cs.fClientIDPrefix
-    </select>
-
-    <select id="selectMachineVersionInfo" resultType="com.keymanager.ckadmin.vo.MachineVersionVo">
-        SELECT
-            cs.fVersion as 'version',
-            cs.fTerminalType as 'terminal',
-            cs.fRunningProgramType as 'programType',
-            COUNT(1) as 'count'
-        FROM t_machine_info cs
-        <where>
-            cs.fValid = 1
-            <if test="terminalType !=null and terminalType !=''"> and  cs.fTerminalType = #{terminalType}</if>
-            <if test="programType !=null and programType !=''"> and  cs.fRunningProgramType = #{programType}</if>
-        </where>
-		GROUP BY cs.fVersion, cs.fTerminalType, cs.fRunningProgramType
-        ORDER BY cs.fVersion
     </select>
 
     <select id="searchMachineInfoGroupSummaryVO" resultType="com.keymanager.ckadmin.vo.MachineInfoGroupSummaryVO">
