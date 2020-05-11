@@ -37,7 +37,7 @@
 				<ref bean="cronTriggerGenerateQZSettingKeywordCountCurve" />
 				<ref bean="cronTriggerAutoSaveTestDataStatisticsSchedule"/>
 				<ref bean="cronTriggerSyncQZCustomerData" />
-				<ref bean="cronTriggerUserRefreshStatistic" />
+<!--				<ref bean="cronTriggerUserRefreshStatistic" />-->
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
@@ -368,18 +368,6 @@
 		<property name="concurrent" value="false" />
 	</bean>
 
-	<!--更新用户刷量统计的信息-->
-	<bean id="cronTriggerUserRefreshStatistic" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="cronJobDetailUserRefreshStatistic"/>
-		<property name="cronExpression" value="0 40 23 * * ?"/>
-	</bean>
-
-	<bean id="cronJobDetailUserRefreshStatistic" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="userRefreshStatisticSchedule"/>
-		<property name="targetMethod" value="runTask"/>
-		<property name="concurrent" value="false"/>
-	</bean>
-
 	<!--自动触发每天的报表-->
 	<bean id="cronAutoTriggerDailyReport" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronAutoTriggerDailyReportSchedule"/>
@@ -450,4 +438,16 @@
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>
+
+<!--	&lt;!&ndash;更新用户刷量统计的信息&ndash;&gt;-->
+<!--	<bean id="cronTriggerUserRefreshStatistic" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">-->
+<!--		<property name="jobDetail" ref="cronJobDetailUserRefreshStatistic"/>-->
+<!--		<property name="cronExpression" value="0 40 23 * * ?"/>-->
+<!--	</bean>-->
+
+<!--	<bean id="cronJobDetailUserRefreshStatistic" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
+<!--		<property name="targetObject" ref="userRefreshStatisticSchedule"/>-->
+<!--		<property name="targetMethod" value="runTask"/>-->
+<!--		<property name="concurrent" value="false"/>-->
+<!--	</bean>-->
 </beans>
