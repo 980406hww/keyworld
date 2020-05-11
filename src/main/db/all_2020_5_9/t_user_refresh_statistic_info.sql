@@ -57,7 +57,7 @@ VALUES
 
 #用户刷量统计授权
 INSERT INTO t_role_resource_new(fRoleID, fResourceID) SELECT tem_role.fUuid, tem_resource.fUuid FROM (
-      (SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN ('Technical', 'Operation', 'SEOSales', 'SEO')) tem_role,
+      (SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN ('AlgorithmGroup', 'Operation', 'SEOSales', 'SEO')) tem_role,
       (SELECT tr.fUuid FROM t_resource_new tr WHERE tr.fResourceName = '用户刷量统计' AND fVersion = '2.0') tem_resource);
 #
 #添加机器版本信息列表资源
@@ -87,5 +87,5 @@ VALUES
 
 #赋予权限
 INSERT INTO t_role_resource_new(fRoleID, fResourceID) SELECT tem_role.fUuid, tem_resource.fUuid FROM (
-      (SELECT r.fUuid FROM t_role r WHERE r.fRoleName in  ('AlgorithmGroup', 'Maintenance')) tem_role,
+      (SELECT r.fUuid FROM t_role r WHERE r.fRoleName in  ('AlgorithmGroup', 'Maintenance','Operation')) tem_role,
       (SELECT tr.fUuid FROM t_resource_new tr WHERE tr.fResourceName = '机器版本信息列表' AND fVersion = '2.0') tem_resource);
