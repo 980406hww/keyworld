@@ -2,9 +2,249 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>产品管理</title>
 </head>
+<style>
+    .layui-tab-content {
+        padding: 0px;
+    }
+
+    .layui-card-body {
+        position: relative;
+        padding: 0px;
+        line-height: 24px;
+    }
+
+    .layui-table, .layui-table-view {
+        margin: 0px;
+        border-width: 1px;
+    }
+
+    .my-collapse > div:first-child {
+        background: #f2f2f2;
+        border: 0px;
+    }
+</style>
+<link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+<link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+<link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+<link rel="stylesheet" href="/static/ok-admin/page/base/searchForm.css">
+
 <body>
-$END$
+<div class="ok-body">
+    <!--模糊搜索区域-->
+    <div class="layui-card ">
+        <div class="layui-card-body ">
+            <div class="my-collapse">
+                <div class="out-condition layui-row">
+                    <div class="layui-col-md6 layui-col-sm6 layui-col-xs6">
+                        <form class="layui-form layui-form-pane" id="searchForm">
+                            <div class="layui-row">
+                                <div class="layui-col-md9 layui-col-sm9 layui-col-xs9">
+                                    <input style="height: 30px" type="text" name="productName" id="productName"
+                                           placeholder="产品名" autocomplete="off" class="layui-input layui-input-text">
+                                </div>
+                                <div class="layui-col-md3 layui-col-sm3 layui-col-xs3" style="text-align: center">
+                                    <button style="padding: 0 12px;" class="layui-btn" lay-submit="" lay-filter="search"
+                                            id="searchBtn">搜索
+                                    </button>
+                                    <div class="layui-inline">
+                                        <div class="layui-btn layui-btn-sm" onclick="productAdd()">
+                                            添加
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <table class="layui-hide" id="productTable" lay-filter="tableFilter"></table>
+        </div>
+    </div>
+</div>
+
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="${ctx.basePath}/static/FileSaver.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
+<script>
+    var flag___ = false;
+    var sign = false;
+    // 进度条加载提示
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    };
+
+    layui.use(['element', 'table', 'form', 'jquery', 'okLayer', 'layer', "common"], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var common = layui.common;
+        var okLayer = layui.okLayer;
+        var active = {
+            reload: function () {
+                if (flag___) {
+                    let data = common.formToJsonObject('searchForm');
+                    data.init = null;
+                    table.reload('productTable', {
+                        where: data,
+                        page: {
+                            curr: 1
+                        },
+                        done: function () {
+                        }
+                    });
+                }
+            }
+        };
+
+        table.on('tool(tableFilter)', function (obj) {
+            let data = obj.data, event = obj.event;
+            switch (event) {
+                case 'updateProductInfo':
+                    toUpdateMachineInfo(data);
+                    break;
+                case 'deleteProduct':
+                    deleteMachine(data.uuid);
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        function toUpdateMachineInfo(data) {
+            okLayer.open("首页 / 产品管理 / 修改产品信息", "/internal/productManage/toUpdateProduct", "35%", "66%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].iniProductInfo(data);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, "80px")
+        }
+
+        function deleteMachine(uuid) {
+            layer.confirm('确认删除该产品？', {
+                icon: 3,
+                title: '删除产品',
+                btn: ['确认', '取消']
+                , yes: function (index_) {
+                    $.ajax({
+                        url: '/internal/productManage/deleteProduct/' + uuid,
+                        type: 'GET',
+                        headers: {
+                            "Accept": 'application/json',
+                            "Content-Type": 'application/json'
+                        },
+                        success: function (res) {
+                            if (res.code === 200) {
+                                layer.close(index_);
+                                common.showSuccessMsg("删除成功", function () {
+                                    active['reload'].call(this);
+                                });
+                            } else {
+                                common.showFailMsg(res.msg)
+                            }
+                        },
+                        error: function () {
+                            common.showFailMsg('未知错误，请稍后重试！！')
+                        }
+                    });
+                }, btn2: function (index) {
+                    layer.close(index);
+                }
+            });
+        }
+
+        function searchProduct(whereCondition) {
+            whereCondition = common.jsonObjectTrim(whereCondition);
+            table.render({
+                elem: '#productTable',
+                method: 'POST',
+                url: '/internal/productManage/getProductInfo',
+                limit: 50,
+                limits: [10, 25, 50, 75, 100, 500, 1000],
+                page: true,
+                response: {
+                    statusCode: 200
+                },
+                size: 'sm',
+                id: 'productTable',
+                even: true,//隔行背景
+                defaultToolbar: ['filter'],
+                contentType: 'application/json',
+                where: whereCondition,
+                cols: [[
+                    {filed: 'uuid', align: 'center', type: 'checkbox', width: '100'},
+                    {field: 'productName', align: 'left', title: '客户端ID', width: '148',},
+                    {field: 'productPrice', align: 'left', title: '产品价格', width: '130'},
+                    {
+                        field: 'createDate', align: 'left', title: '创建日期', width: '280', templet: function (row) {
+                            return (row.createDate);
+                        }
+                    },
+                    {
+                        field: 'alterDate', align: 'left', title: '修改日期', width: '280', templet: function (row) {
+                            if (row.alterDate == null || row.alterDate == "")
+                                return "";
+                            return timestampToTime(row.alterDate);
+                        }
+                    },
+                    {title: '操作', templet: '#operationTpl', align: 'center', width: '250'}
+                ]],
+                height: 'full-115',
+                done: function (res, curr, count) {
+                }
+            });
+        }
+
+        form.on("submit(search)", function (data) {
+            var postData = data.field;
+            postData = common.jsonObjectTrim(postData);
+            searchProduct(postData);
+            flag___ = true;
+            return false
+        });
+
+        window.productAdd = function () {
+            okLayer.open("产品管理 /  添加产品", "/internal/productManage/toAddProduct", "60%", "40%", function (layero) {
+                window[layero.find("iframe")[0]["name"]];
+            }, function () {
+                if (sign) {
+                    let pageConf = common.formToJsonObject('searchForm');
+                    searchProduct(pageConf);
+                    sign = false;
+                }
+            });
+        };
+
+        searchProduct({init: 'init'});
+    })
+
+    function timestampToTime(timestamp) {
+        var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        var Y = date.getFullYear() + '-';
+        var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+        var D = date.getDate() + ' ';
+        var h = date.getHours() + ':';
+        var m = date.getMinutes() + ':';
+        var s = date.getSeconds();
+        return Y + M + D + h + m + s;
+    }
+
+
+</script>
+<script type="text/html" id="operationTpl">
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-xs" lay-event="updateProductInfo">修改</button>
+        <button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="deleteProduct">删除</button>
+    </div>
+</script>
+</div>
 </body>
 </html>

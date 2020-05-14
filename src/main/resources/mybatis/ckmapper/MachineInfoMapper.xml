@@ -154,6 +154,7 @@
         <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''">AND
             mi.fClientID like '${machineInfoCriteria.clientID}%'
         </if>
+        <if test="machineInfoCriteria.productName !=null and machineInfoCriteria.productName !='' "> and mi.fProductID =#{machineInfoCriteria.productID}</if>
         <if test="machineInfoCriteria.machineGroup != null and machineInfoCriteria.machineGroup != ''">
             AND mi.fMachineGroup like '${machineInfoCriteria.machineGroup}%'
         </if>

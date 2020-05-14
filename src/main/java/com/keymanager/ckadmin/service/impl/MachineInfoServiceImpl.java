@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -56,7 +58,10 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     @Override
     public Page<MachineInfo> searchMachineInfos(Page<MachineInfo> page, MachineInfoCriteria machineInfoCriteria, boolean normalSearchFlag) {
         if (normalSearchFlag) {
-           List<MachineInfo> machineInfos= machineInfoDao.searchMachineInfos(page, machineInfoCriteria);
+            ProductInfo cpro=productInfoService.getProductByName(machineInfoCriteria.getProductName());
+            if(cpro !=null)
+                machineInfoCriteria.setProductID(cpro.getUuid());
+            List<MachineInfo> machineInfos= machineInfoDao.searchMachineInfos(page, machineInfoCriteria);
            for(MachineInfo machineInfo :machineInfos){
               ProductInfo productInfo= productInfoService.getProductInfo(machineInfo.getProductId());
               if(productInfo !=null){
@@ -242,18 +247,22 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
         }
     }
 
-    private void saveMachineInfoByVPSFile(MachineInfo machineInfo, String[] MachineInfos) {
+    private void saveMachineInfoByVPSFile(MachineInfo machineInfo, String[] MachineInfos) throws ParseException {
         String[] vncInfos = MachineInfos[2].split(":");
-        machineInfo.setClientID(MachineInfos[0]);
-        machineInfo.setVpsBackendSystemComputerID(MachineInfos[1]);
+        machineInfo.setClientID(MachineInfos[1]);
         machineInfo.setHost(vncInfos[0]);
         machineInfo.setPort(vncInfos[1]);
         machineInfo.setUserName(MachineInfos[3]);
         machineInfo.setPassword(MachineInfos[4]);
-        machineInfo.setTargetVPSPassword(MachineInfos[4]);
         machineInfo.setBroadbandAccount(MachineInfos[5]);
         machineInfo.setBroadbandPassword(MachineInfos[6]);
-        machineInfo.setClientIDPrefix(Utils.removeDigital(MachineInfos[0]));
+        machineInfo.setClientIDPrefix(Utils.removeDigital(MachineInfos[1]));
+        machineInfo.setProductName(MachineInfos[0]);
+        String date=MachineInfos[7].replace(MachineInfos[7].substring(0,4),"");
+        ProductInfo productInfo=productInfoService.getProductByName(MachineInfos[0]);
+        if(productInfo !=null)
+            machineInfo.setProductId(productInfo.getUuid());
+        machineInfo.setOpenDate(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(date));
     }
 
     private void supplementDefaultValue(MachineInfo machineInfo) {
@@ -262,11 +271,11 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     }
 
     @Override
-    public void uploadVPSFile(String machineInfoType, String downloadProgramType, File file, String terminalType) {
+    public void uploadVPSFile(String machineInfoType, String downloadProgramType, File file, String terminalType) throws ParseException {
         List<String> vpsInfos = FileUtil.readTxtFile(file, "UTF-8");
         for (String vpsInfo : vpsInfos) {
             String[] machineInfos = vpsInfo.split("===");
-            MachineInfo existingMachineInfo = machineInfoDao.selectById(machineInfos[0]);
+            MachineInfo existingMachineInfo = machineInfoDao.selectById(machineInfos[1]);
             if (null != existingMachineInfo) {
                 saveMachineInfoByVPSFile(existingMachineInfo, machineInfos);
                 if ("New".equals(downloadProgramType)) {

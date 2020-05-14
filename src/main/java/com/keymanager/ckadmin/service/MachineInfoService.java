@@ -12,6 +12,7 @@ import com.keymanager.ckadmin.vo.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +63,7 @@ public interface MachineInfoService extends IService<MachineInfo> {
 
     void reopenMachineInfo(List<String> clientIDs, String downloadProgramType);
 
-    void uploadVPSFile(String machineInfoType, String downloadProgramType, File file, String terminalType);
+    void uploadVPSFile(String machineInfoType, String downloadProgramType, File file, String terminalType) throws ParseException;
 
     void getFullVNCFileInfo(String terminalType);
 

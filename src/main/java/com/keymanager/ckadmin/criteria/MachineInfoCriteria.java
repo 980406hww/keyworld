@@ -41,6 +41,9 @@ public class MachineInfoCriteria extends BaseCriteria {
     private String targetGroup;
     private int allowSwitchGroup;
 
+    private String productName;//产品名
+    private int productID;//产品id
+
     private Integer gtMemory;
     private Integer ltMemory;
 
@@ -306,5 +309,21 @@ public class MachineInfoCriteria extends BaseCriteria {
 
     public void setHasMachineGroup(String hasMachineGroup) {
         this.hasMachineGroup = hasMachineGroup;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public int getProductID() {
+        return productID;
+    }
+
+    public void setProductID(int productID) {
+        this.productID = productID;
     }
 }
