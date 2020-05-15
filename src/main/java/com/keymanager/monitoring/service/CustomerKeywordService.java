@@ -1929,12 +1929,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         return null;
     }
 
-    public CustomerKeywordRankingCountVO getCustomerKeywordRankingCount(int customerUuid, String groupName) {
-        return customerKeywordDao.getCustomerKeywordRankingCount(customerUuid, groupName);
+    public CustomerKeywordRankingCountVO getCustomerKeywordRankingCount(String terminalType,int customerUuid, Long qzSettingUuid) {
+        return customerKeywordDao.getCustomerKeywordRankingCount(terminalType, customerUuid,qzSettingUuid);
     }
 
-    public int getQZSettingKeywordCount(int customerUuid, String groupName) {
-        return customerKeywordDao.getQZSettingKeywordCount(customerUuid, groupName);
+    public int getQZSettingKeywordCount(String terminalType, int customerUuid, Long qzSettingUuid) {
+        return customerKeywordDao.getQZSettingKeywordCount(terminalType,customerUuid, qzSettingUuid);
     }
 
     public Page<keywordAmountCountVo> searchKeywordAmountCountPage(Page<keywordAmountCountVo> customerKeywordPage, KeywordAmountCountCriteria keywordAmountCountCriteria) {

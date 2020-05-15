@@ -898,8 +898,8 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
 		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
 
-		CustomerKeywordRankingCountVO countVo = customerKeywordService.getCustomerKeywordRankingCount(qzSetting.getCustomerUuid(),
-			"PC".equals(terminalType) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup());
+		CustomerKeywordRankingCountVO countVo = customerKeywordService.getCustomerKeywordRankingCount(terminalType,qzSetting.getCustomerUuid(),
+			qzSetting.getUuid());
 		List<QZKeywordRankInfo> rankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "xt");
 
 		if (CollectionUtils.isNotEmpty(rankInfos)) {
@@ -1008,7 +1008,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-		int qzSettingKeywordCount = customerKeywordService.getQZSettingKeywordCount(qzSetting.getCustomerUuid(), "PC".equals(terminalType) ? qzSetting.getPcGroup() : qzSetting.getPhoneGroup());
+		int qzSettingKeywordCount = customerKeywordService.getQZSettingKeywordCount(terminalType,qzSetting.getCustomerUuid(),qzSetting.getUuid());
 		List<QZKeywordRankInfo> rankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "xt");
 
 		if (CollectionUtils.isNotEmpty(rankInfos)) {

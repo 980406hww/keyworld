@@ -191,7 +191,7 @@
         COUNT((ck.fCurrentPosition BETWEEN 1 AND 50) OR NULL)  AS 'topFiftyNum'
         FROM t_customer_keyword ck
         WHERE ck.fTerminalType = #{captureRankJob.operationType}
-        AND ck.fOptimizeGroupName = #{captureRankJob.groupNames}
+        AND ck.fQZSettingUuid = #{captureRankJob.qzSettingUuid}
         AND ck.fStatus = 1
         <if test="captureRankJob.customerUuid != null and captureRankJob.customerUuid != ''">
             AND fCustomerUuid = #{captureRankJob.customerUuid}

@@ -246,13 +246,13 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<OptimizationKeywordVO> fetchCustomerKeywordsForCache(@Param("terminalType") String terminalType, @Param("machineGroup") String machineGroup, @Param("batchCount") int batchCount);
 
-    CustomerKeywordRankingCountVO getCustomerKeywordRankingCount(@Param("customerUuid") int customerUuid, @Param("groupName") String groupName);
+    CustomerKeywordRankingCountVO getCustomerKeywordRankingCount(@Param("terminalType") String terminalType,@Param("customerUuid") int customerUuid, @Param("qzSettingUuid") Long qzSettingUuid);
 
     List<CustomerKeyWordCrawlRankVO> getCrawlRankKeywords(@Param("type") String type, @Param("captureStatus") int captureStatus);
 
     void updateCrawlRankKeywordTimeByUuids(@Param("uuids") List<Long> uuids);
 
-    int getQZSettingKeywordCount(@Param("customerUuid") int customerUuid, @Param("groupName") String groupName);
+    int getQZSettingKeywordCount(@Param("terminalType") String terminalType,@Param("customerUuid") int customerUuid, @Param("qzSettingUuid") Long qzSettingUuid);
 
     List<keywordAmountCountVo> searchKeywordAmountCountList(Page<keywordAmountCountVo> customerKeywordPage, @Param("keywordAmountCountCriteria") KeywordAmountCountCriteria keywordAmountCountCriteria);
 

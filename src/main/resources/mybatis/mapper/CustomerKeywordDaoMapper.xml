@@ -1740,8 +1740,9 @@
             COUNT((ck.fCurrentPosition BETWEEN 1 AND 40) OR NULL)  AS 'topFortyNum',
             COUNT((ck.fCurrentPosition BETWEEN 1 AND 50) OR NULL)  AS 'topFiftyNum'
         FROM t_customer_keyword ck
-        WHERE ck.fCustomerUuid = #{customerUuid}
-        AND ck.fOptimizeGroupName LIKE '${groupName}%'
+        WHERE ck.fTerminalType = #{terminalType}
+        AND ck.fCustomerUuid = #{customerUuid}
+        AND ck.fQZSettingUuid = #{qzSettingUuid}
     </select>
 
     <select id="getCrawlRankKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeyWordCrawlRankVO">
@@ -1845,8 +1846,9 @@
     <select id="getQZSettingKeywordCount" resultType="java.lang.Integer">
         SELECT COUNT(1)
         FROM t_customer_keyword ck
-        WHERE ck.fCustomerUuid = #{customerUuid}
-        AND ck.fOptimizeGroupName LIKE '${groupName}%'
+        WHERE ck.fTerminalType = #{terminalType}
+        AND ck.fCustomerUuid = #{customerUuid}
+        AND ck.fQZSettingUuid = #{qzSettingUuid}
     </select>
 
     <select id="searchKeywordAmountCountList" parameterType="com.keymanager.monitoring.criteria.KeywordAmountCountCriteria"
