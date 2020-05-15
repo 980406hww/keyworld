@@ -419,17 +419,6 @@
         <include refid="searchCustomerKeywordsCriteria"/>
     </select>
 
-
-    <select id="searchCustomerKeywordsCount" resultType="int">
-        SELECT
-        Count(1)
-        FROM
-        t_customer_keyword ck,
-        t_customer c
-        WHERE c.fUuid = ck.fCustomerUuid
-        <include refid="searchCustomerKeywordsCriteria"/>
-    </select>
-
     <select id="searchCustomerKeywordsForDailyReport" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordCriteria"
             resultType="com.keymanager.monitoring.entity.CustomerKeyword">
         SELECT
@@ -613,10 +602,6 @@
         </foreach>
     </update>
 
-    <select id="getEntryTypes" resultType="String">
-        SELECT ck.fType as typeName FROM t_customer_keyword ck WHERE ck.fOptimizeGroupName = #{groupName} AND ck.fStatus = 1 limit 1
-    </select>
-
     <select id="fetchOptimizationCompletedGroupNames" resultType="String">
         SELECT
         ck.fOptimizeGroupName AS 'groupName'
@@ -642,31 +627,6 @@
         WHERE ck.fOptimizeGroupName = #{groupName} AND ck.fOptimizeRemainingCount > 1 and ck.fStatus = 1
         and ck.fInvalidRefreshCount <![CDATA[<]]> #{maxInvalidCount}
         ORDER BY ck.fOptimizeRemainingCount DESC
-    </select>
-
-    <select id="fetchCustomerKeywordsForCache" resultType="com.keymanager.monitoring.vo.OptimizationKeywordVO">
-        SELECT
-            ck.fUuid              AS 'uuid',
-            ck.fTerminalType      AS 'terminalType',
-            ck.fKeyword           AS 'keyword',
-            ck.fUrl               AS 'url',
-            ck.fBearPawNumber     AS 'bearPawNumber',
-            ck.fType              AS 'entryType',
-            ck.fTitle             AS 'title',
-            ck.fSearchEngine      AS 'searchEngine',
-            ck.fOptimizeGroupName AS 'optimizeGroup',
-            ck.fOptimizedCount	  AS 'optimizedCount',
-            ck.fQueryInterval	  AS 'queryInterval',
-            ck.fCurrentPosition   AS 'currentPosition'
-        FROM t_customer_keyword ck
-        WHERE ck.fMachineGroup = #{machineGroup}
-        AND ck.fStatus = 1
-        AND ck.fOptimizeRemainingCount > 0
-        AND ck.fTerminalType = #{terminalType}
-        AND ck.fQueryTime <![CDATA[<]]> NOW()
-        AND ck.fInvalidFlag = 0
-        ORDER BY ck.fQueryTime
-        LIMIT #{batchCount}
     </select>
 
     <select id="getCustomerKeywordUuidForOptimization" resultType="Long">
@@ -763,24 +723,6 @@
         </foreach>
     </update>
 
-    <select id="searchCustomerKeywordsForAdjustingOptimizationCount" resultType="java.util.Map">
-        SELECT
-        ck.fUuid AS 'uuid',
-        ck.fKeyword AS 'keyword',
-        ck.fUrl AS 'url',
-        ck.fCurrentIndexCount AS 'currentIndexCount',
-        ck.fPositionFirstFee AS 'positionFirstFee',
-        GROUP_CONCAT(CAST(ps.fPosition AS CHAR) ORDER BY ps.fCreateDate) AS 'positions'
-        FROM t_customer_keyword ck JOIN t_ck_position_summary ps ON ck.fUuid = ps.fCustomerKeywordUuid
-        WHERE ps.fCreateDate >= DATE_SUB(CURRENT_DATE(), INTERVAL 3 DAY) and ck.fCurrentIndexCount >= 0
-        AND ck.fStatus = 1 AND ck.fOptimizeGroupName
-        IN
-        <foreach item="item" index="index" collection="groupNames" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-        GROUP BY ck.fUuid, ck.fKeyword
-    </select>
-
     <select id="searchKeywordsForAdjustingOptimizationCount" resultType="java.util.Map">
         SELECT ck.fUuid AS 'uuid', ck.fKeyword as 'keyword', ck.fOptimizeTodayCount AS 'optimizeTodayCount',
         GROUP_CONCAT(CAST(ps.fPosition AS CHAR) ORDER BY ps.fCreateDate) AS 'positions'
@@ -854,19 +796,6 @@
         LIMIT 10
     </select>
 
-    <select id="getCustomerKeywordForCapturePosition" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
-        SELECT
-        ck.fUuid	AS	'uuid',
-        ck.fTerminalType	AS	'terminalType',
-        ck.fKeyword	AS	'keyword',
-        ck.fUrl	AS	'url',
-        ck.fTitle	AS	'title',
-        ck.fSearchEngine	AS	'searchEngine',
-        ck.fBearPawNumber AS 'bearPawNumber'
-        FROM t_customer_keyword ck
-        WHERE ck.fUuid = #{uuid}
-    </select>
-
     <select id="getCustomerKeywordForCapturePositionTemp" resultType="com.keymanager.value.CustomerKeywordForCapturePosition">
         SELECT
         ck.fUuid AS 'uuid',
@@ -928,12 +857,6 @@
         <foreach item="uuid" collection="uuids" open="(" separator="," close=")">
             #{uuid}
         </foreach>
-    </update>
-
-    <update id="updateCapturePositionQueryTimeAndCaptureStatus">
-        UPDATE t_customer_keyword SET fCaptureStatus = 1,
-        fCapturePositionQueryTime = NOW()
-        WHERE fUuid = #{uuid}
     </update>
 
     <update id="updateCapturePositionQueryTimeAndCaptureStatusTemp">
@@ -1288,16 +1211,6 @@
             AND fUrl = #{item.url}
         </foreach>
     </update>
-
-    <select id="getBearPawNumberByCustomerUuid" resultType="java.lang.String">
-        SELECT fBearPawNumber AS 'bearPawNumber'
-        FROM t_customer_keyword
-        WHERE fCustomerUuid = #{customerUuid}
-        AND fTerminalType = #{terminalType}
-        AND fType = #{entryType}
-        AND fBearPawNumber &gt; ''
-        LIMIT 1
-    </select>
 
     <update id="batchUpdateRequireDalete">
         <foreach item="item" index="index" collection="requireDeleteKeywordVOs" open="" separator=";" close="">
@@ -1683,14 +1596,6 @@
         GROUP BY ck.fOptimizeGroupName
     </select>
 
-    <select id="getMachineGroups" resultType="java.lang.String">
-        SELECT
-          CONCAT(fTerminalType, '####', fMachineGroup, '####', COUNT(1))
-        FROM t_machine_info mi
-        WHERE fMachineGroup > ''
-        GROUP BY fTerminalType, fMachineGroup
-    </select>
-
     <update id="updateSameCustomerKeywordSource">
         UPDATE t_customer_keyword
         SET fCustomerKeywordSource = #{customerKeywordSource}
@@ -1744,104 +1649,6 @@
         AND ck.fCustomerUuid = #{customerUuid}
         AND ck.fQZSettingUuid = #{qzSettingUuid}
     </select>
-
-    <select id="getCrawlRankKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeyWordCrawlRankVO">
-        (
-            SELECT
-            ck.fUuid AS 'uuid',
-            ck.fTerminalType AS 'terminalType',
-            ck.fType AS 'type',
-            ck.fCity AS 'city',
-            ck.fTitle AS 'title',
-            ck.fKeyword AS 'keyword',
-            ck.fUrl AS 'url',
-            ck.fSearchEngine AS 'searchEngine',
-            ck.fBearPawNumber AS 'bearPawNumber'
-            FROM t_customer_keyword ck
-            WHERE ck.fType = #{type}
-            AND ck.fSearchEngine = '百度'
-            <if test="type == 'qz'">
-                AND ck.fTerminalType = 'PC'
-            </if>
-            <choose>
-                <when test="captureStatus == 1">
-                    AND ck.fCaptureStatus = 1
-                    AND ck.fCapturePositionQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
-                </when>
-                <otherwise>
-                    AND ck.fCaptureStatus = 0
-                    AND ck.fCapturePositionQueryTime &lt; CURRENT_DATE()
-                </otherwise>
-            </choose>
-            LIMIT 3000
-        )
-        UNION ALL
-        (
-            SELECT
-            ck.fUuid AS 'uuid',
-            ck.fTerminalType AS 'terminalType',
-            ck.fType AS 'type',
-            ck.fCity AS 'city',
-            ck.fTitle AS 'title',
-            ck.fKeyword AS 'keyword',
-            ck.fUrl AS 'url',
-            ck.fSearchEngine AS 'searchEngine',
-            ck.fBearPawNumber AS 'bearPawNumber'
-            FROM t_customer_keyword ck
-            WHERE ck.fType = #{type}
-            AND ck.fSearchEngine = '搜狗'
-            <choose>
-                <when test="captureStatus == 1">
-                    AND ck.fCaptureStatus = 1
-                    AND ck.fCapturePositionQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
-                </when>
-                <otherwise>
-                    AND ck.fCaptureStatus = 0
-                    AND ck.fCapturePositionQueryTime &lt; CURRENT_DATE()
-                </otherwise>
-            </choose>
-            LIMIT 3000
-        )
-        UNION ALL
-        (
-            SELECT
-            ck.fUuid AS 'uuid',
-            ck.fTerminalType AS 'terminalType',
-            ck.fType AS 'type',
-            ck.fCity AS 'city',
-            ck.fTitle AS 'title',
-            ck.fKeyword AS 'keyword',
-            ck.fUrl AS 'url',
-            ck.fSearchEngine AS 'searchEngine',
-            ck.fBearPawNumber AS 'bearPawNumber'
-            FROM t_customer_keyword ck
-            WHERE ck.fType = #{type}
-            AND ck.fSearchEngine = '360'
-            <choose>
-                <when test="captureStatus == 1">
-                    AND ck.fCaptureStatus = 1
-                    AND ck.fCapturePositionQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
-                </when>
-                <otherwise>
-                    AND ck.fCaptureStatus = 0
-                    AND ck.fCapturePositionQueryTime &lt; CURRENT_DATE()
-                </otherwise>
-            </choose>
-            LIMIT 3000
-        )
-        LIMIT 3000
-    </select>
-
-    <update id="updateCrawlRankKeywordTimeByUuids">
-        UPDATE t_customer_keyword
-        SET
-        fCapturePositionQueryTime = NOW(),
-        fCaptureStatus = 1
-        WHERE fUuid IN
-        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
-            #{uuid}
-        </foreach>
-    </update>
 
     <select id="getQZSettingKeywordCount" resultType="java.lang.Integer">
         SELECT COUNT(1)

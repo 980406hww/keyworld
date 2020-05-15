@@ -345,7 +345,10 @@
                             return d.exectionTime.substring(0, 5);
                         }
                     },
-                    {field: 'lastExecutionDate', title: '最后执行日期', width: '5.6%', align: 'center'},
+                    {field: 'lastExecutionDate', title: '最后执行日期', width: '5.6%', align: 'center',templet: function (d) {
+                            return layui.util.toDateString(d.lastExecutionDate, 'yyyy-MM-dd');
+                        }
+                    },
                     {
                         field: 'exectionStatus', title: '状态', width: '4%', align: 'center', templet: function (d) {
                             if (d.captureRankJobStatus === false) {

@@ -7,7 +7,6 @@ import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.vo.*;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.value.CustomerKeywordForCaptureTitle;
-import java.util.Collection;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -50,8 +49,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<CustomerKeyword> searchCustomerKeywordInfo(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
-    int searchCustomerKeywordsCount(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
-
     List<CustomerKeyword> searchCustomerKeywordsForDailyReport(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
     void deleteCustomerKeywordsByUuid(@Param("customerKeywordUuids") List<String> customerKeywordUuids);
@@ -84,8 +81,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void setBigKeywordIndicator(@Param("uuids") List<Long> uuids);
 
-    List<String> getEntryTypes(@Param("groupName") String groupName);
-
     void resetOptimizationInfo();
 
     void resetOptimizationInfoForNoOptimizeDate();
@@ -100,25 +95,15 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateOptimizationResult(@Param("customerKeywordUuid") Long customerKeywordUuid, @Param("count") int count);
 
-    List<Map> searchCustomerKeywordsForAdjustingOptimizationCount(@Param("groupNames") List<String> groupNames);
-
     List<Map> searchKeywordsForAdjustingOptimizationCount(@Param("type") String type);
 
     void adjustOptimizePlanCount(@Param("customerKeywordUuid") Long customerKeywordUuid, @Param("queryInterval") int queryInterval, @Param("optimizeTodayCount") int optimizeTodayCount);
-
-    List<CustomerKeywordForCapturePosition> cacheCustomerKeywordForCapturePosition(@Param("terminalType") String terminalType, @Param("groupNames") List<String> groupNames,
-                                                  @Param("customerUuid") Long customerUuid, @Param("startTime") Date startTime,
-                                                  @Param("captureStatus") Integer captureStatus);
 
     List<Long> getCustomerKeywordUuidForCapturePositionTemp(@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType") String terminalType,
                                                             @Param("groupName") String groupName, @Param("customerUuid") Long customerUuid,
                                                             @Param("startTime") Date startTime, @Param("captureStatus") Integer captureStatus, @Param("saveTopThree") Boolean saveTopThree);
 
-    CustomerKeyword getCustomerKeywordForCapturePosition(@Param("uuid") Long uuid);
-
     List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePositionTemp(@Param("uuids") List uuids);
-
-    void updateCapturePositionQueryTimeAndCaptureStatus(@Param("uuid") Long uuid);
 
     void updateCapturePositionQueryTimeAndCaptureStatusTemp(@Param("uuids") List uuids);
 
@@ -127,8 +112,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateCustomerKeywordStatus(@Param("uuids") List<Long> uuids, @Param("status") Integer status);
 
     void updateCustomerKeywordIndex(@Param("customerKeyword") CustomerKeyword customerKeyword);
-
-    CustomerKeyword searchTitleAndUrl(@Param("groupNames") String[] groupNames, @Param("customerUuid") Long customerUuid);
 
     List<CodeNameVo> searchGroups();
 
@@ -175,8 +158,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateBearPawNumber(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
-    void updateOptimizePlanCountForPrice(@Param("uuids") List<Long> uuids);
-
     int searchCustomerKeywordForNoReachStandard(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
     void batchUpdateOptimizedCount(@Param("customerKeywordUuids") List<Long> customerKeywordUuids);
@@ -188,8 +169,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<String> searchKeywordUrlByGroup(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("optimizeGroupName") String optimizeGroupName);
 
     void batchUpdatePosition(@Param("terminalType") String terminalType, @Param("entryType") String entryType, @Param("searchEngine") String searchEngine, @Param("reachStandardPosition") int reachStandardPosition, @Param("positionVOs") List<PositionVO> positionVOs);
-
-    String getBearPawNumberByCustomerUuid(@Param("customerUuid") int customerUuid, @Param("entryType") String entryType, @Param("terminalType") String terminalType);
 
     void batchUpdateRequireDalete(@Param("requireDeleteKeywordVOs") List<RequireDeleteKeywordVO> requireDeleteKeywordVOs);
 
@@ -210,8 +189,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateCustomerKeywordCt(@Param("customerKeywordUuid") Long customerKeywordUuid, @Param("ct") String ct);
 
     void updateCustomerKeywordFromSource(@Param("customerKeywordUuid") Long customerKeywordUuid, @Param("fromSource") String fromSource);
-
-    List<CustomerKeyword> searchCustomerKeywordsPageForCustomer(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
     //客户关键字批量设�
     void batchUpdateKeywordStatus(@Param("keywordIDs") String[] keywordIDs, @Param("keywordChecks") CustomerKeyword keywordChecks, @Param("keywordStatus") CustomerKeyword keywordStatus);
@@ -242,15 +219,7 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateMachineGroup(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
-    List<String> getMachineGroups();
-
-    List<OptimizationKeywordVO> fetchCustomerKeywordsForCache(@Param("terminalType") String terminalType, @Param("machineGroup") String machineGroup, @Param("batchCount") int batchCount);
-
     CustomerKeywordRankingCountVO getCustomerKeywordRankingCount(@Param("terminalType") String terminalType,@Param("customerUuid") int customerUuid, @Param("qzSettingUuid") Long qzSettingUuid);
-
-    List<CustomerKeyWordCrawlRankVO> getCrawlRankKeywords(@Param("type") String type, @Param("captureStatus") int captureStatus);
-
-    void updateCrawlRankKeywordTimeByUuids(@Param("uuids") List<Long> uuids);
 
     int getQZSettingKeywordCount(@Param("terminalType") String terminalType,@Param("customerUuid") int customerUuid, @Param("qzSettingUuid") Long qzSettingUuid);
 
@@ -262,8 +231,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void batchUpdateIndexAndOptimizePlanCount(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
 
-    void batchUpdateOptimizedCountFromCache(@Param("updateOptimizedCountVOs") Collection<UpdateOptimizedCountSimpleVO> updateOptimizedCountVOs);
-
     /**
      * 批量插入数据
      */
@@ -273,4 +240,5 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
      * 根据qsId判断站点关键词当天是否已同步
      */
     Long searchExistingSysCustomerKeywordQsId(@Param("qsId") Long qsId);
+
 }
