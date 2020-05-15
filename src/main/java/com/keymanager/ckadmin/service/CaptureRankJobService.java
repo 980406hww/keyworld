@@ -40,6 +40,8 @@ public interface CaptureRankJobService extends IService<CaptureRankJob> {
 
     Boolean getCaptureRankJobStatus(Long captureRankJobUuid);
 
+    void completeCaptureRankJob(CaptureRankJob captureRankJob);
+
     void completeCaptureRankJobTempTwo(CaptureRankJob captureRankJob);
 
     CaptureRankJob checkingCaptureRankJobCompleted(ExternalCaptureJobCriteria captureJobCriteria);

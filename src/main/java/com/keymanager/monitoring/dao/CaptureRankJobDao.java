@@ -19,8 +19,6 @@ public interface CaptureRankJobDao extends BaseMapper<CaptureRankJob> {
 
     CaptureRankJob provideCaptureRankJob(@Param("jobType") Integer jobType, @Param("captureJobCriteria") ExternalCaptureJobCriteria captureJobCriteria);
 
-    CaptureRankJob getProcessingJob(@Param("captureJobCriteria") ExternalCaptureJobCriteria captureJobCriteria);
-
     Boolean getCaptureRankJobStatus(@Param("captureRankJobUuid")Long captureRankJobUuid);
 
     void resetCaptureRankJobs(@Param("uuids") List uuids);
@@ -28,12 +26,6 @@ public interface CaptureRankJobDao extends BaseMapper<CaptureRankJob> {
     Long hasUncompletedCaptureRankJob(@Param("groupNames")List<String> groupNames, @Param("rankJobArea")String rankJobArea);
 
     void deleteCaptureRankJob (@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType);
-    
-    List<CaptureRankJob> searchFiveMiniSetCheckingJobs();
-    
-    int searchThreeMiniStatusEqualsOne(@Param("captureRankJob") CaptureRankJob captureRankJob);
-
-    Map<String, Long> searchCountByPosition(@Param("captureRankJob") CaptureRankJob captureRankJob);
 
     CaptureRankJob findExistCaptureRankJob (@Param("qzSettingUuid") Long qzSettingUuid, @Param("operationType") String operationType);
 

@@ -220,6 +220,15 @@ public class CaptureRankJobServiceImpl extends ServiceImpl<CaptureRankJobDao, Ca
     }
 
     @Override
+    public void completeCaptureRankJob(CaptureRankJob captureRankJob) {
+        captureRankJob = captureRankJobDao.selectById(captureRankJob.getUuid());
+        captureRankJob.setExectionStatus(com.keymanager.monitoring.enums.CaptureRankExectionStatus.Complete.name());
+        captureRankJob.setEndTime(new Date());
+        captureRankJob.setLastExecutionDate(new java.sql.Date(System.currentTimeMillis()));
+        captureRankJobDao.updateById(captureRankJob);
+    }
+
+    @Override
     public void completeCaptureRankJobTempTwo(CaptureRankJob captureRankJob) {
         captureRankJob = captureRankJobDao.selectById(captureRankJob.getUuid());
         captureRankJob.setExectionStatus(CaptureRankExectionStatus.Checking.name());

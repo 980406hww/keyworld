@@ -83,4 +83,21 @@ public class ExternalCrawlRankingController extends SpringMVCBaseController {
         }
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
+
+    @RequestMapping(value = "/updateCaptureRankJob", method = RequestMethod.POST)
+    public ResponseEntity<?> updateCaptureRankJob(@RequestBody CaptureRankJobCriteria captureRankJobCriteria) {
+        String userName = captureRankJobCriteria.getUserName();
+        String password = captureRankJobCriteria.getPassword();
+        CaptureRankJob captureRankJob = captureRankJobCriteria.getCaptureRankJob();
+        try {
+            if (validUser(userName, password)) {
+                captureRankJobService.completeCaptureRankJob(captureRankJob);
+                return new ResponseEntity<Object>(HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
 }
