@@ -11,6 +11,7 @@ public class OptimizationKeywordVO {
     private String bearPawNumber;
     private String title;
     private int optimizedCount;
+    private int optimizePlanCount;
     private int queryInterval;
 
     public String getTerminalType() {
@@ -100,4 +101,13 @@ public class OptimizationKeywordVO {
     public void setQueryInterval(int queryInterval) {
         this.queryInterval = queryInterval;
     }
+
+    public int getOptimizePlanCount() {
+        return optimizePlanCount;
+    }
+
+    public void setOptimizePlanCount(int optimizePlanCount) {
+        this.optimizePlanCount = optimizePlanCount;
+    }
+
 }

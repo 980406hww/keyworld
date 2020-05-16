@@ -59,7 +59,8 @@
             ck.fOptimizeGroupName AS 'optimizeGroup',
             ck.fOptimizedCount	  AS 'optimizedCount',
             ck.fQueryInterval	  AS 'queryInterval',
-            ck.fCurrentPosition   AS 'currentPosition'
+            ck.fCurrentPosition   AS 'currentPosition',
+            ck.fOptimizePlanCount AS 'optimizePlanCount'
         FROM t_customer_keyword ck
         WHERE ck.fMachineGroup = #{machineGroup}
         AND ck.fStatus = 1

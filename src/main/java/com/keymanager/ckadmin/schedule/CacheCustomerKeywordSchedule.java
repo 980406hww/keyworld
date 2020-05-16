@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.shedule;
+package com.keymanager.ckadmin.schedule;
 
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import javax.annotation.Resource;

@@ -121,6 +121,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         if (CollectionUtils.isNotEmpty(machineGroups)) {
             for (String machineGroup : machineGroups) {
                 String[] terminalTypeAndMachineGroups = machineGroup.split("####");
+                boolean isFast = terminalTypeAndMachineGroups[1].equals("fast");
                 LinkedBlockingQueue blockingQueue = machineGroupQueueMap.get(terminalTypeAndMachineGroups[0] + "####" + terminalTypeAndMachineGroups[1]);
                 if (blockingQueue == null) {
                     blockingQueue = new LinkedBlockingQueue<String>(100000);
@@ -137,13 +138,25 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                                 ((machineCount * 20) > 8000 ? 8000 : (machineCount * 20)));
                         if (CollectionUtils.isNotEmpty(optimizationKeywordVOS)) {
                             List<Long> customerKeywordUuids = new ArrayList<>();
-                            if (optimizationKeywordVOS.size() > machineCount) {
+                            if (optimizationKeywordVOS.size() > machineCount || isFast) {
                                 for (OptimizationKeywordVO optimizationKeywordVO : optimizationKeywordVOS) {
-                                    if (blockingQueue.offer(optimizationKeywordVO)) {
-                                        offerCount++;
-                                        customerKeywordUuids.add(optimizationKeywordVO.getUuid());
-                                    } else {
-                                        break;
+                                    if (isFast){
+                                        int todayRemainingCount = optimizationKeywordVO.getOptimizePlanCount() - optimizationKeywordVO.getOptimizedCount();
+                                        for (int i=0; i<todayRemainingCount; i++){
+                                            if (blockingQueue.offer(optimizationKeywordVO)) {
+                                                offerCount++;
+                                                customerKeywordUuids.add(optimizationKeywordVO.getUuid());
+                                            } else {
+                                                break;
+                                            }
+                                        }
+                                    }else{
+                                        if (blockingQueue.offer(optimizationKeywordVO)) {
+                                            offerCount++;
+                                            customerKeywordUuids.add(optimizationKeywordVO.getUuid());
+                                        } else {
+                                            break;
+                                        }
                                     }
                                 }
                                 updateOptimizationQueryTime(customerKeywordUuids);
@@ -1242,7 +1255,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         if (!machineInfo.getValid()) {
             return null;
         }
-        Integer onceGetKeywordNum = configService.getOnceGetKeywordNum();
+        Integer onceGetKeywordNum = machineInfo.getMachineGroup().equals("fast")? new Integer(1): configService.getOnceGetKeywordNum();
         List<OptimizationMachineVO> machineVOList = new ArrayList<>();
         String key = machineInfo.getTerminalType() + "####" + (machineInfo.getMachineGroup() == null ? "Default" : machineInfo.getMachineGroup());
         for (int i = 0; i < onceGetKeywordNum; i++) {
