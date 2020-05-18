@@ -16,7 +16,7 @@ public class ProdcutInfoServiceImpl implements ProductInfoService {
     private ProductInfoDao productInfoDao;
 
     @Override
-    public ProductInfo getProductInfo(int id) {
+    public ProductInfo getProductInfo(long id) {
         return productInfoDao.selectById(id);
     }
 
@@ -31,7 +31,7 @@ public class ProdcutInfoServiceImpl implements ProductInfoService {
     }
 
     @Override
-    public void deleteProduct(int uuid) {
+    public void deleteProduct(long uuid) {
         productInfoDao.deleteById(uuid);
     }
 
@@ -43,6 +43,11 @@ public class ProdcutInfoServiceImpl implements ProductInfoService {
     @Override
     public void addProduct(ProductInfo productInfo) {
         productInfoDao.insert(productInfo);
+    }
+
+    @Override
+    public List<ProductInfo> getAllProduct() {
+        return productInfoDao.getProductsByName("");
     }
 
 

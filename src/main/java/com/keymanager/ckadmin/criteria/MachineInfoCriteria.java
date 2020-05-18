@@ -42,7 +42,7 @@ public class MachineInfoCriteria extends BaseCriteria {
     private int allowSwitchGroup;
 
     private String productName;//产品名
-    private int productID;//产品id
+    private long productID;//产品id
 
     private Integer gtMemory;
     private Integer ltMemory;
@@ -319,11 +319,11 @@ public class MachineInfoCriteria extends BaseCriteria {
         this.productName = productName;
     }
 
-    public int getProductID() {
+    public long getProductID() {
         return productID;
     }
 
-    public void setProductID(int productID) {
+    public void setProductID(long productID) {
         this.productID = productID;
     }
 }

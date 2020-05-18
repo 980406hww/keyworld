@@ -221,9 +221,7 @@
                                     <div class="layui-inline">
                                         <input type="text" name="clientID" id="clientID" placeholder="请输入客户端ID" autocomplete="off" style="width: 150px;height: 30px" class="layui-input">
                                     </div>
-                                    <div class="layui-inline">
-                                        <input type="text" name="productName" id="productName" placeholder="请输入产品名" autocomplete="off" style="width: 150px;height: 30px" class="layui-input">
-                                    </div>
+
                                     <div class="layui-inline">
                                         <input type="text" name="machineGroup" id="machineGroup" value="<#if machineGroupFromATP?exists>${machineGroupFromATP}</#if>" placeholder="请输入机器分组" autocomplete="off" style="width: 150px;height: 30px" class="layui-input">
                                     </div>
@@ -284,6 +282,7 @@
                                 </div>
                                 <div class="my-hide my-hide-two" id="searchContent">
                                     <div class="layui-form-item" style="margin-bottom: 0" lay-filter="loginNameFilter">
+
                                         <div class="layui-inline memory">
                                             <label class="layui-form-label">版本/目标版本</label>
                                             <div class="layui-input-inline">
@@ -308,6 +307,14 @@
                                             <div class="layui-input-inline">
                                                 <input type="text" name="gtMemory" id="gtMemory" placeholder="≥" autocomplete="off" class="layui-input">
                                                 <input type="text" name="ltMemory" id="ltMemory" placeholder="≤" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">产品名</label>
+                                            <div class="layui-input-inline">
+                                                <select name="productID" id="productID" lay-filter="customer" lay-search>
+                                                    <option value="">请选择产品</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="layui-inline">
@@ -485,6 +492,32 @@
         var okLayer = layui.okLayer;
         var layer = layui.layer;
         var common = layui.common;
+        initProduct()
+        function initProduct() {
+            $.ajax({
+                url: "/internal/productManage/getAllProduct",
+                type: "GET",
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        var product = $("#productID");
+                        product.empty();
+                        product.append('<option value="">请选择产品</option>');
+                        if (res.data !== null) {
+                            $.each(res.data, function (idx, val) {
+                                product.append('<option value="' + val.uuid + '" >' + val.productName + '</option>')
+                            });
+                        }
+                        form.render('select')
+                    } else {
+                        common.showFailMsg("数据获取失败");
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络错误请稍后再试");
+                }
+            })
+        }
 
         let ternimalType225 = $('#terminalType').val();
         element.tabChange('keywordTab', ternimalType225);
@@ -546,27 +579,27 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {filed: 'uuid', align: 'center', type: 'checkbox', width: '35'},
-                    {field: 'clientIDs', align: 'left', title: '客户端ID', width: '148', templet: '#clientIDs'},
-                    {field: 'machineGroups', align: 'left', title: '机器分组', width: '140', templet: '#machineGroups'},
-                    {field: 'renewalDate', align: 'left', title: '续费<br>日期', width: '116', templet: '#showRenewalDate', hide: true},
-                    {field: 'versionInfo', align: 'left', title: '现版本<br>目标版本', width: '118', templet: '#showVersionInfo'},
-                    {field: 'restartCountAndFailCount', align: 'left', title: '重启数/重启状态<br>失败次数', width: '130', templet: '#restartCountAndFailCount'},
-                    {field: 'cityAndStatus', align: 'left', title: '所在城市<br>终端状态', width: '144', templet: '#cityAndStatus'},
-                    {field: 'cpuCounts', align: 'left', title: 'CPU核数<br>内存', width: '96', templet: '#cpuCounts', hide: true},
-                    {field: 'freeSpaces', align: 'left', title: '剩余空间', width: '96', templet: '#freeSpaces', hide: true},
-                    {field: 'lastVisitTimeAndRestartTime', align: 'left', title: '最新工作时间<br>重启时间', width: '124', templet: '#lastVisitTimeAndRestartTime', hide: true},
-                    {field: 'restartOrderingTimeAndLastSendNotificationTime', align: 'left', title: '重启排序时间<br>发送通知时间', width: '148', templet: '#restartOrderingTimeAndLastSendNotificationTime', hide: true},
-                    {field: 'optimizationSucceedCountAndOptimizationTotalCount', align: 'left', title: '成功次数<br>操作次数', width: '116', templet: '#optimizationSucceedCountAndOptimizationTotalCount'},
-                    {field: 'broadbandAccountAndBroadbandPassword', align: 'left', title: '宽带账号<br>宽带密码', width: '156', templet: '#broadbandAccountAndBroadbandPassword'},
-                    {field: 'runningProgramTypes', align: 'left', title: '程序类型', width: '100', templet: '#runningProgramTypes'},
-                    {field: 'startUpStatusAndDownloadProgramType', align: 'left', title: '开机状态<br>下载程序类型', width: '120', templet: '#startUpStatusAndDownloadProgramType', hide: true},
-                    {field: 'valids', align: 'left', title: '状态', width: '110', templet: '#valid'},
-                    {field: 'upgradeFailedReasons', align: 'left', title: '失败原因', width: '116', templet: '#upgradeFailedReasons'},
-                    {field: 'vpsBackendSystemComputerID', align: 'left', title: '服务器ID', width: '126', templet: '#vpsBackendSystemComputerIDs'},
-                    {field: 'price',align: 'left', title: '价格', width: '126'},
-                    {field: 'productName',align: 'left', title: '产品名', width: '126',hide:true},
-                    {title: '操作', templet: '#operationTpl', align: 'center', width: '198'}
+                    {filed: 'uuid', align: 'center', type: 'checkbox', width: '5%'},
+                    {field: 'clientIDs', align: 'left', title: '客户端ID', width: '5%', templet: '#clientIDs'},
+                    {field: 'machineGroups', align: 'left', title: '机器分组', width: '5%', templet: '#machineGroups'},
+                    {field: 'renewalDate', align: 'left', title: '续费<br>日期', width: '5%', templet: '#showRenewalDate', hide: true},
+                    {field: 'versionInfo', align: 'left', title: '现版本<br>目标版本', width: '5%', templet: '#showVersionInfo'},
+                    {field: 'restartCountAndFailCount', align: 'left', title: '重启数/重启状态<br>失败次数', width: '10%', templet: '#restartCountAndFailCount'},
+                    {field: 'cityAndStatus', align: 'left', title: '所在城市<br>终端状态', width: '5%', templet: '#cityAndStatus'},
+                    {field: 'cpuCounts', align: 'left', title: 'CPU核数<br>内存', width: '5%', templet: '#cpuCounts', hide: true},
+                    {field: 'freeSpaces', align: 'left', title: '剩余空间', width: '5%', templet: '#freeSpaces', hide: true},
+                    {field: 'lastVisitTimeAndRestartTime', align: 'left', title: '最新工作时间<br>重启时间', width: '5%', templet: '#lastVisitTimeAndRestartTime', hide: true},
+                    {field: 'restartOrderingTimeAndLastSendNotificationTime', align: 'left', title: '重启排序时间<br>发送通知时间', width: '5%', templet: '#restartOrderingTimeAndLastSendNotificationTime', hide: true},
+                    {field: 'optimizationSucceedCountAndOptimizationTotalCount', align: 'left', title: '成功次数<br>操作次数', width: '10%', templet: '#optimizationSucceedCountAndOptimizationTotalCount'},
+                    {field: 'broadbandAccountAndBroadbandPassword', align: 'left', title: '宽带账号<br>宽带密码', width: '10%', templet: '#broadbandAccountAndBroadbandPassword'},
+                    {field: 'runningProgramTypes', align: 'left', title: '程序类型', width: '5%', templet: '#runningProgramTypes'},
+                    {field: 'startUpStatusAndDownloadProgramType', align: 'left', title: '开机状态<br>下载程序类型', width: '10%', templet: '#startUpStatusAndDownloadProgramType', hide: true},
+                    {field: 'valids', align: 'left', title: '状态', width: '5%', templet: '#valid'},
+                    {field: 'upgradeFailedReasons', align: 'left', title: '失败原因', width: '5%', templet: '#upgradeFailedReasons'},
+                    {field: 'vpsBackendSystemComputerID', align: 'left', title: '服务器ID', width: '5%', templet: '#vpsBackendSystemComputerIDs'},
+                    {field: 'price',align: 'left', title: '价格', width: '5%'},
+                    {field: 'productName',align: 'left', title: '产品名', width: '2%',hide:true},
+                    {title: '操作', templet: '#operationTpl', align: 'center', width: '20%'}
                 ]],
                 height: 'full-115',
                 done: function (res, curr, count) {

@@ -13,7 +13,7 @@ import java.util.Date;
 public class ProductInfo {
 
     @TableId(value = "fUuid", type = IdType.AUTO)
-    private int uuid;
+    private long uuid;
 
     @TableField(value = "fProductName")
     private String productName;
@@ -29,11 +29,11 @@ public class ProductInfo {
     @TableField(value = "fAlterDate")
     private Date alterDate;
 
-    public int getUuid() {
+    public long getUuid() {
         return uuid;
     }
 
-    public void setUuid(int uuid) {
+    public void setUuid(long uuid) {
         this.uuid = uuid;
     }
 

@@ -44,6 +44,22 @@ public class ProductController {
         return mv;
     }
 
+    @GetMapping(value = "/getAllProduct")
+    public ResultBean getAllProudct(){
+        ResultBean resultBean = new ResultBean();
+        try {
+            List<ProductInfo> productInfos = productInfoService.getAllProduct();
+            resultBean.setData(productInfos);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+            return resultBean;
+        }
+        return resultBean;
+    }
+
     @GetMapping("/getProductInfoByID/{uuid}")
     public ResultBean getProducts(@PathVariable("uuid") int uuid) {
         ResultBean resultBean = new ResultBean();

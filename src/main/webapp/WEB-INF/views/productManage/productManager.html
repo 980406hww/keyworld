@@ -180,22 +180,10 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {filed: 'uuid', align: 'center', type: 'checkbox', width: '100'},
-                    {field: 'productName', align: 'left', title: '客户端ID', width: '148',},
-                    {field: 'productPrice', align: 'left', title: '产品价格', width: '130'},
-                    {
-                        field: 'createDate', align: 'left', title: '创建日期', width: '280', templet: function (row) {
-                            return (row.createDate);
-                        }
-                    },
-                    {
-                        field: 'alterDate', align: 'left', title: '修改日期', width: '280', templet: function (row) {
-                            if (row.alterDate == null || row.alterDate == "")
-                                return "";
-                            return timestampToTime(row.alterDate);
-                        }
-                    },
-                    {title: '操作', templet: '#operationTpl', align: 'center', width: '250'}
+                    {filed: 'uuid', align: 'center', type: 'checkbox', width: '20%',align:'center'},
+                    {field: 'productName', align: 'left', title: '客户端ID', width: '20%',align:'center'},
+                    {field: 'productPrice', align: 'left', title: '产品价格', width: '30%',align:'center'},
+                    {title: '操作', templet: '#operationTpl', align: 'center', width: '30%'}
                 ]],
                 height: 'full-115',
                 done: function (res, curr, count) {

@@ -173,7 +173,7 @@ public class MachineInfo {
     private int remainingKeyword;
 
     @TableField(value = "fProductID")
-    private int productId;
+    private long productId;
 
     @JSONField(format ="yyyy-MM-dd HH:mm:ss")
     @TableField(value = "fOpenDate")
@@ -640,11 +640,11 @@ public class MachineInfo {
         this.pageSize = pageSize;
     }
 
-    public int getProductId() {
+    public long getProductId() {
         return productId;
     }
 
-    public void setProductId(int productId) {
+    public void setProductId(long productId) {
         this.productId = productId;
     }
 
