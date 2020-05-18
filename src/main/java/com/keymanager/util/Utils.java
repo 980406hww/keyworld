@@ -8,15 +8,15 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utils {
+
 	public static String TIME_FORMAT = "yyyy-MM-dd HH:mm";
+
+	public static String DATE_FORMAT = "yyyy-MM-dd";
 
 	public static boolean isPower(int number){
 		if (number == 1) {
@@ -47,6 +47,63 @@ public class Utils {
 
 		return dateDays - compareDateDay;
 
+	}
+
+	public static int getApartDayNum(String startTime, String endTime) {
+		// 返回相隔天数
+		int days = 0;
+		DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+		try {
+			Date start = dateFormat.parse(startTime);
+			Date end = dateFormat.parse(endTime);
+
+			Calendar tempStart = Calendar.getInstance();
+			tempStart.setTime(start);
+
+			Calendar tempEnd = Calendar.getInstance();
+			tempEnd.setTime(end);
+
+			// 不包含结束
+			while (tempStart.before(tempEnd)) {
+				days++;
+				tempStart.add(Calendar.DAY_OF_YEAR, 1);
+			}
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		return days;
+
+	}
+
+	public static List<String> getDays(String startTime, String endTime, String pattern) {
+		// 返回的日期集合
+		List<String> days = new ArrayList<>();
+
+		DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+		DateFormat sdf = new SimpleDateFormat(pattern);
+		try {
+			Date start = dateFormat.parse(startTime);
+			Date end = dateFormat.parse(endTime);
+
+			Calendar tempStart = Calendar.getInstance();
+			tempStart.setTime(start);
+
+			Calendar tempEnd = Calendar.getInstance();
+			tempEnd.setTime(end);
+
+			// 不包含结束
+			while (tempStart.before(tempEnd)) {
+				days.add(sdf.format(tempStart.getTime()));
+				tempStart.add(Calendar.DAY_OF_YEAR, 1);
+			}
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		return days;
 	}
 
 	public static Integer getCurrentHour() {

@@ -190,12 +190,12 @@
         COUNT((ck.fCurrentPosition BETWEEN 1 AND 40) OR NULL)  AS 'topFortyNum',
         COUNT((ck.fCurrentPosition BETWEEN 1 AND 50) OR NULL)  AS 'topFiftyNum'
         FROM t_customer_keyword ck
-        WHERE ck.fTerminalType = #{captureRankJob.operationType}
-        AND ck.fQZSettingUuid = #{captureRankJob.qzSettingUuid}
-        AND ck.fStatus = 1
+        WHERE ck.fQZSettingUuid = #{captureRankJob.qzSettingUuid}
         <if test="captureRankJob.customerUuid != null and captureRankJob.customerUuid != ''">
             AND fCustomerUuid = #{captureRankJob.customerUuid}
         </if>
+        AND ck.fTerminalType = #{captureRankJob.operationType}
+        AND ck.fStatus = 1
     </select>
 
     <select id="getProcessingJob" resultType="com.keymanager.ckadmin.entity.CaptureRankJob">

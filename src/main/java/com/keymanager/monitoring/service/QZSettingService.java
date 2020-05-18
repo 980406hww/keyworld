@@ -21,6 +21,9 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -877,9 +880,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 	public void generateRankingCurve() {
 		List<QZSetting> settings = qzSettingDao.searchAllQZSettingForGenerateRankingCurve();
 		if (CollectionUtils.isNotEmpty(settings)) {
+			String terminalType;
 			for (QZSetting qzSetting : settings) {
 				if (null != qzSetting) {
-					String terminalType;
 					if (null != qzSetting.getPcGroup()) {
 						terminalType = "PC";
 						generateRankingCurveRankInfo(qzSetting, terminalType);
@@ -895,11 +898,13 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	private void generateRankingCurveRankInfo(QZSetting qzSetting, String terminalType) {
 		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
-		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-
-		CustomerKeywordRankingCountVO countVo = customerKeywordService.getCustomerKeywordRankingCount(terminalType,qzSetting.getCustomerUuid(),
-			qzSetting.getUuid());
+		String pattern = "MM-dd";
+		String pattern2 = "yyyy-MM-dd";
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		SimpleDateFormat sdf2 = new SimpleDateFormat(pattern2);
+		String strDate = sdf.format(date);
+		String strFullDate = sdf2.format(date);
+		CustomerKeywordRankingCountVO countVo = customerKeywordService.getCustomerKeywordRankingCount(terminalType,qzSetting.getCustomerUuid(), qzSetting.getUuid());
 		List<QZKeywordRankInfo> rankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "xt");
 
 		if (CollectionUtils.isNotEmpty(rankInfos)) {
@@ -911,12 +916,12 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				String dateStr = rankInfo.getDate();
 				if (StringUtil.isNullOrEmpty(dateStr)) {
 					fillRankInfo(rankInfo, countVo, 1);
-					rankInfo.setDate("['" + sdf.format(date) + "']");
-					rankInfo.setFullDate("['" + sdf2.format(date) + "']");
+					rankInfo.setDate("['" + strDate + "']");
+					rankInfo.setFullDate("['" + strFullDate + "']");
 				} else {
 					String[] dateStrings = dateStr.substring(1, dateStr.length() - 1).split(", ");
 					String nowDate = dateStrings[0];
-					if (nowDate.equals("'" + sdf.format(date) + "'")) {
+					if (nowDate.equals("'" + strDate + "'")) {
 						// 为当天数据, 替换数据
 						if (dateStrings.length == 1) {
 							rankInfo.setTopTen("[" + countVo.getTopTenNum() + "]");
@@ -928,10 +933,22 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 							fillRankInfo(rankInfo, countVo, 0);
 						}
 					} else {
+						// 校验数据是否缺失，根据创建时间开始
+						Date createDate = rankInfo.getCreateTime();
+						String createTime = sdf2.format(createDate);
+						if (!checkRankingMissDate(createTime, strFullDate, dateStrings.length)) {
+							List<String> dateDays = Utils.getDays(createTime, strFullDate, pattern);
+							Collections.reverse(dateDays);
+							fillMissingRankingCurveData(rankInfo, dateDays);
+
+							List<String> fullDateDays = Utils.getDays(createTime, strFullDate, pattern2);
+							Collections.reverse(fullDateDays);
+							fillMissingRankingCurveFullDate(rankInfo, fullDateDays);
+						}
 						// 不为当天, 添加数据
 						fillRankInfo(rankInfo, countVo, 1);
-						rankInfo.setDate(fillData(rankInfo.getDate(), "'" + sdf.format(date) + "'", 1));
-						rankInfo.setFullDate(fillData(rankInfo.getDate(), "'" + sdf2.format(date) + "'", 1));
+						rankInfo.setDate(fillData(rankInfo.getDate(), "'" + strDate + "'", 1));
+						rankInfo.setFullDate(fillData(rankInfo.getFullDate(), "'" + strFullDate + "'", 1));
 					}
 				}
 				qzKeywordRankInfoService.saveQZKeywordRankInfo(rankInfo);
@@ -941,7 +958,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
-    private void fillRankInfo(QZKeywordRankInfo rankInfo, CustomerKeywordRankingCountVO countVo, int fillMode) {
+    private static void fillRankInfo(QZKeywordRankInfo rankInfo, CustomerKeywordRankingCountVO countVo, int fillMode) {
         rankInfo.setTopTen(fillData(rankInfo.getTopTen(), countVo.getTopTenNum() + "", fillMode));
         rankInfo.setTopTwenty(fillData(rankInfo.getTopTwenty(), countVo.getTopTwentyNum() + "", fillMode));
         rankInfo.setTopThirty(fillData(rankInfo.getTopThirty(), countVo.getTopThirtyNum() + "", fillMode));
@@ -949,7 +966,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
         rankInfo.setTopFifty(fillData(rankInfo.getTopFifty(), countVo.getTopFiftyNum() + "", fillMode));
     }
 
-    private String fillData(String str, String num, int fillMode) {
+    private static String fillData(String str, String num, int fillMode) {
         if (str == null) {
             return "[" + num + "]";
         }
@@ -963,11 +980,138 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
         return sb.toString();
     }
 
-	private void saveQZRankingCurveRankInfo(long qzSettingUuid, String terminalType,
-		CustomerKeywordRankingCountVO countVo, Integer qzSettingKeywordCount) {
+	/**
+	 * 校验数据是否缺失
+	 */
+	private static boolean checkRankingMissDate(String createTime, String date, int length) {
+		// 相隔天数
+		int dates = Utils.getApartDayNum(createTime, date);
+		return dates == length;
+	}
+
+	private static void dynamicSetStringFieldValue(Class<?> clazz, Object target, String methodName, String value) {
+		try {
+			Method method = clazz.getMethod(methodName, String.class);
+			method.invoke(target, value);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 返回正确全站排名曲线的数据  下次还需处理一下
+	 */
+	private static void fillMissingRankingCurveData(QZKeywordRankInfo rankInfo, List<String> dateDays) {
+		List<String> dateList = handleRankInfoStringToList(rankInfo.getDate());
+		StringBuilder dateSb = new StringBuilder();
+		dateSb.append("[");
+		List<String> topTenList = handleRankInfoStringToList(rankInfo.getTopTen());
+		StringBuilder topTenSb = new StringBuilder();
+		topTenSb.append("[");
+		List<String> topTwentyList = handleRankInfoStringToList(rankInfo.getTopTwenty());
+		StringBuilder topTwentySb = new StringBuilder();
+		topTwentySb.append("[");
+		List<String> topThirtyList = handleRankInfoStringToList(rankInfo.getTopThirty());
+		StringBuilder topThirtySb = new StringBuilder();
+		topThirtySb.append("[");
+		List<String> topFortyList = handleRankInfoStringToList(rankInfo.getTopForty());
+		StringBuilder topFortySb = new StringBuilder();
+		topFortySb.append("[");
+		List<String> topFiftyList = handleRankInfoStringToList(rankInfo.getTopFifty());
+		StringBuilder topFiftySb = new StringBuilder();
+		topFiftySb.append("[");
+
+		String lastStr;
+		for (int i = 0, size = dateDays.size(); i < size; i++) {
+			lastStr = i < size - 1 ? ", " : "]";
+			fillMissingFieldValue(i, dateList, dateDays, topTenList, topTenSb, lastStr);
+			fillMissingFieldValue(i, dateList, dateDays, topTwentyList, topTwentySb, lastStr);
+			fillMissingFieldValue(i, dateList, dateDays, topThirtyList, topThirtySb, lastStr);
+			fillMissingFieldValue(i, dateList, dateDays, topFortyList, topFortySb, lastStr);
+			fillMissingFieldValue(i, dateList, dateDays, topFiftyList, topFiftySb, lastStr);
+			dateSb.append("'").append(dateDays.get(i)).append("'").append(lastStr);
+		}
+		dynamicSetStringFieldValue(QZKeywordRankInfo.class, rankInfo, "setTopTen", topTenSb.toString());
+		dynamicSetStringFieldValue(QZKeywordRankInfo.class, rankInfo, "setTopTwenty", topTwentySb.toString());
+		dynamicSetStringFieldValue(QZKeywordRankInfo.class, rankInfo, "setTopThirty", topThirtySb.toString());
+		dynamicSetStringFieldValue(QZKeywordRankInfo.class, rankInfo, "setTopForty", topFortySb.toString());
+		dynamicSetStringFieldValue(QZKeywordRankInfo.class, rankInfo, "setTopFifty", topFiftySb.toString());
+		dynamicSetStringFieldValue(QZKeywordRankInfo.class, rankInfo, "setDate", dateSb.toString());
+	}
+
+	/**
+	 * 填充数据
+	 */
+	private static void fillMissingFieldValue(int i, List<String> dateList, List<String> dateDays, List<String> topList, StringBuilder sb, String lastStr) {
+		String valueStr;
+		int index = dateList.indexOf(dateDays.get(i));
+		if (index < 0 ){
+			if (i > 0) {
+				int j = i - 1;
+				int tempIndex = 0;
+				do {
+					if (j > 0) {
+						j = j - 1;
+						tempIndex = dateList.indexOf(dateDays.get(j));
+					} else {
+						tempIndex = 0;
+					}
+				} while (tempIndex < 0);
+				valueStr = topList.get(tempIndex);
+			} else {
+				valueStr = "0";
+			}
+		} else {
+			valueStr = topList.get(index);
+		}
+		sb.append("'").append(valueStr).append("'").append(lastStr);
+	}
+
+	/**
+	 * 返回正确全站排名曲线的日期数据
+	 */
+	private static void fillMissingRankingCurveFullDate(QZKeywordRankInfo rankInfo, List<String> dateDays) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		String lastStr;
+		for (int i = 0, size = dateDays.size(); i < size; i++) {
+			lastStr = i < size - 1 ? ", " : "]";
+			sb.append("'").append(dateDays.get(i)).append("'").append(lastStr);
+		}
+		dynamicSetStringFieldValue(QZKeywordRankInfo.class, rankInfo, "setFullDate", sb.toString());
+	}
+
+	/**
+	 * 返回正确全站操作词曲线的数据
+	 */
+	private static void fillMissingKeywordCountCurveData(QZKeywordRankInfo rankInfo, List<String> days) {
+		List<String> dateList = handleRankInfoStringToList(rankInfo.getBaiduRecordFullDate());
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		List<String> recordList = handleRankInfoStringToList(rankInfo.getBaiduRecord());
+		StringBuilder recordSb = new StringBuilder();
+		recordSb.append("[");
+
+		String lastStr;
+		for (int i = 0, size = days.size(); i < size; i++) {
+			lastStr = i < size - 1 ? ", " : "]";
+			fillMissingFieldValue(i, dateList, days, recordList, recordSb, lastStr);
+			sb.append("'").append(days.get(i)).append("'").append(lastStr);
+		}
+		dynamicSetStringFieldValue(QZKeywordRankInfo.class, rankInfo, "setBaiduRecord", recordSb.toString());
+		dynamicSetStringFieldValue(QZKeywordRankInfo.class, rankInfo, "setBaiduRecordFullDate", sb.toString());
+	}
+
+	private static List<String> handleRankInfoStringToList(String value) {
+		String str = value.substring(1, value.length() - 1).replaceAll("'", "");
+		String[] dates = str.split(", ");
+		return new ArrayList<>(Arrays.asList(dates));
+	}
+
+	private void saveQZRankingCurveRankInfo(long qzSettingUuid, String terminalType, CustomerKeywordRankingCountVO countVo, Integer qzSettingKeywordCount) {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
-
+		String strDate = sdf.format(date);
 		QZKeywordRankInfo rankInfo = new QZKeywordRankInfo();
 		rankInfo.setQzSettingUuid(qzSettingUuid);
 		rankInfo.setTerminalType(terminalType);
@@ -976,10 +1120,10 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 		if (null == qzSettingKeywordCount) {
 			fillRankInfo(rankInfo, countVo, 1);
-			rankInfo.setDate("['" + sdf.format(date) + "']");
+			rankInfo.setDate("['" + strDate + "']");
 		} else {
 			rankInfo.setBaiduRecord(fillData(rankInfo.getBaiduRecord(), "'" + qzSettingKeywordCount + "'", 1));
-			rankInfo.setBaiduRecordFullDate("['" + sdf.format(date) + "']");
+			rankInfo.setBaiduRecordFullDate("['" + strDate + "']");
 		}
 		qzKeywordRankInfoService.saveQZKeywordRankInfo(rankInfo);
 	}
@@ -1003,11 +1147,11 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 		}
 	}
 
-	private void generateQZSettingKeywordCountCurveRankInfo(QZSetting qzSetting,
-		String terminalType) {
+	private void generateQZSettingKeywordCountCurveRankInfo(QZSetting qzSetting, String terminalType) {
 		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
+		String pattern = "yyyy-MM-dd";
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		String strDate = sdf.format(date);
 		int qzSettingKeywordCount = customerKeywordService.getQZSettingKeywordCount(terminalType,qzSetting.getCustomerUuid(),qzSetting.getUuid());
 		List<QZKeywordRankInfo> rankInfos = qzKeywordRankInfoService.searchExistingQZKeywordRankInfo(qzSetting.getUuid(), terminalType, "xt");
 
@@ -1020,21 +1164,29 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				String dateStr = rankInfo.getBaiduRecordFullDate();
 				if (StringUtil.isNullOrEmpty(dateStr)) {
 					rankInfo.setBaiduRecord("['" + qzSettingKeywordCount + "']");
-					rankInfo.setBaiduRecordFullDate("['" + sdf.format(date) + "']");
+					rankInfo.setBaiduRecordFullDate("['" + strDate + "']");
 				} else {
 					String[] dateStrings = dateStr.substring(1, dateStr.length() - 1).split(", ");
 					String nowDate = dateStrings[0];
-					if (nowDate.equals("'" + sdf.format(date) + "'")) {
-						// 为当天数据, 替换数据
+					// 为当天数据, 替换数据
+					if (nowDate.equals("'" + strDate + "'")) {
 						if (dateStrings.length == 1) {
 							rankInfo.setBaiduRecord("['" + qzSettingKeywordCount + "']");
 						} else {
 							rankInfo.setBaiduRecord(fillData(rankInfo.getBaiduRecord(), "'" + qzSettingKeywordCount + "'", 0));
 						}
 					} else {
+						// 校验数据是否缺失，根据创建时间开始
+						Date createDate = rankInfo.getCreateTime();
+						String createTime = sdf.format(createDate);
+						if (!checkRankingMissDate(createTime, strDate, dateStrings.length)) {
+							List<String> days = Utils.getDays(createTime, strDate, pattern);
+							Collections.reverse(days);
+							fillMissingKeywordCountCurveData(rankInfo, days);
+						}
 						// 不为当天, 添加数据
 						rankInfo.setBaiduRecord(fillData(rankInfo.getBaiduRecord(), "'" + qzSettingKeywordCount + "'", 1));
-						rankInfo.setBaiduRecordFullDate(fillData(rankInfo.getBaiduRecordFullDate(), "'" + sdf.format(date) + "'", 1));
+						rankInfo.setBaiduRecordFullDate(fillData(rankInfo.getBaiduRecordFullDate(), "'" + strDate + "'", 1));
 					}
 				}
 				qzKeywordRankInfoService.saveQZKeywordRankInfo(rankInfo);

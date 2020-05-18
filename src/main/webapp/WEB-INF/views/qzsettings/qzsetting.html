@@ -900,7 +900,9 @@
             getTerminalSearchEngineMap('PC', "百度");
         }
 
-        /*动态加载tab栏*/
+        /**
+         * 动态加载tab栏
+         */
         function getTerminalSearchEngineMap(terminal, searchEngine) {
             $.ajax({
                 url: '/internal/qzsetting/getQZSettingSearchEngineMap/' + terminal,
@@ -958,7 +960,9 @@
             }
         };
 
-        /*动态加载网站分类标签列表*/
+        /**
+         * 动态加载网站分类标签列表
+         */
         function get_qzcategory_label_list(categoryTag) {
             $.ajax({
                 url: '${ctx.path}/internal/qzsetting/getCategoryTag',
@@ -979,7 +983,9 @@
             });
         }
 
-        /*动态加载客户列表*/
+        /**
+         * 动态加载客户列表
+         */
         function get_active_customer_list(customerUuid) {
             $.ajax({
                 url: '${ctx.path}/internal/qzsetting/getActiveCustomer',
@@ -1166,7 +1172,9 @@
             }
         }
 
-        /*动态加载操作组合列表*/
+        /**
+         * 动态加载操作组合列表
+         */
         function get_operation_combine_list(terminalType) {
             $.ajax({
                 url: '/internal/operationcombine/getOperationCombines/' + terminalType,

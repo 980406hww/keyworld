@@ -73,9 +73,9 @@
 
     <update id="changeCustomerKeywordStatus">
         UPDATE t_customer_keyword SET fStatus = #{status}
-        WHERE fTerminalType = #{terminalType}
+        WHERE fCustomerUuid = #{customerUuid}
+        AND fTerminalType = #{terminalType}
         AND fType = #{entryType}
-        AND fCustomerUuid = #{customerUuid}
     </update>
 
     <update id="updateOptimizationQueryTime">
@@ -96,7 +96,7 @@
     </delete>
 
     <select id="getCustomerKeywordCount" resultType="int">
-        SELECT COUNT(1) FROM t_customer_keyword ck WHERE ck.fType = #{entryType} and ck.fTerminalType = #{terminalType} and ck.fCustomerUuid = #{customerUuid}
+        SELECT COUNT(1) FROM t_customer_keyword ck WHERE ck.fCustomerUuid = #{customerUuid} and ck.fTerminalType = #{terminalType} and ck.fType = #{entryType}
     </select>
 
     <update id="excludeCustomerKeyword">
@@ -259,21 +259,23 @@
         ck.fKeywordEffect AS 'keywordEffect',
         ck.fOptimizePlanCount AS 'optimizePlanCount'
         FROM t_customer_keyword ck
-        WHERE ck.fKeyword = #{keyword}
-        AND ck.fTerminalType = #{terminalType}
-        AND ck.fCustomerUuid = #{customerUuid}
-        <if test="qzSettingUuid != null and qzSettingUuid != 0">
-            AND ck.fQZSettingUuid = #{qzSettingUuid}
-        </if>
-        <choose>
-            <when test="url == 'NoUrl'">
-                AND ck.fTitle = #{title}
-            </when>
-            <otherwise>
-                AND ck.fUrl = #{url}
-            </otherwise>
-        </choose>
-        LIMIT 1
+        <where>
+            AND ck.fCustomerUuid = #{customerUuid}
+            <if test="qzSettingUuid != null and qzSettingUuid != 0">
+                AND ck.fQZSettingUuid = #{qzSettingUuid}
+            </if>
+            AND ck.fKeyword = #{keyword}
+            AND ck.fTerminalType = #{terminalType}
+            <choose>
+                <when test="url == 'NoUrl'">
+                    AND ck.fTitle = #{title}
+                </when>
+                <otherwise>
+                    AND ck.fUrl = #{url}
+                </otherwise>
+            </choose>
+            LIMIT 1
+        </where>
     </select>
 
     <update id="updateSameCustomerKeyword">
@@ -901,8 +903,9 @@
         ck.fRemarks AS 'remarks'
         FROM
         t_customer_keyword ck
-        WHERE 1 = 1
-        <include refid="searchCustomerKeywordsCriteria"/>
+        <where>
+            <include refid="searchCustomerKeywordsCriteria"/>
+        </where>
     </select>
 
     <select id="selectAllKeywordAndUrl" resultType="java.util.Map">
@@ -969,13 +972,14 @@
         UPDATE t_customer_keyword
         SET fTitle = NULL,
         fManualCleanTitle = 1
-        WHERE 1 = 1
-        <if test="qzUuid != null and qzUuid != ''">
-            AND fQZSettingUuid = #{qzUuid}
-        </if>
-        AND fCustomerUuid = #{customerUuid}
-        AND fTerminalType = #{terminalType}
-        AND fType = #{type}
+        <where>
+            <if test="qzUuid != null and qzUuid != ''">
+                AND fQZSettingUuid = #{qzUuid}
+            </if>
+            AND fCustomerUuid = #{customerUuid}
+            AND fTerminalType = #{terminalType}
+            AND fType = #{type}
+        </where>
     </update>
 
     <update id="cleanCaptureTitleFlag">
@@ -983,14 +987,15 @@
         SET fTitle = NULL,
         fCaptureTitleQueryTime = NULL,
         fCapturedTitle = 0
-        WHERE 1 = 1
-        <if test="qzUuid != null and qzUuid != ''">
-            AND fQZSettingUuid = #{qzUuid}
-        </if>
-        AND fCustomerUuid = #{customerUuid}
-        AND fTerminalType = #{terminalType}
-        AND fType = #{type}
-        AND fManualCleanTitle = 0
+        <where>
+            <if test="qzUuid != null and qzUuid != ''">
+                AND fQZSettingUuid = #{qzUuid}
+            </if>
+            AND fCustomerUuid = #{customerUuid}
+            AND fTerminalType = #{terminalType}
+            AND fType = #{type}
+            AND fManualCleanTitle = 0
+        </where>
     </update>
 
     <update id="cleanCaptureTitleBySelected">
@@ -1215,9 +1220,9 @@
     <select id="getMaxSequence" resultType="java.lang.Integer">
         select max(fSequence)
         from t_customer_keyword
-        where fTerminalType = #{terminalType}
+        where fCustomerUuid = #{customerUuid}
+        and fTerminalType = #{terminalType}
         and fType = #{entryType}
-        and fCustomerUuid = #{customerUuid}
     </select>
 
     <select id="searchSameCustomerKeywords" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
@@ -1366,25 +1371,27 @@
         SELECT
         ck.fUuid AS 'uuid'
         FROM t_customer_keyword ck
-        WHERE ck.fTerminalType = #{terminalType}
-        AND ck.fStatus = 1
-        AND fCaptureStatus = #{captureStatus}
-        <if test="startTime != null and captureStatus == 0">
-            AND ck.fCapturePositionQueryTime &lt; #{startTime}
-            <if test="saveTopThree == true">
-                AND !(ck.fCapturePositionQueryTime &gt; CURRENT_DATE() AND ck.fCurrentPosition &lt; 4 AND ck.fCurrentPosition &gt; 0)
+        <where>
+            <if test="customerUuid != null">
+                AND ck.fCustomerUuid = #{customerUuid}
             </if>
-        </if>
-        <if test="startTime != null and captureStatus == 1">
-            AND ck.fCapturePositionQueryTime &lt; DATE_SUB( NOW(), INTERVAL 3 MINUTE )
-        </if>
-        <if test="customerUuid != null">
-            AND ck.fCustomerUuid = #{customerUuid}
-        </if>
-        <if test="groupName != null">
-            AND ck.fOptimizeGroupName = #{groupName}
-        </if>
-        LIMIT 10
+            <if test="groupName != null">
+                AND ck.fOptimizeGroupName = #{groupName}
+            </if>
+            AND ck.fTerminalType = #{terminalType}
+            AND ck.fStatus = 1
+            AND fCaptureStatus = #{captureStatus}
+            <if test="startTime != null and captureStatus == 0">
+                AND ck.fCapturePositionQueryTime &lt; #{startTime}
+                <if test="saveTopThree == true">
+                    AND !(ck.fCapturePositionQueryTime &gt; CURRENT_DATE() AND ck.fCurrentPosition &lt; 4 AND ck.fCurrentPosition &gt; 0)
+                </if>
+            </if>
+            <if test="startTime != null and captureStatus == 1">
+                AND ck.fCapturePositionQueryTime &lt; DATE_SUB( NOW(), INTERVAL 3 MINUTE )
+            </if>
+            LIMIT 10
+        </where>
     </select>
 
     <select id="getCustomerKeywordForCapturePositionTemp" resultType="com.keymanager.value.CustomerKeywordForCapturePosition">
@@ -1664,7 +1671,6 @@
             fLastOptimizeDateTime = now(),
             fQueryTime = if(fOptimizeTodayCount > fOptimizedCount, fQueryTime,DATE_ADD(NOW(), INTERVAL 1 DAY)),
             fUpdateTime = NOW()
-
         </trim>
         WHERE fUuid IN
         <foreach item="updateOptimizedCountVO" index="index" collection="updateOptimizedCountVOs" open="(" separator="," close=")">
