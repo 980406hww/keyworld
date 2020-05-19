@@ -637,8 +637,15 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
         });
     }
 
+    var existUserName;
+    if (document.getElementById('userName')){
+        existUserName = document.getElementById('userName').value;
+    }else{
+        existUserName = false;
+    }
+
     if (document.getElementById('keyword').value || document.getElementById('optimizeGroupName').value ||
-        document.getElementById('machineGroup').value || document.getElementById('invalidRefreshCount').value ||document.getElementById('userName').value) {
+        document.getElementById('machineGroup').value || document.getElementById('invalidRefreshCount').value || existUserName) {
         $('#searchBtn').click();
     } else {
         get_keywords({init: 'init'});
