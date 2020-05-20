@@ -579,27 +579,28 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {filed: 'uuid', align: 'center', type: 'checkbox', width: '5%'},
-                    {field: 'clientIDs', align: 'left', title: '客户端ID', width: '5%', templet: '#clientIDs'},
-                    {field: 'machineGroups', align: 'left', title: '机器分组', width: '5%', templet: '#machineGroups'},
-                    {field: 'renewalDate', align: 'left', title: '续费<br>日期', width: '5%', templet: '#showRenewalDate', hide: true},
-                    {field: 'versionInfo', align: 'left', title: '现版本<br>目标版本', width: '5%', templet: '#showVersionInfo'},
-                    {field: 'restartCountAndFailCount', align: 'left', title: '重启数/重启状态<br>失败次数', width: '10%', templet: '#restartCountAndFailCount'},
-                    {field: 'cityAndStatus', align: 'left', title: '所在城市<br>终端状态', width: '5%', templet: '#cityAndStatus'},
-                    {field: 'cpuCounts', align: 'left', title: 'CPU核数<br>内存', width: '5%', templet: '#cpuCounts', hide: true},
-                    {field: 'freeSpaces', align: 'left', title: '剩余空间', width: '5%', templet: '#freeSpaces', hide: true},
-                    {field: 'lastVisitTimeAndRestartTime', align: 'left', title: '最新工作时间<br>重启时间', width: '5%', templet: '#lastVisitTimeAndRestartTime', hide: true},
-                    {field: 'restartOrderingTimeAndLastSendNotificationTime', align: 'left', title: '重启排序时间<br>发送通知时间', width: '5%', templet: '#restartOrderingTimeAndLastSendNotificationTime', hide: true},
-                    {field: 'optimizationSucceedCountAndOptimizationTotalCount', align: 'left', title: '成功次数<br>操作次数', width: '10%', templet: '#optimizationSucceedCountAndOptimizationTotalCount'},
-                    {field: 'broadbandAccountAndBroadbandPassword', align: 'left', title: '宽带账号<br>宽带密码', width: '10%', templet: '#broadbandAccountAndBroadbandPassword'},
-                    {field: 'runningProgramTypes', align: 'left', title: '程序类型', width: '5%', templet: '#runningProgramTypes'},
-                    {field: 'startUpStatusAndDownloadProgramType', align: 'left', title: '开机状态<br>下载程序类型', width: '10%', templet: '#startUpStatusAndDownloadProgramType', hide: true},
-                    {field: 'valids', align: 'left', title: '状态', width: '5%', templet: '#valid'},
-                    {field: 'upgradeFailedReasons', align: 'left', title: '失败原因', width: '5%', templet: '#upgradeFailedReasons'},
-                    {field: 'vpsBackendSystemComputerID', align: 'left', title: '服务器ID', width: '5%', templet: '#vpsBackendSystemComputerIDs'},
-                    {field: 'price',align: 'left', title: '价格', width: '5%'},
-                    {field: 'productName',align: 'left', title: '产品名', width: '2%',hide:true},
-                    {title: '操作', templet: '#operationTpl', align: 'center', width: '20%'}
+                    {filed: 'uuid', align: 'center', type: 'checkbox'},
+                    {field: 'clientIDs', align: 'left', title: '客户端ID', templet: '#clientIDs'},
+                    {field: 'machineGroups', align: 'left', title: '机器分组', templet: '#machineGroups'},
+                    {field: 'renewalDate', align: 'left', title: '续费<br>日期', templet: '#showRenewalDate', hide: true},
+                    {field: 'versionInfo', align: 'left', title: '现版本<br>目标版本', templet: '#showVersionInfo'},
+                    {field: 'restartCountAndFailCount', align: 'left', title: '重启数/重启状态<br>失败次数', templet: '#restartCountAndFailCount'},
+                    {field: 'cityAndStatus', align: 'left', title: '所在城市<br>终端状态', templet: '#cityAndStatus'},
+                    {field: 'cpuCounts', align: 'left', title: 'CPU核数<br>内存', templet: '#cpuCounts', hide: true},
+                    {field: 'freeSpaces', align: 'left', title: '剩余空间', templet: '#freeSpaces', hide: true},
+                    {field: 'lastVisitTimeAndRestartTime', align: 'left', title: '最新工作时间<br>重启时间', templet: '#lastVisitTimeAndRestartTime', hide: true},
+                    {field: 'restartOrderingTimeAndLastSendNotificationTime', align: 'left', title: '重启排序时间<br>发送通知时间', templet: '#restartOrderingTimeAndLastSendNotificationTime', hide: true},
+                    {field: 'optimizationSucceedCountAndOptimizationTotalCount', align: 'left', title: '成功次数<br>操作次数', templet: '#optimizationSucceedCountAndOptimizationTotalCount'},
+                    {field: 'broadbandAccountAndBroadbandPassword', align: 'left', title: '宽带账号<br>宽带密码', templet: '#broadbandAccountAndBroadbandPassword'},
+                    {field: 'runningProgramTypes', align: 'left', title: '程序类型', templet: '#runningProgramTypes'},
+                    {field: 'startUpStatusAndDownloadProgramType', align: 'left', title: '开机状态<br>下载程序类型', templet: '#startUpStatusAndDownloadProgramType', hide: true},
+                    {field: 'valids', align: 'left', title: '状态', templet: '#valid'},
+                    {field: 'upgradeFailedReasons', align: 'left', title: '失败原因', templet: '#upgradeFailedReasons'},
+                    {field: 'vpsBackendSystemComputerID', align: 'left', title: '服务器ID', templet: '#vpsBackendSystemComputerIDs'},
+                    {field: 'price',align: 'left', title: '价格'},
+                    {field: 'productName',align: 'left', title: '产品名', hide:true},
+                    {field: 'openDate', align: 'left', title: '开通时间', templet: function(d){ return d.openDate? layui.util.toDateString(d.openDate, 'yyyy-MM-dd HH:mm'): "";}, hide:true},
+                    {title: '操作', templet: '#operationTpl', align: 'center', minWidth: 198}
                 ]],
                 height: 'full-115',
                 done: function (res, curr, count) {
@@ -695,6 +696,9 @@
                     break;
                 case 'showUploadVPSDialog(\'startUp\')':
                     showUploadVPSDialog('startUp');
+                    break;
+                case 'showUploadVPSDialog(\'updateProduct\')':
+                    showUploadVPSDialog('updateProduct');
                     break;
                 case 'batchUpdateMachineGroup(\'selected\')':
                     batchUpdateMachineGroup('selected');
@@ -1077,7 +1081,7 @@
 
         function showUploadVPSDialog(machineInfoType) {
             let height = "22%";
-            if(machineInfoType === 'common'){
+            if(machineInfoType === 'common' || machineInfoType === 'updateProduct'){
                 height = "18%"
             }
             let terminalType = $("#terminalType").val();
@@ -1293,7 +1297,7 @@
         }
 
         function toUpdateMachineInfo(data) {
-            okLayer.open("首页 / 终端列表 / 修改终端信息", "/internal/machineManage/toUpdateMachineInfo", "35%", "66%", function (layero) {
+            okLayer.open("首页 / 终端列表 / 修改终端信息", "/internal/machineManage/toUpdateMachineInfo", "35%", "70%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initMachineInfo(data);
             },function(){
                 if(sign){
@@ -1401,6 +1405,9 @@
             </button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/machineInfo/uploadVPSFile">
+            <button class="layui-btn layui-btn layui-btn layui-btn-warm layui-btn-sm" id="updateProduct" lay-event="showUploadVPSDialog('updateProduct')">
+                <i class="layui-icon layui-icon-upload-drag"></i>更新现有机器产品信息
+            </button>
             <button class="layui-btn layui-btn layui-btn layui-btn-warm layui-btn-sm" id="common" lay-event="showUploadVPSDialog('common')">
                 <i class="layui-icon layui-icon-upload-drag"></i>导入普通终端
             </button>

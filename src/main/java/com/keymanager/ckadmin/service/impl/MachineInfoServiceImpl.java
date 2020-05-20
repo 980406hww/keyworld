@@ -58,18 +58,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     @Override
     public Page<MachineInfo> searchMachineInfos(Page<MachineInfo> page, MachineInfoCriteria machineInfoCriteria, boolean normalSearchFlag) {
         if (normalSearchFlag) {
-            ProductInfo cpro=productInfoService.getProductByName(machineInfoCriteria.getProductName());
-            if(cpro !=null)
-                machineInfoCriteria.setProductID(cpro.getUuid());
-            List<MachineInfo> machineInfos= machineInfoDao.searchMachineInfos(page, machineInfoCriteria);
-           for(MachineInfo machineInfo :machineInfos){
-              ProductInfo productInfo= productInfoService.getProductInfo(machineInfo.getProductId());
-              if(productInfo !=null){
-                  machineInfo.setPrice(productInfo.getProductPrice());
-                  machineInfo.setProductName(productInfo.getProductName());
-              }
-           }
-            page.setRecords(machineInfos);
+            page.setRecords(machineInfoDao.searchMachineAndProductInfos(page, machineInfoCriteria));
         } else {
             page.setRecords(machineInfoDao.searchBadMachineInfo(page, machineInfoCriteria));
         }
@@ -172,12 +161,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public MachineInfo getMachineInfo(String clientID, String terminalType) {
-        MachineInfo machineInfo = machineInfoDao.getMachineInfoByMachineID(clientID, terminalType);
-        ProductInfo productInfo=productInfoService.getProductInfo(machineInfo.getProductId());
-        if(productInfo !=null){
-            machineInfo.setProductName(productInfo.getProductName());
-            machineInfo.setPrice(productInfo.getProductPrice());
-        }
+        MachineInfo machineInfo = machineInfoDao.getMachineAndProductInfoByMachineID(clientID, terminalType);
         return machineInfo;
     }
 
@@ -248,20 +232,27 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     }
 
     private void saveMachineInfoByVPSFile(MachineInfo machineInfo, String[] MachineInfos) throws ParseException {
-        String[] vncInfos = MachineInfos[2].split(":");
-        machineInfo.setClientID(MachineInfos[1]);
+        String[] vncInfos = MachineInfos[3].split(":");
+        machineInfo.setClientID(MachineInfos[0]);
+        ProductInfo product = productInfoService.getProductByName(MachineInfos[1]);
+        if (product == null){
+            ProductInfo newProduct = new ProductInfo();
+            newProduct.setProductName(MachineInfos[1]);
+            newProduct.setCreateDate(new Date());
+            productInfoService.addProduct(newProduct);
+            product = newProduct;
+        }
+        machineInfo.setProductId(product.getUuid());
+        machineInfo.setVpsBackendSystemComputerID(MachineInfos[2]);
         machineInfo.setHost(vncInfos[0]);
         machineInfo.setPort(vncInfos[1]);
-        machineInfo.setUserName(MachineInfos[3]);
-        machineInfo.setPassword(MachineInfos[4]);
-        machineInfo.setBroadbandAccount(MachineInfos[5]);
-        machineInfo.setBroadbandPassword(MachineInfos[6]);
-        machineInfo.setClientIDPrefix(Utils.removeDigital(MachineInfos[1]));
-        machineInfo.setProductName(MachineInfos[0]);
-        String date=MachineInfos[7].replace(MachineInfos[7].substring(0,4),"");
-        ProductInfo productInfo=productInfoService.getProductByName(MachineInfos[0]);
-        if(productInfo !=null)
-            machineInfo.setProductId(productInfo.getUuid());
+        machineInfo.setUserName(MachineInfos[4]);
+        machineInfo.setPassword(MachineInfos[5]);
+        machineInfo.setTargetVPSPassword(MachineInfos[5]);
+        machineInfo.setBroadbandAccount(MachineInfos[6]);
+        machineInfo.setBroadbandPassword(MachineInfos[7]);
+        machineInfo.setClientIDPrefix(Utils.removeDigital(MachineInfos[0]));
+        String date = MachineInfos[8].replace("开通时间","");
         machineInfo.setOpenDate(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(date));
     }
 
@@ -275,7 +266,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
         List<String> vpsInfos = FileUtil.readTxtFile(file, "UTF-8");
         for (String vpsInfo : vpsInfos) {
             String[] machineInfos = vpsInfo.split("===");
-            MachineInfo existingMachineInfo = machineInfoDao.selectById(machineInfos[1]);
+            MachineInfo existingMachineInfo = machineInfoDao.selectById(machineInfos[0]);
             if (null != existingMachineInfo) {
                 saveMachineInfoByVPSFile(existingMachineInfo, machineInfos);
                 if ("New".equals(downloadProgramType)) {
@@ -292,6 +283,9 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
                 }
                 machineInfoDao.updateById(existingMachineInfo);
             } else {
+                if (machineInfoType.equals("updateProduct")){
+                    continue;
+                }
                 MachineInfo machineInfo = new MachineInfo();
                 machineInfo.setTerminalType(terminalType);
                 machineInfo.setFreeSpace(500.00);
