@@ -26,7 +26,7 @@ public class ProductController {
     @Resource
     private ProductInfoService productInfoService;
 
-    @RequiresPermissions(value = "/internal/productManage/modifyProductInfo" )
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @RequestMapping(value = "/toProductInfo", method = RequestMethod.GET)
     public ModelAndView toProductManage() {
         ModelAndView mv = new ModelAndView();
@@ -34,7 +34,7 @@ public class ProductController {
         return mv;
     }
 
-    @RequiresPermissions(value = "/internal/productManage/modifyProductInfo" )
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @GetMapping(value = "/toAddProduct")
     public ModelAndView toAddProduct() {
         ModelAndView mv = new ModelAndView();
@@ -42,7 +42,7 @@ public class ProductController {
         return mv;
     }
 
-    @RequiresPermissions(value = "/internal/productManage/modifyProductInfo" )
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @GetMapping(value = "/toUpdateProduct")
     public ModelAndView toUpdateMachineInfo() {
         ModelAndView mv = new ModelAndView();
@@ -50,7 +50,7 @@ public class ProductController {
         return mv;
     }
 
-    @RequiresPermissions(value = "/internal/productManage/modifyProductInfo" )
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @GetMapping(value = "/getAllProduct")
     public ResultBean getAllProudct(){
         ResultBean resultBean = new ResultBean();
@@ -67,7 +67,7 @@ public class ProductController {
         return resultBean;
     }
 
-    @RequiresPermissions(value = "/internal/productManage/modifyProductInfo" )
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @GetMapping("/getProductInfoByID/{uuid}")
     public ResultBean getProducts(@PathVariable("uuid") int uuid) {
         ResultBean resultBean = new ResultBean();
@@ -84,7 +84,7 @@ public class ProductController {
         return resultBean;
     }
 
-    @RequiresPermissions(value = "/internal/productManage/modifyProductInfo" )
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @PostMapping("/updateProductInfo")
     public ResultBean updateProduct(@RequestBody ProductInfo productInfo) {
         ResultBean resultBean = new ResultBean();
@@ -101,7 +101,7 @@ public class ProductController {
         return resultBean;
     }
 
-    @RequiresPermissions(value = "/internal/productManage/modifyProductInfo" )
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @PostMapping("/getProductInfo")
     public ResultBean getProducts(@RequestBody ProductCriteria criteria) {
         ResultBean resultBean = new ResultBean();
@@ -122,7 +122,7 @@ public class ProductController {
         return resultBean;
     }
 
-    @RequiresPermissions(value = "/internal/productManage/modifyProductInfo" )
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @GetMapping("/deleteProduct/{uuid}")
     public ResultBean deleteProduct(@PathVariable("uuid") int uuid) {
         ResultBean resultBean = new ResultBean();
@@ -138,7 +138,7 @@ public class ProductController {
         return resultBean;
     }
 
-    @RequiresPermissions(value = "/internal/productManage/modifyProductInfo" )
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @PostMapping("/addProduct")
     public ResultBean addProduct(@RequestBody ProductInfo productInfo) {
         ResultBean resultBean = new ResultBean();

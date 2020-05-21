@@ -148,6 +148,7 @@
             var d = data.elem.context.dataset;
             $('#terminalType').val(d.terminal);
             init_operationType();
+            init_searchEngine();
             let pageConf = common.formToJsonObject('searchForm');
             if (pageConf.hasRemainingAccount){
                 pageConf.hasRemainingAccount = true;

@@ -16,31 +16,31 @@ CREATE TABLE `t_product_info`  (
 SET FOREIGN_KEY_CHECKS = 1;
 
 
-#添加产品资源
-INSERT INTO t_resourec_new ( fResourceName, fUrl, fVersion, fIconCls, fParentID, fSequence, fStatus, fOpened, fResourceType, fCreateTime)
+# 产品管理
+INSERT INTO t_resource_new ( fResourceName, fUrl, fVersion, fIconCls, fParentID, fSequence, fStatus, fOpened, fResourceType, fCreateTime )
 VALUES
 	(
-		'产品操作',
-		"/internal/productManage/modifyProductInfo",
-		"2.0",
-		"fi-compass",
-		( SELECT r.fUuid FROM t_resource_new r WHERE r.fUrl = '/internal/productManage/toProductInfo' AND r.fResourceName = '产品管理' ),
+		'产品管理',
+		'/internal/productManage/toProductInfo',
+		'2.0',
+		'fi-compass',
+		( SELECT r.fUuid FROM t_resource_new r WHERE r.fUrl = '#' AND r.fResourceName = '终端管理' AND fVersion = '2.0' ),
 		(
 		SELECT
-			IFNULL( MAX( tr.fSequence ) + 1, 1 )
+			IFNULL( MAX( r.fSequence ) + 1, 1 )
 		FROM
 			t_resource_new r
 		WHERE
-			r.fUrl = '/internal/productManage/toProductInfo'
-			AND r.fResourceName = '产品管理'
+			r.fUrl = '/internal/machineManage/toMachineInfos'
+			AND r.fResourceName = '机器管理'
 		),
 		0,
 		1,
 		0,
-	NOW( )
+		NOW( )
 	);
 
 #赋予权限
 INSERT INTO t_role_resource_new(fRoleID, fResourceID) SELECT tem_role.fUuid, tem_resource.fUuid FROM (
       (SELECT r.fUuid FROM t_role r WHERE r.fRoleName in  ('Operation', 'Maintenance','AlgorithmGroup')) tem_role,
-      (SELECT tr.fUuid FROM t_resource_new tr WHERE tr.fResourceName = '产品操作' AND fVersion = '2.0') tem_resource);
+      (SELECT tr.fUuid FROM t_resource_new tr WHERE tr.fResourceName = '产品管理' AND fVersion = '2.0') tem_resource);
