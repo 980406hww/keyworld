@@ -1,12 +1,15 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.criteria.ProductCriteria;
 import com.keymanager.ckadmin.entity.ProductInfo;
 import com.keymanager.ckadmin.service.ProductInfoService;
 
 import java.util.Date;
 import java.util.List;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +26,7 @@ public class ProductController {
     @Resource
     private ProductInfoService productInfoService;
 
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @RequestMapping(value = "/toProductInfo", method = RequestMethod.GET)
     public ModelAndView toProductManage() {
         ModelAndView mv = new ModelAndView();
@@ -30,6 +34,7 @@ public class ProductController {
         return mv;
     }
 
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @GetMapping(value = "/toAddProduct")
     public ModelAndView toAddProduct() {
         ModelAndView mv = new ModelAndView();
@@ -37,6 +42,7 @@ public class ProductController {
         return mv;
     }
 
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @GetMapping(value = "/toUpdateProduct")
     public ModelAndView toUpdateMachineInfo() {
         ModelAndView mv = new ModelAndView();
@@ -44,6 +50,7 @@ public class ProductController {
         return mv;
     }
 
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @GetMapping(value = "/getAllProduct")
     public ResultBean getAllProudct(){
         ResultBean resultBean = new ResultBean();
@@ -60,6 +67,7 @@ public class ProductController {
         return resultBean;
     }
 
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @GetMapping("/getProductInfoByID/{uuid}")
     public ResultBean getProducts(@PathVariable("uuid") int uuid) {
         ResultBean resultBean = new ResultBean();
@@ -76,6 +84,7 @@ public class ProductController {
         return resultBean;
     }
 
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @PostMapping("/updateProductInfo")
     public ResultBean updateProduct(@RequestBody ProductInfo productInfo) {
         ResultBean resultBean = new ResultBean();
@@ -92,16 +101,18 @@ public class ProductController {
         return resultBean;
     }
 
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @PostMapping("/getProductInfo")
-    public ResultBean getProducts(@RequestBody Map<String, String> map) {
+    public ResultBean getProducts(@RequestBody ProductCriteria criteria) {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
-        if ("init".equals(map.get("init")))
+        if ("init".equals(criteria.getInit()))
             return resultBean;
         try {
-            List<ProductInfo> productInfos = productInfoService.getProductsByName(map.get("productName"));
-            resultBean.setData(productInfos);
-
+            Page<ProductInfo> page=new Page<>(criteria.getPage(),criteria.getLimit());
+            page = productInfoService.getProductsByName(page,criteria.getProductName());
+            resultBean.setData(page.getRecords());
+            resultBean.setCount(page.getTotal());
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
@@ -111,6 +122,7 @@ public class ProductController {
         return resultBean;
     }
 
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @GetMapping("/deleteProduct/{uuid}")
     public ResultBean deleteProduct(@PathVariable("uuid") int uuid) {
         ResultBean resultBean = new ResultBean();
@@ -126,6 +138,7 @@ public class ProductController {
         return resultBean;
     }
 
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @PostMapping("/addProduct")
     public ResultBean addProduct(@RequestBody ProductInfo productInfo) {
         ResultBean resultBean = new ResultBean();
