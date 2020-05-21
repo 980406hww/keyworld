@@ -137,16 +137,16 @@
     </sql>
 
     <sql id="updateCustomerKeywordsCriteria">
-        <if test="customerKeywordCriteria.uuids != null">AND ck.fUuid IN
-            <foreach item="item" collection="customerKeywordCriteria.uuids" open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
         <if test="customerKeywordCriteria.customerUuid != null and customerKeywordCriteria.customerUuid != ''">AND ck.fCustomerUuid =
             #{customerKeywordCriteria.customerUuid}
         </if>
         <if test="customerKeywordCriteria.keyword != null and customerKeywordCriteria.keyword != ''">AND ck.fKeyword like
             '${customerKeywordCriteria.keyword}%'
+        </if>
+        <if test="customerKeywordCriteria.uuids != null">AND ck.fUuid IN
+            <foreach item="item" collection="customerKeywordCriteria.uuids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="customerKeywordCriteria.url != null and customerKeywordCriteria.url != ''">AND ck.fUrl like '%${customerKeywordCriteria.url}%'</if>
         <if test="customerKeywordCriteria.bearPawNumber != null and customerKeywordCriteria.bearPawNumber != ''">AND ck.fBearPawNumber like
@@ -234,12 +234,12 @@
     </update>
 
     <update id="cleanCustomerTitle">
-        UPDATE t_customer_keyword set fTitle = null , fManualCleanTitle = 1 where fTerminalType = #{terminalType} and fType = #{entryType} and fCustomerUuid = #{customerUuid}
+        UPDATE t_customer_keyword set fTitle = null , fManualCleanTitle = 1 where fCustomerUuid = #{customerUuid} and fTerminalType = #{terminalType} and fType = #{entryType}
     </update>
 
     <update id="cleanCaptureTitleFlag">
         UPDATE t_customer_keyword SET fTitle = NULL, fCaptureTitleQueryTime = NULL, fCapturedTitle = 0
-        where fTerminalType = #{terminalType} and fCustomerUuid = #{customerUuid}  and fType = #{entryType} and  fManualCleanTitle = 0
+        where fCustomerUuid = #{customerUuid} and fTerminalType = #{terminalType} and fType = #{entryType} and  fManualCleanTitle = 0
     </update>
 
     <update id="cleanCaptureTitleBySelected">
@@ -273,7 +273,7 @@
     </update>
 
     <select id="getCustomerKeywordCount" resultType="int">
-        SELECT COUNT(1) FROM t_customer_keyword ck WHERE ck.fType = #{entryType} and ck.fTerminalType = #{terminalType} and ck.fCustomerUuid = #{customerUuid}
+        SELECT COUNT(1) FROM t_customer_keyword ck WHERE ck.fCustomerUuid = #{customerUuid} and ck.fTerminalType = #{terminalType} and ck.fType = #{entryType}
     </select>
 
     <select id="getCustomerKeywordsCount" resultType="java.util.Map">
@@ -320,8 +320,7 @@
     </select>
 
     <select id="getMaxSequence" resultType="int">
-        select max(fSequence) from t_customer_keyword where fTerminalType = #{terminalType} and fType = #{entryType} and fCustomerUuid =
-        #{customerUuid};
+        select max(fSequence) from t_customer_keyword where fCustomerUuid = #{customerUuid} and fTerminalType = #{terminalType} and fType = #{entryType}
     </select>
 
     <select id="searchSameCustomerKeywords" resultType="com.keymanager.monitoring.entity.CustomerKeyword">
@@ -365,8 +364,8 @@
         ck.fPositionFifthFee	AS	'positionFifthFee',
         ck.fPositionFirstPageFee	AS	'positionFirstPageFee'
         FROM t_customer_keyword ck
-        WHERE ck.fCurrentIndexCount = -1 AND ck.fPositionFirstFee = -1
-        AND ck.fKeyword = #{keyword}
+        WHERE ck.fKeyword = #{keyword}
+        AND ck.fCurrentIndexCount = -1 AND ck.fPositionFirstFee = -1
         ORDER BY ck.fCaptureIndexQueryTime, ck.fCreateTime
     </select>
 
@@ -498,34 +497,39 @@
         ck.fRemarks AS 'remarks'
         FROM
         t_customer_keyword ck
-        WHERE 1 = 1
-        <include refid="searchCustomerKeywordsCriteria"/>
+        <where>
+            <include refid="searchCustomerKeywordsCriteria"/>
+        </where>
     </select>
 
     <update id="updateCustomerKeywordGroupName" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria">
-        UPDATE t_customer_keyword SET fOptimizeGroupName = #{customerKeywordUpdateCriteria.targetGroupName},fUpdateTime = CURRENT_TIMESTAMP WHERE
-        fTerminalType = #{customerKeywordUpdateCriteria.terminalType} AND fType = #{customerKeywordUpdateCriteria.entryType}
-        <if test="customerKeywordUpdateCriteria.customerUuid !=null and customerKeywordUpdateCriteria.customerUuid != ''">
-            AND fCustomerUuid = #{customerKeywordUpdateCriteria.customerUuid}
-        </if>
-        <if test="customerKeywordUpdateCriteria.customerKeywordUuids != null">AND fUuid IN
-            <foreach item="item" index="index" collection="customerKeywordUpdateCriteria.customerKeywordUuids" open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
+        UPDATE t_customer_keyword SET fOptimizeGroupName = #{customerKeywordUpdateCriteria.targetGroupName},fUpdateTime = CURRENT_TIMESTAMP
+        <where>
+            <if test="customerKeywordUpdateCriteria.customerUuid !=null and customerKeywordUpdateCriteria.customerUuid != ''">
+                AND fCustomerUuid = #{customerKeywordUpdateCriteria.customerUuid}
+            </if>
+            AND fTerminalType = #{customerKeywordUpdateCriteria.terminalType} AND fType = #{customerKeywordUpdateCriteria.entryType}
+            <if test="customerKeywordUpdateCriteria.customerKeywordUuids != null">AND fUuid IN
+                <foreach item="item" index="index" collection="customerKeywordUpdateCriteria.customerKeywordUuids" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
     </update>
 
     <update id="updateCustomerKeywordSearchEngine" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordUpdateCriteria">
-        UPDATE t_customer_keyword SET fSearchEngine = #{customerKeywordUpdateCriteria.targetSearchEngine},fUpdateTime = CURRENT_TIMESTAMP WHERE
-        fTerminalType = #{customerKeywordUpdateCriteria.terminalType} AND fType = #{customerKeywordUpdateCriteria.entryType}
-        <if test="customerKeywordUpdateCriteria.customerUuid !=null and customerKeywordUpdateCriteria.customerUuid != ''">
-            AND fCustomerUuid = #{customerKeywordUpdateCriteria.customerUuid}
-        </if>
-        <if test="customerKeywordUpdateCriteria.customerKeywordUuids != null">AND fUuid IN
-            <foreach item="item" index="index" collection="customerKeywordUpdateCriteria.customerKeywordUuids" open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
+        UPDATE t_customer_keyword SET fSearchEngine = #{customerKeywordUpdateCriteria.targetSearchEngine},fUpdateTime = CURRENT_TIMESTAMP
+        <where>
+            <if test="customerKeywordUpdateCriteria.customerUuid !=null and customerKeywordUpdateCriteria.customerUuid != ''">
+                AND fCustomerUuid = #{customerKeywordUpdateCriteria.customerUuid}
+            </if>
+            AND fTerminalType = #{customerKeywordUpdateCriteria.terminalType} AND fType = #{customerKeywordUpdateCriteria.entryType}
+            <if test="customerKeywordUpdateCriteria.customerKeywordUuids != null">AND fUuid IN
+                <foreach item="item" index="index" collection="customerKeywordUpdateCriteria.customerKeywordUuids" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
     </update>
 
     <select id="searchCustomerKeywordUuidByRank" resultType="java.lang.Long">
@@ -741,59 +745,31 @@
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 
-    <select id="getCustomerKeywordUuidForCapturePosition" resultType="Long">
-        SELECT
-        ck.fUuid AS 'uuid'
-        FROM t_customer_keyword ck
-        WHERE ck.fTerminalType = #{terminalType} and ck.fStatus = 1
-        AND fCaptureStatus = #{captureStatus}
-        <if test="startTime != null and captureStatus == 0">
-            AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
-            AND !(ck.fCapturePositionQueryTime > CURRENT_DATE() AND ck.fCurrentPosition &lt; 4 AND ck.fCurrentPosition &gt; 0)
-        </if>
-        <if test="startTime != null and captureStatus == 1">
-            AND ck.fCapturePositionQueryTime <![CDATA[<]]> DATE_SUB( NOW(), INTERVAL 3 MINUTE )
-        </if>
-        <if test="customerUuid != null">
-            AND ck.fCustomerUuid = #{customerUuid}
-        </if>
-        <choose>
-            <when test="groupNames != null">
-                AND ck.fOptimizeGroupName IN
-                <foreach item="item" index="index" collection="groupNames" open="(" separator="," close=")">
-                    #{item}
-                </foreach>
-            </when>
-            <otherwise>
-                AND ck.fOptimizeGroupName IS NULL
-            </otherwise>
-        </choose>
-        LIMIT 1
-    </select>
-
     <select id="getCustomerKeywordUuidForCapturePositionTemp" resultType="Long">
         SELECT
         ck.fUuid AS 'uuid'
         FROM t_customer_keyword ck
-        WHERE ck.fTerminalType = #{terminalType}
-        AND ck.fStatus = 1
-        AND fCaptureStatus = #{captureStatus}
-        <if test="startTime != null and captureStatus == 0">
-            AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
-            <if test="saveTopThree == true">
-                AND !(ck.fCapturePositionQueryTime > CURRENT_DATE() AND ck.fCurrentPosition &lt; 4 AND ck.fCurrentPosition &gt; 0)
+        <where>
+            <if test="customerUuid != null">
+                AND ck.fCustomerUuid = #{customerUuid}
             </if>
-        </if>
-        <if test="startTime != null and captureStatus == 1">
-            AND ck.fCapturePositionQueryTime <![CDATA[<]]> DATE_SUB( NOW(), INTERVAL 3 MINUTE )
-        </if>
-        <if test="customerUuid != null">
-            AND ck.fCustomerUuid = #{customerUuid}
-        </if>
-        <if test="groupName != null">
-            AND ck.fOptimizeGroupName = #{groupName}
-        </if>
-        LIMIT 10
+            <if test="groupName != null">
+                AND ck.fOptimizeGroupName = #{groupName}
+            </if>
+            AND  ck.fTerminalType = #{terminalType}
+            AND ck.fStatus = 1
+            AND fCaptureStatus = #{captureStatus}
+            <if test="startTime != null and captureStatus == 0">
+                AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
+                <if test="saveTopThree == true">
+                    AND !(ck.fCapturePositionQueryTime > CURRENT_DATE() AND ck.fCurrentPosition &lt; 4 AND ck.fCurrentPosition &gt; 0)
+                </if>
+            </if>
+            <if test="startTime != null and captureStatus == 1">
+                AND ck.fCapturePositionQueryTime <![CDATA[<]]> DATE_SUB( NOW(), INTERVAL 3 MINUTE )
+            </if>
+            LIMIT 10
+        </where>
     </select>
 
     <select id="getCustomerKeywordForCapturePositionTemp" resultType="com.keymanager.value.CustomerKeywordForCapturePosition">
@@ -878,30 +854,32 @@
         ck.fCustomerUuid as 'customerUuid',
         ck.fOptimizeGroupName as 'group'
         FROM t_customer_keyword ck
-        WHERE ck.fType = 'fm'
-        <if test="groupName != null and groupName != ''">AND ck.fOptimizeGroupName = #{groupName}</if>
-        AND ck.fTerminalType = #{terminalType}
-        AND ck.fStatus = 1
-        AND (ck.fAutoUpdateNegativeDateTime is null or DATE_ADD(ck.fAutoUpdateNegativeDateTime, INTERVAL 3 MINUTE) &lt; NOW())
-        ORDER BY ck.fAutoUpdateNegativeDateTime LIMIT 1
+        <where>
+            <if test="groupName != null and groupName != ''">AND ck.fOptimizeGroupName = #{groupName}</if>
+            AND  ck.fType = 'fm'
+            AND ck.fTerminalType = #{terminalType}
+            AND ck.fStatus = 1
+            AND (ck.fAutoUpdateNegativeDateTime is null or DATE_ADD(ck.fAutoUpdateNegativeDateTime, INTERVAL 3 MINUTE) &lt; NOW())
+            ORDER BY ck.fAutoUpdateNegativeDateTime LIMIT 1
+        </where>
     </select>
 
     <update id="updateAutoUpdateNegativeTimeAs4MinutesAgo">
         UPDATE t_customer_keyword
         SET fAutoUpdateNegativeDateTime = DATE_ADD(now(), INTERVAL -4 MINUTE)
-        WHERE fType = 'fm'
-            AND fStatus = 1
-            AND fTerminalType = #{terminalType}
-            AND fOptimizeGroupName = #{groupName}
+        WHERE fOptimizeGroupName = #{groupName}
+          AND fType = 'fm'
+          AND fTerminalType = #{terminalType}
+          AND fStatus = 1
     </update>
 
     <update id="updateAutoUpdateNegativeTime">
         UPDATE t_customer_keyword
         SET fAutoUpdateNegativeDateTime = NOW()
-        WHERE fType = 'fm'
-        AND fStatus = 1
-        AND fKeyword = #{keyword}
+        WHERE fKeyword = #{keyword}
+        AND fType = 'fm'
         AND fTerminalType = #{terminalType}
+        AND fStatus = 1
         AND fOptimizeGroupName = #{groupName}
     </update>
 
@@ -910,8 +888,7 @@
         fOptimizeGroupName	as 'name'
         from t_customer_keyword
         where
-            fOptimizeGroupName is not null
-            and fOptimizeGroupName != ''
+            fOptimizeGroupName > ''
             GROUP BY fOptimizeGroupName
     </select>
 
@@ -923,8 +900,6 @@
         WHERE
             fTerminalType = #{terminalType}
         AND
-            fOptimizeGroupName IS NOT NULL
-        AND
             fOptimizeGroupName &gt; ''
         GROUP BY
             fOptimizeGroupName
@@ -935,24 +910,24 @@
         ck.fUuid AS `uuid`
         FROM
         t_customer_keyword ck
-        WHERE ck.fCapturedTitle = 0
-        AND ck.fSearchEngine = #{searchEngine}
-        AND ck.fCaptureTitleQueryTime IS NULL
-        <if test="qzCaptureTitleLog.terminalType != null and qzCaptureTitleLog.terminalType != ''">
-            AND ck.fTerminalType = #{qzCaptureTitleLog.terminalType}
-        </if>
-        <if test="qzCaptureTitleLog.group != null and qzCaptureTitleLog.group != ''">
-            AND ck.fOptimizeGroupName = #{qzCaptureTitleLog.group}
-        </if>
-        <if test="qzCaptureTitleLog.customerUuid != null and qzCaptureTitleLog.customerUuid != ''">
-            AND ck.fCustomerUuid = #{qzCaptureTitleLog.customerUuid}
-        </if>
-        AND (ck.fTitle IS NULL OR ck.fTitle = '')
-        /*LIMIT 1*/
-
-        <if test="batchCount != null and batchCount != 0">
-            limit #{batchCount}
-        </if>
+        <where>
+            <if test="qzCaptureTitleLog.customerUuid != null and qzCaptureTitleLog.customerUuid != ''">
+                AND ck.fCustomerUuid = #{qzCaptureTitleLog.customerUuid}
+            </if>
+            <if test="qzCaptureTitleLog.group != null and qzCaptureTitleLog.group != ''">
+                AND ck.fOptimizeGroupName = #{qzCaptureTitleLog.group}
+            </if>
+            <if test="qzCaptureTitleLog.terminalType != null and qzCaptureTitleLog.terminalType != ''">
+                AND ck.fTerminalType = #{qzCaptureTitleLog.terminalType}
+            </if>
+            AND ck.fCapturedTitle = 0
+            AND ck.fSearchEngine = #{searchEngine}
+            AND ck.fCaptureTitleQueryTime IS NULL
+            AND (ck.fTitle IS NULL OR ck.fTitle = '')
+            <if test="batchCount != null and batchCount != 0">
+                limit #{batchCount}
+            </if>
+        </where>
     </select>
 
     <select id="searchCustomerKeywordForCaptureTitle" resultType="com.keymanager.value.CustomerKeywordForCaptureTitle">
@@ -1106,16 +1081,16 @@
         , fOptimizeRemainingCount = fOptimizeTodayCount - fOptimizedCount
         , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
         , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)
-        WHERE fTerminalType = #{terminalType}
+        WHERE fCustomerUuid = #{customerUuid}
+        AND fTerminalType = #{terminalType}
         AND fType = #{entryType}
-        AND fCustomerUuid = #{customerUuid}
     </update>
 
     <update id="changeCustomerKeywordStatus">
         UPDATE t_customer_keyword SET fStatus = #{status}
-        WHERE fTerminalType = #{terminalType}
+        WHERE fCustomerUuid = #{customerUuid}
         AND fType = #{entryType}
-        AND fCustomerUuid = #{customerUuid}
+        AND fTerminalType = #{terminalType}
     </update>
 
     <update id="batchChangeCustomerKeywordStatus">
@@ -1163,8 +1138,8 @@
 			fTitle AS 'title',
 			fUrl AS 'url'
 		FROM t_customer_keyword
-		WHERE fType = 'fm'
-		AND fKeyword = #{keyword}
+		WHERE fKeyword = #{keyword}
+		AND fType = 'fm'
 		AND fTerminalType = #{terminalType}
 		AND fOptimizeRemainingCount &gt; 0
 		AND fStatus = 1
@@ -1177,9 +1152,9 @@
             fTitle AS 'title',
             fUrl AS 'url'
         FROM t_customer_keyword
-        WHERE fType = 'qz'
+        WHERE fOptimizeGroupName = #{optimizeGroupName}
         AND fTerminalType = #{terminalType}
-        AND fOptimizeGroupName = #{optimizeGroupName}
+        AND fType = 'qz'
         AND fOptimizeRemainingCount &gt; 0
         AND fStatus = 1
         ORDER BY fQueryTime
@@ -1189,9 +1164,9 @@
     <select id="searchKeywordUrlByGroup" resultType="java.lang.String">
         SELECT CONCAT(fUrl, ',', fKeyword) AS 'urlKeyword'
         FROM t_customer_keyword
-        WHERE fTerminalType = #{terminalType}
+        WHERE fOptimizeGroupName = #{optimizeGroupName}
+        AND fTerminalType = #{terminalType}
         AND fType = #{entryType}
-        AND fOptimizeGroupName = #{optimizeGroupName}
         AND fKeyword > ''
         AND fUrl > ''
         AND fStatus = 1
@@ -1204,10 +1179,10 @@
             <if test="reachStandardPosition &gt; 0 and item.position &gt; 0 and item.position &lt;= reachStandardPosition">
                 ,fLastReachStandardDate = CURRENT_DATE()
             </if>
-            WHERE fTerminalType = #{terminalType}
+            WHERE fKeyword = #{item.keyword}
+            AND fTerminalType = #{terminalType}
             AND fType = #{entryType}
             AND fSearchEngine = #{searchEngine}
-            AND fKeyword = #{item.keyword}
             AND fUrl = #{item.url}
         </foreach>
     </update>
@@ -1249,8 +1224,9 @@
         ck.fKeyword AS 'keyword'
         FROM
         t_customer_keyword ck
-        WHERE 1 = 1
-        <include refid="searchCustomerKeywordsCriteria"/>
+        <where>
+            <include refid="searchCustomerKeywordsCriteria"/>
+        </where>
     </select>
     <update id="moveOutNoRankingCustomerKeyword">
         UPDATE t_customer_keyword
@@ -1339,14 +1315,15 @@
         GROUP_CONCAT(CAST(fUuid AS CHAR) ORDER BY fUuid) AS 'uuids'
         FROM
         t_customer_keyword
-        WHERE
-        fType = #{customerKeywordCriteria.entryType}
-        AND fTerminalType = #{customerKeywordCriteria.terminalType}
-        <if test="customerKeywordCriteria.customerUuid != null and customerKeywordCriteria.customerUuid != ''">
-            AND fCustomerUuid = #{customerKeywordCriteria.customerUuid}
-        </if>
-        GROUP BY fKeyword,fUrl, fCustomerUuid
-        HAVING COUNT(1) > 1
+        <where>
+            <if test="customerKeywordCriteria.customerUuid != null and customerKeywordCriteria.customerUuid != ''">
+                AND fCustomerUuid = #{customerKeywordCriteria.customerUuid}
+            </if>
+            AND fTerminalType = #{customerKeywordCriteria.terminalType}
+            AND fType = #{customerKeywordCriteria.entryType}
+            GROUP BY fKeyword,fUrl, fCustomerUuid
+            HAVING COUNT(1) > 1
+        </where>
     </select>
 
     <update id="batchUpdateKeywordStatus">
@@ -1416,17 +1393,18 @@
     <update id="excludeCustomerKeyword" parameterType="com.keymanager.monitoring.entity.CustomerKeyword">
         UPDATE t_customer_keyword ck
         SET ck.fStatus = 3
-        WHERE 1=1
-        <if test="qzSettingExcludeCustomerKeywordsCriteria.customerUuid != null and qzSettingExcludeCustomerKeywordsCriteria.customerUuid != ''">
-            AND ck.fCustomerUuid = #{qzSettingExcludeCustomerKeywordsCriteria.customerUuid}
-        </if>
-        AND ck.fType = #{qzSettingExcludeCustomerKeywordsCriteria.type}
-        AND ck.fTerminalType = #{qzSettingExcludeCustomerKeywordsCriteria.terminalType}
-        AND ck.fKeyword IN
-        <foreach item="keyword" collection="qzSettingExcludeCustomerKeywordsCriteria.keywords" open="(" separator="," close=")">
-            #{keyword}
-        </foreach>
-        AND ck.fUrl like '%${qzSettingExcludeCustomerKeywordsCriteria.domain}%'
+        <where>
+            <if test="qzSettingExcludeCustomerKeywordsCriteria.customerUuid != null and qzSettingExcludeCustomerKeywordsCriteria.customerUuid != ''">
+                AND ck.fCustomerUuid = #{qzSettingExcludeCustomerKeywordsCriteria.customerUuid}
+            </if>
+            AND ck.fTerminalType = #{qzSettingExcludeCustomerKeywordsCriteria.terminalType}
+            AND ck.fType = #{qzSettingExcludeCustomerKeywordsCriteria.type}
+            AND ck.fKeyword IN
+            <foreach item="keyword" collection="qzSettingExcludeCustomerKeywordsCriteria.keywords" open="(" separator="," close=")">
+                #{keyword}
+            </foreach>
+            AND ck.fUrl like '%${qzSettingExcludeCustomerKeywordsCriteria.domain}%'
+        </where>
     </update>
 
     <select id="getCheckEnteredKeywords" resultType="com.keymanager.monitoring.vo.CustomerKeywordEnteredVO">
@@ -1587,13 +1565,15 @@
         SELECT
         ck.fOptimizeGroupName AS 'groupName'
         FROM t_customer_keyword ck
-        WHERE ck.fTerminalType = #{groupSettingCriteria.terminalType}
-        <if test="groupSettingCriteria.optimizedGroupName != null and groupSettingCriteria.optimizedGroupName != ''">
-            AND ck.fOptimizeGroupName LIKE '${groupSettingCriteria.optimizedGroupName}%'
-        </if>
-        AND ck.fOptimizeGroupName > ''
-        AND ck.fStatus = 1
-        GROUP BY ck.fOptimizeGroupName
+        <where>
+            <if test="groupSettingCriteria.optimizedGroupName != null and groupSettingCriteria.optimizedGroupName != ''">
+                AND ck.fOptimizeGroupName LIKE '${groupSettingCriteria.optimizedGroupName}%'
+            </if>
+            AND ck.fTerminalType = #{groupSettingCriteria.terminalType}
+            AND ck.fOptimizeGroupName > ''
+            AND ck.fStatus = 1
+            GROUP BY ck.fOptimizeGroupName
+        </where>
     </select>
 
     <update id="updateSameCustomerKeywordSource">
@@ -1633,8 +1613,9 @@
         UPDATE t_customer_keyword ck
         SET ck.fMachineGroup = #{customerKeywordCriteria.targetMachineGroup},
         ck.fUpdateTime = NOW()
-        WHERE 1=1
-        <include refid="updateCustomerKeywordsCriteria"/>
+        <where>
+            <include refid="updateCustomerKeywordsCriteria"/>
+        </where>
     </update>
 
     <select id="getCustomerKeywordRankingCount" resultType="com.keymanager.monitoring.vo.CustomerKeywordRankingCountVO">
@@ -1645,17 +1626,17 @@
             COUNT((ck.fCurrentPosition BETWEEN 1 AND 40) OR NULL)  AS 'topFortyNum',
             COUNT((ck.fCurrentPosition BETWEEN 1 AND 50) OR NULL)  AS 'topFiftyNum'
         FROM t_customer_keyword ck
-        WHERE ck.fTerminalType = #{terminalType}
-        AND ck.fCustomerUuid = #{customerUuid}
+        WHERE ck.fCustomerUuid = #{customerUuid}
         AND ck.fQZSettingUuid = #{qzSettingUuid}
+        AND ck.fTerminalType = #{terminalType}
     </select>
 
     <select id="getQZSettingKeywordCount" resultType="java.lang.Integer">
         SELECT COUNT(1)
         FROM t_customer_keyword ck
-        WHERE ck.fTerminalType = #{terminalType}
-        AND ck.fCustomerUuid = #{customerUuid}
+        WHERE ck.fCustomerUuid = #{customerUuid}
         AND ck.fQZSettingUuid = #{qzSettingUuid}
+        AND ck.fTerminalType = #{terminalType}
     </select>
 
     <select id="searchKeywordAmountCountList" parameterType="com.keymanager.monitoring.criteria.KeywordAmountCountCriteria"

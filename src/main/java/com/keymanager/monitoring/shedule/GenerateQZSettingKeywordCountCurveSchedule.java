@@ -14,6 +14,9 @@ public class GenerateQZSettingKeywordCountCurveSchedule {
     @Autowired
     private QZSettingService qzSettingService;
 
+    /**
+     * 每天的8点，22点 更新一次站点操作词数曲线
+     */
     public void runTask() {
         logger.info("============= "+" Generate QZSetting Keyword Count Curve Task "+"===================");
         try {

@@ -14,6 +14,9 @@ public class GenerateRankingCurveSchedule {
     @Autowired
     private QZSettingService qzSettingService;
 
+    /**
+     * 每俩小时更新一次站点排名曲线
+     */
     public void runTask() {
         logger.info("============= "+" Generate Ranking Curve  Task "+"===================");
         try {

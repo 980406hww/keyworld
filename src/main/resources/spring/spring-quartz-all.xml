@@ -391,7 +391,7 @@
 		<property name="concurrent" value="false" />
 	</bean>
 
-	<!--每隔一小时更新一次站点排名曲线-->
+	<!--每俩小时更新一次站点排名曲线-->
 	<bean id="cronTriggerGenerateRankingCurve" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronJobDetailGenerateRankingCurve" />
 		<property name="cronExpression" value="0 0 8-23/2  * * ?" />
@@ -403,7 +403,7 @@
 		<property name="concurrent" value="false" />
 	</bean>
 
-	<!--每天更新一次站点操作词数曲线-->
+	<!--每天的8点，22点 更新一次站点操作词数曲线-->
 	<bean id="cronTriggerGenerateQZSettingKeywordCountCurve" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronJobDetailGenerateQZSettingKeywordCountCurve" />
 		<property name="cronExpression" value="0 0 8,22 * * ?" />
