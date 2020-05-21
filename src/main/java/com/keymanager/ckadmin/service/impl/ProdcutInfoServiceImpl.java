@@ -1,5 +1,6 @@
 package com.keymanager.ckadmin.service.impl;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.dao.ProductInfoDao;
 import com.keymanager.ckadmin.entity.ProductInfo;
 import com.keymanager.ckadmin.service.ProductInfoService;
@@ -26,8 +27,9 @@ public class ProdcutInfoServiceImpl implements ProductInfoService {
     }
 
     @Override
-    public List<ProductInfo> getProductsByName(String name) {
-        return productInfoDao.getProductsByName(name);
+    public Page<ProductInfo> getProductsByName(Page<ProductInfo> page,String name) {
+        List<ProductInfo> productInfos= productInfoDao.getProductsByName(page,name);
+        return page.setRecords(productInfos);
     }
 
     @Override
