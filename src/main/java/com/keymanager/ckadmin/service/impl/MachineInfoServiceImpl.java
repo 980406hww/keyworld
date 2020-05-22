@@ -234,15 +234,15 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     private void saveMachineInfoByVPSFile(MachineInfo machineInfo, String[] MachineInfos) throws ParseException {
         String[] vncInfos = MachineInfos[3].split(":");
         machineInfo.setClientID(MachineInfos[0]);
-        ProductInfo product = productInfoService.getProductByName(MachineInfos[1]);
-        if (product == null){
+        Long productId = productInfoService.getProductIdByName(MachineInfos[1]);
+        if (productId == null){
             ProductInfo newProduct = new ProductInfo();
             newProduct.setProductName(MachineInfos[1]);
-            newProduct.setCreateDate(new Date());
+            newProduct.setCreateTime(new Date());
             productInfoService.addProduct(newProduct);
-            product = newProduct;
+            productId = newProduct.getUuid();
         }
-        machineInfo.setProductId(product.getUuid());
+        machineInfo.setProductId(productId);
         machineInfo.setVpsBackendSystemComputerID(MachineInfos[2]);
         machineInfo.setHost(vncInfos[0]);
         machineInfo.setPort(vncInfos[1]);

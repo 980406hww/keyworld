@@ -23,11 +23,11 @@ public class ProductInfo {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:SS")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:SS")
-    @TableField(value = "fCreateDate")
-    private Date createDate;
+    @TableField(value = "fCreateTime")
+    private Date createTime;
 
-    @TableField(value = "fAlterDate")
-    private Date alterDate;
+    @TableField(value = "fUpdateTime")
+    private Date updateTime;
 
     public long getUuid() {
         return uuid;
@@ -53,19 +53,19 @@ public class ProductInfo {
         this.productPrice = productPrice;
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public Date getAlterDate() {
-        return alterDate;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setAlterDate(Date alterDate) {
-        this.alterDate = alterDate;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

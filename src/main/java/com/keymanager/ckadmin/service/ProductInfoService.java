@@ -7,7 +7,7 @@ import java.util.List;
 public interface ProductInfoService {
     ProductInfo getProductInfo(long id);
 
-    ProductInfo getProductByName(String name);
+    Long getProductIdByName(String name);
 
     Page<ProductInfo> getProductsByName(Page<ProductInfo> page, String name);
 

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/internal/productManage")
@@ -90,7 +89,7 @@ public class ProductController {
         ResultBean resultBean = new ResultBean();
         resultBean.setCode(200);
         try {
-            productInfo.setAlterDate(new Date());
+            productInfo.setUpdateTime(new Date());
             productInfoService.updateProduct(productInfo);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -143,7 +142,7 @@ public class ProductController {
     public ResultBean addProduct(@RequestBody ProductInfo productInfo) {
         ResultBean resultBean = new ResultBean();
         try {
-            productInfo.setCreateDate(new Date());
+            productInfo.setCreateTime(new Date());
             productInfoService.addProduct(productInfo);
             resultBean.setCode(200);
         } catch (Exception e) {

@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 public interface ProductInfoDao extends BaseMapper<ProductInfo> {
 
-    ProductInfo selectProductByName(@Param(value = "name") String name);
+    Long getProductIdByName(@Param(value = "name") String name);
 
     List<ProductInfo> getProductsByName(Page<ProductInfo> page, @Param(value = "name") String name );
 

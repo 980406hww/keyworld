@@ -8,8 +8,8 @@ CREATE TABLE `t_product_info`  (
   `fUuid` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `fProductName` varchar(50)  NULL DEFAULT NULL COMMENT '产品名',
   `fProductPrice` decimal(10, 2) NULL DEFAULT NULL COMMENT '产品价格',
-  `fCreateDate` datetime NULL DEFAULT NULL COMMENT '创建时间',
-  `fAlterDate` datetime NULL DEFAULT NULL COMMENT '修改时间',
+  `fCreateTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `fUpdateTime` datetime NULL DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`fUuid`) USING BTREE
 ) ENGINE = InnoDB ;
 

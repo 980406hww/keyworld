@@ -22,8 +22,8 @@ public class ProdcutInfoServiceImpl implements ProductInfoService {
     }
 
     @Override
-    public ProductInfo getProductByName(String name) {
-        return productInfoDao.selectProductByName(name);
+    public Long getProductIdByName(String name) {
+        return productInfoDao.getProductIdByName(name);
     }
 
     @Override
