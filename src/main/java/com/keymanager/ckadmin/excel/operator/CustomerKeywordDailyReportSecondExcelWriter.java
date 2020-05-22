@@ -87,7 +87,9 @@ public class CustomerKeywordDailyReportSecondExcelWriter {
                 }
             }
 
-            writer.addFormulanCell(CustomerKeywordDailyReportSecondDefinition.TodayPrice.getColumnIndex(), rowIndex, "SUM(F2:F" + rowIndex + ")");
+//            writer.addFormulanCell(CustomerKeywordDailyReportSecondDefinition.TodayPrice.getColumnIndex(), rowIndex, "SUM(F2:F" + rowIndex + ")");
+            writer.addLabelCell(CustomerKeywordDailyReportSecondDefinition.TodayPrice.getColumnIndex(), rowIndex, totalFee);
+
             writer.setColumnView(CustomerKeywordDailyReportSecondDefinition.Keyword.getColumnIndex(), keywordWidth + 6);
             writer.setColumnView(CustomerKeywordDailyReportSecondDefinition.URL.getColumnIndex(), urlWidth + 6);
             writer.setColumnView(CustomerKeywordDailyReportSecondDefinition.Price1.getColumnIndex(), price1Width + 6);
@@ -95,7 +97,7 @@ public class CustomerKeywordDailyReportSecondExcelWriter {
             writer.setColumnView(CustomerKeywordDailyReportSecondDefinition.CurrentPosition.getColumnIndex(), currentPositionWidth + 6);
             writer.setColumnView(CustomerKeywordDailyReportSecondDefinition.TodayPrice.getColumnIndex(), todayPriceWidth + 6);
 
-            writeDailySubTotal(rowIndex);
+            writeDailySubTotal(rowIndex, totalFee);
 
             return totalFee;
         }
@@ -151,13 +153,14 @@ public class CustomerKeywordDailyReportSecondExcelWriter {
     }
 
 
-    private void writeDailySubTotal(int rowIndex) throws Exception {
+    private void writeDailySubTotal(int rowIndex, double totalFee) throws Exception {
         writer.setCurrentWorkSheetWithName("小计");
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int endOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         writer.addLabelCell(0, day, day);
-        writer.addFormulanCell(1, day, "'" + day + "'!F" + (rowIndex + 1));
+//        writer.addFormulanCell(1, day, "'" + day + "'!F" + (rowIndex + 1));
+        writer.addLabelCell(1, day, totalFee);
 
         if (day == endOfMonth) {
             writer.addFormulanCell(2, day, "SUM(B2:B" + (day + 1) + ")");
