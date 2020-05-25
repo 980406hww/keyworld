@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>产品管理</title>
+    <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
+    <style>
+        .layui-tab-content {
+            padding: 0px;
+        }
+        .layui-card-body {
+            position: relative;
+            padding: 0px;
+            line-height: 24px;
+        }
+        .layui-table, .layui-table-view {
+            margin: 0px;
+            border-width: 1px;
+        }
+        .my-collapse > div:first-child {
+            margin-top: 10px;
+            background: #f2f2f2;
+            border: 0px;
+        }
+        /* 下拉条件框 */
+        .my-collapse {
+            position: relative;
+            box-shadow: none;
+        }
+
+        .my-collapse * {
+            box-shadow: none;
+        }
+
+        .my-collapse .layui-form-select dl,
+        .my-collapse .layui-form-select .layui-anim {
+            top: 33px !important;
+        }
+
+        .my-collapse > div {
+            padding: 6px 5px;
+        }
+
+        .my-hide {
+            padding-bottom: 1px !important;
+            width: 100%;
+            display: none;
+            position: absolute;
+            top: 43px;
+            left: 0;
+            z-index: 894;
+            background: #fff;
+            border-left: 1px solid #e6e6e6;
+            border-right: 1px solid #e6e6e6;
+            border-bottom: 1px solid #e6e6e6;
+            border-bottom-right-radius: 2px;
+            border-bottom-left-radius: 2px;
+        }
+
+        .my-collapse button {
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .my-collapse .my-btn {
+            height: 30px !important;
+            line-height: 30px !important;
+            padding: 0 18px;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .my-collapse .my-btn:hover {
+            opacity: .8;
+            transition: opacity 0.5s;
+        }
+
+        .layui-input-inline input {
+            height: 30px;
+        }
+
+        .layui-form-pane .layui-form-label {
+            width: 116px;
+            padding: 8px 15px;
+            height: 30px;
+            line-height: 13px;
+            border-width: 1px;
+            border-style: solid;
+            border-radius: 2px 0 0 2px;
+            text-align: center;
+            background-color: #FBFBFB;
+            overflow: hidden;
+            box-sizing: border-box
+        }
+
+        .layui-inline label {
+            border-right: none;
+        }
+
+        .layui-form-pane .layui-form-checkbox {
+            margin: 0;
+        }
+
+        .layui-inline input {
+            width: 180px;
+            height: 30px;
+        }
+
+        .layui-inline:nth-child(1) input {
+            width: 140px;
+        }
+
+        .layui-table-body .laytable-cell-checkbox {
+            text-align: center;
+        }
+
+        .layui-table-body .laytable-cell-1-0-13, .layui-table-body .laytable-cell-6-0-13, .layui-table-body .laytable-cell-11-0-13,
+        .layui-table-body .laytable-cell-2-0-13, .layui-table-body .laytable-cell-7-0-13, .layui-table-body .laytable-cell-12-0-13,
+        .layui-table-body .laytable-cell-3-0-13, .layui-table-body .laytable-cell-8-0-13, .layui-table-body .laytable-cell-13-0-13,
+        .layui-table-body .laytable-cell-4-0-13, .layui-table-body .laytable-cell-9-0-13, .layui-table-body .laytable-cell-14-0-13,
+        .layui-table-body .laytable-cell-5-0-13, .layui-table-body .laytable-cell-10-0-13, .layui-table-body .laytable-cell-15-0-13 {
+            text-align: center;
+        }
+
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 25px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="ok-body">
+    <!--模糊搜索区域-->
+    <div class="layui-card ">
+        <div class="layui-card-body ">
+            <form class="layui-form layui-form-pane" id="searchForm">
+                <div class="my-collapse">
+                    <div>
+                        <div class="layui-inline">
+                            <input style="height: 30px" type="text" name="productName" id="productName" placeholder="产品名" autocomplete="off" class="layui-input layui-input-text" />
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">
+                                搜索
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table class="layui-hide" id="productTable" lay-filter="tableFilter"></table>
+</div>
+
+<script src="/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
+<script type="text/html" id="toolbarTpl">
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-sm" id="add_product" lay-event="add_product">
+            添加产品
+        </button>
+        <button class="layui-btn layui-btn-sm" id="change_select_productPrice" lay-event="change_select_productPrice">
+            修改价格
+        </button>
+    </div>
+</script>
+<script>
+    var flag___ = false;
+    var sign = false;
+    // 进度条加载提示
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    };
+
+    layui.use(['table', 'form', 'jquery', 'okLayer', 'layer', "common"], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var common = layui.common;
+        var okLayer = layui.okLayer;
+        var active = {
+            reload: function () {
+                if (flag___) {
+                    let data = common.formToJsonObject('searchForm');
+                    data.init = null;
+                    table.reload('productTable', {
+                        where: data,
+                        page: {
+                            curr: 1
+                        },
+                        done: function () {
+                        }
+                    });
+                }
+            }
+        };
+
+        table.on('toolbar(tableFilter)', function (obj) {
+            let data = obj.data, event = obj.event;
+            switch (event) {
+                case 'change_select_productPrice':
+                    change_select_productPrice();
+                    break;
+                case 'add_product':
+                    to_add_product();
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        table.on('tool(tableFilter)', function (obj) {
+            let data = obj.data, event = obj.event;
+            switch (event) {
+                case 'updateProductInfo':
+                    toUpdateProductInfo(data);
+                    break;
+                case 'deleteProduct':
+                    deleteProduct(data.uuid);
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        function get_selected_uuid_arr() {
+            let checkStatus = table.checkStatus('productTable')
+                , data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            return uuidArr;
+        }
+
+        function to_add_product() {
+            okLayer.open("产品管理 /  添加产品", "/internal/productManage/toAddProduct", "60%", "40%", function (layero) {
+                window[layero.find("iframe")[0]["name"]];
+            }, function () {
+                if (sign) {
+                    let pageConf = common.formToJsonObject('searchForm');
+                    searchProduct(pageConf);
+                    sign = false;
+                }
+            });
+        }
+
+        function toUpdateProductInfo(data) {
+            okLayer.open("首页 / 产品管理 / 修改产品信息", "/internal/productManage/toUpdateProduct", "35%", "66%", function (layero) {
+                window[layero.find("iframe")[0]["name"]].iniProductInfo(data);
+            }, function () {
+                if (sign) {
+                    active['reload'].call(this);
+                    sign = false;
+                }
+            }, "80px")
+        }
+
+        function deleteProduct(uuid) {
+            layer.confirm('确认删除该产品？', {
+                icon: 3,
+                title: '删除产品',
+                btn: ['确认', '取消']
+                , yes: function (index_) {
+                    $.ajax({
+                        url: '/internal/productManage/deleteProduct/' + uuid,
+                        type: 'GET',
+                        headers: {
+                            "Accept": 'application/json',
+                            "Content-Type": 'application/json'
+                        },
+                        success: function (res) {
+                            if (res.code === 200) {
+                                layer.close(index_);
+                                common.showSuccessMsg("删除成功", function () {
+                                    active['reload'].call(this);
+                                });
+                            } else {
+                                common.showFailMsg(res.msg)
+                            }
+                        },
+                        error: function () {
+                            common.showFailMsg('未知错误，请稍后重试！！')
+                        }
+                    });
+                }, btn2: function (index) {
+                    layer.close(index);
+                }
+            });
+        }
+
+        function change_select_productPrice() {
+            let uuidArr = get_selected_uuid_arr();
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要操作的词');
+                return
+            }
+
+            layer.prompt({
+                formType: 3,
+                value: '',
+                title: '产品价格',
+                area: ['220px', '60px'], //自定义文本域宽高
+                yes: function (index, layero) {
+                    let index2 = index;
+                    let value = layero.find(".layui-layer-input").val();
+                    if (value === '') {
+                        common.showFailMsg('请输入要修改的价格！');
+                        return;
+                    }
+                    if (!/^\d+$/.test(value)){
+                        common.showFailMsg('请输入纯数字！');
+                        return;
+                    }
+
+                    let postData = {};
+                    postData.uuids = uuidArr;
+                    postData.productPrice = value;
+                    $.ajax({
+                        url: '/internal/productManage/updateProductPriceForUuids',
+                        data: JSON.stringify(postData),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        timeout: 5000,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result.code === 200) {
+                                common.showSuccessMsg('修改成功', active['reload'].call(this));
+                            } else {
+                                common.showFailMsg('修改失败');
+                            }
+                        },
+                        error: function () {
+                            common.showFailMsg('未知错误，请稍后重试');
+                        }
+                    });
+                    layer.close(index2);
+                }
+            });
+
+        }
+
+        function searchProduct(whereCondition) {
+            whereCondition = common.jsonObjectTrim(whereCondition);
+            table.render({
+                elem: '#productTable',
+                method: 'POST',
+                url: '/internal/productManage/getProductInfo',
+                limit: 50,
+                limits: [10, 25, 50, 75, 100, 500, 1000],
+                toolbar: "#toolbarTpl",
+                page: true,
+                response: {
+                    statusCode: 200
+                },
+                size: 'sm',
+                id: 'productTable',
+                even: true,//隔行背景
+                defaultToolbar: ['filter'],
+                contentType: 'application/json',
+                where: whereCondition,
+                cols: [[
+                    {filed: 'uuid', align: 'center', type: 'checkbox'},
+                    {field: 'productName', title: '客户端ID', align:'center'},
+                    {field: 'productPrice', title: '产品价格',align:'center'},
+                    {title: '操作', templet: '#operationTpl', align: 'center', Minwidth: 200}
+                ]],
+                height: 'full-64',
+                done: function (res, curr, count) {
+                }
+            });
+        }
+
+        form.on("submit(search)", function (data) {
+            var postData = data.field;
+            postData = common.jsonObjectTrim(postData);
+            searchProduct(postData);
+            flag___ = true;
+            return false
+        });
+
+        searchProduct({init: 'init'});
+    })
+
+    function timestampToTime(timestamp) {
+        var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        var Y = date.getFullYear() + '-';
+        var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+        var D = date.getDate() + ' ';
+        var h = date.getHours() + ':';
+        var m = date.getMinutes() + ':';
+        var s = date.getSeconds();
+        return Y + M + D + h + m + s;
+    }
+
+
+</script>
+<script type="text/html" id="operationTpl">
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-xs" lay-event="updateProductInfo">修改</button>
+        <button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="deleteProduct">删除</button>
+    </div>
+</script>
+</body>
+</html>

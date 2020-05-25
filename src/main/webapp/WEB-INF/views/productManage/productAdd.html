@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>增加产品信息</title>
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/css/sub-page.css">
+    <link rel="stylesheet" href="${ctx.basePath}/static/ok-admin/lib/nprogress/nprogress.css">
+</head>
+<body>
+<div class="ok-body" id="UpdateMachineDialog">
+
+    <form class="layui-form layui-form-pane ok-form" lay-filter="UpdateProductInfo">
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品名称</label>
+            <div class="layui-input-block">
+                <input type="text" id="productName" name="productName" lay-verify="required" placeholder="请输入产品名"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品价格</label>
+            <div class="layui-input-block">
+                <input type="text" id="productPrice" name="productPrice" lay-verify="required" placeholder="请输入产品价格"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div style="position: fixed;bottom: 0;width: 100%;background:#fff;text-align: right;">
+            <div style="margin: 0 10px 6px 10px; padding-top: 8px;border-top: solid 1px #e6e6e6">
+                <button class="layui-btn" lay-submit lay-filter="commit">确定</button>
+                <div class="layui-btn layui-btn-primary" id="close" style="margin-right: 20px">取消</div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="${ctx.basePath}/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
+<script>
+    layui.use(["form", "jquery", "layer", 'common'], function () {
+        let form = layui.form;
+        let $ = layui.jquery;
+        let common = layui.common;
+
+        form.on("submit(commit)", function (data) {
+            let productInfo;
+            productInfo = data.field;
+            productInfo = common.jsonObjectTrim(productInfo);
+            $.ajax({
+                url: '/internal/productManage/addProduct',
+                type: 'post',
+                data: JSON.stringify(productInfo),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                success: function (res) {
+                    if (res.code === 200) {
+                        common.showSuccessMsg("保存成功", function () {
+                            parent.window.sign = true;
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    } else {
+                        common.showFailMsg(res.msg);
+                    }
+                }
+            });
+            return false;
+        });
+
+        $('#close').click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+            return false;
+        });
+
+    });
+</script>

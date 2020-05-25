@@ -46,7 +46,59 @@
         mi.fRemainingKeyword AS "remainingKeyword",
         mi.fCreateTime AS "createTime",
         mi.fCpuCount AS "cpuCount",
-        mi.fMemory AS "memory"
+        mi.fMemory AS "memory",
+        mi.fProductID as "productId",
+        mi.fOpenDate as "openDate"
+    </sql>
+
+    <sql id="selectProductCol">
+        mi.fClientID AS "clientID",
+        mi.fTerminalType AS "terminalType",
+        mi.fClientIDPrefix AS "clientIDPrefix",
+        mi.fVersion AS "version",
+        mi.fTargetVersion AS "targetVersion",
+        mi.fPageNo AS "pageNo",
+        mi.fContinuousFailCount AS "continuousFailCount",
+        mi.fCity AS "city",
+        mi.fGroup AS "group",
+        mi.fMachineGroup AS "machineGroup",
+        mi.fUsingOperationType AS "usingOperationType",
+        mi.fAllowSwitchGroup AS "allowSwitchGroup",
+        mi.fSwitchGroupName AS "switchGroupName",
+        mi.fHost AS "host",
+        mi.fPort AS "port",
+        mi.fUserName AS "userName",
+        mi.fPassword AS "password",
+        mi.fBroadbandAccount AS "broadbandAccount",
+        mi.fBroadbandPassword AS "broadbandPassword",
+        mi.fFreeSpace AS "freeSpace",
+        mi.fVPSBackendSystemComputerID AS "vPSBackendSystemComputerID",
+        mi.fVPSBackendSystemPassword AS "vPSBackendSystemPassword",
+        mi.fLastVisitTime AS "lastVisitTime",
+        mi.fLastSendNotificationTime AS "lastSendNotificationTime",
+        mi.fRestartCount AS "restartCount",
+        mi.fRestartStatus AS "restartStatus",
+        mi.fRestartTime AS "restartTime",
+        mi.fValid AS "valid",
+        mi.fRestartOrderingTime AS "restartOrderingTime",
+        mi.fOptimizationStartDate AS "optimizationStartDate",
+        mi.fOptimizationTotalCount AS "optimizationTotalCount",
+        mi.fOptimizationSucceedCount AS "optimizationSucceedCount",
+        mi.fRenewalDate AS "renewalDate",
+        mi.fDownloadProgramType AS "downloadProgramType",
+        mi.fStartUpStatus AS "startUpStatus",
+        mi.fStartUpTime AS "startUpTime",
+        mi.fStatus AS "status",
+        mi.fRunningProgramType AS "runningProgramType",
+        mi.fUpgradeFailedReason AS "upgradeFailedReason",
+        mi.fRemainingKeyword AS "remainingKeyword",
+        mi.fCreateTime AS "createTime",
+        mi.fCpuCount AS "cpuCount",
+        mi.fMemory AS "memory",
+        mi.fProductID as "productId",
+        mi.fOpenDate as "openDate",
+        pi.fProductName AS "productName",
+        pi.fProductPrice AS "price"
     </sql>
 
     <update id="updateOptimizationResultFromCache" parameterType="java.util.Collection">
@@ -151,6 +203,83 @@
         WHERE mi.fTerminalType = #{machineInfoCriteria.terminalType}
         <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''">AND
             mi.fClientID like '${machineInfoCriteria.clientID}%'
+        </if>
+        <if test="machineInfoCriteria.productID !=null and machineInfoCriteria.productID !='' "> and mi.fProductID =#{machineInfoCriteria.productID}</if>
+        <if test="machineInfoCriteria.machineGroup != null and machineInfoCriteria.machineGroup != ''">
+            AND mi.fMachineGroup like '${machineInfoCriteria.machineGroup}%'
+        </if>
+        <if test="machineInfoCriteria.upgradeFailedReason != null and machineInfoCriteria.upgradeFailedReason != ''">
+            AND mi.fUpgradeFailedReason like '${machineInfoCriteria.upgradeFailedReason}%'
+        </if>
+        <if test="machineInfoCriteria.version != null and machineInfoCriteria.version != ''">AND
+            mi.fVersion like concat(#{machineInfoCriteria.version},'%')
+        </if>
+        <if test="machineInfoCriteria.targetVersion != null and machineInfoCriteria.targetVersion != ''">
+            AND mi.fTargetVersion like concat(#{machineInfoCriteria.targetVersion},'%')
+        </if>
+        <if test="machineInfoCriteria.city != null and machineInfoCriteria.city != ''">AND mi.fCity like
+            concat(#{machineInfoCriteria.city},'%')
+        </if>
+        <if test="machineInfoCriteria.valid != null and machineInfoCriteria.valid != ''">AND mi.fValid =
+            #{machineInfoCriteria.valid}
+        </if>
+        <if test="machineInfoCriteria.hasProblem != null">AND (mi.fContinuousFailCount &gt; 5 OR
+            mi.fTenMinsLastVisitTime &lt; NOW()) and mi.fValid = 1
+        </if>
+        <if test="machineInfoCriteria.renewal != null">AND mi.fRenewalDate &lt; DATE_ADD(CURRENT_DATE(),
+            INTERVAL -3 DAY) and mi.fValid = 1
+        </if>
+        <if test="machineInfoCriteria.noMachineGroup != null">AND (mi.fMachineGroup is null or
+            mi.fMachineGroup = '')
+        </if>
+        <if test="machineInfoCriteria.hasMachineGroup != null">AND mi.fMachineGroup > ''</if>
+        <if test="machineInfoCriteria.startUpStatus != null and machineInfoCriteria.startUpStatus != ''">
+            AND mi.fStartUpStatus = #{machineInfoCriteria.startUpStatus}
+        </if>
+        <if test="machineInfoCriteria.runningProgramType != null and machineInfoCriteria.runningProgramType != ''">
+            AND mi.fRunningProgramType = #{machineInfoCriteria.runningProgramType}
+        </if>
+        <if test="machineInfoCriteria.noVNC != null">AND (mi.fHost is null or mi.fHost = '')</if>
+        <if test="machineInfoCriteria.noUpgrade != null">AND (mi.fVersion &lt;&gt; mi.fTargetVersion)
+        </if>
+        <if test="machineInfoCriteria.noChangePassword != null">AND (mi.fPassword &lt;&gt;
+            mi.fTargetVPSPassword)
+        </if>
+        <if test="machineInfoCriteria.startUpClient != null">AND mi.fDownloadProgramType > ''</if>
+        <if test="machineInfoCriteria.vpsBackendSystemComputerID != null and machineInfoCriteria.vpsBackendSystemComputerID != ''">
+            AND mi.fVPSBackendSystemComputerID = #{machineInfoCriteria.vpsBackendSystemComputerID}
+        </if>
+        <if test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''">
+            AND mi.fSwitchGroupName = #{machineInfoCriteria.switchGroupName}
+        </if>
+        <if test="machineInfoCriteria.allowSwitchGroup != null and machineInfoCriteria.allowSwitchGroup != ''">
+            AND mi.fAllowSwitchGroup = #{machineInfoCriteria.allowSwitchGroup}
+        </if>
+        <if test="machineInfoCriteria.gtMemory != null and machineInfoCriteria.gtMemory != ''">AND mi.fMemory &gt;= #{machineInfoCriteria.gtMemory}</if>
+        <if test="machineInfoCriteria.ltMemory != null and machineInfoCriteria.ltMemory != ''">AND mi.fMemory &lt;= #{machineInfoCriteria.ltMemory}</if>
+        <if test="machineInfoCriteria.switchGroups != null">AND mi.fSwitchGroupName IN
+            <foreach collection="machineInfoCriteria.switchGroups" item="switchGroup" open="(" close=")" separator=",">
+                #{switchGroup}
+            </foreach>
+        </if>
+        <if test="machineInfoCriteria.orderBy != null and machineInfoCriteria.orderBy != ''">
+            ORDER BY ${machineInfoCriteria.orderBy}
+        </if>
+    </select>
+
+    <select id="searchMachineAndProductInfos" parameterType="com.keymanager.ckadmin.criteria.MachineInfoCriteria" resultType="com.keymanager.ckadmin.entity.MachineInfo">
+        SELECT
+        <include refid="selectProductCol"/>
+        FROM
+        t_machine_info mi
+        LEFT JOIN t_product_info pi
+        ON mi.fProductID = pi.fUuid
+        WHERE mi.fTerminalType = #{machineInfoCriteria.terminalType}
+        <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''">AND
+            mi.fClientID like '${machineInfoCriteria.clientID}%'
+        </if>
+        <if test="machineInfoCriteria.productID !=null and machineInfoCriteria.productID !='' ">
+            AND mi.fProductID =#{machineInfoCriteria.productID}
         </if>
         <if test="machineInfoCriteria.machineGroup != null and machineInfoCriteria.machineGroup != ''">
             AND mi.fMachineGroup like '${machineInfoCriteria.machineGroup}%'
@@ -267,6 +396,18 @@
         AND mi.fClientID = #{clientID}
     </select>
 
+    <select id="getMachineAndProductInfoByMachineID" parameterType="java.lang.String"
+            resultType="com.keymanager.ckadmin.entity.MachineInfo">
+        SELECT
+        <include refid="selectProductCol"/>
+        FROM
+        t_machine_info mi
+        LEFT JOIN t_product_info pi
+        ON mi.fProductID = pi.fUuid
+        WHERE mi.fTerminalType = #{terminalType}
+        AND mi.fClientID = #{clientID}
+    </select>
+
     <update id="resetRestartStatusForProcessing">
         UPDATE t_machine_info SET fRestartStatus = NULL WHERE (fRestartStatus = 'Processing' or fRestartStatus = 'Logging')
     </update>
@@ -347,6 +488,12 @@
 
     <select id="getMachineInfoID" parameterType="java.lang.String" resultType="java.lang.String">
         SELECT fClientID as 'clientID' FROM t_machine_info WHERE fVPSBackendSystemComputerID = #{vpsBackendSystemComputerID}
+    </select>
+
+    <select id="getMachineInfoForVpsBackendSystemComputerID" parameterType="java.lang.String" resultType="com.keymanager.ckadmin.entity.MachineInfo">
+        SELECT
+        <include refid="selectCol"/>
+        FROM t_machine_info mi WHERE fVPSBackendSystemComputerID = #{vpsBackendSystemComputerID}
     </select>
 
     <select id="getDownloadingClientCount" resultType="java.lang.Integer">
@@ -558,22 +705,6 @@
         </where>
         GROUP BY cs.fClientIDPrefix, cs.fTerminalType, cs.fCity, cs.fSwitchGroupName
         ORDER BY cs.fClientIDPrefix
-    </select>
-
-    <select id="selectMachineVersionInfo" resultType="com.keymanager.ckadmin.vo.MachineVersionVo">
-        SELECT
-            cs.fVersion as 'version',
-            cs.fTerminalType as 'terminal',
-            cs.fRunningProgramType as 'programType',
-            COUNT(1) as 'count'
-        FROM t_machine_info cs
-        <where>
-            cs.fValid = 1
-            <if test="terminalType !=null and terminalType !=''"> and  cs.fTerminalType = #{terminalType}</if>
-            <if test="programType !=null and programType !=''"> and  cs.fRunningProgramType = #{programType}</if>
-        </where>
-		GROUP BY cs.fVersion, cs.fTerminalType, cs.fRunningProgramType
-        ORDER BY cs.fVersion
     </select>
 
     <select id="searchMachineInfoGroupSummaryVO" resultType="com.keymanager.ckadmin.vo.MachineInfoGroupSummaryVO">

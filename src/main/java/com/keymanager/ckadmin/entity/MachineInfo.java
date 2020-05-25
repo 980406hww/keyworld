@@ -1,5 +1,6 @@
 package com.keymanager.ckadmin.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
@@ -8,6 +9,7 @@ import com.keymanager.util.Utils;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 @TableName(value = "t_machine_info")
 public class MachineInfo {
@@ -170,6 +172,13 @@ public class MachineInfo {
     @TableField(value = "fRemainingKeyword")
     private int remainingKeyword;
 
+    @TableField(value = "fProductID")
+    private long productId;
+
+    @JSONField(format ="yyyy-MM-dd HH:mm:ss")
+    @TableField(value = "fOpenDate")
+    private Date openDate;
+
     @TableField(exist = false)
     private boolean red;
 
@@ -179,6 +188,11 @@ public class MachineInfo {
     @TableField(exist = false)
     private boolean orange;
 
+    @TableField(exist=false)
+    private double price;
+
+    @TableField(exist=false)
+    private String productName;
 
     public String getClientID() {
         return clientID;
@@ -624,5 +638,37 @@ public class MachineInfo {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(long productId) {
+        this.productId = productId;
+    }
+
+    public Date getOpenDate() {
+        return openDate;
+    }
+
+    public void setOpenDate(Date openDate) {
+        this.openDate = openDate;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 }

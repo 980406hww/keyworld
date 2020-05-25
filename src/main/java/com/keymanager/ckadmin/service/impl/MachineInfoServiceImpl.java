@@ -4,14 +4,12 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.*;
 import com.keymanager.ckadmin.dao.MachineInfoDao;
-import com.keymanager.ckadmin.entity.ClientUpgrade;
-import com.keymanager.ckadmin.entity.CustomerKeywordTerminalRefreshStatRecord;
-import com.keymanager.ckadmin.entity.MachineGroupWorkInfo;
-import com.keymanager.ckadmin.entity.MachineInfo;
+import com.keymanager.ckadmin.entity.*;
 import com.keymanager.ckadmin.enums.ClientStartUpStatusEnum;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.MachineInfoService;
+import com.keymanager.ckadmin.service.ProductInfoService;
 import com.keymanager.ckadmin.vo.*;
 import com.keymanager.util.DES;
 import com.keymanager.util.FileUtil;
@@ -21,6 +19,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -37,6 +37,9 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Resource(name = "customerKeywordService2")
     private CustomerKeywordService customerKeywordService;
+
+    @Resource
+    private ProductInfoService productInfoService;
 
     @Override
     public Integer getUpgradingMachineCount(ClientUpgrade clientUpgrade) {
@@ -55,7 +58,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     @Override
     public Page<MachineInfo> searchMachineInfos(Page<MachineInfo> page, MachineInfoCriteria machineInfoCriteria, boolean normalSearchFlag) {
         if (normalSearchFlag) {
-            page.setRecords(machineInfoDao.searchMachineInfos(page, machineInfoCriteria));
+            page.setRecords(machineInfoDao.searchMachineAndProductInfos(page, machineInfoCriteria));
         } else {
             page.setRecords(machineInfoDao.searchBadMachineInfo(page, machineInfoCriteria));
         }
@@ -158,7 +161,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Override
     public MachineInfo getMachineInfo(String clientID, String terminalType) {
-        MachineInfo machineInfo = machineInfoDao.getMachineInfoByMachineID(clientID, terminalType);
+        MachineInfo machineInfo = machineInfoDao.getMachineAndProductInfoByMachineID(clientID, terminalType);
         return machineInfo;
     }
 
@@ -228,18 +231,42 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
         }
     }
 
-    private void saveMachineInfoByVPSFile(MachineInfo machineInfo, String[] MachineInfos) {
-        String[] vncInfos = MachineInfos[2].split(":");
-        machineInfo.setClientID(MachineInfos[0]);
-        machineInfo.setVpsBackendSystemComputerID(MachineInfos[1]);
-        machineInfo.setHost(vncInfos[0]);
-        machineInfo.setPort(vncInfos[1]);
-        machineInfo.setUserName(MachineInfos[3]);
-        machineInfo.setPassword(MachineInfos[4]);
-        machineInfo.setTargetVPSPassword(MachineInfos[4]);
-        machineInfo.setBroadbandAccount(MachineInfos[5]);
-        machineInfo.setBroadbandPassword(MachineInfos[6]);
-        machineInfo.setClientIDPrefix(Utils.removeDigital(MachineInfos[0]));
+    private void saveMachineInfoByVPSFile(MachineInfo machineInfo, String[] MachineInfos, String machineInfoType) throws ParseException {
+        String productName = MachineInfos[0];
+        String openDate = MachineInfos[2];
+        String productSuppliers = MachineInfos[3];
+
+        if (!machineInfoType.equals("updateProduct")){
+            String[] vncInfos = MachineInfos[3].split(":");
+            machineInfo.setClientID(MachineInfos[0]);
+            machineInfo.setVpsBackendSystemComputerID(MachineInfos[2]);
+            machineInfo.setHost(vncInfos[0]);
+            machineInfo.setPort(vncInfos[1]);
+            machineInfo.setUserName(MachineInfos[4]);
+            machineInfo.setPassword(MachineInfos[5]);
+            machineInfo.setTargetVPSPassword(MachineInfos[5]);
+            machineInfo.setBroadbandAccount(MachineInfos[6]);
+            machineInfo.setBroadbandPassword(MachineInfos[7]);
+            machineInfo.setClientIDPrefix(Utils.removeDigital(MachineInfos[0]));
+
+            productName = MachineInfos[1];
+            openDate = MachineInfos[8];
+            productSuppliers = MachineInfos[9];
+        }
+
+        ProductInfo productInfo = new ProductInfo();
+        productInfo.setProductName(productName);
+        productInfo.setSuppliers(productSuppliers);
+
+        Long productId = productInfoService.getProductId(productInfo);
+        if (productId == null){
+            productInfo.setCreateTime(new Date());
+            productInfoService.addProduct(productInfo);
+            productId = productInfo.getUuid();
+        }
+        machineInfo.setProductId(productId);
+        String date = openDate.replace("开通时间","");
+        machineInfo.setOpenDate(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(date));
     }
 
     private void supplementDefaultValue(MachineInfo machineInfo) {
@@ -248,51 +275,59 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     }
 
     @Override
-    public void uploadVPSFile(String machineInfoType, String downloadProgramType, File file, String terminalType) {
+    public void uploadVPSFile(String machineInfoType, String downloadProgramType, File file, String terminalType) throws ParseException {
         List<String> vpsInfos = FileUtil.readTxtFile(file, "UTF-8");
         for (String vpsInfo : vpsInfos) {
             String[] machineInfos = vpsInfo.split("===");
-            MachineInfo existingMachineInfo = machineInfoDao.selectById(machineInfos[0]);
-            if (null != existingMachineInfo) {
-                saveMachineInfoByVPSFile(existingMachineInfo, machineInfos);
-                if ("New".equals(downloadProgramType)) {
-                    existingMachineInfo.setSwitchGroupName("laodu");
+            if (machineInfoType.equals("updateProduct")){
+                List<MachineInfo> existingMachineInfos = machineInfoDao.getMachineInfoForVpsBackendSystemComputerID(machineInfos[1]);
+                for (MachineInfo existingMachineInfo : existingMachineInfos){
+                    saveMachineInfoByVPSFile(existingMachineInfo, machineInfos, machineInfoType);
+                    machineInfoDao.updateById(existingMachineInfo);
+                }
+            }else{
+                MachineInfo existingMachineInfo = machineInfoDao.selectById(machineInfos[0]);
+                if (null != existingMachineInfo) {
+                    saveMachineInfoByVPSFile(existingMachineInfo, machineInfos, machineInfoType);
+                    if ("New".equals(downloadProgramType)) {
+                        existingMachineInfo.setSwitchGroupName("laodu");
+                    } else {
+                        existingMachineInfo.setSwitchGroupName("Default");
+                    }
+                    if (machineInfoType.equals("startUp")) {
+                        existingMachineInfo.setStartUpStatus(ClientStartUpStatusEnum.New.name());
+                        existingMachineInfo.setDownloadProgramType(downloadProgramType);
+                    } else {
+                        existingMachineInfo.setStartUpStatus(ClientStartUpStatusEnum.Completed.name());
+                        existingMachineInfo.setDownloadProgramType(null);
+                    }
+                    machineInfoDao.updateById(existingMachineInfo);
                 } else {
-                    existingMachineInfo.setSwitchGroupName("Default");
+                    MachineInfo machineInfo = new MachineInfo();
+                    machineInfo.setTerminalType(terminalType);
+                    machineInfo.setFreeSpace(500.00);
+                    machineInfo.setValid(true);
+                    saveMachineInfoByVPSFile(machineInfo, machineInfos, machineInfoType);
+                    if (!Character.isDigit(machineInfos[0].charAt(machineInfos[0].length() - 1))) {
+                        Integer maxClientID = machineInfoDao.selectMaxIdByMachineID(machineInfos[0]);
+                        maxClientID = maxClientID == null ? 1 : maxClientID + 1;
+                        machineInfo.setClientID(machineInfos[0] + maxClientID);
+                    }
+                    supplementDefaultValue(machineInfo);
+                    if ("New".equals(downloadProgramType)) {
+                        machineInfo.setSwitchGroupName("laodu");
+                    } else {
+                        machineInfo.setSwitchGroupName("Default");
+                    }
+                    if (machineInfoType.equals("startUp")) {
+                        machineInfo.setStartUpStatus(ClientStartUpStatusEnum.New.name());
+                        machineInfo.setDownloadProgramType(downloadProgramType);
+                    } else {
+                        machineInfo.setStartUpStatus(ClientStartUpStatusEnum.Completed.name());
+                    }
+                    machineInfo.setUpdateSettingTime(Utils.getCurrentTimestamp());
+                    machineInfoDao.insert(machineInfo);
                 }
-                if (machineInfoType.equals("startUp")) {
-                    existingMachineInfo.setStartUpStatus(ClientStartUpStatusEnum.New.name());
-                    existingMachineInfo.setDownloadProgramType(downloadProgramType);
-                } else {
-                    existingMachineInfo.setStartUpStatus(ClientStartUpStatusEnum.Completed.name());
-                    existingMachineInfo.setDownloadProgramType(null);
-                }
-                machineInfoDao.updateById(existingMachineInfo);
-            } else {
-                MachineInfo machineInfo = new MachineInfo();
-                machineInfo.setTerminalType(terminalType);
-                machineInfo.setFreeSpace(500.00);
-                machineInfo.setValid(true);
-                saveMachineInfoByVPSFile(machineInfo, machineInfos);
-                if (!Character.isDigit(machineInfos[0].charAt(machineInfos[0].length() - 1))) {
-                    Integer maxClientID = machineInfoDao.selectMaxIdByMachineID(machineInfos[0]);
-                    maxClientID = maxClientID == null ? 1 : maxClientID + 1;
-                    machineInfo.setClientID(machineInfos[0] + maxClientID);
-                }
-                supplementDefaultValue(machineInfo);
-                if ("New".equals(downloadProgramType)) {
-                    machineInfo.setSwitchGroupName("laodu");
-                } else {
-                    machineInfo.setSwitchGroupName("Default");
-                }
-                if (machineInfoType.equals("startUp")) {
-                    machineInfo.setStartUpStatus(ClientStartUpStatusEnum.New.name());
-                    machineInfo.setDownloadProgramType(downloadProgramType);
-                } else {
-                    machineInfo.setStartUpStatus(ClientStartUpStatusEnum.Completed.name());
-                }
-                machineInfo.setUpdateSettingTime(Utils.getCurrentTimestamp());
-                machineInfoDao.insert(machineInfo);
             }
         }
     }
@@ -541,6 +576,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
         }
         return machineVersionVos;
     }
+
 
     @Override
     public Page<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(Page<MachineInfoGroupSummaryVO> page,

@@ -221,6 +221,7 @@
                                     <div class="layui-inline">
                                         <input type="text" name="clientID" id="clientID" placeholder="请输入客户端ID" autocomplete="off" style="width: 150px;height: 30px" class="layui-input">
                                     </div>
+
                                     <div class="layui-inline">
                                         <input type="text" name="machineGroup" id="machineGroup" value="<#if machineGroupFromATP?exists>${machineGroupFromATP}</#if>" placeholder="请输入机器分组" autocomplete="off" style="width: 150px;height: 30px" class="layui-input">
                                     </div>
@@ -281,6 +282,7 @@
                                 </div>
                                 <div class="my-hide my-hide-two" id="searchContent">
                                     <div class="layui-form-item" style="margin-bottom: 0" lay-filter="loginNameFilter">
+
                                         <div class="layui-inline memory">
                                             <label class="layui-form-label">版本/目标版本</label>
                                             <div class="layui-input-inline">
@@ -305,6 +307,14 @@
                                             <div class="layui-input-inline">
                                                 <input type="text" name="gtMemory" id="gtMemory" placeholder="≥" autocomplete="off" class="layui-input">
                                                 <input type="text" name="ltMemory" id="ltMemory" placeholder="≤" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">产品名</label>
+                                            <div class="layui-input-inline">
+                                                <select name="productID" id="productID" lay-filter="customer" lay-search>
+                                                    <option value="">请选择产品</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="layui-inline">
@@ -482,6 +492,32 @@
         var okLayer = layui.okLayer;
         var layer = layui.layer;
         var common = layui.common;
+        initProduct()
+        function initProduct() {
+            $.ajax({
+                url: "/internal/productManage/getAllProduct",
+                type: "GET",
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        var product = $("#productID");
+                        product.empty();
+                        product.append('<option value="">请选择产品</option>');
+                        if (res.data !== null) {
+                            $.each(res.data, function (idx, val) {
+                                product.append('<option value="' + val.uuid + '" >' + val.productName + '</option>')
+                            });
+                        }
+                        form.render('select')
+                    } else {
+                        common.showFailMsg("数据获取失败");
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络错误请稍后再试");
+                }
+            })
+        }
 
         let ternimalType225 = $('#terminalType').val();
         element.tabChange('keywordTab', ternimalType225);
@@ -543,25 +579,28 @@
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {filed: 'uuid', align: 'center', type: 'checkbox', width: '35'},
-                    {field: 'clientIDs', align: 'left', title: '客户端ID', width: '148', templet: '#clientIDs'},
-                    {field: 'machineGroups', align: 'left', title: '机器分组', width: '140', templet: '#machineGroups'},
-                    {field: 'renewalDate', align: 'left', title: '续费<br>日期', width: '116', templet: '#showRenewalDate', hide: true},
-                    {field: 'versionInfo', align: 'left', title: '现版本<br>目标版本', width: '118', templet: '#showVersionInfo'},
-                    {field: 'restartCountAndFailCount', align: 'left', title: '重启数/重启状态<br>失败次数', width: '130', templet: '#restartCountAndFailCount'},
-                    {field: 'cityAndStatus', align: 'left', title: '所在城市<br>终端状态', width: '144', templet: '#cityAndStatus'},
-                    {field: 'cpuCounts', align: 'left', title: 'CPU核数<br>内存', width: '96', templet: '#cpuCounts', hide: true},
-                    {field: 'freeSpaces', align: 'left', title: '剩余空间', width: '96', templet: '#freeSpaces', hide: true},
-                    {field: 'lastVisitTimeAndRestartTime', align: 'left', title: '最新工作时间<br>重启时间', width: '124', templet: '#lastVisitTimeAndRestartTime', hide: true},
-                    {field: 'restartOrderingTimeAndLastSendNotificationTime', align: 'left', title: '重启排序时间<br>发送通知时间', width: '148', templet: '#restartOrderingTimeAndLastSendNotificationTime', hide: true},
-                    {field: 'optimizationSucceedCountAndOptimizationTotalCount', align: 'left', title: '成功次数<br>操作次数', width: '116', templet: '#optimizationSucceedCountAndOptimizationTotalCount'},
-                    {field: 'broadbandAccountAndBroadbandPassword', align: 'left', title: '宽带账号<br>宽带密码', width: '156', templet: '#broadbandAccountAndBroadbandPassword'},
-                    {field: 'runningProgramTypes', align: 'left', title: '程序类型', width: '100', templet: '#runningProgramTypes'},
-                    {field: 'startUpStatusAndDownloadProgramType', align: 'left', title: '开机状态<br>下载程序类型', width: '120', templet: '#startUpStatusAndDownloadProgramType', hide: true},
-                    {field: 'valids', align: 'left', title: '状态', width: '110', templet: '#valid'},
-                    {field: 'upgradeFailedReasons', align: 'left', title: '失败原因', width: '116', templet: '#upgradeFailedReasons'},
-                    {field: 'vpsBackendSystemComputerID', align: 'left', title: '服务器ID', width: '126', templet: '#vpsBackendSystemComputerIDs'},
-                    {title: '操作', templet: '#operationTpl', align: 'center', width: '198'}
+                    {filed: 'uuid', align: 'center', type: 'checkbox'},
+                    {field: 'clientIDs', align: 'left', title: '客户端ID', templet: '#clientIDs'},
+                    {field: 'machineGroups', align: 'left', title: '机器分组', templet: '#machineGroups'},
+                    {field: 'renewalDate', align: 'left', title: '续费<br>日期', templet: '#showRenewalDate', hide: true},
+                    {field: 'versionInfo', align: 'left', title: '现版本<br>目标版本', templet: '#showVersionInfo'},
+                    {field: 'restartCountAndFailCount', align: 'left', title: '重启数/重启状态<br>失败次数', templet: '#restartCountAndFailCount'},
+                    {field: 'cityAndStatus', align: 'left', title: '所在城市<br>终端状态', templet: '#cityAndStatus'},
+                    {field: 'cpuCounts', align: 'left', title: 'CPU核数<br>内存', templet: '#cpuCounts', hide: true},
+                    {field: 'freeSpaces', align: 'left', title: '剩余空间', templet: '#freeSpaces', hide: true},
+                    {field: 'lastVisitTimeAndRestartTime', align: 'left', title: '最新工作时间<br>重启时间', templet: '#lastVisitTimeAndRestartTime', hide: true},
+                    {field: 'restartOrderingTimeAndLastSendNotificationTime', align: 'left', title: '重启排序时间<br>发送通知时间', templet: '#restartOrderingTimeAndLastSendNotificationTime', hide: true},
+                    {field: 'optimizationSucceedCountAndOptimizationTotalCount', align: 'left', title: '成功次数<br>操作次数', templet: '#optimizationSucceedCountAndOptimizationTotalCount'},
+                    {field: 'broadbandAccountAndBroadbandPassword', align: 'left', title: '宽带账号<br>宽带密码', templet: '#broadbandAccountAndBroadbandPassword'},
+                    {field: 'runningProgramTypes', align: 'left', title: '程序类型', templet: '#runningProgramTypes'},
+                    {field: 'startUpStatusAndDownloadProgramType', align: 'left', title: '开机状态<br>下载程序类型', templet: '#startUpStatusAndDownloadProgramType', hide: true},
+                    {field: 'valids', align: 'left', title: '状态', templet: '#valid'},
+                    {field: 'upgradeFailedReasons', align: 'left', title: '失败原因', templet: '#upgradeFailedReasons'},
+                    {field: 'vpsBackendSystemComputerID', align: 'left', title: '服务器ID', templet: '#vpsBackendSystemComputerIDs'},
+                    {field: 'price',align: 'left', title: '价格'},
+                    {field: 'productName',align: 'left', title: '产品名', hide:true},
+                    {field: 'openDate', align: 'left', title: '开通时间', templet: function(d){ return d.openDate? layui.util.toDateString(d.openDate, 'yyyy-MM-dd HH:mm'): "";}, hide:true},
+                    {title: '操作', templet: '#operationTpl', align: 'center', minWidth: 198}
                 ]],
                 height: 'full-115',
                 done: function (res, curr, count) {
@@ -657,6 +696,9 @@
                     break;
                 case 'showUploadVPSDialog(\'startUp\')':
                     showUploadVPSDialog('startUp');
+                    break;
+                case 'showUploadVPSDialog(\'updateProduct\')':
+                    showUploadVPSDialog('updateProduct');
                     break;
                 case 'batchUpdateMachineGroup(\'selected\')':
                     batchUpdateMachineGroup('selected');
@@ -1039,7 +1081,7 @@
 
         function showUploadVPSDialog(machineInfoType) {
             let height = "22%";
-            if(machineInfoType === 'common'){
+            if(machineInfoType === 'common' || machineInfoType === 'updateProduct'){
                 height = "18%"
             }
             let terminalType = $("#terminalType").val();
@@ -1255,7 +1297,7 @@
         }
 
         function toUpdateMachineInfo(data) {
-            okLayer.open("首页 / 终端列表 / 修改终端信息", "/internal/machineManage/toUpdateMachineInfo", "35%", "66%", function (layero) {
+            okLayer.open("首页 / 终端列表 / 修改终端信息", "/internal/machineManage/toUpdateMachineInfo", "35%", "70%", function (layero) {
                 window[layero.find("iframe")[0]["name"]].initMachineInfo(data);
             },function(){
                 if(sign){
@@ -1363,6 +1405,9 @@
             </button>
         </@shiro.hasPermission>
         <@shiro.hasPermission name="/internal/machineInfo/uploadVPSFile">
+            <button class="layui-btn layui-btn layui-btn layui-btn-warm layui-btn-sm" id="updateProduct" lay-event="showUploadVPSDialog('updateProduct')">
+                <i class="layui-icon layui-icon-upload-drag"></i>更新现有机器产品信息
+            </button>
             <button class="layui-btn layui-btn layui-btn layui-btn-warm layui-btn-sm" id="common" lay-event="showUploadVPSDialog('common')">
                 <i class="layui-icon layui-icon-upload-drag"></i>导入普通终端
             </button>
