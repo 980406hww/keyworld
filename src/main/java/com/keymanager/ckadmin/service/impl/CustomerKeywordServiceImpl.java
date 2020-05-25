@@ -1053,6 +1053,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         CaptureRankJob captureRankJob = captureRankJobService.checkingCaptureRankJobCompleted(captureJobCriteria);
         if (null == captureRankJob) {
             if (customerKeywordCrawlQZRankQueue.size() < 15000) {
+                int loopTime = 0;
+                int maxLoopTimes = 10;
                 List<CustomerKeyWordCrawlRankVO> customerKeyWordCrawlRankVos;
                 do {
                     customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords("qz", 1);
@@ -1070,8 +1072,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                         }
                         customerKeywordDao.updateCrawlRankKeywordTimeByUuids(customerKeywordUuids);
                     }
+                    loopTime += 1;
                 }
-                while (customerKeywordCrawlQZRankQueue.size() < 30000 && CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos));
+                while (customerKeywordCrawlQZRankQueue.size() < 30000 && CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos) && loopTime <= maxLoopTimes);
             }
         }
     }
