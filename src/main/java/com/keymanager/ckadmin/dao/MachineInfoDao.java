@@ -83,6 +83,8 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     String getMachineInfoID(@Param("vpsBackendSystemComputerID") String vpsBackendSystemComputerID);
 
+    List<MachineInfo> getMachineInfoForVpsBackendSystemComputerID(@Param("vpsBackendSystemComputerID") String vpsBackendSystemComputerID);
+
     void updateMachineInfoForCapturePosition(@Param("clientID") String clientID);
 
     void updateVersion(@Param("clientID") String clientID, @Param("version") String version);

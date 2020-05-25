@@ -21,6 +21,9 @@ public class ProductInfo {
     @TableField(value = "fProductPrice")
     private double productPrice;
 
+    @TableField(value = "fSuppliers")
+    private String suppliers;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:SS")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:SS")
     @TableField(value = "fCreateTime")
@@ -67,5 +70,13 @@ public class ProductInfo {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getSuppliers() {
+        return suppliers;
+    }
+
+    public void setSuppliers(String suppliers) {
+        this.suppliers = suppliers;
     }
 }

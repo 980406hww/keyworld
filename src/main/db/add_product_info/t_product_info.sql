@@ -8,12 +8,17 @@ CREATE TABLE `t_product_info`  (
   `fUuid` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `fProductName` varchar(50)  NULL DEFAULT NULL COMMENT '产品名',
   `fProductPrice` decimal(10, 2) NULL DEFAULT NULL COMMENT '产品价格',
+  `fSuppliers` varchar(50) NULL DEFAULT NULL COMMENT '产品供应商',
   `fCreateTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `fUpdateTime` datetime NULL DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`fUuid`) USING BTREE
 ) ENGINE = InnoDB ;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+# 机器表添加和产品的关联属性
+ALTER TABLE `t_machine_info` ADD COLUMN `fProductID` INT(11) DEFAULT NULL COMMENT '机器产品ID';
+ALTER TABLE `t_machine_info` ADD COLUMN `fOpenDate` datetime DEFAULT NULL COMMENT '机器开机时间';
 
 
 # 产品管理
@@ -37,7 +42,7 @@ VALUES
 		0,
 		1,
 		0,
-		NOW( )
+		NOW()
 	);
 
 #赋予权限

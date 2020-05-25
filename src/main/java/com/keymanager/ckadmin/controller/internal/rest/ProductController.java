@@ -9,6 +9,7 @@ import com.keymanager.ckadmin.service.ProductInfoService;
 import java.util.Date;
 import java.util.List;
 
+import java.util.Map;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,6 +153,23 @@ public class ProductController {
             return resultBean;
         }
         return resultBean;
+    }
+
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
+    @PostMapping("/updateProductPriceForUuids")
+    public ResultBean updateProductPriceForUuids(@RequestBody Map<String, Object> requestMap){
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            List<Long> uuids = (List<Long>) requestMap.get("uuids");
+            String productPrice = (String) requestMap.get("productPrice");
+            productInfoService.updateProductPriceForUuids(uuids, productPrice);
+            return resultBean;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+            return resultBean;
+        }
     }
 
 }

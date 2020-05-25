@@ -27,6 +27,11 @@ public class ProdcutInfoServiceImpl implements ProductInfoService {
     }
 
     @Override
+    public Long getProductId(ProductInfo productInfo){
+        return productInfoDao.getProductId(productInfo);
+    }
+
+    @Override
     public Page<ProductInfo> getProductsByName(Page<ProductInfo> page,String name) {
         List<ProductInfo> productInfos= productInfoDao.getProductsByName(page,name);
         return page.setRecords(productInfos);
@@ -50,6 +55,11 @@ public class ProdcutInfoServiceImpl implements ProductInfoService {
     @Override
     public List<ProductInfo> getAllProduct() {
         return productInfoDao.getProductsByName("");
+    }
+
+    @Override
+    public void updateProductPriceForUuids(List<Long> uuids, String productPrice){
+        productInfoDao.updateProductPriceForUuids(uuids, productPrice);
     }
 
 

@@ -152,11 +152,6 @@
                                 搜索
                             </button>
                         </div>
-                        <div class="layui-inline">
-                            <div class="my-btn layui-btn" onclick="productAdd()">
-                                添加
-                            </div>
-                        </div>
                     </div>
                 </div>
             </form>
@@ -168,6 +163,16 @@
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
 <script src="/static/ok-admin/lib/nprogress/nprogress.js"></script>
 <script src="/static/ok-admin/js/somePublic.js"></script>
+<script type="text/html" id="toolbarTpl">
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-sm" id="add_product" lay-event="add_product">
+            添加产品
+        </button>
+        <button class="layui-btn layui-btn-sm" id="change_select_productPrice" lay-event="change_select_productPrice">
+            修改价格
+        </button>
+    </div>
+</script>
 <script>
     var flag___ = false;
     var sign = false;
@@ -200,6 +205,20 @@
             }
         };
 
+        table.on('toolbar(tableFilter)', function (obj) {
+            let data = obj.data, event = obj.event;
+            switch (event) {
+                case 'change_select_productPrice':
+                    change_select_productPrice();
+                    break;
+                case 'add_product':
+                    to_add_product();
+                    break;
+                default:
+                    break;
+            }
+        });
+
         table.on('tool(tableFilter)', function (obj) {
             let data = obj.data, event = obj.event;
             switch (event) {
@@ -213,6 +232,28 @@
                     break;
             }
         });
+
+        function get_selected_uuid_arr() {
+            let checkStatus = table.checkStatus('productTable')
+                , data = checkStatus.data;
+            let uuidArr = [];
+            $.each(data, function (index, item) {
+                uuidArr.push(item.uuid);
+            });
+            return uuidArr;
+        }
+
+        function to_add_product() {
+            okLayer.open("产品管理 /  添加产品", "/internal/productManage/toAddProduct", "60%", "40%", function (layero) {
+                window[layero.find("iframe")[0]["name"]];
+            }, function () {
+                if (sign) {
+                    let pageConf = common.formToJsonObject('searchForm');
+                    searchProduct(pageConf);
+                    sign = false;
+                }
+            });
+        }
 
         function toUpdateProductInfo(data) {
             okLayer.open("首页 / 产品管理 / 修改产品信息", "/internal/productManage/toUpdateProduct", "35%", "66%", function (layero) {
@@ -258,6 +299,59 @@
             });
         }
 
+        function change_select_productPrice() {
+            let uuidArr = get_selected_uuid_arr();
+            if (uuidArr.length <= 0) {
+                common.showFailMsg('请选择要操作的词');
+                return
+            }
+
+            layer.prompt({
+                formType: 3,
+                value: '',
+                title: '产品价格',
+                area: ['220px', '60px'], //自定义文本域宽高
+                yes: function (index, layero) {
+                    let index2 = index;
+                    let value = layero.find(".layui-layer-input").val();
+                    if (value === '') {
+                        common.showFailMsg('请输入要修改的价格！');
+                        return;
+                    }
+                    if (!/^\d+$/.test(value)){
+                        common.showFailMsg('请输入纯数字！');
+                        return;
+                    }
+
+                    let postData = {};
+                    postData.uuids = uuidArr;
+                    postData.productPrice = value;
+                    $.ajax({
+                        url: '/internal/productManage/updateProductPriceForUuids',
+                        data: JSON.stringify(postData),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        timeout: 5000,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result.code === 200) {
+                                common.showSuccessMsg('修改成功', active['reload'].call(this));
+                            } else {
+                                common.showFailMsg('修改失败');
+                            }
+                        },
+                        error: function () {
+                            common.showFailMsg('未知错误，请稍后重试');
+                        }
+                    });
+                    layer.close(index2);
+                }
+            });
+
+        }
+
         function searchProduct(whereCondition) {
             whereCondition = common.jsonObjectTrim(whereCondition);
             table.render({
@@ -266,6 +360,7 @@
                 url: '/internal/productManage/getProductInfo',
                 limit: 50,
                 limits: [10, 25, 50, 75, 100, 500, 1000],
+                toolbar: "#toolbarTpl",
                 page: true,
                 response: {
                     statusCode: 200
@@ -295,18 +390,6 @@
             flag___ = true;
             return false
         });
-
-        window.productAdd = function () {
-            okLayer.open("产品管理 /  添加产品", "/internal/productManage/toAddProduct", "60%", "40%", function (layero) {
-                window[layero.find("iframe")[0]["name"]];
-            }, function () {
-                if (sign) {
-                    let pageConf = common.formToJsonObject('searchForm');
-                    searchProduct(pageConf);
-                    sign = false;
-                }
-            });
-        };
 
         searchProduct({init: 'init'});
     })

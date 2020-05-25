@@ -490,6 +490,12 @@
         SELECT fClientID as 'clientID' FROM t_machine_info WHERE fVPSBackendSystemComputerID = #{vpsBackendSystemComputerID}
     </select>
 
+    <select id="getMachineInfoForVpsBackendSystemComputerID" parameterType="java.lang.String" resultType="com.keymanager.ckadmin.entity.MachineInfo">
+        SELECT
+        <include refid="selectCol"/>
+        FROM t_machine_info mi WHERE fVPSBackendSystemComputerID = #{vpsBackendSystemComputerID}
+    </select>
+
     <select id="getDownloadingClientCount" resultType="java.lang.Integer">
         SELECT COUNT(1) FROM t_machine_info WHERE fStartUpStatus = "Downloading"
     </select>

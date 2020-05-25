@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.ckadmin.dao.ProductInfoDao">
+
+    <select id="getProductId" resultType="java.lang.Long">
+        SELECT
+            fUuid as 'uuid'
+        FROM t_product_info
+        WHERE 1=1
+        <if test="productInfo.productName !=null and productInfo.productName !='' ">
+            AND fProductName=#{productInfo.productName}
+        </if>
+        <if test="productInfo.suppliers !=null and productInfo.suppliers !='' ">
+            AND fSuppliers=#{productInfo.suppliers}
+        </if>
+    </select>
+
     <select id="getProductIdByName" resultType="java.lang.Long">
         select fUuid as 'uuid' from t_product_info where fProductName=#{name} ;
     </select>
@@ -9,4 +23,14 @@
         select  fUuid as 'uuid' ,fProductName as 'productName' ,fProductPrice as 'productPrice' ,fCreateTime as 'createTime' ,fUpdateTime as 'updateTime' from t_product_info
         where 1=1 <if test="name !=null and name !=''">and fProductName LIKE concat('%', #{name}, '%')</if>
     </select>
+
+    <update id="updateProductPriceForUuids">
+        UPDATE t_product_info
+        SET fProductPrice = #{productPrice},
+            fUpdateTime = NOW()
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" separator="," open="(" close=")">
+            #{uuid}
+        </foreach>
+    </update>
 </mapper>

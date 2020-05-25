@@ -9,6 +9,8 @@ public interface ProductInfoService {
 
     Long getProductIdByName(String name);
 
+    Long getProductId(ProductInfo productInfo);
+
     Page<ProductInfo> getProductsByName(Page<ProductInfo> page, String name);
 
     void deleteProduct(long uuid);
@@ -18,4 +20,6 @@ public interface ProductInfoService {
     void addProduct(ProductInfo productInfo);
 
     List<ProductInfo> getAllProduct();
+
+    void updateProductPriceForUuids(List<Long> uuids, String productPrice);
 }
