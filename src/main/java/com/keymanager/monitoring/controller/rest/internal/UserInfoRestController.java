@@ -56,13 +56,6 @@ public class UserInfoRestController {
 
     }
 
-    @RequestMapping(value = "/checkEmail/{loginName}", method = RequestMethod.GET)
-    public ModelAndView checkEmail(@PathVariable("loginName")String loginName) {
-        ModelAndView modelAndView = new ModelAndView("/checkEmail");
-        modelAndView.addObject("loginName",loginName);
-        return modelAndView;
-    }
-
     @RequestMapping(value = "/userValidate/{loginName}/{validateCode}", method = RequestMethod.GET)
     public ModelAndView userValidate(@PathVariable("loginName") String loginName,@PathVariable("validateCode") String validateCode) {
         try {
