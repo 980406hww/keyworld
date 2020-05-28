@@ -1,15 +1,16 @@
 package com.keymanager.ckadmin.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldStrategy;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.keymanager.util.Utils;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @TableName(value = "t_machine_info")
 public class MachineInfo {
@@ -175,7 +176,8 @@ public class MachineInfo {
     @TableField(value = "fProductID")
     private long productId;
 
-    @JSONField(format ="yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField(value = "fOpenDate")
     private Date openDate;
 
