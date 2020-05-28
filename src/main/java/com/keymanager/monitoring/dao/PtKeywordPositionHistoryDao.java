@@ -8,7 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PtKeywordPositionHistoryDao extends BaseMapper<PtKeywordPositionHistory> {
 
-    void insertKeywordPositionHistory(@Param("keywordId") Long keywordId,
-                                      @Param("currentPosition") Integer currentPosition,
-                                      @Param("currentDate") String currentDate);
+    void insertKeywordPositionHistory(@Param("positionHistory") PtKeywordPositionHistory positionHistory);
 }

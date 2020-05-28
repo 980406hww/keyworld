@@ -11,7 +11,7 @@ public class PtKeywordPositionHistory implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableField(value = "fUuid")
+    @TableField(value = "KEYWORD_ID")
     private Long keywordId;
 
     @TableField(value = "SYSTEM_POSITION")
@@ -19,6 +19,15 @@ public class PtKeywordPositionHistory implements Serializable {
 
     @TableField(value = "CUSTOMER_POSITION")
     private Integer customerPosition;
+
+    @TableField(value = "SEARCH_ENGINE")
+    private String searchEngine;
+
+    @TableField(value = "TERMINAL_TYPE")
+    private String terminalType;
+
+    @TableField(value = "TODAY_FEE")
+    private Double todayFee;
 
     @TableField(value = "RECORD_DATE")
     private Date recordDate;
@@ -45,6 +54,30 @@ public class PtKeywordPositionHistory implements Serializable {
 
     public void setCustomerPosition(Integer customerPosition) {
         this.customerPosition = customerPosition;
+    }
+
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
+    }
+
+    public String getTerminalType() {
+        return terminalType;
+    }
+
+    public void setTerminalType(String terminalType) {
+        this.terminalType = terminalType;
+    }
+
+    public Double getTodayFee() {
+        return todayFee;
+    }
+
+    public void setTodayFee(Double todayFee) {
+        this.todayFee = todayFee;
     }
 
     public Date getRecordDate() {

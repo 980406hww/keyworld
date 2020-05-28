@@ -1967,21 +1967,29 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 // 获取当前时间
                 String currentDate = Utils.getCurrentDate();
                 for (PtCustomerKeyword keyword : ptKeywords) {
-                    // 计算是否达标
-                    keyword.setCompStatus(keyword.getCurrentPosition() > 10);
-                    // 查重
-                    PtCustomerKeyword existingKeyword = ptCustomerKeywordService.selectExistingCmsKeyword(keyword);
-                    if (null == existingKeyword) {
-                        keyword.setSubDate(Utils.parseDate(currentDate, "yyyy-MM-dd"));
-                        ptCustomerKeywordService.insert(keyword);
-                    } else {
-                        keyword.setKeywordId(existingKeyword.getKeywordId());
-                        keyword.setSubDate(existingKeyword.getSubDate());
-                        ptCustomerKeywordService.updateById(keyword);
-                    }
-                    if (null != keyword.getKeywordId()) {
-                        // 更新历史排名 replace into
-                        ptKeywordPositionHistoryService.insertKeywordPositionHistory(keyword.getKeywordId(), keyword.getCurrentPosition(), currentDate);
+                    PtCustomerKeyword existingKeyword = ptCustomerKeywordService.selectExistingCmsKeyword(keyword.getCustomerKeywordId());
+                    if (null != existingKeyword) {
+                        existingKeyword.setCurrentPosition(keyword.getCurrentPosition());
+                        existingKeyword.setCity(keyword.getCity());
+                        existingKeyword.setCapturePositionCity(keyword.getCapturePositionCity());
+                        existingKeyword.setPricePreDay(keyword.getPricePreDay());
+                        existingKeyword.setCaptureStatus(keyword.getCaptureStatus());
+                        existingKeyword.setCapturePositionTime(keyword.getCapturePositionTime());
+                        ptCustomerKeywordService.updateById(existingKeyword);
+
+                        // 历史排名 replace into
+                        PtKeywordPositionHistory positionHistory = new PtKeywordPositionHistory();
+                        positionHistory.setKeywordId(existingKeyword.getId());
+                        positionHistory.setSystemPosition(existingKeyword.getCurrentPosition());
+                        positionHistory.setSearchEngine(existingKeyword.getSearchEngine());
+                        positionHistory.setTerminalType(existingKeyword.getTerminalType());
+                        double todatFee = 0.00;
+                        if (existingKeyword.getCurrentPosition() > 0 && existingKeyword.getCurrentPosition() <= 10) {
+                            todatFee = existingKeyword.getPricePreDay();
+                        }
+                        positionHistory.setTodayFee(todatFee);
+                        positionHistory.setRecordDate(Utils.parseDate(currentDate, "yyyy-MM-dd"));
+                        ptKeywordPositionHistoryService.insertKeywordPositionHistory(positionHistory);
                     }
                 }
             }

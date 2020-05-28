@@ -13,14 +13,11 @@ public class PtCustomerKeyword implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "fUuid", type= IdType.AUTO)
-    private Long keywordId;
+    @TableId(value = "ID", type= IdType.AUTO)
+    private Long id;
 
-    @TableField(exist = false)
-    private Long customerUuid;
-
-    @TableField(value = "COMPANY_CODE")
-    private String companyCode;
+    @TableField(value = "CUSTOMER_KEYWORD_ID")
+    private Long customerKeywordId;
 
     @TableField(value = "KEYWORD")
     private String keyword;
@@ -46,46 +43,44 @@ public class PtCustomerKeyword implements Serializable {
     @TableField(value = "CITY")
     private String city;
 
+    @TableField(value = "COMPANY_CODE")
+    private String companyCode;
+
     @TableField(value = "CURRENT_POSITION")
     private Integer currentPosition;
-
-    @TableField(value = "CAPTURE_POSITION_CITY")
-    private String capturePositionCity;
 
     @TableField(value = "PRICE_PER_DAY")
     private Double pricePreDay;
 
+    @TableField(value = "CAPTURE_POSITION_CITY")
+    private String capturePositionCity;
+
     @TableField(value = "CAPTURE_POSITION_TIME")
-    private Date capturePositionQueryTime;
+    private Date capturePositionTime;
 
-    @TableField(value = "SUB_DATE")
-    private Date subDate;
+    @TableField(value = "CAPTURE_STATUS")
+    private Integer captureStatus;
 
-    @TableField(value = "COMP_STATUS")
-    private Boolean compStatus;
+    @TableField(value = "CREATE_TIME")
+    private Date createTime;
 
-    public Long getKeywordId() {
-        return keywordId;
+    @TableField(value = "UPDATE_TIME")
+    private Date updateTime;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setKeywordId(Long keywordId) {
-        this.keywordId = keywordId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Long getCustomerUuid() {
-        return customerUuid;
+    public Long getCustomerKeywordId() {
+        return customerKeywordId;
     }
 
-    public void setCustomerUuid(Long customerUuid) {
-        this.customerUuid = customerUuid;
-    }
-
-    public String getCompanyCode() {
-        return companyCode;
-    }
-
-    public void setCompanyCode(String companyCode) {
-        this.companyCode = companyCode;
+    public void setCustomerKeywordId(Long customerKeywordId) {
+        this.customerKeywordId = customerKeywordId;
     }
 
     public String getKeyword() {
@@ -152,20 +147,20 @@ public class PtCustomerKeyword implements Serializable {
         this.city = city;
     }
 
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
+    }
+
     public Integer getCurrentPosition() {
         return currentPosition;
     }
 
     public void setCurrentPosition(Integer currentPosition) {
         this.currentPosition = currentPosition;
-    }
-
-    public String getCapturePositionCity() {
-        return capturePositionCity;
-    }
-
-    public void setCapturePositionCity(String capturePositionCity) {
-        this.capturePositionCity = capturePositionCity;
     }
 
     public Double getPricePreDay() {
@@ -176,27 +171,43 @@ public class PtCustomerKeyword implements Serializable {
         this.pricePreDay = pricePreDay;
     }
 
-    public Date getCapturePositionQueryTime() {
-        return capturePositionQueryTime;
+    public String getCapturePositionCity() {
+        return capturePositionCity;
     }
 
-    public void setCapturePositionQueryTime(Date capturePositionQueryTime) {
-        this.capturePositionQueryTime = capturePositionQueryTime;
+    public void setCapturePositionCity(String capturePositionCity) {
+        this.capturePositionCity = capturePositionCity;
     }
 
-    public Date getSubDate() {
-        return subDate;
+    public Date getCapturePositionTime() {
+        return capturePositionTime;
     }
 
-    public void setSubDate(Date subDate) {
-        this.subDate = subDate;
+    public void setCapturePositionTime(Date capturePositionTime) {
+        this.capturePositionTime = capturePositionTime;
     }
 
-    public Boolean getCompStatus() {
-        return compStatus;
+    public Integer getCaptureStatus() {
+        return captureStatus;
     }
 
-    public void setCompStatus(Boolean compStatus) {
-        this.compStatus = compStatus;
+    public void setCaptureStatus(Integer captureStatus) {
+        this.captureStatus = captureStatus;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

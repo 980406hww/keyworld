@@ -4,7 +4,8 @@
 
     <sql id="cmsKeywordColID">
         SELECT
-            KEYWORD_ID AS 'keywordId',
+            ID AS 'id',
+            CUSTOMER_KEYWORD_ID AS 'customerKeywordId',
             KEYWORD AS 'keyword',
             URL AS 'url',
             TITLE AS 'title',
@@ -12,31 +13,26 @@
             TERMINAL_TYPE AS 'terminalType',
             BEAR_PAW_NUM AS 'bearPawNumber',
             PRICE_PER_DAY AS 'pricePreDay',
-            SUB_DATE AS 'subDate',
             CURRENT_POSITION AS 'currentPosition',
             STATUS AS 'status',
-            COMP_STATUS AS 'compStatus',
             CITY AS 'city',
             COMPANY_CODE AS 'companyCode',
             CAPTURE_POSITION_CITY AS 'capturePositionCity',
-            CAPTURE_POSITION_TIME AS 'capturePositionQueryTime'
+            CAPTURE_POSITION_TIME AS 'capturePositionTime',
+            CAPTURE_STATUS AS 'captureStatus',
+            CREATE_TIME AS 'createTime',
+            UPDATE_TIME AS 'updateTime'
         FROM cms_keyword
     </sql>
 
     <select id="selectExistingCmsKeyword" resultType="com.keymanager.monitoring.entity.PtCustomerKeyword">
         <include refid="cmsKeywordColID"/>
-        <where>
-            KEYWORD = #{ptCustomerKeyword.keyword}
-            AND URL = #{ptCustomerKeyword.url}
-            AND SEARCH_ENGINE = #{ptCustomerKeyword.searchEngine}
-            AND TERMINAL_TYPE = #{ptCustomerKeyword.type}
-            AND COMPANY_CODE = #{ptCustomerKeyword.companyCode}
-            LIMIT 1
-        </where>
+        WHERE CUSTOMER_KEYWORD_ID = #{customerKeywordId}
+        LIMIT 1
     </select>
 
     <select id="checkFinishedCapturePosition" resultType="java.lang.Integer">
-        SELECT COUNT(1) FROM cms_keyword WHERE STATUS = 2 AND CAPTURE_POSITION_TIME &lt; CURRENT_DATE()
+        SELECT COUNT(1) FROM cms_keyword WHERE STATUS = 1 AND CAPTURE_POSITION_TIME &lt; CURRENT_DATE()
     </select>
 
 </mapper>

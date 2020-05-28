@@ -6,12 +6,22 @@
         KEYWORD_ID AS 'keywordId',
         SYSTEM_POSITION AS 'systemPosition',
         CUSTOMER_POSITION AS 'customerPosition',
+        SEARCH_ENGINE AS 'searchEngine',
+        TERMINAL_TYPE AS 'terminalType',
+        TODAY_FEE AS 'todayFee',
         RECORD_DATE AS 'recordDate'
     </sql>
 
     <insert id="insertKeywordPositionHistory">
-        REPLACE INTO cms_keyword_position_history(KEYWORD_ID, SYSTEM_POSITION, RECORD_DATE)
-        VALUES(#{keywordId}, #{currentPosition}, #{currentDate})
+        REPLACE INTO cms_keyword_position_history(KEYWORD_ID, SYSTEM_POSITION, SEARCH_ENGINE, TERMINAL_TYPE, TODAY_FEE, RECORD_DATE)
+        VALUES (
+                #{positionHistory.id},
+                #{positionHistory.currentPosition},
+                #{positionHistory.searchEngine},
+                #{positionHistory.terminalType},
+                #{positionHistory.todayFee},
+                #{positionHistory.currentDate}
+        )
     </insert>
 
 </mapper>

@@ -15,7 +15,7 @@ public class PtKeywordPositionHistoryService extends ServiceImpl<PtKeywordPositi
     /**
      * 更新历史排名 replace into
      */
-    public void insertKeywordPositionHistory(Long keywordId, Integer currentPosition, String currentDate) {
-        ptKeywordPositionHistoryDao.insertKeywordPositionHistory(keywordId, currentPosition, currentDate);
+    public void insertKeywordPositionHistory(PtKeywordPositionHistory positionHistory) {
+        ptKeywordPositionHistoryDao.insertKeywordPositionHistory(positionHistory);
     }
 }

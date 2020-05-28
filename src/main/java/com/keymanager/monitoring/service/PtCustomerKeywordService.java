@@ -13,10 +13,10 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
     private PtCustomerKeywordDao ptCustomerKeywordDao;
 
     /**
-     * 查重
+     * 根据customerKeywordId查询
      */
-    public PtCustomerKeyword selectExistingCmsKeyword(PtCustomerKeyword keyword) {
-        return ptCustomerKeywordDao.selectExistingCmsKeyword(keyword);
+    public PtCustomerKeyword selectExistingCmsKeyword(Long customerKeywordId) {
+        return ptCustomerKeywordDao.selectExistingCmsKeyword(customerKeywordId);
     }
 
     /**

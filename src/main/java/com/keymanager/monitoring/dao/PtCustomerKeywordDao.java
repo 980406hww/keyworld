@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 public interface PtCustomerKeywordDao extends BaseMapper<PtCustomerKeyword> {
 
     /**
-     * 查重
+     * 根据customerKeywordId查询
      */
-    PtCustomerKeyword selectExistingCmsKeyword(@Param("ptCustomerKeyword") PtCustomerKeyword ptCustomerKeyword);
+    PtCustomerKeyword selectExistingCmsKeyword(@Param("customerKeywordId") Long customerKeywordId);
 
     /**
      * 检查操作中的关键词排名是否爬取完成, 关闭开关
