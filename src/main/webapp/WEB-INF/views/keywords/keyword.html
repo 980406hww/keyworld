@@ -229,6 +229,18 @@
                                                 <input type="text" name="ltCreateTime" id="ltCreateTime" placeholder="结束日期" autocomplete="off" class="layui-input">
                                             </div>
                                         </div>
+
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label" style="width: 90px">是否收录</label>
+                                            <div class="layui-input-inline" style="width: 120px">
+                                                <select name="includeStatus" id="includeStatus">
+                                                    <option value="">是否收录</option>
+                                                    <option value="1">已收录</option>
+                                                    <option value="0">未收录</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
                                         <@shiro.hasRole name="Technical">
                                         <div class="layui-inline">
                                             <label class="layui-form-label" style="width: 100px">抓排名失败标识</label>

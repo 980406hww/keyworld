@@ -13,6 +13,7 @@ import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.vo.CodeNameVo;
 import com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO;
+import com.keymanager.ckadmin.vo.CustomerKeywordIncludeVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
@@ -177,4 +178,12 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<Long> getCustomerKeywordUuidsForBDExcel(@Param("customerKeyword") CustomerKeyword customerKeyword, @Param("username") String username);
 
     void batchDownKeywordByExcel(@Param("uuids") List<Long> uuids);
+
+    List<CustomerKeywordIncludeVO> fetchCustomerKeywordsForIncludeCheck();
+
+    void updateIncludeCheckTimeByUuids(@Param("uuids") List<Long> uuids);
+
+    void updateCustomerKeywordIncludeStatus(@Param("customerKeywordUuid") Long customerKeywordUuid, @Param("includeStatus") Integer includeStatus);
+
+    void updateCustomerKeywordIncludeCheckTime(@Param("customerKeywordUuid") Long customerKeywordUuid, @Param("includeCheckTime") Date includeCheckTime);
 }

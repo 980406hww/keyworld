@@ -63,6 +63,8 @@ public class KeywordCriteria extends BaseCriteria {
 
     private String deleteType;
 
+    private Integer includeStatus;
+
     public Long getQzUuid() {
         return qzUuid;
     }
@@ -425,5 +427,13 @@ public class KeywordCriteria extends BaseCriteria {
 
     public void setLtStartOptimizedTime(String ltStartOptimizedTime) {
         this.ltStartOptimizedTime = ltStartOptimizedTime;
+    }
+
+    public Integer getIncludeStatus() {
+        return includeStatus;
+    }
+
+    public void setIncludeStatus(Integer includeStatus) {
+        this.includeStatus = includeStatus;
     }
 }
