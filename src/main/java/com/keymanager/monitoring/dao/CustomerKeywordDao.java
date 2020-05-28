@@ -2,6 +2,7 @@ package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.keymanager.ckadmin.entity.PtCustomerKeyword;
 import com.keymanager.monitoring.criteria.*;
 import com.keymanager.monitoring.entity.*;
 import com.keymanager.monitoring.vo.*;
@@ -240,9 +241,4 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
      * 根据qsId判断站点关键词当天是否已同步
      */
     Long searchExistingSysCustomerKeywordQsId(@Param("qsId") Long qsId);
-
-    /**
-     * 根据客户名称，查询客户所有的pt关键词
-     */
-    List<PtCustomerKeyword> selectCustomerPtKeyword(@Param("customerName") String customerName, @Param("type") String type);
 }

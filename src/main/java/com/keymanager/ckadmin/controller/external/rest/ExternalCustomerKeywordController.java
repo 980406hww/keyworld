@@ -9,6 +9,7 @@ import com.keymanager.ckadmin.service.MachineInfoService;
 import com.keymanager.ckadmin.service.PerformanceService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
+import com.keymanager.ckadmin.util.Constants;
 import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.SearchEngineResultVO;
@@ -100,10 +101,14 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
                 String clientID = (String) requestMap.get("clientID");
                 String city = (String) requestMap.get("capturePositionCity");
                 Date startTime = new Date((Long) requestMap.get("startTime"));
+                String systemType = (String) requestMap.get("systemType");
+                if (null == systemType) {
+                    systemType = Constants.SYSTEM_TYPE_KEYWORD;
+                }
                 if (null != position && position > -1) {
-                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp(), ip, city);
+                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp(), ip, city, systemType);
                 } else {
-                    customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, capturePositionFailIdentify, startTime);
+                    customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, capturePositionFailIdentify, startTime, systemType);
                 }
                 if (StringUtil.isNotNullNorEmpty(clientID)) {
                     machineInfoService.updateMachineInfoForCapturePosition(clientID);

@@ -1482,7 +1482,8 @@
             ck.fKeyword AS 'keyword',
             ck.fUrl AS 'url',
             ck.fSearchEngine AS 'searchEngine',
-            ck.fBearPawNumber AS 'bearPawNumber'
+            ck.fBearPawNumber AS 'bearPawNumber',
+            "KeywordSystem" AS 'systemType'
             FROM t_customer_keyword ck
             WHERE ck.fType = #{type}
             AND ck.fSearchEngine = '百度'
@@ -1512,7 +1513,8 @@
             ck.fKeyword AS 'keyword',
             ck.fUrl AS 'url',
             ck.fSearchEngine AS 'searchEngine',
-            ck.fBearPawNumber AS 'bearPawNumber'
+            ck.fBearPawNumber AS 'bearPawNumber',
+            "KeywordSystem" AS 'systemType'
             FROM t_customer_keyword ck
             WHERE ck.fType = #{type}
             AND ck.fSearchEngine = '搜狗'
@@ -1539,7 +1541,8 @@
             ck.fKeyword AS 'keyword',
             ck.fUrl AS 'url',
             ck.fSearchEngine AS 'searchEngine',
-            ck.fBearPawNumber AS 'bearPawNumber'
+            ck.fBearPawNumber AS 'bearPawNumber',
+            "KeywordSystem" AS 'systemType'
             FROM t_customer_keyword ck
             WHERE ck.fType = #{type}
             AND ck.fSearchEngine = '360'

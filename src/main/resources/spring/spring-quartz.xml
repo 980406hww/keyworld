@@ -7,7 +7,7 @@
 		<!-- Triggers集成 -->
 		<property name="triggers">
 			<list>
-				<!--<ref bean="cronTriggerControlCustomerKeywordStatus" />
+				<ref bean="cronTriggerControlCustomerKeywordStatus" />
 				<ref bean="cronTriggerAdjustOptimizationCount" />
 				<ref bean="cronTriggerRenewalNotification" />
 				<ref bean="cronTriggerExpiryTimeWebsite" />
@@ -29,7 +29,7 @@
 				<ref bean="cronTriggerSwitchClientStatusGroup" />
 				<ref bean="cronTriggerGenerateRankingCurve" />
 				<ref bean="cronTriggerGenerateQZSettingKeywordCountCurve" />
-				<ref bean="cronTriggerAutoSaveTestDataStatisticsSchedule"/>-->
+				<ref bean="cronTriggerAutoSaveTestDataStatisticsSchedule"/>
 				<ref bean="cronTriggerSyncCustomerKeyword" />
 <!--				<ref bean="cronTriggerUserRefreshStatistic" />-->
 			</list>
@@ -350,7 +350,7 @@
 	<!-- 同步客户关键词信息 -->
 	<bean id="cronTriggerSyncCustomerKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerSyncCustomerKeywordSchedule" />
-		<property name="cronExpression" value="0 0/3 * * * ?" />
+		<property name="cronExpression" value="0 25 23 * * ?" />
 	</bean>
 
 	<bean id="cronTriggerSyncCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">

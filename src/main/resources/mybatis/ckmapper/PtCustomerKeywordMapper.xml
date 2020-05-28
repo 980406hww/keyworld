@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.ckadmin.dao.PtCustomerKeywordDao">
+
+    <select id="getPtKeywords" resultType="com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO">
+        SELECT
+            KEYWORD_ID AS 'uuid',
+            KEYWORD AS 'keyword',
+            URL AS 'url',
+            TITLE AS 'title',
+            SEARCH_ENGINE AS 'searchEngine',
+            TERMINAL_TYPE AS 'terminalType',
+            BEAR_PAW_NUM AS 'bearPawNumber',
+            CITY AS 'city',
+            "customerSystem" AS 'systemType'
+        FROM cms_keyword
+        <where>
+            <choose>
+                <when test="captureStatus == 1">
+                    AND ck.fCaptureStatus = 1
+                    AND ck.fCapturePositionQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+                </when>
+                <otherwise>
+                    AND ck.fCaptureStatus = 0
+                    AND ck.fCapturePositionQueryTime &lt; CURRENT_DATE()
+                </otherwise>
+            </choose>
+            LIMIT 3000
+        </where>
+    </select>
+
+    <update id="updatePtCaptureStatus">
+        UPDATE cms_keyword
+        SET
+        CAPTURE_POSITION_TIME = NOW(),
+        CAPTURE_STATUS = 1
+        WHERE KEYWORD_ID IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
+
+    <update id="updatePtKeywordCapturePositionTime">
+        UPDATE cms_keyword
+        SET CAPTURE_STATUS = 0,
+        CAPTURE_POSITION_TIME = #{capturePositionTime}
+        WHERE KEYWORD_ID = #{Uuid}
+    </update>
+
+    <update id="updatePosition">
+        UPDATE cms_keyword
+        SET
+        CURRENT_POSITION = IF(#{position} > 0 , #{position}, CURRENT_POSITION),
+        CAPTURE_POSITION_TIME = IFNULL(#{capturePositionTime}, CAPTURE_POSITION_TIME),
+        CAPTURE_POSITION_CITY = #{city},
+        CAPTURE_STATUS = 0,
+        UPDATE_TIME = NOW()
+        WHERE KEYWORD_ID = #{uuid}
+    </update>
+
+</mapper>

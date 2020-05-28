@@ -113,11 +113,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     @Autowired
     private CustomerExcludeKeywordService customerExcludeKeywordService;
 
-    @Autowired
-    private PtCustomerKeywordService ptCustomerKeywordService;
-
-    @Autowired PtKeywordPositionHistoryService ptKeywordPositionHistoryService;
-
     private final static LinkedBlockingQueue updateOptimizedResultQueue = new LinkedBlockingQueue();
 
     private final static Map<String, LinkedBlockingQueue> machineGroupQueueMap = new HashMap<String, LinkedBlockingQueue>();
@@ -1943,48 +1938,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         Long existQsId = customerKeywordDao.searchExistingSysCustomerKeywordQsId(qsId);
         if (null == existQsId) {
             customerKeywordDao.batchInsertCustomerKeywordByCustomerUuid(customerUuid, qsId);
-        }
-    }
-
-    public void getPTCustomerKeyword() {
-        // 读取配置表需要同步pt关键词的客户信息
-        Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD, Constants.CONFIG_KEY_SYNC_CUSTOMER_PT_KEYWORD);
-        if (null != config) {
-            String customerNameStr = config.getValue();
-            List<PtCustomerKeyword> ptKeywords = new ArrayList<>();
-            if (StringUtil.isNotNullNorEmpty(customerNameStr)) {
-                String[] syncCustomerNames = customerNameStr.replaceAll(" ", "").split(",");
-                for (String customerName : syncCustomerNames) {
-                    List<PtCustomerKeyword> keywords = customerKeywordDao.selectCustomerPtKeyword(customerName, "pt");
-                    if (CollectionUtils.isNotEmpty(keywords)) {
-                        ptKeywords.addAll(keywords);
-                    }
-                }
-            }
-
-            // 开始同步
-            if (CollectionUtils.isNotEmpty(ptKeywords)) {
-                // 获取当前时间
-                String currentDate = Utils.getCurrentDate();
-                for (PtCustomerKeyword keyword : ptKeywords) {
-                    // 计算是否达标
-                    keyword.setCompStatus(keyword.getCurrentPosition() > 10);
-                    // 查重
-                    PtCustomerKeyword existingKeyword = ptCustomerKeywordService.selectExistingCmsKeyword(keyword);
-                    if (null == existingKeyword) {
-                        keyword.setSubDate(Utils.parseDate(currentDate, "yyyy-MM-dd"));
-                        ptCustomerKeywordService.insert(keyword);
-                    } else {
-                        keyword.setKeywordId(existingKeyword.getKeywordId());
-                        keyword.setSubDate(existingKeyword.getSubDate());
-                        ptCustomerKeywordService.updateById(keyword);
-                    }
-                    if (null != keyword.getKeywordId()) {
-                        // 更新历史排名 replace into
-                        ptKeywordPositionHistoryService.insertKeywordPositionHistory(keyword.getKeywordId(), keyword.getCurrentPosition(), currentDate);
-                    }
-                }
-            }
         }
     }
 }

@@ -10,6 +10,7 @@ public class CustomerKeyWordCrawlRankVO {
     private String url;
     private String bearPawNumber;
     private String title;
+    private String systemType;
 
     public String getTitle() {
         return title;
@@ -81,5 +82,13 @@ public class CustomerKeyWordCrawlRankVO {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getSystemType() {
+        return systemType;
+    }
+
+    public void setSystemType(String systemType) {
+        this.systemType = systemType;
     }
 }

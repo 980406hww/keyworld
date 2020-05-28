@@ -13,8 +13,7 @@ import com.keymanager.ckadmin.criteria.QZRateKewordCountCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.dao.CustomerKeywordDao;
-import com.keymanager.ckadmin.entity.CaptureRankJob;
-import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.entity.*;
 import com.keymanager.ckadmin.enums.CollectMethod;
 import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.EntryTypeEnum;
@@ -38,9 +37,6 @@ import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
 import com.keymanager.ckadmin.vo.SearchEngineResultItemVO;
 import com.keymanager.ckadmin.vo.SearchEngineResultVO;
-import com.keymanager.ckadmin.entity.GroupSetting;
-import com.keymanager.ckadmin.entity.MachineInfo;
-import com.keymanager.ckadmin.entity.OperationCombine;
 import com.keymanager.ckadmin.vo.OptimizationMachineVO;
 import com.keymanager.ckadmin.vo.OptimizationVO;
 import com.keymanager.monitoring.vo.UpdateOptimizedCountSimpleVO;
@@ -104,6 +100,12 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     @Resource(name = "machineInfoService2")
     private MachineInfoService machineInfoService;
+
+    @Resource(name = "ptCustomerKeywordService2")
+    private PtCustomerKeywordService ptCustomerKeywordService;
+
+    @Resource(name = "ptKeywordPositionHistoryService2")
+    private PtKeywordPositionHistoryService ptKeywordPositionHistoryService;
 
     private final static LinkedBlockingQueue updateOptimizedResultQueue = new LinkedBlockingQueue();
 
@@ -1014,34 +1016,54 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime, String ip, String city) {
+    public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime, String ip, String city, String systemType) {
         Double todayFee = null;
-        CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordFee(customerKeywordUuid);
-        if (position > 0 && position <= 10) {
-            if (customerKeyword.getPositionFirstFee() != null && customerKeyword.getPositionFirstFee() > 0 && position == 1) {
-                todayFee = customerKeyword.getPositionFirstFee();
-            } else if (customerKeyword.getPositionSecondFee() != null && customerKeyword.getPositionSecondFee() > 0 && position == 2) {
-                todayFee = customerKeyword.getPositionSecondFee();
-            } else if (customerKeyword.getPositionThirdFee() != null && customerKeyword.getPositionThirdFee() > 0 && position == 3) {
-                todayFee = customerKeyword.getPositionThirdFee();
-            } else if (customerKeyword.getPositionForthFee() != null && customerKeyword.getPositionForthFee() > 0 && position == 4) {
-                todayFee = customerKeyword.getPositionForthFee();
-            } else if (customerKeyword.getPositionFifthFee() != null && customerKeyword.getPositionFifthFee() > 0 && position == 5) {
-                todayFee = customerKeyword.getPositionFifthFee();
-            } else if (customerKeyword.getPositionFirstPageFee() != null && customerKeyword.getPositionFirstPageFee() > 0) {
-                todayFee = customerKeyword.getPositionFirstPageFee();
+        if (Constants.SYSTEM_TYPE_KEYWORD.equals(systemType)) {
+            CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordFee(customerKeywordUuid);
+            if (position > 0 && position <= 10) {
+                if (customerKeyword.getPositionFirstFee() != null && customerKeyword.getPositionFirstFee() > 0 && position == 1) {
+                    todayFee = customerKeyword.getPositionFirstFee();
+                } else if (customerKeyword.getPositionSecondFee() != null && customerKeyword.getPositionSecondFee() > 0 && position == 2) {
+                    todayFee = customerKeyword.getPositionSecondFee();
+                } else if (customerKeyword.getPositionThirdFee() != null && customerKeyword.getPositionThirdFee() > 0 && position == 3) {
+                    todayFee = customerKeyword.getPositionThirdFee();
+                } else if (customerKeyword.getPositionForthFee() != null && customerKeyword.getPositionForthFee() > 0 && position == 4) {
+                    todayFee = customerKeyword.getPositionForthFee();
+                } else if (customerKeyword.getPositionFifthFee() != null && customerKeyword.getPositionFifthFee() > 0 && position == 5) {
+                    todayFee = customerKeyword.getPositionFifthFee();
+                } else if (customerKeyword.getPositionFirstPageFee() != null && customerKeyword.getPositionFirstPageFee() > 0) {
+                    todayFee = customerKeyword.getPositionFirstPageFee();
+                }
             }
-        }
-        customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee, ip, city);
-        if (capturePositionQueryTime != null) {
-            ckPositionSummaryService.savePositionSummary(customerKeywordUuid, customerKeyword.getSearchEngine(), customerKeyword.getTerminalType(),
-                customerKeyword.getCustomerUuid(), customerKeyword.getType(), position);
+            customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee, ip, city);
+            if (capturePositionQueryTime != null) {
+                ckPositionSummaryService.savePositionSummary(customerKeywordUuid, customerKeyword.getSearchEngine(), customerKeyword.getTerminalType(),
+                        customerKeyword.getCustomerUuid(), customerKeyword.getType(), position);
+            }
+        } else {
+            PtCustomerKeyword ptCustomerKeyword = ptCustomerKeywordService.selectById(customerKeywordUuid);
+            if (position > 0 && position <= 10) {
+                todayFee = ptCustomerKeyword.getPricePreDay();
+                ptCustomerKeyword.setCompStatus(true);
+            } else {
+                todayFee = 0.00;
+                ptCustomerKeyword.setCompStatus(false);
+            }
+            ptCustomerKeywordService.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, city);
+            if (capturePositionQueryTime != null) {
+                ptKeywordPositionHistoryService.savePositionHistory(customerKeywordUuid, ptCustomerKeyword.getSearchEngine(),
+                        ptCustomerKeyword.getTerminalType(), position, todayFee);
+            }
         }
     }
 
     @Override
-    public void updateCustomerKeywordQueryTime(Long customerKeywordUuid, Integer capturePositionFailIdentify, Date date) {
-        customerKeywordDao.updateCustomerKeywordQueryTime(customerKeywordUuid, capturePositionFailIdentify, DateUtils.addMinutes(date, -3));
+    public void updateCustomerKeywordQueryTime(Long customerKeywordUuid, Integer capturePositionFailIdentify, Date date, String systemType) {
+        if (Constants.SYSTEM_TYPE_CUSTOMER.equals(systemType)) {
+            ptCustomerKeywordService.updatePtKeywordCapturePositionTime(customerKeywordUuid, DateUtils.addMinutes(date, -3));
+        } else {
+            customerKeywordDao.updateCustomerKeywordQueryTime(customerKeywordUuid, capturePositionFailIdentify, DateUtils.addMinutes(date, -3));
+        }
     }
 
     @Override
@@ -1091,22 +1113,39 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             int offerSize = 0;
             if (currentSize < 12000) {
                 List<CustomerKeyWordCrawlRankVO> customerKeyWordCrawlRankVos;
+                String systemType;
                 do {
+                    systemType = Constants.SYSTEM_TYPE_KEYWORD;
                     customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords("pt", 1);
                     if (CollectionUtils.isEmpty(customerKeyWordCrawlRankVos)) {
                         customerKeyWordCrawlRankVos = customerKeywordDao.getCrawlRankKeywords("pt", 0);
+
+                        // 把指定客户的关键词放入队列
+                        if (CollectionUtils.isEmpty(customerKeyWordCrawlRankVos)) {
+                            systemType = Constants.SYSTEM_TYPE_CUSTOMER;
+                            customerKeyWordCrawlRankVos = ptCustomerKeywordService.getPtKeywords(1);
+
+                            if (CollectionUtils.isEmpty(customerKeyWordCrawlRankVos)) {
+                                customerKeyWordCrawlRankVos = ptCustomerKeywordService.getPtKeywords(0);
+                            }
+                        }
                     }
+
                     if (CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos)) {
-                        List<Long> customerKeywordUuids = new ArrayList<>();
-                        for (CustomerKeyWordCrawlRankVO customerKeyWordCrawlRankVo : customerKeyWordCrawlRankVos) {
-                            if (customerKeywordCrawlPTRankQueue.offer(customerKeyWordCrawlRankVo)) {
-                                customerKeywordUuids.add(customerKeyWordCrawlRankVo.getUuid());
+                        List<Long> uuids = new ArrayList<>();
+                        for (CustomerKeyWordCrawlRankVO vo : customerKeyWordCrawlRankVos) {
+                            if (customerKeywordCrawlPTRankQueue.offer(vo)) {
+                                uuids.add(vo.getUuid());
                                 offerSize++;
                             } else {
                                 break;
                             }
                         }
-                        customerKeywordDao.updateCrawlRankKeywordTimeByUuids(customerKeywordUuids);
+                        if (Constants.SYSTEM_TYPE_KEYWORD.equals(systemType)) {
+                            customerKeywordDao.updateCrawlRankKeywordTimeByUuids(uuids);
+                        } else {
+                            ptCustomerKeywordService.updatePtCaptureStatus(uuids);
+                        }
                     }
                 }
                 while (currentSize + offerSize < 24000 && CollectionUtils.isNotEmpty(customerKeyWordCrawlRankVos));

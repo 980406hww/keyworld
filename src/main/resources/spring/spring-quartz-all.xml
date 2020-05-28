@@ -430,7 +430,7 @@
 	<!-- 同步客户关键词信息 -->
 	<bean id="cronTriggerSyncCustomerKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerSyncCustomerKeywordSchedule" />
-		<property name="cronExpression" value="0 0/3 * * * ?" />
+		<property name="cronExpression" value="0 25 23 * * ?" />
 	</bean>
 
 	<bean id="cronTriggerSyncCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">

@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.entity;
+package com.keymanager.ckadmin.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -13,11 +13,8 @@ public class PtCustomerKeyword implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "fUuid", type= IdType.AUTO)
+    @TableId(value = "KEYWORD_ID", type= IdType.AUTO)
     private Long keywordId;
-
-    @TableField(exist = false)
-    private Long customerUuid;
 
     @TableField(value = "COMPANY_CODE")
     private String companyCode;
@@ -58,11 +55,17 @@ public class PtCustomerKeyword implements Serializable {
     @TableField(value = "CAPTURE_POSITION_TIME")
     private Date capturePositionQueryTime;
 
-    @TableField(value = "SUB_DATE")
-    private Date subDate;
+    @TableField(value = "CAPTURE_STATUS")
+    private Integer captureStatus;
 
     @TableField(value = "COMP_STATUS")
     private Boolean compStatus;
+
+    @TableField(value = "CREATE_TIME")
+    private Date createTime;
+
+    @TableField(value = "UPDATE_TIME")
+    private Date updateTime;
 
     public Long getKeywordId() {
         return keywordId;
@@ -70,14 +73,6 @@ public class PtCustomerKeyword implements Serializable {
 
     public void setKeywordId(Long keywordId) {
         this.keywordId = keywordId;
-    }
-
-    public Long getCustomerUuid() {
-        return customerUuid;
-    }
-
-    public void setCustomerUuid(Long customerUuid) {
-        this.customerUuid = customerUuid;
     }
 
     public String getCompanyCode() {
@@ -184,12 +179,12 @@ public class PtCustomerKeyword implements Serializable {
         this.capturePositionQueryTime = capturePositionQueryTime;
     }
 
-    public Date getSubDate() {
-        return subDate;
+    public Integer getCaptureStatus() {
+        return captureStatus;
     }
 
-    public void setSubDate(Date subDate) {
-        this.subDate = subDate;
+    public void setCaptureStatus(Integer captureStatus) {
+        this.captureStatus = captureStatus;
     }
 
     public Boolean getCompStatus() {
@@ -198,5 +193,21 @@ public class PtCustomerKeyword implements Serializable {
 
     public void setCompStatus(Boolean compStatus) {
         this.compStatus = compStatus;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

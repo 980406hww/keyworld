@@ -248,4 +248,8 @@ public class Constants {
     }
 
     public final static String CONFIG_OPERATE_KEYWORD = "OperateKeywordConfig";
+
+    // 系统类型常量
+    public final static String SYSTEM_TYPE_KEYWORD = "KeywordSystem";
+    public final static String SYSTEM_TYPE_CUSTOMER = "customerSystem";
 }
