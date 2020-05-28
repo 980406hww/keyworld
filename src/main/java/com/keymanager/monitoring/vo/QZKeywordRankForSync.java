@@ -1,6 +1,10 @@
 package com.keymanager.monitoring.vo;
 
-public class QZKeywordRankForSync {
+import java.io.Serializable;
+
+public class QZKeywordRankForSync implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Long qkId;
     private Long qsId;

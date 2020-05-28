@@ -36,7 +36,7 @@
 				<ref bean="cronTriggerGenerateRankingCurve" />
 				<ref bean="cronTriggerGenerateQZSettingKeywordCountCurve" />
 				<ref bean="cronTriggerAutoSaveTestDataStatisticsSchedule"/>
-				<ref bean="cronTriggerSyncQZCustomerData" />
+				<ref bean="cronTriggerSyncCustomerKeyword" />
 <!--				<ref bean="cronTriggerUserRefreshStatistic" />-->
 			</list>
 		</property>
@@ -427,14 +427,14 @@
 		<property name="concurrent" value="false" />
 	</bean>
 
-	<!--缓存需同步到简化版seo后台的数据信息-->
-	<bean id="cronTriggerSyncQZCustomerData" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="cronTriggerSyncQZCustomerDataSchedule" />
-		<property name="cronExpression" value="0 25 23 * * ?" />
+	<!-- 同步客户关键词信息 -->
+	<bean id="cronTriggerSyncCustomerKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerSyncCustomerKeywordSchedule" />
+		<property name="cronExpression" value="0 0/3 * * * ?" />
 	</bean>
 
-	<bean id="cronTriggerSyncQZCustomerDataSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="syncQZCustomerDataSchedule" />
+	<bean id="cronTriggerSyncCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="syncCustomerKeywordSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>

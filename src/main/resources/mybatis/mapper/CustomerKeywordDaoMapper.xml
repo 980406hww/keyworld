@@ -1730,4 +1730,28 @@
     <select id="searchExistingSysCustomerKeywordQsId" resultType="java.lang.Long">
         SELECT QS_ID FROM sys_customer_keyword sck WHERE QS_ID = #{qsId} AND CREATE_TIME = CURRENT_DATE() LIMIT 1
     </select>
+
+    <select id="selectCustomerPtKeyword" resultType="com.keymanager.monitoring.entity.PtCustomerKeyword">
+        SELECT
+            c.fUuid AS 'customerUuid',
+            c.fContactPerson AS 'companyCode',
+            ck.fKeyword AS 'keyword',
+            ck.fUrl AS 'url',
+            ck.fTitle AS 'title',
+            ck.fSearchEngine AS 'searchEngine',
+            ck.fTerminalType AS 'terminalType',
+            ck.fBearPawNumber AS 'bearPawNumber',
+            ck.fStatus AS 'status',
+            ck.fCity AS 'city',
+            ck.fCurrentPosition AS 'currentPosition',
+            ck.fCapturePositionCity AS 'capturePositionCity',
+            ck.fPositionFirstPageFee AS 'pricePreDay',
+            ck.fCapturePositionQueryTime AS 'capturePositionQueryTime'
+        FROM
+            t_customer_keyword ck, t_customer c
+        WHERE c.fUuid = ck.fCustomerUuid
+          AND c.fContactPerson = #{customerName}
+          AND ck.fType = #{type}
+          AND ck.fCapturePositionQueryTime > CURRENT_DATE()
+    </select>
 </mapper>

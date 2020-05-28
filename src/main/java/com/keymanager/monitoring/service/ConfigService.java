@@ -2,9 +2,7 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.monitoring.dao.ConfigDao;
-import com.keymanager.monitoring.dao.MachineInfoDao;
 import com.keymanager.monitoring.entity.Config;
-import com.keymanager.monitoring.entity.MachineInfo;
 import com.keymanager.util.Constants;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
@@ -15,7 +13,7 @@ import java.io.File;
 import java.util.*;
 
 @Service
-public class ConfigService extends ServiceImpl<MachineInfoDao, MachineInfo>{
+public class ConfigService extends ServiceImpl<ConfigDao, Config>{
 
     @Autowired
     private ConfigDao configDao;

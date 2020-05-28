@@ -241,4 +241,8 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
      */
     Long searchExistingSysCustomerKeywordQsId(@Param("qsId") Long qsId);
 
+    /**
+     * 根据客户名称，查询客户所有的pt关键词
+     */
+    List<PtCustomerKeyword> selectCustomerPtKeyword(@Param("customerName") String customerName, @Param("type") String type);
 }
