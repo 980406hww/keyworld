@@ -116,7 +116,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     @Autowired
     private PtCustomerKeywordService ptCustomerKeywordService;
 
-    @Autowired PtKeywordPositionHistoryService ptKeywordPositionHistoryService;
+    @Autowired
+    PtKeywordPositionHistoryService ptKeywordPositionHistoryService;
 
     private final static LinkedBlockingQueue updateOptimizedResultQueue = new LinkedBlockingQueue();
 
