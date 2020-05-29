@@ -1716,8 +1716,6 @@
             fTerminalType AS 'terminalType',
             fKeyword AS 'keyword',
             fUrl AS 'url',
-            fTitle AS 'title',
-            fBearPawNumber AS 'bearPawNumber',
             fSearchEngine AS 'searchEngine'
         FROM
             t_customer_keyword
@@ -1727,6 +1725,7 @@
                 ( fIncludeCheckTime &lt; DATE_SUB( CURRENT_DATE(), INTERVAL 3 DAY ) AND fIncludeStatus = 0 )
                 OR ( fOptimizedCount = 0 AND fFailedCause = "关键字未收录" AND fIncludeCheckTime &lt; CURRENT_DATE() )
             )
+        LIMIT 1000
     </select>
 
     <update id="updateIncludeCheckTimeByUuids">

@@ -4,8 +4,6 @@ public class CustomerKeywordIncludeVO {
     private Long uuid;
     private String keyword;
     private String url;
-    private String title;
-    private String bearPawNumber;
     private String terminalType;
     private String searchEngine;
 
@@ -31,22 +29,6 @@ public class CustomerKeywordIncludeVO {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getBearPawNumber() {
-        return bearPawNumber;
-    }
-
-    public void setBearPawNumber(String bearPawNumber) {
-        this.bearPawNumber = bearPawNumber;
     }
 
     public String getTerminalType() {
