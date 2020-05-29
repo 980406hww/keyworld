@@ -26,6 +26,7 @@ import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.CodeNameVo;
 import com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO;
+import com.keymanager.ckadmin.vo.CustomerKeywordIncludeVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordUploadVO;
 import com.keymanager.ckadmin.vo.GroupVO;
@@ -114,6 +115,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     private final static ArrayBlockingQueue<CustomerKeyWordCrawlRankVO> customerKeywordCrawlPTRankQueue = new ArrayBlockingQueue<>(24000);
 
     private final static ArrayBlockingQueue<CustomerKeyWordCrawlRankVO> customerKeywordCrawlQZRankQueue = new ArrayBlockingQueue<>(30000);
+
+    private final static LinkedBlockingQueue customerKeywordCheckIncludeQueue = new LinkedBlockingQueue();
 
     @Override
     public void cacheCustomerKeywords() {
@@ -352,6 +355,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         }
 
         machineGroupQueueVos.add(new MachineGroupQueueVO("Update", updateOptimizedResultQueue.size()));
+        machineGroupQueueVos.add(new MachineGroupQueueVO("CheckInclude", customerKeywordCheckIncludeQueue.size()));
 
         for (Map.Entry<String, LinkedBlockingQueue> entry : optimizeGroupNameQueueMap.entrySet()) {
             machineGroupQueueVos.add(new MachineGroupQueueVO(entry.getKey(), entry.getValue().size()));
@@ -1363,6 +1367,51 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         }
 
         return false;
+    }
+
+    @Override
+    public void cacheCheckIncludeCustomerKeywordsQueue(){
+        if (customerKeywordCheckIncludeQueue.size() < 4000) {
+            List<CustomerKeywordIncludeVO> customerKeywordIncludeVOs;
+            do {
+                customerKeywordIncludeVOs = customerKeywordDao.fetchCustomerKeywordsForIncludeCheck();
+                if (CollectionUtils.isNotEmpty(customerKeywordIncludeVOs)) {
+                    List<Long> customerKeywordUuids = new ArrayList<>();
+                    for (CustomerKeywordIncludeVO keywordincludeVo : customerKeywordIncludeVOs) {
+                        if (customerKeywordCheckIncludeQueue.offer(keywordincludeVo)) {
+                            customerKeywordUuids.add(keywordincludeVo.getUuid());
+                        } else {
+                            break;
+                        }
+                    }
+                    customerKeywordDao.updateIncludeCheckTimeByUuids(customerKeywordUuids);
+                }
+            } while (customerKeywordCheckIncludeQueue.size() < 10000 && CollectionUtils.isNotEmpty(customerKeywordIncludeVOs));
+        }
+
+    }
+
+    @Override
+    public synchronized List<CustomerKeywordIncludeVO> getCheckingEnteredKeywords(){
+        if (customerKeywordCheckIncludeQueue.size() > 0) {
+            List<CustomerKeywordIncludeVO> customerKeywordIncludeVOs = new ArrayList<>();
+            do {
+                Object obj = customerKeywordCheckIncludeQueue.poll();
+                customerKeywordIncludeVOs.add((CustomerKeywordIncludeVO) obj);
+            } while (customerKeywordCheckIncludeQueue.size() > 0 && customerKeywordIncludeVOs.size() < 10);
+            return customerKeywordIncludeVOs;
+        }
+        return null;
+    }
+
+    @Override
+    public void updateCustomerKeywordIncludeStatus(Long customerKeywordUuid, Integer includeStatus){
+        customerKeywordDao.updateCustomerKeywordIncludeStatus(customerKeywordUuid, includeStatus);
+    }
+
+    @Override
+    public void updateCustomerKeywordIncludeCheckTime(Long customerKeywordUuid, Date includeCheckTime){
+        customerKeywordDao.updateCustomerKeywordIncludeCheckTime(customerKeywordUuid, includeCheckTime);
     }
 
 }

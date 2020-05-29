@@ -189,6 +189,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                 {field: 'invalidRefreshCount', title: '无效', sort: true, width: '60', hide: true },
                 {field: 'status', title: '状态', width: '60', templet: '#statusTpl' },
                 {field: 'paymentStatus', title: '付费状态', width: '80', hide: true },
+                {field: 'includeStatus', title: '收录状态', width: '80', hide: true, templet: '#includeStatusTpl' },
                 {field: 'remarks', title: '备注', width: '100', hide: true, templet: '#remarksTpl'},
                 {field: 'failedCause', title: '失败原因', width: '80', hide: true},
                 {field: 'capturePositionFailIdentify', title: '抓排名失败标识', width: '100', hide: true}

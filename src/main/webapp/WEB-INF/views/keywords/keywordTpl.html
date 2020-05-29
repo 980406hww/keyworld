@@ -110,3 +110,11 @@
         </@shiro.hasPermission>
     </div>
 </script>
+
+<script type="text/html" id="includeStatusTpl">
+    {{#  if(d.includeStatus === 0) { }}
+    未收录
+    {{#  }else { }}
+    已收录
+    {{# } }}
+</script>

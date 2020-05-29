@@ -15,6 +15,7 @@ import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.entity.MachineInfo;
 import com.keymanager.ckadmin.vo.CodeNameVo;
 import com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO;
+import com.keymanager.ckadmin.vo.CustomerKeywordIncludeVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordUploadVO;
 import com.keymanager.ckadmin.vo.GroupVO;
@@ -175,4 +176,12 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
                                                                                   Date startTime, Long captureRankJobUuid);
 
     Boolean batchDownKeywordsForExcel(CustomerKeywordUploadVO customerKeywordUploadVo, String loginName);
+
+    void cacheCheckIncludeCustomerKeywordsQueue();
+
+    List<CustomerKeywordIncludeVO> getCheckingEnteredKeywords();
+
+    void updateCustomerKeywordIncludeStatus(Long customerKeywordUuid, Integer includeStatus);
+
+    void updateCustomerKeywordIncludeCheckTime(Long customerKeywordUuid, Date startTime);
 }

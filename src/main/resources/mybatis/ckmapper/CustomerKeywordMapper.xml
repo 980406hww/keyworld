@@ -543,6 +543,9 @@
         <if test="keywordCriteria.ltStartOptimizedTime != null and keywordCriteria.ltStartOptimizedTime != ''">
             AND ck.fStartOptimizedTime &lt;= #{keywordCriteria.ltStartOptimizedTime}
         </if>
+        <if test="keywordCriteria.includeStatus != null and keywordCriteria.includeStatus != ''">
+            AND ck.fIncludeStatus = #{keywordCriteria.includeStatus}
+        </if>
         <if test="keywordCriteria.orderingElement != null and keywordCriteria.orderingElement != ''">
             ORDER BY ${keywordCriteria.orderingElement}
         </if>
@@ -704,7 +707,8 @@
         ck.fCapturePositionQueryTime AS 'capturePositionQueryTime',
         ck.fOptimizeGroupName AS 'optimizeGroupName',
         ck.fMachineGroup AS 'machineGroup',
-        ck.fCapturePositionFailIdentify AS 'capturePositionFailIdentify'
+        ck.fCapturePositionFailIdentify AS 'capturePositionFailIdentify',
+        ck.fIncludeStatus AS 'includeStatus'
         FROM
         t_customer_keyword ck,
         t_customer c
@@ -833,7 +837,8 @@
         ck.fCapturePositionQueryTime AS 'capturePositionQueryTime',
         ck.fOptimizeGroupName AS 'optimizeGroupName',
         ck.fMachineGroup AS 'machineGroup',
-        ck.fCapturePositionQueryTime AS 'capturePositionQueryTime'
+        ck.fCapturePositionQueryTime AS 'capturePositionQueryTime',
+        ck.fIncludeStatus AS 'includeStatus'
         FROM
         t_customer_keyword ck,
         t_customer c
@@ -1703,5 +1708,44 @@
         <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
             #{uuid}
         </foreach>
+    </update>
+
+    <select id="fetchCustomerKeywordsForIncludeCheck"  resultType="com.keymanager.ckadmin.vo.CustomerKeywordIncludeVO">
+        SELECT
+            fUuid AS 'uuid',
+            fTerminalType AS 'terminalType',
+            fKeyword AS 'keyword',
+            fUrl AS 'url',
+            fSearchEngine AS 'searchEngine'
+        FROM
+            t_customer_keyword
+        WHERE
+            fStatus = 1
+            AND (
+                ( fIncludeCheckTime &lt; DATE_SUB( CURRENT_DATE(), INTERVAL 3 DAY ) AND fIncludeStatus = 0 )
+                OR ( fOptimizedCount = 0 AND fFailedCause = "关键字未收录" AND fIncludeCheckTime &lt; CURRENT_DATE() )
+            )
+        LIMIT 1000
+    </select>
+
+    <update id="updateIncludeCheckTimeByUuids">
+        UPDATE t_customer_keyword
+        SET fIncludeCheckTime = NOW(), fIncludeStatus = 1
+        WHERE fUuid IN
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </update>
+
+    <update id="updateCustomerKeywordIncludeStatus">
+        UPDATE t_customer_keyword
+        SET fIncludeStatus = #{includeStatus}
+        WHERE fUuid = #{customerKeywordUuid}
+    </update>
+
+    <update id="updateCustomerKeywordIncludeCheckTime">
+        UPDATE t_customer_keyword
+        SET fIncludeCheckTime = #{includeCheckTime}
+        WHERE fUuid = #{customerKeywordUuid}
     </update>
 </mapper>
