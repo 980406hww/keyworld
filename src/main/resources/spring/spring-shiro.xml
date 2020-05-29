@@ -103,7 +103,7 @@
 				/static/** = anon
 				/external/** = anon
 				/login = anon
-				/loginOldVersion = anon
+				<!--/loginOldVersion = anon-->
 				<!--/internal/terminalSetting/** = anon-->
 				<!--/tj.js = anon-->
 				/** = userInfo
