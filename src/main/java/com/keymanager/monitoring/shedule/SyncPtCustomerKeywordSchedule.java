@@ -55,7 +55,6 @@ public class SyncPtCustomerKeywordSchedule {
                     customerKeywordService.getPTCustomerKeyword();
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(" Sync Pt Customer Keyword Schedule Task is error" + e.getMessage());

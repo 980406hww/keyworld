@@ -24,4 +24,8 @@
         )
     </insert>
 
+    <delete id="cleanNotExistKeywordPositionHistory">
+        DELETE FROM cms_keyword_position_history WHERE NOT EXISTS (SELECT 1 FROM cms_keyword WHERE ID = KEYWORD_ID)
+    </delete>
+
 </mapper>

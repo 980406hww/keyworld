@@ -32,6 +32,7 @@
 				<ref bean="cronTriggerAutoSaveTestDataStatisticsSchedule"/>
 				<ref bean="cronTriggerSyncQzCustomerKeyword" />
 				<ref bean="cronTriggerSyncPtCustomerKeyword" />
+				<ref bean="cronTriggerCheckPtCustomerKeywordStatus" />
 <!--				<ref bean="cronTriggerUserRefreshStatistic" />-->
 			</list>
 		</property>
@@ -368,6 +369,18 @@
 
 	<bean id="cronTriggerSyncPtCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="syncPtCustomerKeywordSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!-- 监控客户pt关键词的状态变化 -->
+	<bean id="cronTriggerCheckPtCustomerKeywordStatus" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerCheckPtCustomerKeywordStatusSchedule" />
+		<property name="cronExpression" value="0 0/10 * * * ?" />
+	</bean>
+
+	<bean id="cronTriggerCheckPtCustomerKeywordStatusSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="checkPtCustomerKeywordStatusSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>

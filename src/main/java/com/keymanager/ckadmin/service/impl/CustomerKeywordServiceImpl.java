@@ -19,6 +19,7 @@ import com.keymanager.ckadmin.enums.CollectMethod;
 import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.EntryTypeEnum;
 import com.keymanager.ckadmin.enums.KeywordEffectEnum;
+import com.keymanager.ckadmin.excel.definition.SuperUserSimpleKeywordDefinition;
 import com.keymanager.ckadmin.excel.operator.AbstractExcelReader;
 import com.keymanager.ckadmin.service.*;
 import com.keymanager.ckadmin.util.Constants;
@@ -43,6 +44,7 @@ import com.keymanager.ckadmin.entity.MachineInfo;
 import com.keymanager.ckadmin.entity.OperationCombine;
 import com.keymanager.ckadmin.vo.OptimizationMachineVO;
 import com.keymanager.ckadmin.vo.OptimizationVO;
+import com.keymanager.monitoring.entity.PtCustomerKeyword;
 import com.keymanager.monitoring.vo.UpdateOptimizedCountSimpleVO;
 import com.keymanager.monitoring.vo.UpdateOptimizedCountVO;
 import com.keymanager.monitoring.vo.machineGroupQueueVO;
@@ -1365,6 +1367,65 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         return false;
     }
 
+    @Override
+    public void addCustomerKeywordsFromSeoSystem(List<PtCustomerKeyword> ptKeywords, Long customerUuid) {
+        for (PtCustomerKeyword ptKeyword : ptKeywords) {
+            ptKeyword.setStatus(1);
+            CustomerKeyword customerKeyword = new CustomerKeyword();
+            customerKeyword.setCustomerUuid(customerUuid);
+            customerKeyword.setType("pt");
+            customerKeyword.setStatus(1);
+            customerKeyword.setKeyword(ptKeyword.getKeyword());
+            customerKeyword.setUrl(ptKeyword.getUrl());
+            customerKeyword.setSearchEngine(ptKeyword.getSearchEngine());
+            customerKeyword.setTerminalType(ptKeyword.getTerminalType());
+            customerKeyword.setOriginalUrl(ptKeyword.getUrl());
+            customerKeyword.setBearPawNumber(ptKeyword.getBearPawNumber());
+            customerKeyword.setCurrentPosition(ptKeyword.getCurrentPosition());
+            customerKeyword.setTitle(ptKeyword.getTitle());
+
+            Double fee = ptKeyword.getPricePreDay();
+            customerKeyword.setPositionFirstFee(fee);
+            customerKeyword.setPositionSecondFee(fee);
+            customerKeyword.setPositionThirdFee(fee);
+            customerKeyword.setPositionForthFee(fee);
+            customerKeyword.setPositionFifthFee(fee);
+            customerKeyword.setPositionFirstPageFee(fee);
+
+            customerKeyword.setCollectMethod(CollectMethod.PerDay.getCode());
+            customerKeyword.setManualCleanTitle(true);
+            customerKeyword.setServiceProvider("baidutop123");
+            customerKeyword.setCurrentIndexCount(-1);
+            customerKeyword.setOptimizePlanCount(50);
+            customerKeyword.setOptimizeRemainingCount(50);
+            customerKeyword.setMachineGroup("super");
+            customerKeyword.setOptimizeGroupName("Default");
+            customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Excel.name());
+
+            int queryInterval = 24 * 60 * 60;
+            if (null != customerKeyword.getOptimizePlanCount() && customerKeyword.getOptimizePlanCount() > 0) {
+                int optimizeTodayCount = (int) Math.floor(Utils.getRoundValue(customerKeyword.getOptimizePlanCount() *
+                        (Math.random() * 0.7 + 0.5), 1));
+                queryInterval = queryInterval / optimizeTodayCount;
+                customerKeyword.setOptimizeTodayCount(optimizeTodayCount);
+                customerKeyword.setOptimizeRemainingCount(optimizeTodayCount);
+            }
+
+            customerKeyword.setQueryInterval(queryInterval);
+            customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
+            customerKeyword.setCapturePositionQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));
+            customerKeyword.setCaptureIndexQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));
+            customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
+            customerKeyword.setLastReachStandardDate(Utils.yesterday());
+            customerKeyword.setQueryTime(new Date());
+            customerKeyword.setQueryDate(new Date());
+            customerKeyword.setUpdateTime(new Date());
+            customerKeyword.setCreateTime(new Date());
+
+            customerKeywordDao.insert(customerKeyword);
+            ptKeyword.setCustomerKeywordId(customerKeyword.getUuid());
+        }
+    }
 }
 
 

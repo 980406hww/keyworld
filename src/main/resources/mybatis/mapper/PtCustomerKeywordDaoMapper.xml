@@ -35,4 +35,55 @@
         SELECT COUNT(1) FROM cms_keyword WHERE STATUS = 1 AND CAPTURE_POSITION_TIME &lt; CURRENT_DATE()
     </select>
 
+    <select id="selectNewPtKeyword" resultType="com.keymanager.monitoring.entity.PtCustomerKeyword">
+        SELECT
+            ID AS 'id',
+            CUSTOMER_KEYWORD_ID AS 'customerKeywordId',
+            KEYWORD AS 'keyword',
+            URL AS 'url',
+            TITLE AS 'title',
+            SEARCH_ENGINE AS 'searchEngine',
+            TERMINAL_TYPE AS 'terminalType',
+            BEAR_PAW_NUM AS 'bearPawNumber',
+            PRICE_PER_DAY AS 'pricePreDay',
+            CURRENT_POSITION AS 'currentPosition',
+            STATUS AS 'status',
+            CITY AS 'city',
+            COMPANY_CODE AS 'companyCode',
+            CAPTURE_POSITION_CITY AS 'capturePositionCity',
+            CAPTURE_POSITION_TIME AS 'capturePositionTime',
+            CAPTURE_STATUS AS 'captureStatus',
+            CREATE_TIME AS 'createTime',
+            UPDATE_TIME AS 'updateTime'
+        FROM cms_keyword
+        WHERE CUSTOMER_KEYWORD_ID IS NULL AND COMPANY_CODE = #{customerName} AND `STATUS` = 2
+    </select>
+
+    <select id="selectCustomerDelKeywords" resultType="java.lang.Long">
+        SELECT CUSTOMER_KEYWORD_ID FROM cms_keyword
+        WHERE CUSTOMER_KEYWORD_ID > ''
+        AND `STATUS` = 3
+    </select>
+
+    <update id="updateCustomerKeywordDiffStatus">
+        UPDATE cms_keyword k, t_customer_keyword ck
+        SET ck.fStatus = k.`STATUS`
+        WHERE k.CUSTOMER_KEYWORD_ID = ck.fUuid
+        AND k.`STATUS` &lt;&gt; ck.fStatus
+    </update>
+
+    <delete id="deleteSaleDelKeywords">
+        DELETE FROM cms_keyword
+        WHERE CUSTOMER_KEYWORD_ID > ''
+        AND NOT EXISTS (SELECT 1 FROM t_customer_keyword WHERE fUuid = CUSTOMER_KEYWORD_ID)
+    </delete>
+
+    <delete id="cleanNotExistCustomerKeyword">
+        DELETE FROM cms_keyword
+        WHERE COMPANY_CODE NOT IN
+        <foreach collection="customerNames" item="name" open="(" separator="," close=")">
+            #{name}
+        </foreach>
+    </delete>
+
 </mapper>
