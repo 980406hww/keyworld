@@ -100,7 +100,7 @@
 
 	<bean id="cronTriggerCacheCheckIncludeCustomerKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerCacheCheckIncludeCustomerKeywordSchedule"/>
-		<property name="cronExpression" value="0 0/1 18-23 * * ? " />
+		<property name="cronExpression" value="0 0/2 18-23 * * ?" />
 	</bean>
 
 	<bean id="cronTriggerCacheCheckIncludeCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">

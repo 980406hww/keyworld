@@ -1386,7 +1386,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                     }
                     customerKeywordDao.updateIncludeCheckTimeByUuids(customerKeywordUuids);
                 }
-            } while (customerKeywordCheckIncludeQueue.size() < 5000 && CollectionUtils.isNotEmpty(customerKeywordIncludeVOs));
+            } while (customerKeywordCheckIncludeQueue.size() < 10000 && CollectionUtils.isNotEmpty(customerKeywordIncludeVOs));
         }
 
     }
