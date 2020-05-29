@@ -6,7 +6,7 @@ import com.keymanager.monitoring.entity.PtKeywordPositionHistory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("positionHistoryService2")
 public class PtKeywordPositionHistoryService extends ServiceImpl<PtKeywordPositionHistoryDao, PtKeywordPositionHistory> {
 
     @Autowired

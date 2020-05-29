@@ -15,12 +15,12 @@
     <insert id="insertKeywordPositionHistory">
         REPLACE INTO cms_keyword_position_history(KEYWORD_ID, SYSTEM_POSITION, SEARCH_ENGINE, TERMINAL_TYPE, TODAY_FEE, RECORD_DATE)
         VALUES (
-                #{positionHistory.id},
-                #{positionHistory.currentPosition},
+                #{positionHistory.keywordId},
+                #{positionHistory.systemPosition},
                 #{positionHistory.searchEngine},
                 #{positionHistory.terminalType},
                 #{positionHistory.todayFee},
-                #{positionHistory.currentDate}
+                #{positionHistory.recordDate}
         )
     </insert>
 

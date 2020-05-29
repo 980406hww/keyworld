@@ -1733,7 +1733,7 @@
 
     <select id="selectCustomerPtKeyword" resultType="com.keymanager.monitoring.entity.PtCustomerKeyword">
         SELECT
-            ck.fUuid AS 'customerKeywordUuid',
+            ck.fUuid AS 'customerKeywordId',
             ck.fCity AS 'city',
             ck.fCurrentPosition AS 'currentPosition',
             ck.fCapturePositionCity AS 'capturePositionCity',

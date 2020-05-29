@@ -3,7 +3,10 @@
 <mapper namespace="com.keymanager.monitoring.dao.ConfigDao">
     <select id="getConfig" resultType="com.keymanager.monitoring.entity.Config">
         SELECT c.fConfigType as 'configType', c.fKey as 'key', c.fValue as 'value' FROM t_config c
-        WHERE c.fConfigType = #{configType} AND c.fKey = #{key}
+        WHERE c.fConfigType = #{configType}
+        <if test="key != null and key != ''">
+            AND c.fKey = #{key}
+        </if>
     </select>
 
     <update id="updateConfig" parameterType="com.keymanager.monitoring.entity.Config">

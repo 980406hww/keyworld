@@ -32,7 +32,7 @@
     </select>
 
     <select id="checkFinishedCapturePosition" resultType="java.lang.Integer">
-        SELECT COUNT(1) FROM cms_keyword WHERE STATUS = 1 AND CAPTURE_POSITION_TIME &lt; CURRENT_DATE()
+        SELECT COUNT(1) FROM cms_keyword WHERE STATUS = 1 AND ((CAPTURE_STATUS = 0 AND CAPTURE_POSITION_TIME &lt; CURRENT_DATE()) OR CAPTURE_STATUS = 1 )
     </select>
 
     <select id="selectNewPtKeyword" resultType="com.keymanager.monitoring.entity.PtCustomerKeyword">

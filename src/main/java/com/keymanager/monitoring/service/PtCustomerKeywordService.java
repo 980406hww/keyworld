@@ -17,7 +17,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import javax.annotation.Resource;
 import java.util.List;
 
-@Service
+@Service("ptCustomerKeywordService2")
 public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, PtCustomerKeyword> {
 
     @Autowired
