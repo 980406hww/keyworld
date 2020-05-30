@@ -11,11 +11,6 @@ import java.util.List;
 public interface PtCustomerKeywordDao extends BaseMapper<PtCustomerKeyword> {
 
     /**
-     * 根据customerKeywordId查询
-     */
-    PtCustomerKeyword selectExistingCmsKeyword(@Param("customerKeywordId") Long customerKeywordId);
-
-    /**
      * 检查操作中的关键词排名是否爬取完成, 关闭开关
      */
     int checkFinishedCapturePosition();
@@ -44,4 +39,6 @@ public interface PtCustomerKeywordDao extends BaseMapper<PtCustomerKeyword> {
      * 清理不再需要同步的客户数据
      */
     void cleanNotExistCustomerKeyword(@Param("customerNames") String[] customerNames);
+
+    void updatePtKeywordCurrentPosition(@Param("cusId") Long cusId, @Param("type") String type);
 }

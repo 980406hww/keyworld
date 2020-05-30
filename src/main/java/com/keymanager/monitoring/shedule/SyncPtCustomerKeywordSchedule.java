@@ -33,7 +33,7 @@ public class SyncPtCustomerKeywordSchedule {
         try {
             // 获取当前时间
             String currentDate = Utils.getCurrentDate();
-            // 读取配置表客户pt关键词日期和完成标识 1: 开  0: 关
+            // 读取配置表客户pt关键词日期和完成标识 1: 开  0: 关  一天同步一次
             Config ptFinishedConfig = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD_SWITCH, null);
             if (null != ptFinishedConfig) {
                 if (!currentDate.equals(ptFinishedConfig.getKey())) {
@@ -42,22 +42,15 @@ public class SyncPtCustomerKeywordSchedule {
                     configService.updateConfig(ptFinishedConfig);
                 }
 
-                // 检查操作中的关键词排名是否爬取完成, 关闭开关
-                if (ptCustomerKeywordService.checkFinishedCapturePosition() == 0) {
-                    if ("1".equals(ptFinishedConfig.getValue())) {
+                if ("1".equals(ptFinishedConfig.getValue())) {
+                    // 检查操作中的关键词排名是否爬取完成
+                    if (ptCustomerKeywordService.checkFinishedCapturePosition() == 0) {
+                        // 同步指定的客户关键词
+                        customerKeywordService.getPTCustomerKeyword();
+                        // 关闭开关
                         ptFinishedConfig.setValue("0");
                         configService.updateConfig(ptFinishedConfig);
                     }
-                } else {
-                    if ("0".equals(ptFinishedConfig.getValue())) {
-                        ptFinishedConfig.setValue("1");
-                        configService.updateConfig(ptFinishedConfig);
-                    }
-                }
-
-                if ("1".equals(ptFinishedConfig.getValue())) {
-                    // 同步指定的客户关键词
-                    customerKeywordService.getPTCustomerKeyword();
                 }
             }
         } catch (Exception e) {
