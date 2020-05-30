@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
  * @author shunshikj40
  */
 @Component
-public class SyncQZCustomerDataSchedule {
+public class SyncQzCustomerKeywordSchedule {
 
-    private static final Logger logger = LoggerFactory.getLogger(SyncQZCustomerDataSchedule.class);
+    private static final Logger logger = LoggerFactory.getLogger(SyncQzCustomerKeywordSchedule.class);
 
     @Autowired
     private QZSettingService qzSettingService;
@@ -20,10 +20,11 @@ public class SyncQZCustomerDataSchedule {
     public void runTask() {
         logger.info("============= " + " Sync QZ Customer Data Schedule Task " + "===================");
         try {
-            qzSettingService.syncQZCustomerKeyword();
+            // 同步客户QZ关键词和曲线信息
+            qzSettingService.getQZCustomerKeyword();
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(" Sync QZ Customer Data Schedule Task is error" + e.getMessage());
+            logger.error(" Sync Customer Keyword Schedule Task is error" + e.getMessage());
         }
     }
 }

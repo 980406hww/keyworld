@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.PtKeywordPositionHistoryDao">
+
+    <sql id="keywordPositionHistoryColID">
+        KEYWORD_ID AS 'keywordId',
+        SYSTEM_POSITION AS 'systemPosition',
+        CUSTOMER_POSITION AS 'customerPosition',
+        SEARCH_ENGINE AS 'searchEngine',
+        TERMINAL_TYPE AS 'terminalType',
+        TODAY_FEE AS 'todayFee',
+        RECORD_DATE AS 'recordDate'
+    </sql>
+
+    <insert id="insertKeywordPositionHistory">
+        REPLACE INTO cms_keyword_position_history(KEYWORD_ID, SYSTEM_POSITION, SEARCH_ENGINE, TERMINAL_TYPE, TODAY_FEE, RECORD_DATE)
+        VALUES (
+                #{positionHistory.keywordId},
+                #{positionHistory.systemPosition},
+                #{positionHistory.searchEngine},
+                #{positionHistory.terminalType},
+                #{positionHistory.todayFee},
+                #{positionHistory.recordDate}
+        )
+    </insert>
+
+    <delete id="cleanNotExistKeywordPositionHistory">
+        DELETE FROM cms_keyword_position_history WHERE NOT EXISTS (SELECT 1 FROM cms_keyword WHERE ID = KEYWORD_ID)
+    </delete>
+
+</mapper>

@@ -19,7 +19,6 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.ibatis.jdbc.Null;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,6 +112,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
     @Autowired
     private CustomerExcludeKeywordService customerExcludeKeywordService;
+
+    @Autowired
+    private PtCustomerKeywordService ptCustomerKeywordService;
+
+    @Autowired
+    PtKeywordPositionHistoryService ptKeywordPositionHistoryService;
 
     private final static LinkedBlockingQueue updateOptimizedResultQueue = new LinkedBlockingQueue();
 
@@ -1939,6 +1944,56 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         Long existQsId = customerKeywordDao.searchExistingSysCustomerKeywordQsId(qsId);
         if (null == existQsId) {
             customerKeywordDao.batchInsertCustomerKeywordByCustomerUuid(customerUuid, qsId);
+        }
+    }
+
+    public void getPTCustomerKeyword() {
+        // 读取配置表需要同步pt关键词的客户信息
+        Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD, Constants.CONFIG_KEY_SYNC_CUSTOMER_PT_KEYWORD);
+        if (null != config) {
+            String customerNameStr = config.getValue();
+            List<PtCustomerKeyword> ptKeywords = new ArrayList<>();
+            if (StringUtil.isNotNullNorEmpty(customerNameStr)) {
+                String[] syncCustomerNames = customerNameStr.replaceAll(" ", "").split(",");
+                for (String customerName : syncCustomerNames) {
+                    List<PtCustomerKeyword> keywords = customerKeywordDao.selectCustomerPtKeyword(customerName, "pt");
+                    if (CollectionUtils.isNotEmpty(keywords)) {
+                        ptKeywords.addAll(keywords);
+                    }
+                }
+            }
+
+            // 开始同步
+            if (CollectionUtils.isNotEmpty(ptKeywords)) {
+                // 获取当前时间
+                String currentDate = Utils.getCurrentDate();
+                for (PtCustomerKeyword keyword : ptKeywords) {
+                    PtCustomerKeyword existingKeyword = ptCustomerKeywordService.selectExistingCmsKeyword(keyword.getCustomerKeywordId());
+                    if (null != existingKeyword) {
+                        existingKeyword.setCurrentPosition(keyword.getCurrentPosition());
+                        existingKeyword.setCity(keyword.getCity());
+                        existingKeyword.setCapturePositionCity(keyword.getCapturePositionCity());
+                        existingKeyword.setPricePreDay(keyword.getPricePreDay());
+                        existingKeyword.setCaptureStatus(keyword.getCaptureStatus());
+                        existingKeyword.setCapturePositionTime(keyword.getCapturePositionTime());
+                        ptCustomerKeywordService.updateById(existingKeyword);
+
+                        // 历史排名 replace into
+                        PtKeywordPositionHistory positionHistory = new PtKeywordPositionHistory();
+                        positionHistory.setKeywordId(existingKeyword.getId());
+                        positionHistory.setSystemPosition(existingKeyword.getCurrentPosition());
+                        positionHistory.setSearchEngine(existingKeyword.getSearchEngine());
+                        positionHistory.setTerminalType(existingKeyword.getTerminalType());
+                        double todatFee = 0.00;
+                        if (existingKeyword.getCurrentPosition() > 0 && existingKeyword.getCurrentPosition() <= 10) {
+                            todatFee = existingKeyword.getPricePreDay();
+                        }
+                        positionHistory.setTodayFee(todatFee);
+                        positionHistory.setRecordDate(Utils.parseDate(currentDate, "yyyy-MM-dd"));
+                        ptKeywordPositionHistoryService.insertKeywordPositionHistory(positionHistory);
+                    }
+                }
+            }
         }
     }
 }

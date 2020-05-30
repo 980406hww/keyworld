@@ -103,10 +103,14 @@ public class Constants {
     public final static String CONFIG_KEY_INDUSTRY_TEL_REG = "IndustryTelReg";
     public final static String CONFIG_TYPE_INDUSTRY_QQ_REG = "IndustryQqReg";
     public final static String CONFIG_KEY_INDUSTRY_QQ_REG = "IndustryQqReg";
-    public final static String CONFIG_TYPE_SYNC_CUSTOMER_DATA = "SyncCustomerData";
-    public final static String CONFIG_KEY_CUSTOMER_TYPE_INFO = "CustomerTypeInfo";
+
     public final static String CONFIG_TYPE_SYNC_QZ_CUSTOMER_KEYWORD = "SyncQZCustomerKeyword";
     public final static String CONFIG_KEY_SYNC_QZ_CUSTOMER_TAG = "SyncQZCustomerTag";
+
+    public final static String CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD_SWITCH = "SyncCustomerPtKeywordSwitch";
+
+    public final static String CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD = "SyncCustomerPtKeyword";
+    public final static String CONFIG_KEY_SYNC_CUSTOMER_PT_KEYWORD = "SyncCustomerName";
 
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
 

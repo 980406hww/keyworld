@@ -27,6 +27,7 @@ import com.keymanager.ckadmin.vo.OptimizationVO;
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
 import com.keymanager.ckadmin.vo.SearchEngineResultVO;
+import com.keymanager.monitoring.entity.PtCustomerKeyword;
 import com.keymanager.monitoring.vo.UpdateOptimizedCountVO;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
@@ -178,6 +179,8 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     Boolean batchDownKeywordsForExcel(CustomerKeywordUploadVO customerKeywordUploadVo, String loginName);
 
     void cacheCheckIncludeCustomerKeywordsQueue();
+    
+    void addCustomerKeywordsFromSeoSystem(List<PtCustomerKeyword> ptKeywords, Long customerUuid);
 
     List<CustomerKeywordIncludeVO> getCheckingEnteredKeywords();
 
