@@ -62,15 +62,13 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
                 }
 
                 // 处理已删除的关键词
-                // 销售删除的
-                ptCustomerKeywordDao.deleteSaleDelKeywords();
-                // 客户删除的
                 List<Long> customerKeywordUuids = ptCustomerKeywordDao.selectCustomerDelKeywords();
                 if (CollectionUtils.isNotEmpty(customerKeywordUuids)) {
                     customerKeywordService.deleteBatchIds(customerKeywordUuids);
                 }
+                ptCustomerKeywordDao.deleteSaleDelKeywords();
 
-                // 处理其他状态的关键词
+                // 处理状态不同的关键词
                 ptCustomerKeywordDao.updateCustomerKeywordDiffStatus();
 
                 // 清理不再需要同步的客户数据
