@@ -73,9 +73,9 @@
 
     <update id="updateCustomerKeywordDiffStatus">
         UPDATE cms_keyword k, t_customer_keyword ck
-        SET ck.fStatus = k.`STATUS`
+        SET k.STATUS = 0
         WHERE k.CUSTOMER_KEYWORD_ID = ck.fUuid
-        AND k.`STATUS` &lt;&gt; ck.fStatus
+        AND ck.fStatus = 0
     </update>
 
     <delete id="deleteSaleDelKeywords">

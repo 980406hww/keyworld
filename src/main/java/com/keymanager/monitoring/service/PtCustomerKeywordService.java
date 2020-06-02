@@ -68,8 +68,8 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
                 }
                 ptCustomerKeywordDao.deleteSaleDelKeywords();
 
-                // 处理状态不同的关键词
-//                ptCustomerKeywordDao.updateCustomerKeywordDiffStatus();
+                // 处理暂不操作的词
+                ptCustomerKeywordDao.updateCustomerKeywordDiffStatus();
 
                 // 清理不再需要同步的客户数据
                 ptCustomerKeywordDao.cleanNotExistCustomerKeyword(customerNames);

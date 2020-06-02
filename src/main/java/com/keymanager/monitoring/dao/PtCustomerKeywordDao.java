@@ -26,7 +26,7 @@ public interface PtCustomerKeywordDao extends BaseMapper<PtCustomerKeyword> {
     List<Long> selectCustomerDelKeywords();
 
     /**
-     * 更新状态不同的关键词（不包含物理删除的）
+     * 处理暂不操作的词
      */
     void updateCustomerKeywordDiffStatus();
 
