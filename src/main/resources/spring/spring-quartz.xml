@@ -364,7 +364,7 @@
 	<!-- 同步客户PT关键词信息 -->
 	<bean id="cronTriggerSyncPtCustomerKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerSyncPtCustomerKeywordSchedule" />
-		<property name="cronExpression" value="0 0/30 * * * ?" />
+		<property name="cronExpression" value="0 0/30 9-23 * * ?" />
 	</bean>
 
 	<bean id="cronTriggerSyncPtCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -376,7 +376,7 @@
 	<!-- 监控客户pt关键词的状态变化 -->
 	<bean id="cronTriggerCheckPtCustomerKeywordStatus" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerCheckPtCustomerKeywordStatusSchedule" />
-		<property name="cronExpression" value="0 0/10 * * * ?" />
+		<property name="cronExpression" value="0 0/10 8-23 * * ?" />
 	</bean>
 
 	<bean id="cronTriggerCheckPtCustomerKeywordStatusSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">

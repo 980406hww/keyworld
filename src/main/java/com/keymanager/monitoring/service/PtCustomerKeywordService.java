@@ -36,13 +36,6 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
     private PtKeywordPositionHistoryService positionHistoryService;
 
     /**
-     * 根据customerKeywordId查询
-     */
-    public PtCustomerKeyword selectExistingCmsKeyword(Long customerKeywordId) {
-        return ptCustomerKeywordDao.selectExistingCmsKeyword(customerKeywordId);
-    }
-
-    /**
      * 检查操作中的关键词排名是否爬取完成, 关闭开关
      */
     public int checkFinishedCapturePosition() {
@@ -87,5 +80,9 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
                 positionHistoryService.cleanNotExistKeywordPositionHistory();
             }
         }
+    }
+
+    public void updatePtKeywordCurrentPosition(Long cusId, String type) {
+        ptCustomerKeywordDao.updatePtKeywordCurrentPosition(cusId, type);
     }
 }
