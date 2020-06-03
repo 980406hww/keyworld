@@ -15,7 +15,7 @@
     <insert id="insertKeywordPositionHistory">
         REPLACE INTO cms_keyword_position_history(KEYWORD_ID, SYSTEM_POSITION, SEARCH_ENGINE,TERMINAL_TYPE,TODAY_FEE,RECORD_DATE)
         SELECT DISTINCT ck.ID, CURRENT_POSITION, ck.SEARCH_ENGINE, ck.TERMINAL_TYPE,
-        IF(CUSTOMER_POSITION &gt; 0 and CURRENT_POSITION &lt;= 10, PRICE_PER_DAY, 0.00), CURRENT_DATE()
+        IF(CURRENT_POSITION &gt; 0 and CURRENT_POSITION &lt;= 10, PRICE_PER_DAY, 0.00), CURRENT_DATE()
         FROM cms_keyword ck, cms_keyword_position_history ph
         WHERE ck.ID = ph.KEYWORD_ID AND ck.CUSTOMER_KEYWORD_ID > '' AND ck.STATUS = 1
     </insert>
