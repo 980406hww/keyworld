@@ -240,4 +240,9 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
      * 根据qsId判断站点关键词当天是否已同步
      */
     Long searchExistingSysCustomerKeywordQsId(@Param("qsId") Long qsId);
+
+    /**
+     * 检查操作中的关键词排名是否爬取完成
+     */
+    int checkCustomerFinishedCapturePosition(@Param("customerUuid") Long customerUuid, @Param("type") String type);
 }

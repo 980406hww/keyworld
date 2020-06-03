@@ -11,11 +11,6 @@ import java.util.List;
 public interface PtCustomerKeywordDao extends BaseMapper<PtCustomerKeyword> {
 
     /**
-     * 检查操作中的关键词排名是否爬取完成, 关闭开关
-     */
-    int checkFinishedCapturePosition();
-
-    /**
      * 查询新增的关键词
      */
     List<PtCustomerKeyword> selectNewPtKeyword(@Param("customerName") String customerName);

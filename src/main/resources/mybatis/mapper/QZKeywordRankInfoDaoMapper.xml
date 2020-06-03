@@ -234,6 +234,6 @@
     </insert>
 
     <delete id="deleteSysQzKeywordRanks">
-        DELETE FROM sys_qz_keyword_rank WHERE QS_ID IN (SELECT DISTINCT QS_ID FROM sys_qz_setting WHERE COMPANY_NAME = #{qzCustomerTag})
+        DELETE FROM sys_qz_keyword_rank WHERE QS_ID IN (SELECT DISTINCT QS_ID FROM sys_qz_setting WHERE COMPANY_CODE = #{qzCustomerTag})
     </delete>
 </mapper>

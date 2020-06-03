@@ -1952,20 +1952,52 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void getPTCustomerKeyword() {
-        // 读取配置表需要同步pt关键词的客户信息
-        Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD, Constants.CONFIG_KEY_SYNC_CUSTOMER_PT_KEYWORD);
-        if (null != config) {
-            String customerNameStr = config.getValue();
-            if (StringUtil.isNotNullNorEmpty(customerNameStr)) {
-                String[] customerNames = customerNameStr.replaceAll(" ", "").split(",");
-                for (String customerName : customerNames) {
-                    // 根据客户id同步
-                    com.keymanager.ckadmin.entity.Customer customer = customerService2.selectByName(customerName);
-                    if (null != customer) {
-                        // 更新排名 update
-                        ptCustomerKeywordService.updatePtKeywordCurrentPosition(customer.getUuid(), "pt");
-                        // 历史排名 replace into
-                        ptKeywordPositionHistoryService.insertKeywordPositionHistory();
+        // 获取当前时间
+        String currentDate = Utils.getCurrentDate();
+        // 读取配置表客户pt关键词日期和完成标识 1: 开  0: 关  一天同步一次
+        Config ptFinishedConfig = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD_SWITCH, null);
+        if (null != ptFinishedConfig) {
+            if (!currentDate.equals(ptFinishedConfig.getKey())) {
+                ptFinishedConfig.setKey(currentDate);
+                ptFinishedConfig.setValue("1");
+                configService.updateConfig(ptFinishedConfig);
+            }
+
+            if ("1".equals(ptFinishedConfig.getValue())) {
+                // 读取配置表需要同步pt关键词的客户信息
+                Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD, Constants.CONFIG_KEY_SYNC_CUSTOMER_PT_KEYWORD);
+                if (null != config) {
+                    String customerNameStr = config.getValue();
+                    if (StringUtil.isNotNullNorEmpty(customerNameStr)) {
+                        String[] customerNames = customerNameStr.replaceAll(" ", "").split(",");
+                        boolean updateKeyFlag = false;
+                        List<Long> cusIds = new ArrayList<>();
+                        for (String customerName : customerNames) {
+                            updateKeyFlag = false;
+                            // 根据客户id同步
+                            com.keymanager.ckadmin.entity.Customer customer = customerService2.selectByName(customerName);
+                            if (null != customer) {
+                                // 检查操作中的关键词排名是否爬取完成
+                                int count = customerKeywordDao.checkCustomerFinishedCapturePosition(customer.getUuid(), "pt");
+                                if (count > 0) {
+                                    break;
+                                }
+                                updateKeyFlag = true;
+                                cusIds.add(customer.getUuid());
+                            }
+                        }
+
+                        if (updateKeyFlag && CollectionUtils.isNotEmpty(cusIds)) {
+                            for (Long cusId : cusIds) {
+                                // 更新排名 update
+                                ptCustomerKeywordService.updatePtKeywordCurrentPosition(cusId, "pt");
+                                // 历史排名 replace into
+                                ptKeywordPositionHistoryService.insertKeywordPositionHistory();
+                            }
+                            // 关闭开关
+                            ptFinishedConfig.setValue("0");
+                            configService.updateConfig(ptFinishedConfig);
+                        }
                     }
                 }
             }

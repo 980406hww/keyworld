@@ -35,13 +35,6 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
     @Resource(name = "positionHistoryService2")
     private PtKeywordPositionHistoryService positionHistoryService;
 
-    /**
-     * 检查操作中的关键词排名是否爬取完成, 关闭开关
-     */
-    public int checkFinishedCapturePosition() {
-        return ptCustomerKeywordDao.checkFinishedCapturePosition();
-    }
-
     public void updatePtCustomerKeywordStatus() {
         // 读取配置表需要同步pt关键词的客户信息
         Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD, Constants.CONFIG_KEY_SYNC_CUSTOMER_PT_KEYWORD);
