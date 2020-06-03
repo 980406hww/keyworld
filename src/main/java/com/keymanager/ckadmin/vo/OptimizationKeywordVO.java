@@ -13,6 +13,7 @@ public class OptimizationKeywordVO {
     private int optimizedCount;
     private int optimizePlanCount;
     private int queryInterval;
+    private int currentPosition;
 
     public String getTerminalType() {
         return terminalType;
@@ -110,4 +111,11 @@ public class OptimizationKeywordVO {
         this.optimizePlanCount = optimizePlanCount;
     }
 
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public void setCurrentPosition(int currentPosition) {
+        this.currentPosition = currentPosition;
+    }
 }
