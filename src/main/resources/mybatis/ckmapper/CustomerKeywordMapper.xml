@@ -543,7 +543,7 @@
         <if test="keywordCriteria.ltStartOptimizedTime != null and keywordCriteria.ltStartOptimizedTime != ''">
             AND ck.fStartOptimizedTime &lt;= #{keywordCriteria.ltStartOptimizedTime}
         </if>
-        <if test="keywordCriteria.includeStatus != null and keywordCriteria.includeStatus != ''">
+        <if test="keywordCriteria.includeStatus != null">
             AND ck.fIncludeStatus = #{keywordCriteria.includeStatus}
         </if>
         <if test="keywordCriteria.orderingElement != null and keywordCriteria.orderingElement != ''">
