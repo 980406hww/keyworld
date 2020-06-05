@@ -444,7 +444,7 @@
 	<!-- 同步客户PT关键词信息 -->
 	<bean id="cronTriggerSyncPtCustomerKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerSyncPtCustomerKeywordSchedule" />
-		<property name="cronExpression" value="0 0/30 9-23 * * ?" />
+		<property name="cronExpression" value="0 5,35 7-20 * * ?" />
 	</bean>
 
 	<bean id="cronTriggerSyncPtCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">

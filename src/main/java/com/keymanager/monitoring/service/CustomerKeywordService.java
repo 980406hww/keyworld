@@ -1992,7 +1992,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                 // 更新排名 update
                                 ptCustomerKeywordService.updatePtKeywordCurrentPosition(cusId, "pt");
                                 // 历史排名 replace into
-                                ptKeywordPositionHistoryService.insertKeywordPositionHistory();
+//                                ptKeywordPositionHistoryService.insertKeywordPositionHistory();
                             }
                             // 关闭开关
                             ptFinishedConfig.setValue("0");
