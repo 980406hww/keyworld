@@ -1991,9 +1991,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                             for (Long cusId : cusIds) {
                                 // 更新排名 update
                                 ptCustomerKeywordService.updatePtKeywordCurrentPosition(cusId, "pt");
-                                // 历史排名 replace into
-//                                ptKeywordPositionHistoryService.insertKeywordPositionHistory();
                             }
+                            // 历史排名 replace into
+                            ptKeywordPositionHistoryService.insertKeywordPositionHistory();
                             // 关闭开关
                             ptFinishedConfig.setValue("0");
                             configService.updateConfig(ptFinishedConfig);

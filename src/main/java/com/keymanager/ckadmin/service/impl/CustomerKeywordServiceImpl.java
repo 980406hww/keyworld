@@ -1427,7 +1427,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             customerKeyword.setSearchEngine(ptKeyword.getSearchEngine());
             customerKeyword.setTerminalType(ptKeyword.getTerminalType());
             customerKeyword.setOriginalUrl(ptKeyword.getUrl());
-            customerKeyword.setBearPawNumber(ptKeyword.getBearPawNumber());
+//            customerKeyword.setBearPawNumber(ptKeyword.getBearPawNumber());
             customerKeyword.setCurrentPosition(ptKeyword.getCurrentPosition());
             customerKeyword.setTitle(ptKeyword.getTitle());
 
@@ -1459,6 +1459,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             }
 
             customerKeyword.setQueryInterval(queryInterval);
+            customerKeyword.setCaptureStatus(0); // 默认值 0
             customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
             customerKeyword.setCapturePositionQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));
             customerKeyword.setCaptureIndexQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));

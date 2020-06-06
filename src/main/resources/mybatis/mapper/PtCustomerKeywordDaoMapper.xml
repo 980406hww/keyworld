@@ -34,34 +34,26 @@
             TITLE AS 'title',
             SEARCH_ENGINE AS 'searchEngine',
             TERMINAL_TYPE AS 'terminalType',
-            BEAR_PAW_NUM AS 'bearPawNumber',
             PRICE_PER_DAY AS 'pricePreDay',
-            CURRENT_POSITION AS 'currentPosition',
-            STATUS AS 'status',
-            CITY AS 'city',
-            COMPANY_CODE AS 'companyCode',
-            CAPTURE_POSITION_CITY AS 'capturePositionCity',
-            CAPTURE_POSITION_TIME AS 'capturePositionTime',
-            CAPTURE_STATUS AS 'captureStatus',
-            CREATE_TIME AS 'createTime',
-            UPDATE_TIME AS 'updateTime'
+            CURRENT_POSITION AS 'currentPosition'
         FROM cms_keyword
-        WHERE CUSTOMER_KEYWORD_ID IS NULL AND COMPANY_CODE = #{customerName} AND `STATUS` = 2
+        WHERE COMPANY_CODE = #{customerName} AND STATUS = 2
     </select>
 
     <select id="selectCustomerDelKeywords" resultType="java.lang.Long">
         SELECT CUSTOMER_KEYWORD_ID FROM cms_keyword
         WHERE CUSTOMER_KEYWORD_ID > ''
-        AND `STATUS` = 3
+        AND STATUS = 3
     </select>
 
     <update id="updatePtKeywordCurrentPosition">
         UPDATE cms_keyword k,
-            (SELECT fUuid, fCurrentPosition, fPositionFirstPageFee, fCaptureStatus, fCapturePositionQueryTime, fCity, fCapturePositionCity
+            (SELECT fUuid, fCurrentPosition, IF(fPositionFirstPageFee &gt; '', fPositionFirstPageFee, 0.00) as price, fCaptureStatus,
+                    fCapturePositionQueryTime, fCity, fCapturePositionCity
                 FROM t_customer_keyword
-                WHERE fCustomerUuid = #{cusId} AND fType = #{type} AND fStatus	= 1 AND fCapturePositionQueryTime > CURRENT_DATE()
+                WHERE fCustomerUuid = #{cusId} AND fType = #{type} AND fStatus	= 1
             ) ck
-        SET k.CURRENT_POSITION = ck.fCurrentPosition, k.PRICE_PER_DAY = IF(ck.fPositionFirstPageFee > '', ck.fPositionFirstPageFee, 0.00),
+        SET k.CURRENT_POSITION = ck.fCurrentPosition, k.PRICE_PER_DAY = ck.price,
             k.CAPTURE_STATUS = ck.fCaptureStatus, k.CAPTURE_POSITION_TIME = ck.fCapturePositionQueryTime,
             k.CITY = ck.fCity, k.CAPTURE_POSITION_CITY = ck.fCapturePositionCity
         WHERE k.CUSTOMER_KEYWORD_ID = ck.fUuid
