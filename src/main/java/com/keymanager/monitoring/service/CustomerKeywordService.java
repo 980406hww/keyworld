@@ -855,7 +855,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public List<String> getGroups(List<Long> customerUuids) {
-        return customerKeywordDao.getGroups(customerUuids);
+        List<String> groups = new ArrayList<>();
+        for (Long customerUuid : customerUuids) {
+            groups.addAll(customerKeywordDao.getGroups(customerUuid));
+        }
+        return groups;
     }
 
     public CustomerKeywordForOptimization searchCustomerKeywordsForOptimization(String terminalType, String clientID, String version, boolean updateQueryInfo) {

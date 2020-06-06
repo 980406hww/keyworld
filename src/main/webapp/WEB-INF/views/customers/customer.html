@@ -166,52 +166,54 @@
 </script>
 <script src="/static/ok-admin/page/customer/customer.js"></script>
 <script>
-    layui.define(['layer', 'jquery'], function (exports) {
-        var $ = layui.jquery;
-        exports('searchCurrentDateCompletedReports', function () {//函数参数
-            let div = $("#dailyReportDiv");
-            $.ajax({
-                url: '/internal/dailyReport/searchCurrentDateCompletedReports2',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                timeout: 5000,
-                type: 'GET',
-                success: function (result) {
-                    var htmlContent = "";
-                    if (result.code === 200) {
-                        if (result.data != null) {
-                            $.each(result.data,function(idx,val){
-                                var date = new Date(val.completeTime);
-                                htmlContent += '<a class="layui-btn layui-btn-sm" href="' + val.reportPath + '">下载日报表(' + ((date.getHours() < 10) ? '0'
-                                    + date.getHours() : date.getHours()) + ':' + ((date.getMinutes() < 10) ? '0' + date.getMinutes()
-                                    : date.getMinutes()) + ')</a>';
-                            });
+    <@shiro.hasRole name="SEOSales">
+        layui.define(['layer', 'jquery'], function (exports) {
+            var $ = layui.jquery;
+            exports('searchCurrentDateCompletedReports', function () {//函数参数
+                let div = $("#dailyReportDiv");
+                $.ajax({
+                    url: '/internal/dailyReport/searchCurrentDateCompletedReports2',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 5000,
+                    type: 'GET',
+                    success: function (result) {
+                        var htmlContent = "";
+                        if (result.code === 200) {
+                            if (result.data != null) {
+                                $.each(result.data,function(idx,val){
+                                    var date = new Date(val.completeTime);
+                                    htmlContent += '<a class="layui-btn layui-btn-sm" href="' + val.reportPath + '">下载日报表(' + ((date.getHours() < 10) ? '0'
+                                        + date.getHours() : date.getHours()) + ':' + ((date.getMinutes() < 10) ? '0' + date.getMinutes()
+                                        : date.getMinutes()) + ')</a>';
+                                });
+                            } else {
+                                htmlContent = $('<span class="layui-btn layui-btn-sm" disabled>今天没报表</span>');
+                            }
+                            div.html(htmlContent);
                         } else {
-                            htmlContent = $('<span class="layui-btn layui-btn-sm" disabled>今天没报表</span>');
+                            div.html($('<span class="layui-btn layui-btn-sm" disabled>获取报表清单异常</span>'));
                         }
-                        div.html(htmlContent);
-                    } else {
+                    },
+                    error: function () {
                         div.html($('<span class="layui-btn layui-btn-sm" disabled>获取报表清单异常</span>'));
                     }
-                },
-                error: function () {
-                    div.html($('<span class="layui-btn layui-btn-sm" disabled>获取报表清单异常</span>'));
-                }
+                });
             });
         });
-    });
 
     layui.use(['jquery'], function () {
     <@shiro.hasPermission name="/internal/dailyReport/triggerReportGeneration">
         var intervalId = setInterval(function () {
             layui.searchCurrentDateCompletedReports();
-        }, 1000 * 30);
+        }, 1000 * 60);
         window.searchCurrentDateCompletedReportsIntervalId = intervalId;
         window.hasPer = true;
     </@shiro.hasPermission>
     });
+    </@shiro.hasRole>
 </script>
 </body>
 </html>
