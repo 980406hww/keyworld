@@ -68,7 +68,7 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
                 ptCustomerKeywordDao.cleanNotExistCustomerKeyword(customerNames);
 
                 // 统一清理历史排名数据
-                positionHistoryService.cleanNotExistKeywordPositionHistory();
+//                positionHistoryService.cleanNotExistKeywordPositionHistory();
             }
         }
     }
