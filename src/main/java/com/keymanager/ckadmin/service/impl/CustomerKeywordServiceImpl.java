@@ -505,6 +505,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         customerKeyword.setQueryDate(new Date());
         customerKeyword.setUpdateTime(new Date());
         customerKeyword.setCreateTime(new Date());
+        customerKeyword.setIncludeCheckTime(new Date());
         return customerKeyword;
     }
 
@@ -713,6 +714,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             customerKeyword.setType(type);
             customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
             customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+            customerKeyword.setIncludeCheckTime(Utils.getCurrentTimestamp());
             customerKeyword.setTerminalType(terminalType);
             customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Excel.name());
         }
@@ -964,6 +966,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         customerKeyword.setSequence(maxSequence);
         customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
         customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+        customerKeyword.setIncludeCheckTime(Utils.getCurrentTimestamp());
         customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.UI.name());
     }
 
@@ -1193,6 +1196,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         customerKeyword.setAutoUpdateNegativeTime(Utils.getCurrentTimestamp());
         customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
         customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+        customerKeyword.setIncludeCheckTime(Utils.getCurrentTimestamp());
         customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Plugin.name());
         return customerKeyword;
     }
@@ -1469,6 +1473,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             customerKeyword.setQueryDate(new Date());
             customerKeyword.setUpdateTime(new Date());
             customerKeyword.setCreateTime(new Date());
+            customerKeyword.setIncludeCheckTime(new Date());
 
             customerKeywordDao.insert(customerKeyword);
             ptKeyword.setCustomerKeywordId(customerKeyword.getUuid());

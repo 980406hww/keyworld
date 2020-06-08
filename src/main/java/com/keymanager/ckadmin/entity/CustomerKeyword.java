@@ -293,7 +293,7 @@ public class CustomerKeyword extends BaseEntity {
     private String customerKeywordSource;
 
     @TableField(value = "fIncludeStatus")
-    private int includeStatus;
+    private Integer includeStatus;
 
     @TableField(value = "fIncludeCheckTime")
     private Date includeCheckTime;
@@ -1145,11 +1145,11 @@ public class CustomerKeyword extends BaseEntity {
         this.customerKeywordSource = customerKeywordSource;
     }
 
-    public int getIncludeStatus() {
+    public Integer getIncludeStatus() {
         return includeStatus;
     }
 
-    public void setIncludeStatus(int includeStatus) {
+    public void setIncludeStatus(Integer includeStatus) {
         this.includeStatus = includeStatus;
     }
 

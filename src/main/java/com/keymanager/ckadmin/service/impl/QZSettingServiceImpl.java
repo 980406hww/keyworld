@@ -848,6 +848,7 @@ public class QZSettingServiceImpl extends
         customerKeyword.setStatus(1);
         customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
         customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
+        customerKeyword.setIncludeCheckTime(Utils.getCurrentTimestamp());
         customerKeyword.setInitialIndexCount(customerKeywordVO.getCurrentIndexCount());
         customerKeyword.setTerminalType(qzOperationType.getOperationType());
         customerKeyword.setOptimizeGroupName(qzOperationType.getGroup());
