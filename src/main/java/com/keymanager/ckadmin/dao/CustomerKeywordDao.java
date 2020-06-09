@@ -91,7 +91,7 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<CustomerKeyword> searchCustomerKeywordsForDailyReport(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
 
-    List<String> getGroups(@Param("customerUuid") Long customerUuid);
+    List<String> getGroups(@Param("customerUuid") List<Long> customerUuids);
 
     List<Long> getCustomerUuids(@Param("entryType") String entryType, @Param("terminalType") String terminalType);
 

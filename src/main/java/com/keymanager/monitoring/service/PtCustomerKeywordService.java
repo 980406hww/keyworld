@@ -32,9 +32,6 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
     @Resource(name = "configService2")
     private ConfigService configService;
 
-    @Resource(name = "positionHistoryService2")
-    private PtKeywordPositionHistoryService positionHistoryService;
-
     public void updatePtCustomerKeywordStatus() {
         // 读取配置表需要同步pt关键词的客户信息
         Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD, Constants.CONFIG_KEY_SYNC_CUSTOMER_PT_KEYWORD);
@@ -66,9 +63,6 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
 
                 // 清理不再需要同步的客户数据
                 ptCustomerKeywordDao.cleanNotExistCustomerKeyword(customerNames);
-
-                // 统一清理历史排名数据
-                positionHistoryService.cleanNotExistKeywordPositionHistory();
             }
         }
     }

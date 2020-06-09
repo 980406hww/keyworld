@@ -749,11 +749,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     @Override
     public List<String> getGroups(List<Long> customerUuids) {
-        List<String> groups = new ArrayList<>();
-        for (Long customerUuid : customerUuids) {
-            groups.addAll(customerKeywordDao.getGroups(customerUuid));
-        }
-        return groups;
+        return customerKeywordDao.getGroups(customerUuids);
     }
 
     @Override

@@ -585,12 +585,14 @@
     </delete>
 
     <select id="getGroups" resultType="java.lang.String">
-        SELECT fOptimizeGroupName as 'group'
-        FROM t_customer_keyword
-        WHERE fCustomerUuid = #{customerUuid}
-          AND fStatus = 1
-          AND fOptimizeGroupName &gt; ''
-        GROUP BY fOptimizeGroupName
+        SELECT ck.fOptimizeGroupName as 'group' FROM t_customer_keyword ck WHERE ck.fStatus = 1
+        <if test="customerUuids != null">
+            AND ck.fCustomerUuid IN
+            <foreach item="item" index="index" collection="customerUuids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        AND ck.fOptimizeGroupName &gt; '' GROUP BY ck.fOptimizeGroupName
     </select>
 
     <update id="cleanBigKeywordIndicator">
