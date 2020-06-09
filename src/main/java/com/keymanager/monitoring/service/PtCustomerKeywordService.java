@@ -73,7 +73,7 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
         }
     }
 
-    public void updatePtKeywordCurrentPosition(Long cusId, String type) {
-        ptCustomerKeywordDao.updatePtKeywordCurrentPosition(cusId, type);
+    public void updatePtKeywordCurrentPosition() {
+        ptCustomerKeywordDao.updatePtKeywordCurrentPosition();
     }
 }

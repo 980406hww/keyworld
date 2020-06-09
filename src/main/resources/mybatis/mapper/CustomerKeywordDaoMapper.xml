@@ -1729,12 +1729,16 @@
         SELECT QS_ID FROM sys_customer_keyword sck WHERE QS_ID = #{qsId} AND CREATE_TIME = CURRENT_DATE() LIMIT 1
     </select>
 
-    <select id="checkCustomerFinishedCapturePosition" resultType="java.lang.Integer">
-        SELECT COUNT(1) FROM t_customer_keyword
-        WHERE fCustomerUuid = #{customerUuid}
-          AND fStatus = 1
-          AND fType = #{type}
-          AND ((fCaptureStatus = 0 AND fCapturePositionQueryTime &lt; CURRENT_DATE()) OR fCaptureStatus = 1 )
-    </select>
+    <insert id="migrationRecordToPtCustomerKeyword">
+        insert into  t_pt_customer_keyword
+        SELECT fUuid, fCurrentPosition, IF(fPositionFirstPageFee &gt; '', fPositionFirstPageFee, 0.00), fCaptureStatus,
+               fCapturePositionQueryTime, fCity, fCapturePositionCity
+        FROM t_customer_keyword
+        WHERE fCustomerUuid = #{cusId} AND fType = #{type} AND fStatus	= 1
+    </insert>
+
+    <delete id="cleanPtCustomerKeyword">
+        truncate table t_pt_customer_keyword
+    </delete>
 
 </mapper>

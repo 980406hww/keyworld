@@ -158,4 +158,8 @@ public class CaptureRankJobService extends ServiceImpl<CaptureRankJobDao, Captur
     public CaptureRankJob checkingCaptureRankJobCompleted(ExternalCaptureJobCriteria captureJobCriteria) {
         return captureRankJobDao.provideCaptureRankJob(1, captureJobCriteria);
     }
+
+    public int checkCaptureJobCompletedByCustomerUuid(Long customerUuid) {
+        return captureRankJobDao.checkCaptureJobCompletedByCustomerUuid(customerUuid);
+    }
 }

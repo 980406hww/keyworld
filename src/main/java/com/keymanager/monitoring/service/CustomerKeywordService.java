@@ -117,9 +117,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     @Autowired
     private PtCustomerKeywordService ptCustomerKeywordService;
 
-    @Autowired
-    PtKeywordPositionHistoryService ptKeywordPositionHistoryService;
-
     @Resource(name = "customerService2")
     private com.keymanager.ckadmin.service.CustomerService customerService2;
 
@@ -1981,8 +1978,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                             // 根据客户id同步
                             com.keymanager.ckadmin.entity.Customer customer = customerService2.selectByName(customerName);
                             if (null != customer) {
-                                // 检查操作中的关键词排名是否爬取完成
-                                int count = customerKeywordDao.checkCustomerFinishedCapturePosition(customer.getUuid(), "pt");
+                                // 抓排名任务是否完成
+                                int count = captureRankJobService.checkCaptureJobCompletedByCustomerUuid(customer.getUuid());
                                 if (count > 0) {
                                     break;
                                 }
@@ -1993,11 +1990,14 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
 
                         if (updateKeyFlag && CollectionUtils.isNotEmpty(cusIds)) {
                             for (Long cusId : cusIds) {
+                                // 根据客户id，将数据临时存储在中间表 insert into
+                                customerKeywordDao.migrationRecordToPtCustomerKeyword(cusId, "pt");
                                 // 更新排名 update
-                                ptCustomerKeywordService.updatePtKeywordCurrentPosition(cusId, "pt");
+                                ptCustomerKeywordService.updatePtKeywordCurrentPosition();
+                                // 清空临时表数据 truncate
+                                customerKeywordDao.cleanPtCustomerKeyword();
                             }
-                            // 历史排名 replace into
-                            ptKeywordPositionHistoryService.insertKeywordPositionHistory();
+
                             // 关闭开关
                             ptFinishedConfig.setValue("0");
                             configService.updateConfig(ptFinishedConfig);
