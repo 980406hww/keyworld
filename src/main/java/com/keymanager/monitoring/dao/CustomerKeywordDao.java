@@ -73,7 +73,7 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void deleteCustomerKeywords(@Param("terminalType") String terminalType, @Param("groupName") String groupName, @Param("keyword") String keyword);
 
-    List<String> getGroups(@Param("customerUuids") List<Long> customerUuids);
+    List<String> getGroups(@Param("customerUuid") List<Long> customerUuids);
 
     List<Map> searchRemainingOptimizationCount(@Param("groupName") String groupName, @Param("maxInvalidCount") int maxInvalidCount, @Param("noPositionMaxInvalidCount") int noPositionMaxInvalidCount);
 
@@ -242,7 +242,12 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     Long searchExistingSysCustomerKeywordQsId(@Param("qsId") Long qsId);
 
     /**
-     * 检查操作中的关键词排名是否爬取完成
+     * 根据客户id，将数据临时存储在中间表
      */
-    int checkCustomerFinishedCapturePosition(@Param("customerUuid") Long customerUuid, @Param("type") String type);
+    void migrationRecordToPtCustomerKeyword(@Param("cusId") Long cusId, @Param("type") String type);
+
+    /**
+     * 清空临时表数据
+     */
+    void cleanPtCustomerKeyword();
 }

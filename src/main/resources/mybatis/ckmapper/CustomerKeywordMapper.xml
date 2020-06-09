@@ -868,7 +868,7 @@
         ORDER BY ck.fSequence
     </select>
 
-    <select id="getGroups" resultType="String">
+    <select id="getGroups" resultType="java.lang.String">
         SELECT ck.fOptimizeGroupName as 'group' FROM t_customer_keyword ck WHERE ck.fStatus = 1
         <if test="customerUuids != null">
             AND ck.fCustomerUuid IN

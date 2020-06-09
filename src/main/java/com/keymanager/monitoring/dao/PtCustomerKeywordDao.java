@@ -35,5 +35,5 @@ public interface PtCustomerKeywordDao extends BaseMapper<PtCustomerKeyword> {
      */
     void cleanNotExistCustomerKeyword(@Param("customerNames") String[] customerNames);
 
-    void updatePtKeywordCurrentPosition(@Param("cusId") Long cusId, @Param("type") String type);
+    void updatePtKeywordCurrentPosition();
 }

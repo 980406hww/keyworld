@@ -47,16 +47,14 @@
     </select>
 
     <update id="updatePtKeywordCurrentPosition">
-        UPDATE cms_keyword k,
-            (SELECT fUuid, fCurrentPosition, IF(fPositionFirstPageFee &gt; '', fPositionFirstPageFee, 0.00) as price, fCaptureStatus,
-                    fCapturePositionQueryTime, fCity, fCapturePositionCity
-                FROM t_customer_keyword
-                WHERE fCustomerUuid = #{cusId} AND fType = #{type} AND fStatus	= 1
-            ) ck
-        SET k.CURRENT_POSITION = ck.fCurrentPosition, k.PRICE_PER_DAY = ck.price,
-            k.CAPTURE_STATUS = ck.fCaptureStatus, k.CAPTURE_POSITION_TIME = ck.fCapturePositionQueryTime,
-            k.CITY = ck.fCity, k.CAPTURE_POSITION_CITY = ck.fCapturePositionCity
-        WHERE k.CUSTOMER_KEYWORD_ID = ck.fUuid
+        UPDATE cms_keyword k, t_pt_customer_keyword tpck
+        SET k.CURRENT_POSITION = tpck.fCurrentPosition,
+            k.PRICE_PER_DAY = tpck.fPrice,
+            k.CAPTURE_STATUS = tpck.fCaptureStatus,
+            k.CAPTURE_POSITION_TIME = tpck.fCapturePositionQueryTime,
+            k.CITY = tpck.fCity,
+            k.CAPTURE_POSITION_CITY = tpck.fCapturePositionCity
+        WHERE k.CUSTOMER_KEYWORD_ID = tpck.fUuid
     </update>
 
     <update id="updateCustomerKeywordDiffStatus">
