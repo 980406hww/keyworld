@@ -1491,9 +1491,14 @@
             FROM t_customer_keyword ck
             WHERE ck.fType = #{type}
             AND ck.fSearchEngine = '百度'
-            <if test="type == 'qz'">
-                AND ck.fTerminalType = 'PC'
-            </if>
+            <choose>
+                <when test="type == 'qz'">
+                    AND ck.fTerminalType = 'PC'
+                </when>
+                <otherwise>
+                    AND ck.fTerminalType in ('PC','Phone')
+                </otherwise>
+            </choose>
             <choose>
                 <when test="captureStatus == 1">
                     AND ck.fCaptureStatus = 1
@@ -1521,6 +1526,7 @@
             FROM t_customer_keyword ck
             WHERE ck.fType = #{type}
             AND ck.fSearchEngine = '搜狗'
+            AND ck.fTerminalType in ('PC','Phone')
             <choose>
                 <when test="captureStatus == 1">
                     AND ck.fCaptureStatus = 1
@@ -1548,6 +1554,7 @@
             FROM t_customer_keyword ck
             WHERE ck.fType = #{type}
             AND ck.fSearchEngine = '360'
+            AND ck.fTerminalType in ('PC','Phone')
             <choose>
                 <when test="captureStatus == 1">
                     AND ck.fCaptureStatus = 1
