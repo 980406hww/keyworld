@@ -13,7 +13,7 @@
 <!--				<ref bean="cronTriggerCacheCheckingEnteredCustomerKeyword" />-->
 				<ref bean="cronTriggerUpdateOptimizedCount" />
 				<ref bean="cronTriggerQZRateStatistics" />
-				<ref bean="cronTriggerCacheCheckIncludeCustomerKeyword"/>
+<!--				<ref bean="cronTriggerCacheCheckIncludeCustomerKeyword"/>-->
 			</list>
 		</property>
 		<!-- Quartz配置, 本地运行无需单独的quartz.properties文件，在此简单配置即可 -->
