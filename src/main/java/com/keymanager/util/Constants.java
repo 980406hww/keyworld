@@ -108,9 +108,10 @@ public class Constants {
     public final static String CONFIG_KEY_SYNC_QZ_CUSTOMER_TAG = "SyncQZCustomerTag";
 
     public final static String CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD_SWITCH = "SyncCustomerPtKeywordSwitch";
+    public final static String CONFIG_KEY_SYNC_CUSTOMER_PT_KEYWORD = "SyncCustomerPtKeyword";
 
     public final static String CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD = "SyncCustomerPtKeyword";
-    public final static String CONFIG_KEY_SYNC_CUSTOMER_PT_KEYWORD = "SyncCustomerName";
+    public final static String CONFIG_KEY_SYNC_CUSTOMER_NAME = "SyncCustomerName";
 
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
 

@@ -1952,17 +1952,11 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         // 获取当前时间
         String currentDate = Utils.getCurrentDate();
         // 读取配置表客户pt关键词日期和完成标识 1: 开  0: 关  一天同步一次
-        Config ptFinishedConfig = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD_SWITCH, null);
+        Config ptFinishedConfig = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD_SWITCH, Constants.CONFIG_KEY_SYNC_CUSTOMER_PT_KEYWORD);
         if (null != ptFinishedConfig) {
-            if (!currentDate.equals(ptFinishedConfig.getKey())) {
-                ptFinishedConfig.setKey(currentDate);
-                ptFinishedConfig.setValue("1");
-                configService.updateConfig(ptFinishedConfig);
-            }
-
-            if ("1".equals(ptFinishedConfig.getValue())) {
+            if (!currentDate.equals(ptFinishedConfig.getValue())) {
                 // 读取配置表需要同步pt关键词的客户信息
-                Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD, Constants.CONFIG_KEY_SYNC_CUSTOMER_PT_KEYWORD);
+                Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD, Constants.CONFIG_KEY_SYNC_CUSTOMER_NAME);
                 if (null != config) {
                     String customerNameStr = config.getValue();
                     if (StringUtil.isNotNullNorEmpty(customerNameStr)) {
@@ -1995,7 +1989,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                             }
 
                             // 关闭开关
-                            ptFinishedConfig.setValue("0");
+                            ptFinishedConfig.setValue(currentDate);
                             configService.updateConfig(ptFinishedConfig);
                         }
                     }

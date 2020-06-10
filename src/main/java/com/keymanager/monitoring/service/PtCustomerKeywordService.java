@@ -34,7 +34,7 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
 
     public void updatePtCustomerKeywordStatus() {
         // 读取配置表需要同步pt关键词的客户信息
-        Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD, Constants.CONFIG_KEY_SYNC_CUSTOMER_PT_KEYWORD);
+        Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD, Constants.CONFIG_KEY_SYNC_CUSTOMER_NAME);
         if (null != config) {
             String customerNameStr = config.getValue();
             if (StringUtil.isNotNullNorEmpty(customerNameStr)) {
