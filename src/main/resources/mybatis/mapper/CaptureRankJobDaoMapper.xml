@@ -175,7 +175,8 @@
     </select>
 
     <select id="checkCaptureJobCompletedByCustomerUuid" resultType="java.lang.Integer">
-        select count(1) from t_capture_rank_job where fCustomerUuid = #{customerUuid} and fCaptureRankJobStatus = 1 and fLastExecutionDate &lt; current_date()
+        select count(1) from t_capture_rank_job
+        where fCustomerUuid = #{customerUuid} and fCaptureRankJobStatus = 1 and (fEndTime &lt; current_date() or fEndTime is null)
     </select>
 
     <update id="updateCaptureRankJobsStatus">
