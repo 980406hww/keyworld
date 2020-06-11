@@ -134,9 +134,8 @@ public class AlgorithmAutoTestController {
         try {
             Page<AlgorithmTestPlan> page = new Page<>(algorithmTestCriteria.getPage(), algorithmTestCriteria.getLimit());
             page = algorithmTestPlanService.searchAlgorithmTestPlans(page, algorithmTestCriteria);
-            List<AlgorithmTestPlan> algorithmTestPlans = page.getRecords();
-            resultBean.setCount(algorithmTestPlans.size());
-            resultBean.setData(algorithmTestPlans);
+            resultBean.setCount(page.getTotal());
+            resultBean.setData(page.getRecords());
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);
