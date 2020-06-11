@@ -1729,8 +1729,8 @@
         WHERE
             fStatus = 1
             AND (
-                ( fIncludeCheckTime &lt; DATE_SUB( CURRENT_DATE(), INTERVAL 3 DAY ) AND fIncludeStatus = 0 )
-                OR ( fOptimizedCount = 0 AND fFailedCause = "关键字未收录" AND fIncludeCheckTime &lt; CURRENT_DATE() )
+                ( fFailedCause = '关键字site未收录' AND fIncludeCheckTime &lt; DATE_SUB( CURRENT_DATE(), INTERVAL 3 DAY ) AND fIncludeStatus = 0 )
+                OR ( fOptimizedCount = 0 AND fFailedCause = '关键字未收录' AND fIncludeCheckTime &lt; CURRENT_DATE() )
             )
         LIMIT 1000
     </select>
@@ -1753,6 +1753,12 @@
     <update id="updateCustomerKeywordIncludeCheckTime">
         UPDATE t_customer_keyword
         SET fIncludeCheckTime = #{includeCheckTime}
+        WHERE fUuid = #{customerKeywordUuid}
+    </update>
+
+    <update id="updateCustomerKeywordFailedCause">
+        UPDATE t_customer_keyword
+        SET fFailedCause = #{failedCause}
         WHERE fUuid = #{customerKeywordUuid}
     </update>
 </mapper>

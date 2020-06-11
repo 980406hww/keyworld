@@ -1410,6 +1410,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     @Override
     public void updateCustomerKeywordIncludeStatus(Long customerKeywordUuid, Integer includeStatus){
+        customerKeywordDao.updateCustomerKeywordFailedCause(customerKeywordUuid, "关键词site未收录");
         customerKeywordDao.updateCustomerKeywordIncludeStatus(customerKeywordUuid, includeStatus);
     }
 

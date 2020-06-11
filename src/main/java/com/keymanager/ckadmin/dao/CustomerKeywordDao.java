@@ -186,4 +186,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateCustomerKeywordIncludeStatus(@Param("customerKeywordUuid") Long customerKeywordUuid, @Param("includeStatus") Integer includeStatus);
 
     void updateCustomerKeywordIncludeCheckTime(@Param("customerKeywordUuid") Long customerKeywordUuid, @Param("includeCheckTime") Date includeCheckTime);
+
+    void updateCustomerKeywordFailedCause(@Param("customerKeywordUuid") Long customerKeywordUuid, @Param("failedCause") String failedCause);
 }
