@@ -405,33 +405,6 @@
         WHERE fClientID = #{clientID}
     </update>
 
-  <select id="searchMachineInfoForRefreshStat"
-    parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria"
-    resultType="com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord">
-    SELECT
-    cs.fGroup AS "group",
-    cs.fTerminalType AS "terminalType",
-    SUM(IF(DATE_ADD(cs.fLastVisitTime, INTERVAL IF(10 > cs.fPageNo * 3, 15, cs.fPageNo * 3 + 5)
-    MINUTE) &lt; NOW(), 1, 0)) AS 'unworkMachineCount',
-    SUM(cs.fIdleTotalMinutes) AS "idleTotalMinutes",
-    COUNT(1) AS 'totalMachineCount'
-    FROM t_machine_info cs
-    WHERE cs.fValid = 1
-    <if
-      test="customerKeywordRefreshStatInfoCriteria.terminalType!=null and customerKeywordRefreshStatInfoCriteria.terminalType!=''">
-      AND cs.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
-    </if>
-    <if
-      test="customerKeywordRefreshStatInfoCriteria.groupName!=null and customerKeywordRefreshStatInfoCriteria.groupName!=''">
-      AND cs.fGroup like '${customerKeywordRefreshStatInfoCriteria.groupName}%'
-      AND EXISTS (SELECT 1 FROM t_customer_keyword ck WHERE ck.fType =
-      #{customerKeywordRefreshStatInfoCriteria.entryType} AND ck.fOptimizeGroupName like
-      '${customerKeywordRefreshStatInfoCriteria.groupName}%')
-    </if>
-    GROUP BY cs.fGroup, cs.fTerminalType
-    ORDER BY cs.fGroup
-  </select>
-
   <update id="updatePageNo">
         UPDATE t_machine_info
         SET
@@ -643,31 +616,6 @@
       ${machineInfoCriteria.orderBy}
     </if>
   </update>
-
-  <select id="searchMachineInfoFormMachineGroupWorkInfo"
-    resultType="com.keymanager.monitoring.entity.MachineGroupWorkInfo">
-    SELECT
-    cs.fMachineGroup AS "machineGroup",
-    cs.fTerminalType AS "terminalType",
-    SUM(IF(DATE_ADD(cs.fLastVisitTime, INTERVAL IF(10 > cs.fPageNo * 3, 15, cs.fPageNo * 3 + 5)
-    MINUTE) &lt; NOW(), 1, 0)) AS 'unworkMachineCount',
-    SUM(cs.fIdleTotalMinutes) AS "idleTotalMinutes",
-    COUNT(1) AS 'totalMachineCount'
-    FROM t_machine_info cs
-    WHERE cs.fValid = 1
-    <if
-      test="machineGroupWorkInfoCriteria.terminalType!=null and machineGroupWorkInfoCriteria.terminalType!=''">
-      AND cs.fTerminalType = #{machineGroupWorkInfoCriteria.terminalType}
-    </if>
-    <if
-      test="machineGroupWorkInfoCriteria.machineGroup!=null and machineGroupWorkInfoCriteria.machineGroup!=''">
-      AND cs.fMachineGroup like '${machineGroupWorkInfoCriteria.machineGroup}%'
-      AND EXISTS (SELECT 1 FROM t_customer_keyword ck WHERE ck.fType =
-      #{machineGroupWorkInfoCriteria.entryType} AND ck.fMachineGroup like
-      '${machineGroupWorkInfoCriteria.machineGroup}%')
-    </if>
-    GROUP BY cs.fMachineGroup, cs.fTerminalType
-  </select>
 
   <select id="searchMachineInfoMachineGroupSummaryVO"
     resultType="com.keymanager.monitoring.vo.MachineInfoMachineGroupSummaryVO">

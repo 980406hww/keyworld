@@ -464,11 +464,6 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     }
 
     @Override
-    public List<CustomerKeywordTerminalRefreshStatRecord> searchMachineInfoForRefreshStat(RefreshStatisticsCriteria criteria) {
-        return null;
-    }
-
-    @Override
     public List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(String clientIDPrefix, String city, String switchGroupName) {
         List<MachineInfoSummaryVO> pcMachineInfoSummaryVos = machineInfoDao.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName);
         Collections.sort(pcMachineInfoSummaryVos);

@@ -677,10 +677,6 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         machineInfoDao.updatePageNo(clientID, pageNo);
     }
 
-    public List<CustomerKeywordTerminalRefreshStatRecord> searchMachineInfoForRefreshStat(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
-        return machineInfoDao.searchMachineInfoForRefreshStat(customerKeywordRefreshStatInfoCriteria);
-    }
-
     public List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(String clientIDPrefix, String city, String switchGroupName) throws Exception {
         List<MachineInfoSummaryVO> pcMachineInfoSummaryVOs = machineInfoDao.searchMachineInfoSummaryVO(clientIDPrefix, city, switchGroupName);
         Collections.sort(pcMachineInfoSummaryVOs);
@@ -875,10 +871,6 @@ public class MachineInfoService extends ServiceImpl<MachineInfoDao, MachineInfo>
         MachineInfo machineInfo = machineInfoDao.selectById(clientID);
         machineInfo.setMachineGroup(machineGroup);
         machineInfoDao.updateById(machineInfo);
-    }
-
-    public List<MachineGroupWorkInfo> searchMachineInfoFormMachineGroupWorkInfo(MachineGroupWorkInfoCriteria machineGroupWorkInfoCriteria) {
-        return machineInfoDao.searchMachineInfoFormMachineGroupWorkInfo(machineGroupWorkInfoCriteria);
     }
 
     public List<MachineInfoMachineGroupSummaryVO> searchMachineInfoMachineGroupSummaryVO(String machineGroup, String terminalType) {

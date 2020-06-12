@@ -2,15 +2,11 @@ package com.keymanager.monitoring.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria;
 import com.keymanager.monitoring.criteria.MachineGroupWorkInfoCriteria;
 import com.keymanager.monitoring.criteria.MachineInfoCriteria;
 import com.keymanager.monitoring.entity.ClientUpgrade;
-import com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord;
-import com.keymanager.monitoring.entity.MachineGroupWorkInfo;
 import com.keymanager.monitoring.entity.MachineInfo;
 import com.keymanager.monitoring.vo.*;
-import java.util.Collection;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -70,13 +66,9 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
 
     void updateVersion(@Param("clientID") String clientID, @Param("version") String version);
 
-    List<CustomerKeywordTerminalRefreshStatRecord> searchMachineInfoForRefreshStat(@Param("customerKeywordRefreshStatInfoCriteria") CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
-
     List<MachineInfoSummaryVO> searchMachineInfoSummaryVO(@Param("clientIDPrefix") String clientIDPrefix, @Param("city") String city, @Param("switchGroupName") String switchGroupName);
 
     List<MachineInfoGroupSummaryVO> searchMachineInfoGroupSummaryVO(@Param("group") String group, @Param("terminalType") String terminalType);
-
-    List<MachineInfo> searchRestartingMachineInfos();
 
     List<MachineInfo> searchWaitingRestartingMachineInfos(@Param("clientIDPrefix") String clientIDPrefix);
 
@@ -93,8 +85,6 @@ public interface MachineInfoDao extends BaseMapper<MachineInfo> {
     void resetOptimizationInfo();
 
     void updateMachineGroup(@Param("machineInfoCriteria") MachineInfoCriteria machineInfoCriteria);
-
-    List<MachineGroupWorkInfo> searchMachineInfoFormMachineGroupWorkInfo(@Param("machineGroupWorkInfoCriteria") MachineGroupWorkInfoCriteria machineGroupWorkInfoCriteria);
 
     List<MachineInfoMachineGroupSummaryVO> searchMachineInfoMachineGroupSummaryVO(@Param("machineGroup") String machineGroup, @Param("terminalType") String terminalType);
 
