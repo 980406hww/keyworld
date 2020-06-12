@@ -1733,7 +1733,7 @@
 
     <insert id="migrationRecordToPtCustomerKeyword">
         insert into  t_pt_customer_keyword
-        SELECT fUuid, fCurrentPosition, IF(fPositionFirstPageFee &gt; '', fPositionFirstPageFee, 0.00), fCaptureStatus,
+        SELECT fUuid, fTitle, fCurrentPosition, IF(fPositionFirstPageFee &gt; '', fPositionFirstPageFee, 0.00), fCaptureStatus,
                fCapturePositionQueryTime, fCity, fCapturePositionCity
         FROM t_customer_keyword
         WHERE fCustomerUuid = #{cusId} AND fType = #{type} AND fStatus	= 1
