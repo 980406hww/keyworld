@@ -99,6 +99,7 @@ public class CustomerKeywordRefreshStatInfoController extends SpringMVCBaseContr
         return modelAndView;
     }
 
+    @Deprecated
     @RequiresPermissions("/internal/customerKeyword/downloadCustomerKeywordInfo")
     @RequestMapping(value = "/downloadKeywordUrlByGroup", method = RequestMethod.POST)
     public ResponseEntity<?> downloadKeywordUrlByGroup(@RequestBody Map<String, Object> requestMap, HttpServletRequest request, HttpServletResponse response) {
@@ -115,6 +116,7 @@ public class CustomerKeywordRefreshStatInfoController extends SpringMVCBaseContr
         }
     }
 
+    @Deprecated
     @RequiresPermissions("/internal/customerKeyword/uploadCustomerKeywords")
     @RequestMapping(value = "/uploadCSVFile", method = RequestMethod.POST)
     public ResponseEntity<?> uploadVPSFile(@RequestParam(value = "file", required = false) MultipartFile file,

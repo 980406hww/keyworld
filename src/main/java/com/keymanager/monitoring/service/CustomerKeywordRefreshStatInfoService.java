@@ -137,7 +137,6 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
     }
 
     private List<CustomerKeywordTerminalRefreshStatRecord> generateAllCustomerKeywordStatInfo(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
-        List<CustomerKeywordTerminalRefreshStatRecord> customerKeywordStatInfoRecords = getCustomerKeywordStatInfoRecords(customerKeywordRefreshStatInfoCriteria);
-        return customerKeywordStatInfoRecords;
+        return getCustomerKeywordStatInfoRecords(customerKeywordRefreshStatInfoCriteria);
     }
 }

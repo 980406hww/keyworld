@@ -13,7 +13,7 @@ import java.util.List;
  **/
 public interface CustomerKeywordTerminalRefreshStatRecordDao extends BaseMapper<CustomerKeywordTerminalRefreshStatRecord> {
 
-    List<Long> findMostDistantCustomerKeywordTerminalRefreshStatRecord ();
+    List<Long> findMostDistantCustomerKeywordTerminalRefreshStatRecord();
 
-    List<CustomerKeywordTerminalRefreshStatRecord> getHistoryTerminalRefreshStatRecord (@Param("customerKeywordRefreshStatInfoCriteria") CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
+    List<CustomerKeywordTerminalRefreshStatRecord> getHistoryTerminalRefreshStatRecord(@Param("customerKeywordRefreshStatInfoCriteria") CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria);
 }

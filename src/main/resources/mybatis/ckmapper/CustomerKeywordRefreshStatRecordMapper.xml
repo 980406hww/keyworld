@@ -19,11 +19,11 @@
             ckrsr.fQueryCount AS 'queryCount',
             ckrsr.fMaxInvalidCount AS 'maxInvalidCount'
         FROM t_ck_refresh_stat_record ckrsr
-        WHERE  #{criteria.historyDate}  = ckrsr.fCreateDate
+        WHERE ckrsr.fCreateDate = #{criteria.historyDate}
         AND ckrsr.fType = #{criteria.entryType}
         AND ckrsr.fTerminalType = #{criteria.terminalType}
-        <if test="criteria.groupName!=null and criteria.groupName!=''">
-            AND ckrsr.fGroup LIKE CONCAT(#{criteria.groupName}, "%")
+        <if test="criteria.groupName != null and criteria.groupName != ''">
+            AND ckrsr.fGroup LIKE CONCAT(#{criteria.groupName}, '%')
         </if>
         GROUP BY ckrsr.fUuid
         ORDER BY ckrsr.fGroup

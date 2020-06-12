@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.monitoring.dao.CustomerKeywordTerminalRefreshStatRecordDao">
-    <select id="findMostDistantCustomerKeywordTerminalRefreshStatRecord" resultType="java.lang.Integer">
+
+    <select id="findMostDistantCustomerKeywordTerminalRefreshStatRecord" resultType="java.lang.Long">
         SELECT
           ckrsr.fUuid AS 'uuid'
         FROM t_ck_refresh_stat_record ckrsr
@@ -9,7 +10,8 @@
         GROUP BY ckrsr.fUuid
     </select>
 
-    <select id="getHistoryTerminalRefreshStatRecord" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria" resultType="com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord">
+    <select id="getHistoryTerminalRefreshStatRecord" parameterType="com.keymanager.monitoring.criteria.CustomerKeywordRefreshStatInfoCriteria"
+            resultType="com.keymanager.monitoring.entity.CustomerKeywordTerminalRefreshStatRecord">
         SELECT
             ckrsr.fGroup AS 'group',
             ckrsr.fTotalKeywordCount AS 'totalKeywordCount',
@@ -25,7 +27,7 @@
             ckrsr.fQueryCount AS 'queryCount',
             ckrsr.fMaxInvalidCount AS 'maxInvalidCount'
         FROM t_ck_refresh_stat_record ckrsr
-        WHERE DATE_SUB(CURDATE(), INTERVAL #{customerKeywordRefreshStatInfoCriteria.dayNum} DAY) = ckrsr.fCreateDate
+        WHERE ckrsr.fCreateDate = DATE_SUB(CURDATE(), INTERVAL #{customerKeywordRefreshStatInfoCriteria.dayNum} DAY)
         AND ckrsr.fType = #{customerKeywordRefreshStatInfoCriteria.entryType}
         AND ckrsr.fTerminalType = #{customerKeywordRefreshStatInfoCriteria.terminalType}
         GROUP BY ckrsr.fUuid

@@ -7,10 +7,16 @@ import com.keymanager.ckadmin.service.CustomerKeywordRefreshStatInfoService;
 import com.keymanager.ckadmin.service.CustomerKeywordTerminalRefreshStatRecordService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
+
+import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import com.keymanager.ckadmin.util.StringUtil;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,12 +69,13 @@ public class RefreshStatisticsController {
                 criteria.setUserName(userName);
             }
             List<RefreshStatRecord> refreshStatRecords;
-            if (criteria.getHistoryDate() != null && criteria.getHistoryDate() != "") {
+            String nowDate = DateFormatUtils.format(new Date(), "yyyy-MM-dd");
+            if (StringUtil.isNotNullNorEmpty(criteria.getHistoryDate()) && !nowDate.equals(criteria.getHistoryDate())) {
                 refreshStatRecords = refreshStatRecordService.getHistoryTerminalRefreshStatRecord(criteria);
             } else {
                 refreshStatRecords = refreshStatInfoService.generateCustomerKeywordStatInfo(criteria);
             }
-            if (null != refreshStatRecords && !refreshStatRecords.isEmpty()) {
+            if (CollectionUtils.isNotEmpty(refreshStatRecords)) {
                 resultBean.setData(refreshStatRecords);
             }
         } catch (Exception e) {

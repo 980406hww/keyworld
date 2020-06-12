@@ -1,6 +1,5 @@
 package com.keymanager.ckadmin.service.impl;
 
-import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.dao.CustomerKeywordTerminalRefreshStatRecordDao;
 import com.keymanager.ckadmin.entity.RefreshStatRecord;
