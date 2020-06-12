@@ -3,16 +3,18 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.MachineGroupWorkInfoCriteria;
 import com.keymanager.ckadmin.entity.MachineGroupWorkInfo;
-import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.MachineGroupWorkInfoService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 
-import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import com.keymanager.ckadmin.util.StringUtil;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,17 +28,16 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value = "/internal/machinegroupstatistics")
 public class MachineGroupWorkInfoController {
 
-    private static Logger logger = LoggerFactory.getLogger(MachineGroupWorkInfoController.class);
+    private static final Logger logger = LoggerFactory.getLogger(MachineGroupWorkInfoController.class);
 
-    @Resource(name = "configService2")
-    private ConfigService configService;
     @Resource(name = "userRoleService2")
     private UserRoleService userRoleService;
+
     @Resource(name = "userInfoService2")
     private UserInfoService userInfoService;
+
     @Resource(name = "machineGroupWorkInfoService2")
     private MachineGroupWorkInfoService machineGroupWorkInfoService;
-
 
     @RequiresPermissions("/internal/machinegroupstatistics/toMachineGroupStatistics")
     @RequestMapping(value = "/toMachineGroupStatistics", method = RequestMethod.GET)
@@ -61,11 +62,11 @@ public class MachineGroupWorkInfoController {
                 criteria.setUserName(userName);
             }
             List<MachineGroupWorkInfo> machineGroupWorkInfos;
-
-            if (("").equals(criteria.getHistoryDate()) || criteria.getHistoryDate()==null ||("null").equals(criteria.getHistoryDate())) {
-                machineGroupWorkInfos = machineGroupWorkInfoService.generateMachineGroupWorkInfo(criteria);
-            } else {
+            String nowDate = DateFormatUtils.format(new Date(), "yyyy-MM-dd");
+            if (StringUtil.isNotNullNorEmpty(criteria.getHistoryDate()) && !nowDate.equals(criteria.getHistoryDate())) {
                 machineGroupWorkInfos = machineGroupWorkInfoService.getHistoryMachineGroupWorkInfo(criteria);
+            } else {
+                machineGroupWorkInfos = machineGroupWorkInfoService.generateMachineGroupWorkInfo(criteria);
             }
             if (null != machineGroupWorkInfos && !machineGroupWorkInfos.isEmpty()) {
                 resultBean.setData(machineGroupWorkInfos);

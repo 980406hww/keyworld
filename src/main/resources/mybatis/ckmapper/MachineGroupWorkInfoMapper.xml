@@ -4,33 +4,31 @@
 
     <select id="getMachineGroupWorkInfos" resultType="com.keymanager.ckadmin.entity.MachineGroupWorkInfo">
         SELECT
-        ck.fMachineGroup     AS "machineGroup",
-        COUNT(1)             AS "totalKeywordCount",
-        SUM(IF(ck.fOptimizeRemainingCount > 0, 1, 0))                  AS "needOptimizeKeywordCount",
-        SUM(IF(ck.fInvalidRefreshCount >= toc.fMaxInvalidCount, 1, 0)) AS "invalidKeywordCount",
-        SUM(IF(ck.fOptimizedCount = 0, 1, 0))                          AS "zeroOptimizedCount",
-        SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(), 1, 0))      AS "reachStandardKeywordCount",
+        ck.fMachineGroup AS "machineGroup",
+        COUNT(1) AS "totalKeywordCount",
+        SUM(IF(ck.fOptimizeRemainingCount > 0, 1, 0)) AS "needOptimizeKeywordCount",
+        SUM(IF(ck.fInvalidRefreshCount >= 4, 1, 0)) AS "invalidKeywordCount",
+        SUM(IF(ck.fOptimizedCount = 0, 1, 0)) AS "zeroOptimizedCount",
+        SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(), 1, 0)) AS "reachStandardKeywordCount",
         SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(), ck.fTodayFee, 0)) AS "todaySubTotal",
-        SUM(ck.fOptimizePlanCount)      AS "totalOptimizeCount",
-        SUM(ck.fOptimizedCount)         AS "totalOptimizedCount",
+        SUM(ck.fOptimizePlanCount) AS "totalOptimizeCount",
+        SUM(ck.fOptimizedCount) AS "totalOptimizedCount",
         SUM(ck.fOptimizeRemainingCount) AS "needOptimizeCount",
-        SUM(ck.fQueryCount)             AS "queryCount"
-        FROM t_customer_keyword ck, t_group g, t_operation_combine toc
-        WHERE ck.fStatus = 1
-        AND toc.fUuid = g.fOperationCombineUuid
-        AND ck.fOptimizeGroupName = g.fGroupName
-        AND ck.fTerminalType = toc.fTerminalType
-        <if test="criteria.machineGroup!=null and criteria.machineGroup!=''">
-            AND ck.fMachineGroup like concat(#{criteria.machineGroup}, '%')
-        </if>
+        SUM(ck.fQueryCount) AS "queryCount"
+        FROM t_customer_keyword ck, t_group g
+        WHERE ck.fOptimizeGroupName = g.fGroupName
         <if test="criteria.entryType!=null and criteria.entryType!=''">
             AND ck.fType = #{criteria.entryType}
         </if>
         <if test="criteria.terminalType!=null and criteria.terminalType!=''">
             AND ck.fTerminalType = #{criteria.terminalType}
         </if>
-        <if test="criteria.customerName!=null and criteria.customerName!=''">
+        AND ck.fStatus = 1
+        <if test="criteria.customerName != null and criteria.customerName != ''">
             AND EXISTS (SELECT 1 FROM t_customer c WHERE ck.fCustomerUuid = c.fUuid AND c.fContactPerson LIKE CONCAT('%', #{criteria.customerName}, '%'))
+        </if>
+        <if test="criteria.machineGroup!=null and criteria.machineGroup!=''">
+            AND ck.fMachineGroup like concat(#{criteria.machineGroup}, '%')
         </if>
         GROUP BY ck.fMachineGroup, ck.fType, ck.fTerminalType
         ORDER BY ck.fMachineGroup;
@@ -38,37 +36,36 @@
 
     <select id="getHistoryMachineGroupWorkInfo" resultType="com.keymanager.ckadmin.entity.MachineGroupWorkInfo">
         SELECT
-            mgwi.fMachineGroup AS 'machineGroup',
-            mgwi.fTotalKeywordCount AS 'totalKeywordCount',
-            mgwi.fNeedOptimizeKeywordCount AS 'needOptimizeKeywordCount',
-            mgwi.fInvalidKeywordCount AS 'invalidKeywordCount',
-            mgwi.fZeroOptimizedCount AS 'zeroOptimizedCount',
-            mgwi.fReachStandardKeywordCount AS 'reachStandardKeywordCount',
-            mgwi.fTodaySubTotal AS 'todaySubTotal',
-            mgwi.fTotalOptimizeCount AS 'totalOptimizeCount',
-            mgwi.fTotalOptimizedCount AS 'totalOptimizedCount',
-            mgwi.fNeedOptimizeCount AS 'needOptimizeCount',
-            mgwi.fQueryCount AS 'queryCount',
-            mgwi.fTotalMachineCount AS 'totalMachineCount',
-            mgwi.fUnworkMachineCount AS 'unworkMachineCount',
-            mgwi.fMaxInvalidCount AS 'maxInvalidCount',
-            mgwi.fIdleTotalMinutes AS 'idleTotalMinutes'
+        mgwi.fMachineGroup AS 'machineGroup',
+        mgwi.fTotalKeywordCount AS 'totalKeywordCount',
+        mgwi.fNeedOptimizeKeywordCount AS 'needOptimizeKeywordCount',
+        mgwi.fInvalidKeywordCount AS 'invalidKeywordCount',
+        mgwi.fZeroOptimizedCount AS 'zeroOptimizedCount',
+        mgwi.fReachStandardKeywordCount AS 'reachStandardKeywordCount',
+        mgwi.fTodaySubTotal AS 'todaySubTotal',
+        mgwi.fTotalOptimizeCount AS 'totalOptimizeCount',
+        mgwi.fTotalOptimizedCount AS 'totalOptimizedCount',
+        mgwi.fNeedOptimizeCount AS 'needOptimizeCount',
+        mgwi.fQueryCount AS 'queryCount',
+        mgwi.fTotalMachineCount AS 'totalMachineCount',
+        mgwi.fUnworkMachineCount AS 'unworkMachineCount',
+        mgwi.fMaxInvalidCount AS 'maxInvalidCount',
+        mgwi.fIdleTotalMinutes AS 'idleTotalMinutes'
         FROM t_machine_group_work_info mgwi
-        WHERE date_format(#{criteria.historyDate},'%Y-%m-%d')  = mgwi.fCreateDate
+        WHERE mgwi.fCreateDate = date_format(#{criteria.historyDate}, '%Y-%m-%d')
         AND mgwi.fType = #{criteria.entryType}
         AND mgwi.fTerminalType = #{criteria.terminalType}
-        <if test="criteria.machineGroup!=null and criteria.machineGroup!=''">
-            AND mgwi.fMachineGroup LIKE CONCAT(#{criteria.machineGroup}, "%")
+        <if test="criteria.machineGroup != null and criteria.machineGroup != ''">
+            AND mgwi.fMachineGroup LIKE CONCAT(#{criteria.machineGroup}, '%')
         </if>
         GROUP BY mgwi.fUuid
         ORDER BY mgwi.fMachineGroup
     </select>
 
-    <select id="findMostDistantMachineGroupWorkInfo" resultType="java.lang.Integer">
-        SELECT
-          mgwi.fUuid AS 'uuid'
+    <select id="findMostDistantMachineGroupWorkInfo" resultType="java.lang.Long">
+        SELECT mgwi.fUuid AS 'uuid'
         FROM t_machine_group_work_info mgwi
-        WHERE DATE_SUB(CURDATE(), INTERVAL 6 DAY) <![CDATA[>=]]> mgwi.fCreateDate
+        WHERE mgwi.fCreateDate <![CDATA[<=]]> DATE_SUB(CURDATE(), INTERVAL 6 DAY)
         GROUP BY mgwi.fUuid
     </select>
 </mapper>

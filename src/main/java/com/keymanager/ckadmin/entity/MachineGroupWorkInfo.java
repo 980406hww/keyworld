@@ -5,12 +5,10 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * @Author zhoukai
- * @Date 2018/11/28 17:32
  **/
 @TableName(value = "t_machine_group_work_info")
 public class MachineGroupWorkInfo implements Serializable {

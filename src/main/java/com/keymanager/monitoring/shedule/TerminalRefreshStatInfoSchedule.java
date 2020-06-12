@@ -1,12 +1,14 @@
 package com.keymanager.monitoring.shedule;
 
-import com.keymanager.monitoring.service.CustomerKeywordRefreshStatInfoService;
+import com.keymanager.ckadmin.service.CustomerKeywordRefreshStatInfoService;
+import com.keymanager.ckadmin.service.MachineGroupWorkInfoService;
 import com.keymanager.monitoring.service.CustomerKeywordService;
-import com.keymanager.monitoring.service.MachineGroupWorkInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * @Author zhoukai
@@ -16,14 +18,14 @@ import org.springframework.stereotype.Component;
 public class TerminalRefreshStatInfoSchedule {
     private static Logger logger = LoggerFactory.getLogger(TerminalRefreshStatInfoSchedule.class);
 
-    @Autowired
+    @Resource(name = "customerKeywordRefreshStatInfoService2")
     private CustomerKeywordRefreshStatInfoService customerKeywordRefreshStatInfoService;
+
+    @Resource(name = "machineGroupWorkInfoService2")
+    private MachineGroupWorkInfoService machineGroupWorkInfoService;
 
     @Autowired
     private CustomerKeywordService customerKeywordService;
-
-    @Autowired
-    private MachineGroupWorkInfoService machineGroupWorkInfoService;
 
     public void runTask(){
         logger.info("============= " + " Terminal Refresh Stat Info Task "+"===================");

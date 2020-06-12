@@ -27,6 +27,7 @@ import java.util.Map;
 /**
  * Created by shunshikj08 on 2017/9/12.
  */
+@Deprecated
 @RestController
 @RequestMapping(value = "/internal/refreshstatinfo")
 public class CustomerKeywordRefreshStatInfoController extends SpringMVCBaseController {

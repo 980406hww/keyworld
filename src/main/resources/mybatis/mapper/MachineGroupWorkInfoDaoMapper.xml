@@ -67,4 +67,5 @@
         GROUP BY mgwi.fUuid
         ORDER BY mgwi.fMachineGroup
     </select>
+
 </mapper>

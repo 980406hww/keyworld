@@ -150,7 +150,7 @@
                                         <input type="text" autocomplete="off" name="customerName" id="customerName" placeholder="请输入客户名称" class="layui-input">
                                     </div>
                                     <div class="layui-inline">
-                                        <input type="text" class="layui-input" id="date_input" name="historyDate" placeholder="历史记录">
+                                        <input type="text" class="layui-input" id="historyDate" name="historyDate" placeholder="历史记录">
                                     </div>
                                     <div class="layui-inline">
                                         <button class="layui-btn" lay-submit lay-filter="search" id="searchBtn">搜索</button>
@@ -189,20 +189,13 @@
         var form = layui.form;
         var $ = layui.jquery;
         var common = layui.common;
-
         let layer = layui.layer;
         let layDate = layui.laydate;
-        var nowTime = new Date();
-        layDate.render({
-            elem: "#date_input",
 
-            them: "#393D49",
-            max: 'nowTime',
-        });
         layDate.render({
-            elem: "#shijianriqi",
-            type: 'datetime',
-            them: '#000000'
+            elem: "#historyDate"
+            , them: "#393D49"
+            , max: new Date()
         });
 
         <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
@@ -542,9 +535,6 @@
         var active = {
             reload: function () {
                 let condition = common.formToJsonObject("searchForm");
-                if (condition.historyDate === '') {
-                    condition.historyDate ="null";
-                }
                 if (condition.machineGroup){
                     condition.groupName = condition.machineGroup;
                 }
@@ -557,9 +547,6 @@
         form.on("submit(search)", function (data) {
             let condition = data.field;
             condition = common.jsonObjectTrim(condition);
-            if (condition.historyDate === '') {
-                condition.historyDate ="null";
-            }
             tableInit(condition);
             return false;
         });

@@ -9,4 +9,6 @@ public interface MachineGroupWorkInfoService {
     List<MachineGroupWorkInfo> getHistoryMachineGroupWorkInfo(MachineGroupWorkInfoCriteria criteria);
 
     List<MachineGroupWorkInfo> generateMachineGroupWorkInfo(MachineGroupWorkInfoCriteria criteria);
+
+    void updateCustomerKeywordStatInfo();
 }

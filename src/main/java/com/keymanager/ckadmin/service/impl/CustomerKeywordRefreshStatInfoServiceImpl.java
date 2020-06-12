@@ -1,16 +1,18 @@
 package com.keymanager.ckadmin.service.impl;
 
-import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.dao.CustomerKeywordRefreshStatInfoDao;
 import com.keymanager.ckadmin.entity.RefreshStatRecord;
 import com.keymanager.ckadmin.service.CustomerKeywordRefreshStatInfoService;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 @Service("customerKeywordRefreshStatInfoService2")
-public class CustomerKeywordRefreshStatInfoServiceImpl implements CustomerKeywordRefreshStatInfoService {
+public class CustomerKeywordRefreshStatInfoServiceImpl extends ServiceImpl<CustomerKeywordRefreshStatInfoDao, RefreshStatRecord>
+        implements CustomerKeywordRefreshStatInfoService {
 
     @Resource(name = "customerKeywordRefreshStatInfoDao2")
     private CustomerKeywordRefreshStatInfoDao refreshStatInfoDao;
@@ -18,6 +20,13 @@ public class CustomerKeywordRefreshStatInfoServiceImpl implements CustomerKeywor
     @Override
     public List<RefreshStatRecord> generateCustomerKeywordStatInfo(RefreshStatisticsCriteria criteria) {
         List<RefreshStatRecord> refreshStatRecords = refreshStatInfoDao.searchCustomerKeywordStatInfos(criteria);
+        setCountCustomerKeywordRefreshStatInfo(refreshStatRecords);
+        return refreshStatRecords;
+    }
+
+    @Override
+    public List<RefreshStatRecord> getHistoryTerminalRefreshStatRecord(RefreshStatisticsCriteria criteria) {
+        List<RefreshStatRecord> refreshStatRecords = refreshStatInfoDao.getHistoryTerminalRefreshStatRecord(criteria);
         setCountCustomerKeywordRefreshStatInfo(refreshStatRecords);
         return refreshStatRecords;
     }
@@ -40,5 +49,20 @@ public class CustomerKeywordRefreshStatInfoServiceImpl implements CustomerKeywor
         }
         total.setMaxInvalidCount(4);
         refreshStatRecords.add(0, total);
+    }
+
+    public void updateCustomerKeywordStatInfo (){
+        // 只保存一周的数据
+        refreshStatInfoDao.deleteOverOneWeekData();
+
+        List<RefreshStatRecord> refreshStatInfoRecords = generateAllCustomerKeywordStatInfo(new RefreshStatisticsCriteria());
+        for (RefreshStatRecord refreshStatInfoRecord : refreshStatInfoRecords) {
+            refreshStatInfoRecord.setCreateDate(new Date());
+            refreshStatInfoDao.insert(refreshStatInfoRecord);
+        }
+    }
+
+    private List<RefreshStatRecord> generateAllCustomerKeywordStatInfo(RefreshStatisticsCriteria criteria) {
+        return refreshStatInfoDao.searchCustomerKeywordStatInfos(criteria);
     }
 }

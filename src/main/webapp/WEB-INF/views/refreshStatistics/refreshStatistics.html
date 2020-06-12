@@ -188,15 +188,11 @@
         var common = layui.common;
         var layDate=layui.laydate;
 
-        setHistoryDate();
-
-        function setHistoryDate() {
-            layDate.render({
-                elem: "#historyDate",
-                them: "#393D49",
-                max: new Date(),
-            });
-        }
+        layDate.render({
+            elem: "#historyDate"
+            , them: "#393D49"
+            , max: new Date()
+        });
 
         <@shiro.hasPermission name = "/internal/customerKeyword/searchCustomerKeywordLists" >
         window.searchCustomerKeywords = function (group) {

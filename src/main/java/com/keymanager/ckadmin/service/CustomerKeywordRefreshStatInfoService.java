@@ -8,5 +8,9 @@ public interface CustomerKeywordRefreshStatInfoService {
 
     List<RefreshStatRecord> generateCustomerKeywordStatInfo(RefreshStatisticsCriteria criteria);
 
+    List<RefreshStatRecord> getHistoryTerminalRefreshStatRecord(RefreshStatisticsCriteria criteria);
+
     void setCountCustomerKeywordRefreshStatInfo(List<RefreshStatRecord> refreshStatRecords);
+
+    void updateCustomerKeywordStatInfo();
 }

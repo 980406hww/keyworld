@@ -4,7 +4,6 @@ import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
 import com.keymanager.ckadmin.entity.RefreshStatRecord;
 import com.keymanager.ckadmin.service.CustomerKeywordRefreshStatInfoService;
-import com.keymanager.ckadmin.service.CustomerKeywordTerminalRefreshStatRecordService;
 import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRoleService;
 
@@ -41,9 +40,6 @@ public class RefreshStatisticsController {
     @Resource(name = "customerKeywordRefreshStatInfoService2")
     private CustomerKeywordRefreshStatInfoService refreshStatInfoService;
 
-    @Resource(name = "customerKeywordTerminalRefreshStatRecordService2")
-    private CustomerKeywordTerminalRefreshStatRecordService refreshStatRecordService;
-
     /**
      * 跳转刷量统计页面
      */
@@ -71,7 +67,7 @@ public class RefreshStatisticsController {
             List<RefreshStatRecord> refreshStatRecords;
             String nowDate = DateFormatUtils.format(new Date(), "yyyy-MM-dd");
             if (StringUtil.isNotNullNorEmpty(criteria.getHistoryDate()) && !nowDate.equals(criteria.getHistoryDate())) {
-                refreshStatRecords = refreshStatRecordService.getHistoryTerminalRefreshStatRecord(criteria);
+                refreshStatRecords = refreshStatInfoService.getHistoryTerminalRefreshStatRecord(criteria);
             } else {
                 refreshStatRecords = refreshStatInfoService.generateCustomerKeywordStatInfo(criteria);
             }

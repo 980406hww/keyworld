@@ -21,6 +21,7 @@ import java.util.*;
 /**
  * Created by shunshikj08 on 2017/9/12.
  */
+@Deprecated
 @Service
 public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerKeywordRefreshStatInfoDao, CustomerKeywordTerminalRefreshStatRecord> {
 
@@ -37,10 +38,7 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
 
     public List<CustomerKeywordTerminalRefreshStatRecord> generateCustomerKeywordStatInfo(CustomerKeywordRefreshStatInfoCriteria customerKeywordRefreshStatInfoCriteria) {
         List<CustomerKeywordTerminalRefreshStatRecord> customerKeywordTerminalRefreshStatRecords = getCustomerKeywordStatInfoRecords(customerKeywordRefreshStatInfoCriteria);
-        Map<String, CustomerKeywordTerminalRefreshStatRecord> customerKeywordRefreshStatInfoRecordMap = new HashMap<String, CustomerKeywordTerminalRefreshStatRecord>();
-        for (CustomerKeywordTerminalRefreshStatRecord customerKeywordTerminalRefreshStatRecord : customerKeywordTerminalRefreshStatRecords) {
-            customerKeywordRefreshStatInfoRecordMap.put(customerKeywordTerminalRefreshStatRecord.getGroup(), customerKeywordTerminalRefreshStatRecord);
-        }
+
         this.setCountCustomerKeywordRefreshStatInfo(customerKeywordTerminalRefreshStatRecords);
         return customerKeywordTerminalRefreshStatRecords;
     }
@@ -68,6 +66,7 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
         return customerKeywordRefreshStatInfoDao.searchCustomerKeywordStatInfos(customerKeywordRefreshStatInfoCriteria);
     }
 
+    @Deprecated
     public List<String> searchKeywordUrlByGroup(String terminalType, String entryType, List<String> groups) throws Exception {
         List<String> keywordUrls = new ArrayList<String>();
         for (String group : groups) {
@@ -79,6 +78,7 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
         return keywordUrls;
     }
 
+    @Deprecated
     public void downloadTxtFile(List<String> keywordUrls) throws Exception {
         FileOutputStream o = null;
         String path = Thread.currentThread().getContextClassLoader().getResource("").toURI().getPath() + "keywordUrl.txt";
@@ -99,6 +99,7 @@ public class CustomerKeywordRefreshStatInfoService extends ServiceImpl<CustomerK
         outputStream.close();
     }
 
+    @Deprecated
     public void uploadCSVFile(String terminalType, String entryType, String searchEngine, int reachStandardPosition, File targetFile) {
         FileUtil.readTxtFile(targetFile,"UTF-8");
         List<String> contents = FileUtil.readTxtFile(targetFile,"GBK");
