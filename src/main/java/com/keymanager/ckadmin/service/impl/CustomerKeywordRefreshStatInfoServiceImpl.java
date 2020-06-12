@@ -46,8 +46,16 @@ public class CustomerKeywordRefreshStatInfoServiceImpl extends ServiceImpl<Custo
             total.setZeroOptimizedCount(total.getZeroOptimizedCount() + refreshStatRecord.getZeroOptimizedCount());
             total.setReachStandardKeywordCount(total.getReachStandardKeywordCount() + refreshStatRecord.getReachStandardKeywordCount());
             total.setTodaySubTotal(total.getTodaySubTotal() + refreshStatRecord.getTodaySubTotal());
+            refreshStatRecord.setAvgOptimizedCount();
+            refreshStatRecord.setInvalidKeywordPercentage();
+            refreshStatRecord.setInvalidOptimizePercentage();
+            refreshStatRecord.setReachStandardPercentage();
         }
         total.setMaxInvalidCount(4);
+        total.setAvgOptimizedCount();
+        total.setInvalidKeywordPercentage();
+        total.setInvalidOptimizePercentage();
+        total.setReachStandardPercentage();
         refreshStatRecords.add(0, total);
     }
 

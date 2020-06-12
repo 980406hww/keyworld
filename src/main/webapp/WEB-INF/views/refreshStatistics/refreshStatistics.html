@@ -188,10 +188,11 @@
         var common = layui.common;
         var layDate=layui.laydate;
 
+        var nowTime = new Date();
         layDate.render({
             elem: "#historyDate"
             , them: "#393D49"
-            , max: new Date()
+            , max: 'nowTime'
         });
 
         <@shiro.hasPermission name = "/internal/customerKeyword/searchCustomerKeywordLists" >
@@ -482,9 +483,7 @@
             reload: function () {
                 if (table.index >= 1) {
                     let condition = common.formToJsonObject("searchForm");
-                    if (condition.dayNum === '') {
-                        condition.dayNum = 0;
-                    }
+
                     table.reload('refreshTable', {
                         where: condition
                     });
@@ -495,9 +494,7 @@
         form.on("submit(search)", function (data) {
             let condition = data.field;
             condition = common.jsonObjectTrim(condition);
-            if (condition.dayNum === '') {
-                condition.dayNum = 0;
-            }
+
             tableInit(condition);
             return false;
         });

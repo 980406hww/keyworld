@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keymanager.ckadmin.dao.UserRefreshStatisticDao">
+
     <select id="getUserRefreshStatisticInfo" resultType="com.keymanager.ckadmin.entity.UserRefreshStatisticInfo">
-         SELECT
+        SELECT
         ck.fOptimizeGroupName AS "groupName",
         ck.fType AS "type",
         ck.fTerminalType AS "terminalType",
@@ -10,23 +11,22 @@
         tc.fContactPerson as "customerName",
         COUNT(1) AS "totalKeywordCount",
         SUM(IF(ck.fOptimizeRemainingCount > 0, 1, 0)) AS "needOptimizeKeywordCount",
-        SUM(IF(ck.fFailedCause > '', 1, 0)) AS "failedKeywordCount",
         SUM(IF(ck.fOptimizedCount = 0, 1, 0)) AS "zeroOptimizedCount",
         SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(), 1, 0)) AS "reachStandardKeywordCount",
-        SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(),ck.fTodayFee, 0)) as "todaySubTotal",
+        SUM(IF(ck.fLastReachStandardDate = CURRENT_DATE(), ck.fTodayFee, 0)) as "todaySubTotal",
         SUM(ck.fOptimizePlanCount) AS "totalOptimizeCount",
         SUM(ck.fOptimizedCount) AS "totalOptimizedCount",
         SUM(ck.fOptimizeRemainingCount) AS "needOptimizeCount",
         SUM(ck.fQueryCount) AS "queryCount"
-        FROM t_customer_keyword ck,t_customer tc ,t_userinfo tu
-        WHERE ck.fStatus = 1
-				and tc.fUserID=tu.fLoginName
-				and ck.fCustomerUuid=tc.fUuid
-				<if test="criteria.userName != null and criteria.userName != '' "> and tu.fLoginName = #{criteria.userName}</if>
-				<if test="criteria.groupName != null and criteria.groupName != ''"> and ck.fOptimizeGroupName = #{criteria.groupName}</if>
-                <if test="criteria.entryType != null and criteria.entryType !='' "> AND ck.fType = #{criteria.entryType} </if>
-                <if test="criteria.terminalType != null and criteria.terminalType!='' "> AND ck.fTerminalType = #{criteria.terminalType}</if>
-                <if test="criteria.customerName != null and criteria.customerName !='' ">AND tc.fContactPerson like concat('%', #{criteria.customerName}, "%")</if>
+        FROM t_customer_keyword ck, t_customer tc, t_userinfo tu
+        WHERE ck.fCustomerUuid = tc.fUuid
+        and ck.fStatus = 1
+        <if test="criteria.groupName != null and criteria.groupName != ''">and ck.fOptimizeGroupName = #{criteria.groupName}</if>
+        <if test="criteria.terminalType != null and criteria.terminalType != ''">AND ck.fTerminalType = #{criteria.terminalType}</if>
+        <if test="criteria.entryType != null and criteria.entryType !=''">AND ck.fType = #{criteria.entryType}</if>
+        and tc.fUserID = tu.fLoginName
+        <if test="criteria.userName != null and criteria.userName != ''">and tu.fLoginName = #{criteria.userName}</if>
+        <if test="criteria.customerName != null and criteria.customerName !=''">AND tc.fContactPerson like concat('%', #{criteria.customerName}, '%')</if>
         GROUP BY tu.fLoginName, ck.fType, ck.fTerminalType
         ORDER BY tu.fLoginName;
     </select>
@@ -48,12 +48,12 @@
         ursi.fMaxInvalidCount AS 'maxInvalidCount',
         ursi.fIdleTotalMinutes AS 'idleTotalMinutes'
         FROM t_user_refresh_statistic_info ursi
-        WHERE date_format(#{criteria.historyDate},'%Y-%m-%d') = ursi.fCreateDate
+        WHERE ursi.fCreateDate = date_format(#{criteria.historyDate}, '%Y-%m-%d')
         AND ursi.fType = #{criteria.entryType}
         AND ursi.fTerminalType = #{criteria.terminalType}
-        <if test="criteria.groupName !=null and criteria.groupName != '' "> and fGroupName =#{criteria.groupName} </if>
-        <if test="criteria.userName !=null and criteria.userName != ''"> and  fUserName =#{criteria.userName}</if>
-        <if test="criteria.customerName !=null and criteria.customerName != ''"> and fCustomerName =#{criteria.customerName} </if>
+        <if test="criteria.groupName != null and criteria.groupName != '' ">and fGroupName = #{criteria.groupName}</if>
+        <if test="criteria.userName != null and criteria.userName != ''">and fUserName = #{criteria.userName}</if>
+        <if test="criteria.customerName != null and criteria.customerName != ''">and fCustomerName = #{criteria.customerName}</if>
         GROUP BY ursi.fUuid
         ORDER BY ursi.fUserName
     </select>

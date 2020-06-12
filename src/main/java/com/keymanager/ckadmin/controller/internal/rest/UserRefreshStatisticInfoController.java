@@ -2,11 +2,10 @@ package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.criteria.UserRefreshStatisticCriteria;
-import com.keymanager.ckadmin.entity.RefreshStatRecord;
 import com.keymanager.ckadmin.entity.UserRefreshStatisticInfo;
-import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRefreshStatisticService;
-import com.keymanager.ckadmin.service.UserRoleService;
+import com.keymanager.ckadmin.util.StringUtil;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -38,8 +38,6 @@ public class UserRefreshStatisticInfoController {
 
     /**
      * 获取用户刷量信息
-     * @param criteria
-     * @return
      */
     @RequiresPermissions("/internal/userRefreshStatistic/toUserRefreshStatistic")
     @PostMapping(value = "/getUserRefreshInfo")
@@ -50,7 +48,8 @@ public class UserRefreshStatisticInfoController {
         }
         try {
             List<UserRefreshStatisticInfo> userRefreshStatisticInfos;
-            if (criteria.getHistoryDate() != "" && criteria.getHistoryDate() != null) {
+            String nowDate = DateFormatUtils.format(new Date(), "yyyy-MM-dd");
+            if (StringUtil.isNotNullNorEmpty(criteria.getHistoryDate()) && !nowDate.equals(criteria.getHistoryDate())) {
                 userRefreshStatisticInfos= userRefreshStatisticService.getHistoryUserRefreshStatisticInfo(criteria);
             } else {
                 userRefreshStatisticInfos = userRefreshStatisticService.generateUserRefreshStatisticInfo(criteria);

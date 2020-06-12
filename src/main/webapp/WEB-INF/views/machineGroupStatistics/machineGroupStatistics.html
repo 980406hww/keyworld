@@ -192,10 +192,11 @@
         let layer = layui.layer;
         let layDate = layui.laydate;
 
+        var nowTime = new Date();
         layDate.render({
             elem: "#historyDate"
             , them: "#393D49"
-            , max: new Date()
+            , max: 'nowTime'
         });
 
         <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
