@@ -1,6 +1,8 @@
 package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.common.shiro.ShiroUser;
+import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.UserRefreshStatisticCriteria;
 import com.keymanager.ckadmin.entity.UserRefreshStatisticInfo;
 import com.keymanager.ckadmin.service.UserRefreshStatisticService;
@@ -15,10 +17,11 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/internal/userRefreshStatistic")
-public class UserRefreshStatisticInfoController {
+public class UserRefreshStatisticInfoController extends SpringMVCBaseController {
 
     private static Logger logger = LoggerFactory.getLogger(UserRefreshStatisticInfoController.class);
 
@@ -47,6 +50,11 @@ public class UserRefreshStatisticInfoController {
             return resultBean;
         }
         try {
+            ShiroUser shiroUser = getCurrentUser();
+            Set<String> roles = shiroUser.getRoles();
+            if (!roles.contains("DepartmentManager")) {
+                criteria.setUserName(shiroUser.getLoginName());
+            }
             List<UserRefreshStatisticInfo> userRefreshStatisticInfos;
             String nowDate = DateFormatUtils.format(new Date(), "yyyy-MM-dd");
             if (StringUtil.isNotNullNorEmpty(criteria.getHistoryDate()) && !nowDate.equals(criteria.getHistoryDate())) {

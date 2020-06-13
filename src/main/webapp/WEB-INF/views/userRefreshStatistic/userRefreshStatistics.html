@@ -133,13 +133,16 @@
                                 <div>
                                     <input type="hidden" id="entryType" name="entryType" value="pt">
                                     <input type="hidden" id="terminalType" name="terminalType" value="PC">
-                                                                      <div class="layui-inline">
+                                    <div class="layui-inline">
                                         <input type="text" name="groupName" id="groupName" autocomplete="off" placeholder="请输入分组查询" class="layui-input">
                                     </div>
-
+                                    <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
                                     <div class="layui-inline">
-                                        <input type="text" name="userName" id="userName" autocomplete="off" placeholder="请输入用户名称" class="layui-input">
+                                        <select name="userName" id="userName">
+                                            <option value="">用户名</option>
+                                        </select>
                                     </div>
+                                    </@shiro.hasPermission>
                                     <div class="layui-inline">
                                         <input type="text" name="customerName" id="customerName" autocomplete="off" placeholder="请输入客户名称" class="layui-input">
                                     </div>
@@ -177,7 +180,7 @@
     };
 
     // layui相关
-    layui.use(['element', 'table', 'form', 'jquery', 'common','laydate'], function () {
+    layui.use(['element', 'table', 'form', 'jquery', 'common', 'laydate'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
@@ -192,6 +195,34 @@
             , max: 'nowTime'
         });
 
+    <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
+        init__user_list();
+
+        function init__user_list() {
+            $("#userName").empty();
+            $.ajax({
+                url: '/internal/customer/getActiveUsers',
+                dataType: 'json',
+                type: 'get',
+                success: function (res) {
+                    if (res.code === 200) {
+                        let data = res.data;
+                        $("#userName").append('<option value="">用户名</option>');
+                        $.each(data, function (index, item) {
+                            $('#userName').append(
+                                '<option value="' + item.loginName + '">'
+                                + item.userName
+                                + '</option>');// 下拉菜单里添加元素
+                        });
+                        form.render("select");
+                    } else {
+                        common.showFailMsg('获取用户列表失败');
+                    }
+                }
+            });
+        }
+    </@shiro.hasPermission>
+
     <@shiro.hasPermission name = "/internal/customerKeyword/searchCustomerKeywordLists" >
         window.searchCustomerKeywords = function (userName) {
             let data = {
@@ -204,10 +235,10 @@
             let id = group + '-sl' + data.type + data.terminal;
             let url = '/internal/customerKeyword/toKeywordsFromUS/' + data.type + '/' + data.terminal + '/' + data.irc + '/' + data.userName;
             common.updateOrNewTab(url, title, id);
-        };
+        }
     </@shiro.hasPermission>
 
-        <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
+    <@shiro.hasPermission name="/internal/customerKeyword/searchCustomerKeywordLists">
         window.findKeyword = function (optimizeGroupName, invalidRefreshCount) {
             let data = {
                 type: document.getElementById('entryType').value,
@@ -229,7 +260,7 @@
             }
             let url = '/internal/customerKeyword/toKeywordsFromUS/' + data.type + '/' + data.terminal + '/' + data.irc + '/' + data.userName;
             common.updateOrNewTab(url, title, id);
-        };
+        }
     </@shiro.hasPermission>
 
         window.resetInvaidRefreshCount = function (groupName, customerName, fullMatchGroup) {
@@ -261,7 +292,7 @@
                     common.showFailMsg('网络异常请稍后再试');
                 }
             });
-        };
+        }
 
         init_keyword_type();
 
@@ -294,131 +325,131 @@
             });
         }
 
-    <@shiro.hasPermission name="/internal/refreshstatinfo/searchRefreshStatInfos">
-            function tableInit(condition) {
-                table.render({
-                    elem: '#refreshTable',
-                    method: 'post',
-                    url: '/internal/userRefreshStatistic/getUserRefreshInfo',
-                    page: false,
-                    autoSort: true,
-                    size: 'sm',
-                    id: 'refreshTable',
-                    even: true,//隔行背景
-                    where: condition,
-                    defaultToolbar: ['filter'],
-                    contentType: 'application/json',
-                    cols: [[
-                        {filed: 'uuid', type: 'checkbox', width: '2%', rowspan :2, align: 'center'},
-                        {filed: 'group', title: '类型', width: '10%', align: 'left', rowspan: 2 ,templet: '#group', sort: true},
-                        {title: '关键字', width: '56%', align: 'center', colspan: 7},
-                        {title: '刷的次数', width: '31%', align: 'center', colspan: 4}
-                    ],[
-                        {field: 'totalKeywordCount', title: '总数', width: '7%', align: 'left', sort:true},
-                        {
-                            field: 'reachStandardKeywordCount', title: '达标数(金额)', width: '9%', align: 'left', sort: true, templet: function (d) {
-                                if (d.reachStandardKeywordCount > 0) {
-                                    if (d.userName === '总计') {
-                                        return '<a href="javascript:findKeyword(\'\', \'\')" style="color: blue">' + d.reachStandardKeywordCount + '('
-                                            + d.todaySubTotal + ')</a>';
-                                    }
-                                    return '<a href="javascript:findKeyword(\'' + d.userName + '\', \'\')" style="color: blue">' + d.reachStandardKeywordCount + '('
+    <@shiro.hasPermission name="/internal/userRefreshStatistic/toUserRefreshStatistic">
+        function tableInit(condition) {
+            table.render({
+                elem: '#refreshTable',
+                method: 'post',
+                url: '/internal/userRefreshStatistic/getUserRefreshInfo',
+                page: false,
+                autoSort: true,
+                size: 'sm',
+                id: 'refreshTable',
+                even: true,//隔行背景
+                where: condition,
+                defaultToolbar: ['filter'],
+                contentType: 'application/json',
+                cols: [[
+                    {filed: 'uuid', type: 'checkbox', width: '2%', rowspan :2, align: 'center'},
+                    {filed: 'group', title: '类型', width: '10%', align: 'left', rowspan: 2 ,templet: '#group', sort: true},
+                    {title: '关键字', width: '56%', align: 'center', colspan: 7},
+                    {title: '刷的次数', width: '31%', align: 'center', colspan: 4}
+                ],[
+                    {field: 'totalKeywordCount', title: '总数', width: '7%', align: 'left', sort:true},
+                    {
+                        field: 'reachStandardKeywordCount', title: '达标数(金额)', width: '9%', align: 'left', sort: true, templet: function (d) {
+                            if (d.reachStandardKeywordCount > 0) {
+                                if (d.userName === '总计') {
+                                    return '<a href="javascript:findKeyword(\'\', \'\')" style="color: blue">' + d.reachStandardKeywordCount + '('
                                         + d.todaySubTotal + ')</a>';
-                                } else {
-                                    return '';
                                 }
-                            }
-                        },
-                        {
-                            field: 'reachStandardPercentage', title: '达标率', width: '8%', align: 'left', sort: true, templet: function (d) {
-                                if (d.reachStandardPercentage > 0) {
-                                    return d.reachStandardPercentage.toFixed(2) + '%';
-                                } else {
-                                    return '';
-                                }
-                            }
-                        },
-                        {
-                            field: 'zeroOptimizedCount', title: '没有刷量', width: '8%', align: 'left', sort: true, templet: function (d) {
-                                if (d.zeroOptimizedCount > 0) {
-                                    return d.zeroOptimizedCount;
-                                } else {
-                                    return '';
-                                }
-                            }
-                        },
-                        {
-                            field: 'needOptimizeKeywordCount', title: '待刷数', width: '8%', align: 'left', sort: true, templet: function (d) {
-                                if (d.needOptimizeKeywordCount > 0) {
-                                    return d.needOptimizeKeywordCount;
-                                } else {
-                                    return '';
-                                }
-                            }
-                        },
-                        {
-                            field: 'totalOptimizeCount', title: '总次数', width: '8%', align: 'left', sort: true, templet: function (d) {
-                                if (d.totalOptimizeCount > 0) {
-                                    return d.totalOptimizeCount;
-                                } else {
-                                    return '';
-                                }
-                            }
-                        },
-                        {
-                            field: 'totalOptimizedCount', title: '已刷次数', width: '8%', align: 'left', sort: true, templet: function (d) {
-                                if (d.totalOptimizedCount > 0) {
-                                    return d.totalOptimizedCount;
-                                } else {
-                                    return '';
-                                }
-                            }
-                        },
-                        {
-                            field: 'needOptimizeCount', title: '待刷次数', width: '7%', align: 'left', sort: true, templet: function (d) {
-                                if (d.needOptimizeCount > 0) {
-                                    return d.needOptimizeCount;
-                                } else {
-                                    return '';
-                                }
-                            }
-                        },
-                        {
-                            field: 'avgOptimizedCount', title: '平均有效刷量', width: '9%', align: 'left', sort: true, templet: function (d) {
-                                if (d.avgOptimizedCount > 0) {
-                                    let color = d.avgOptimizedCount <= 30 ? "red" : "black";
-                                    return '<span style="color: ' + color + '">' + d.avgOptimizedCount.toFixed(2) + '</span>';
-                                } else {
-                                    return '';
-                                }
-                            }
-                        },
-                        {
-                            field: 'queryCount', title: '取词次数', width: '8%', align: 'left', sort: true, templet: function (d) {
-                                if (d.queryCount > 0) {
-                                    return d.queryCount;
-                                } else {
-                                    return '';
-                                }
-                            }
-                        },
-                        {
-                            field: 'invalidOptimizePercentage', title: '无效占比', width: '7%', align: 'left', sort: true, templet: function (d) {
-                                if (d.invalidOptimizePercentage > 0) {
-                                    let color = d.invalidOptimizePercentage > 20 ? "red" : (d.invalidOptimizePercentage > 10 ? "purple" : "#000");
-                                    return '<span style="color: ' + color + '">' + d.invalidOptimizePercentage.toFixed(2) + '%</span>';
-                                } else {
-                                    return '';
-                                }
+                                return '<a href="javascript:findKeyword(\'' + d.userName + '\', \'\')" style="color: blue">' + d.reachStandardKeywordCount + '('
+                                    + d.todaySubTotal + ')</a>';
+                            } else {
+                                return '';
                             }
                         }
-                    ]],
-                    height: 'full-108',
-                    done: function (res, curr, count) {
+                    },
+                    {
+                        field: 'reachStandardPercentage', title: '达标率', width: '8%', align: 'left', sort: true, templet: function (d) {
+                            if (d.reachStandardPercentage > 0) {
+                                return d.reachStandardPercentage.toFixed(2) + '%';
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        field: 'zeroOptimizedCount', title: '没有刷量', width: '8%', align: 'left', sort: true, templet: function (d) {
+                            if (d.zeroOptimizedCount > 0) {
+                                return d.zeroOptimizedCount;
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        field: 'needOptimizeKeywordCount', title: '待刷数', width: '8%', align: 'left', sort: true, templet: function (d) {
+                            if (d.needOptimizeKeywordCount > 0) {
+                                return d.needOptimizeKeywordCount;
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        field: 'totalOptimizeCount', title: '总次数', width: '8%', align: 'left', sort: true, templet: function (d) {
+                            if (d.totalOptimizeCount > 0) {
+                                return d.totalOptimizeCount;
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        field: 'totalOptimizedCount', title: '已刷次数', width: '8%', align: 'left', sort: true, templet: function (d) {
+                            if (d.totalOptimizedCount > 0) {
+                                return d.totalOptimizedCount;
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        field: 'needOptimizeCount', title: '待刷次数', width: '7%', align: 'left', sort: true, templet: function (d) {
+                            if (d.needOptimizeCount > 0) {
+                                return d.needOptimizeCount;
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        field: 'avgOptimizedCount', title: '平均有效刷量', width: '9%', align: 'left', sort: true, templet: function (d) {
+                            if (d.avgOptimizedCount > 0) {
+                                let color = d.avgOptimizedCount <= 30 ? "red" : "black";
+                                return '<span style="color: ' + color + '">' + d.avgOptimizedCount.toFixed(2) + '</span>';
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        field: 'queryCount', title: '取词次数', width: '8%', align: 'left', sort: true, templet: function (d) {
+                            if (d.queryCount > 0) {
+                                return d.queryCount;
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        field: 'invalidOptimizePercentage', title: '无效占比', width: '7%', align: 'left', sort: true, templet: function (d) {
+                            if (d.invalidOptimizePercentage > 0) {
+                                let color = d.invalidOptimizePercentage > 20 ? "red" : (d.invalidOptimizePercentage > 10 ? "purple" : "#000");
+                                return '<span style="color: ' + color + '">' + d.invalidOptimizePercentage.toFixed(2) + '%</span>';
+                            } else {
+                                return '';
+                            }
+                        }
                     }
-                });
-            }
-            </@shiro.hasPermission>
+                ]],
+                height: 'full-108',
+                done: function (res, curr, count) {
+                }
+            });
+        }
+    </@shiro.hasPermission>
 
         element.on('tab(refreshTab)', function (data) {
             let d = data.elem.context.dataset;
