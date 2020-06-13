@@ -65,6 +65,13 @@
         AND ck.fStatus = 0
     </update>
 
+    <update id="updateCustomerKeyword">
+        UPDATE cms_keyword k, t_customer_keyword ck
+        SET ck.fKeyword = k.KEYWORD, ck.fUrl = k.URL, ck.fTitle = k.TITLE
+        WHERE k.CUSTOMER_KEYWORD_ID = ck.fUuid
+          AND k.STATUS = 4
+    </update>
+
     <delete id="deleteSaleDelKeywords">
         DELETE FROM cms_keyword
         WHERE CUSTOMER_KEYWORD_ID > ''
