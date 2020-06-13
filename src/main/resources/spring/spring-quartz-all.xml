@@ -36,9 +36,6 @@
 				<ref bean="cronTriggerGenerateRankingCurve" />
 				<ref bean="cronTriggerGenerateQZSettingKeywordCountCurve" />
 				<ref bean="cronTriggerAutoSaveTestDataStatisticsSchedule"/>
-				<ref bean="cronTriggerSyncQzCustomerKeyword" />
-				<ref bean="cronTriggerSyncPtCustomerKeyword" />
-				<ref bean="cronTriggerCheckPtCustomerKeywordStatus" />
 <!--				<ref bean="cronTriggerUserRefreshStatistic" />-->
 			</list>
 		</property>
@@ -425,42 +422,6 @@
 
 	<bean id="cronAutoSaveTestDataStatisticsSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="autoSaveTestDataStatisticsSchedule" />
-		<property name="targetMethod" value="runTask" />
-		<property name="concurrent" value="false" />
-	</bean>
-
-	<!-- 同步客户QZ关键词和曲线信息 -->
-	<bean id="cronTriggerSyncQzCustomerKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="cronTriggerSyncQzCustomerKeywordSchedule" />
-		<property name="cronExpression" value="0 25 23 * * ?" />
-	</bean>
-
-	<bean id="cronTriggerSyncQzCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="syncQzCustomerKeywordSchedule" />
-		<property name="targetMethod" value="runTask" />
-		<property name="concurrent" value="false" />
-	</bean>
-
-	<!-- 同步客户PT关键词信息 -->
-	<bean id="cronTriggerSyncPtCustomerKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="cronTriggerSyncPtCustomerKeywordSchedule" />
-		<property name="cronExpression" value="0 0/30 8-18 * * ?" />
-	</bean>
-
-	<bean id="cronTriggerSyncPtCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="syncPtCustomerKeywordSchedule" />
-		<property name="targetMethod" value="runTask" />
-		<property name="concurrent" value="false" />
-	</bean>
-
-	<!-- 监控客户pt关键词的状态变化 -->
-	<bean id="cronTriggerCheckPtCustomerKeywordStatus" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="cronTriggerCheckPtCustomerKeywordStatusSchedule" />
-		<property name="cronExpression" value="0 0/20 8-21 * * ?" />
-	</bean>
-
-	<bean id="cronTriggerCheckPtCustomerKeywordStatusSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="checkPtCustomerKeywordStatusSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>

@@ -53,7 +53,8 @@
             k.CAPTURE_STATUS = tpck.fCaptureStatus,
             k.CAPTURE_POSITION_TIME = tpck.fCapturePositionQueryTime,
             k.CITY = tpck.fCity,
-            k.CAPTURE_POSITION_CITY = tpck.fCapturePositionCity
+            k.CAPTURE_POSITION_CITY = tpck.fCapturePositionCity,
+            k.TITLE = tpck.fTitle
         WHERE k.CUSTOMER_KEYWORD_ID = tpck.fUuid
     </update>
 
