@@ -138,7 +138,7 @@ public class OperationCombineServiceImpl extends
     }
 
     @Override
-    public OperationCombine getOperationCombineForSearchEngineDefaule(String searchEngine, String terminal){
-        return operationCombineDao.getOperationCombineForSearchEngineDefaule(searchEngine, terminal);
+    public OperationCombine getOperationCombineForSearchEngineDefault(String searchEngine, String terminal){
+        return operationCombineDao.getOperationCombineForSearchEngineDefault(searchEngine, terminal);
     }
 }

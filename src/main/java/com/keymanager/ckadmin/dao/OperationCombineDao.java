@@ -34,8 +34,6 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
 
     /**
      * 获取操作组合
-     * @param optimizeGroupName
-     * @return
      */
     String getOperationCombineName(@Param("optimizeGroupName") String optimizeGroupName);
 
@@ -61,5 +59,5 @@ public interface OperationCombineDao extends BaseMapper<OperationCombine> {
     /**
      * 获取默认操作组合
      */
-    OperationCombine getOperationCombineForSearchEngineDefaule(@Param("searchEngine") String searchEngine, @Param("terminal") String terminal);
+    OperationCombine getOperationCombineForSearchEngineDefault(@Param("searchEngine") String searchEngine, @Param("terminal") String terminal);
 }

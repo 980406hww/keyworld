@@ -137,9 +137,10 @@
         UPDATE t_operation_combine SET fOperationCombineName = #{operationCombineName} WHERE fUuid = #{uuid}
     </update>
 
-    <select id="getOperationCombineForSearchEngineDefaule" resultType="com.keymanager.ckadmin.entity.OperationCombine">
+    <select id="getOperationCombineForSearchEngineDefault" resultType="com.keymanager.ckadmin.entity.OperationCombine">
         SELECT
             toc.fUuid AS 'uuid',
+            toc.fOperationCombineName AS 'operationCombineName',
             toc.fRemainingAccount AS 'remainingAccount',
             toc.fMaxInvalidCount AS 'maxInvalidCount',
             toc.fUpdateTime AS 'updateTime'
