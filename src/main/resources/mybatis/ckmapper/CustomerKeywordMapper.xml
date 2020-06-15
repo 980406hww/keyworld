@@ -1466,6 +1466,28 @@
         WHERE fUuid = #{uuid}
     </update>
 
+    <update id="updateNewPosition">
+        UPDATE
+        t_customer_keyword
+        SET
+        fCurrentPosition = #{position},
+        fInitialPosition = IFNULL(fInitialPosition, #{position}),
+        fCapturePositionQueryTime = IFNULL(#{capturePositionQueryTime}, fCapturePositionQueryTime),
+        fTodayFee = #{todayFee},
+        fCapturePositionIP = #{ip}, fCapturePositionCity = #{city},
+        <choose>
+            <when test="todayFee != null">
+                fLastReachStandardDate = CURRENT_DATE(),
+            </when>
+            <otherwise>
+                fLastReachStandardDate = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY ),
+            </otherwise>
+        </choose>
+        fCaptureStatus = 0,
+        fUpdateTime = NOW()
+        WHERE fUuid = #{uuid}
+    </update>
+
     <update id="updateCustomerKeywordQueryTime">
         UPDATE t_customer_keyword
         SET fCaptureStatus = 0,

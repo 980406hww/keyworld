@@ -53,7 +53,8 @@
             k.CAPTURE_STATUS = tpck.fCaptureStatus,
             k.CAPTURE_POSITION_TIME = tpck.fCapturePositionQueryTime,
             k.CITY = tpck.fCity,
-            k.CAPTURE_POSITION_CITY = tpck.fCapturePositionCity
+            k.CAPTURE_POSITION_CITY = tpck.fCapturePositionCity,
+            k.TITLE = tpck.fTitle
         WHERE k.CUSTOMER_KEYWORD_ID = tpck.fUuid
     </update>
 
@@ -62,6 +63,13 @@
         SET k.STATUS = 0
         WHERE k.CUSTOMER_KEYWORD_ID = ck.fUuid
         AND ck.fStatus = 0
+    </update>
+
+    <update id="updateCustomerKeyword">
+        UPDATE cms_keyword k, t_customer_keyword ck
+        SET ck.fKeyword = k.KEYWORD, ck.fUrl = k.URL, ck.fTitle = k.TITLE
+        WHERE k.CUSTOMER_KEYWORD_ID = ck.fUuid
+          AND k.STATUS = 4
     </update>
 
     <delete id="deleteSaleDelKeywords">

@@ -36,4 +36,9 @@ public interface PtCustomerKeywordDao extends BaseMapper<PtCustomerKeyword> {
     void cleanNotExistCustomerKeyword(@Param("customerNames") String[] customerNames);
 
     void updatePtKeywordCurrentPosition();
+
+    /**
+     * 客户更新过的词需同步keyword，url，title到t_customer_keyword
+     */
+    void updateCustomerKeyword();
 }

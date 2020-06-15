@@ -1949,48 +1949,27 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void getPTCustomerKeyword() {
-        // 获取当前时间
-        String currentDate = Utils.getCurrentDate();
-        // 读取配置表客户pt关键词日期和完成标识 1: 开  0: 关  一天同步一次
+        // 读取配置表客户pt关键词同步标识  1: 开  0: 关
         Config ptFinishedConfig = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD_SWITCH, Constants.CONFIG_KEY_SYNC_CUSTOMER_PT_KEYWORD);
         if (null != ptFinishedConfig) {
-            if (!currentDate.equals(ptFinishedConfig.getValue())) {
+            if ("1".equals(ptFinishedConfig.getValue())) {
                 // 读取配置表需要同步pt关键词的客户信息
                 Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD, Constants.CONFIG_KEY_SYNC_CUSTOMER_NAME);
                 if (null != config) {
                     String customerNameStr = config.getValue();
                     if (StringUtil.isNotNullNorEmpty(customerNameStr)) {
                         String[] customerNames = customerNameStr.replaceAll(" ", "").split(",");
-                        boolean updateKeyFlag = false;
-                        List<Long> cusIds = new ArrayList<>();
                         for (String customerName : customerNames) {
-                            updateKeyFlag = false;
                             // 根据客户id同步
                             com.keymanager.ckadmin.entity.Customer customer = customerService2.selectByName(customerName);
                             if (null != customer) {
-                                // 抓排名任务是否完成
-                                int count = captureRankJobService.checkCaptureJobCompletedByCustomerUuid(customer.getUuid());
-                                if (count > 0) {
-                                    break;
-                                }
-                                updateKeyFlag = true;
-                                cusIds.add(customer.getUuid());
-                            }
-                        }
-
-                        if (updateKeyFlag && CollectionUtils.isNotEmpty(cusIds)) {
-                            for (Long cusId : cusIds) {
-                                // 根据客户id，将数据临时存储在中间表 insert into
-                                customerKeywordDao.migrationRecordToPtCustomerKeyword(cusId, "pt");
-                                // 更新排名 update
-                                ptCustomerKeywordService.updatePtKeywordCurrentPosition();
                                 // 清空临时表数据 truncate
                                 customerKeywordDao.cleanPtCustomerKeyword();
+                                // 根据客户id，将数据临时存储在中间表 insert into
+                                customerKeywordDao.migrationRecordToPtCustomerKeyword(customer.getUuid(), "pt");
+                                // 更新排名 update
+                                ptCustomerKeywordService.updatePtKeywordCurrentPosition();
                             }
-
-                            // 关闭开关
-                            ptFinishedConfig.setValue(currentDate);
-                            configService.updateConfig(ptFinishedConfig);
                         }
                     }
                 }
@@ -1998,5 +1977,3 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 }
-
-

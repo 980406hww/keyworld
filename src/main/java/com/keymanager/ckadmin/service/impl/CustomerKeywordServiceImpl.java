@@ -927,7 +927,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         page.setRecords(qzRateKeywordCountVos);
         return page;
     }
-    
+
     @Override
     public void updateSelectFailReason(KeywordCriteria keywordCriteria) {
         customerKeywordDao.updateSelectFailReason(keywordCriteria);
@@ -1021,9 +1021,12 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime, String ip, String city) {
+    public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime, String ip, String city,String captureType) {
         Double todayFee = null;
         CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordFee(customerKeywordUuid);
+        //captureType
+        //saveBest:会更新达标日期和金额;一天多次采集取最好
+        //update:会更新达标日期和金额;一天多次采集取当前
         if (position > 0 && position <= 10) {
             if (customerKeyword.getPositionFirstFee() != null && customerKeyword.getPositionFirstFee() > 0 && position == 1) {
                 todayFee = customerKeyword.getPositionFirstFee();
@@ -1039,10 +1042,14 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                 todayFee = customerKeyword.getPositionFirstPageFee();
             }
         }
-        customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee, ip, city);
+        if ("update".equals(captureType)) {
+            customerKeywordDao.updateNewPosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee, ip, city);
+        } else {
+            customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee, ip, city);
+        }
         if (capturePositionQueryTime != null) {
             ckPositionSummaryService.savePositionSummary(customerKeywordUuid, customerKeyword.getSearchEngine(), customerKeyword.getTerminalType(),
-                customerKeyword.getCustomerUuid(), customerKeyword.getType(), position);
+                    customerKeyword.getCustomerUuid(), customerKeyword.getType(), position);
         }
     }
 

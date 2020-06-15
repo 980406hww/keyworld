@@ -40,7 +40,7 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
             if (StringUtil.isNotNullNorEmpty(customerNameStr)) {
                 String[] customerNames = customerNameStr.replaceAll(" ", "").split(",");
                 for (String customerName : customerNames) {
-                    // 处理新增状态的关键词
+                    // 处理新增状态的关键词 status = 2
                     List<PtCustomerKeyword> ptKeywords = ptCustomerKeywordDao.selectNewPtKeyword(customerName);
                     if (CollectionUtils.isNotEmpty(ptKeywords)) {
                         Customer customer = customerService.selectByName(customerName);
@@ -51,14 +51,17 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
                     }
                 }
 
-                // 处理已删除的关键词
+                // 处理有更新状态的关键词 status = 4 keyword, url, title
+                ptCustomerKeywordDao.updateCustomerKeyword();
+
+                // 处理已删除的关键词 status = 3
                 List<Long> customerKeywordUuids = ptCustomerKeywordDao.selectCustomerDelKeywords();
                 if (CollectionUtils.isNotEmpty(customerKeywordUuids)) {
                     customerKeywordService.deleteBatchIds(customerKeywordUuids);
                 }
                 ptCustomerKeywordDao.deleteSaleDelKeywords();
 
-                // 处理暂不操作的词
+                // 处理暂不操作的词 status = 0
                 ptCustomerKeywordDao.updateCustomerKeywordDiffStatus();
 
                 // 清理不再需要同步的客户数据
