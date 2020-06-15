@@ -927,7 +927,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         page.setRecords(qzRateKeywordCountVos);
         return page;
     }
-    
+
     @Override
     public void updateSelectFailReason(KeywordCriteria keywordCriteria) {
         customerKeywordDao.updateSelectFailReason(keywordCriteria);
@@ -1021,10 +1021,14 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime, String ip, String city) {
+    public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime, String ip, String city,String captureType) {
         Double todayFee = null;
         CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordFee(customerKeywordUuid);
-        if (position > 0 && position <= 10) {
+        //captureType
+        //job:抓取任务,会更新达标日期和金额;一天多次采集取最好
+        //update:可以更新当前已经达标的数据;一天多次采集取当前
+        //queue:队列抓取，只更新排名
+        if (position > 0 && position <= 10 && ("job".equals(captureType) || "update".equals(captureType))) {
             if (customerKeyword.getPositionFirstFee() != null && customerKeyword.getPositionFirstFee() > 0 && position == 1) {
                 todayFee = customerKeyword.getPositionFirstFee();
             } else if (customerKeyword.getPositionSecondFee() != null && customerKeyword.getPositionSecondFee() > 0 && position == 2) {
@@ -1039,10 +1043,16 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                 todayFee = customerKeyword.getPositionFirstPageFee();
             }
         }
-        customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee, ip, city);
+        if ("queue".equals(captureType)) {
+            customerKeywordDao.updateOnlyPosition(customerKeywordUuid, position, capturePositionQueryTime, ip, city);
+        } else if ("update".equals(captureType)) {
+            customerKeywordDao.updateNewPosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee, ip, city);
+        } else {
+            customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee, ip, city);
+        }
         if (capturePositionQueryTime != null) {
             ckPositionSummaryService.savePositionSummary(customerKeywordUuid, customerKeyword.getSearchEngine(), customerKeyword.getTerminalType(),
-                customerKeyword.getCustomerUuid(), customerKeyword.getType(), position);
+                    customerKeyword.getCustomerUuid(), customerKeyword.getType(), position);
         }
     }
 
