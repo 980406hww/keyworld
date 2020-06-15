@@ -1949,7 +1949,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     }
 
     public void getPTCustomerKeyword() {
-
         // 读取配置表客户pt关键词同步标识  1: 开  0: 关
         Config ptFinishedConfig = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD_SWITCH, Constants.CONFIG_KEY_SYNC_CUSTOMER_PT_KEYWORD);
         if (null != ptFinishedConfig) {
@@ -1964,12 +1963,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                             // 根据客户id同步
                             com.keymanager.ckadmin.entity.Customer customer = customerService2.selectByName(customerName);
                             if (null != customer) {
+                                // 清空临时表数据 truncate
+                                customerKeywordDao.cleanPtCustomerKeyword();
                                 // 根据客户id，将数据临时存储在中间表 insert into
                                 customerKeywordDao.migrationRecordToPtCustomerKeyword(customer.getUuid(), "pt");
                                 // 更新排名 update
                                 ptCustomerKeywordService.updatePtKeywordCurrentPosition();
-                                // 清空临时表数据 truncate
-                                customerKeywordDao.cleanPtCustomerKeyword();
                             }
                         }
                     }
