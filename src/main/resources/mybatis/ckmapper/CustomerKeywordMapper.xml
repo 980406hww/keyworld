@@ -1488,19 +1488,6 @@
         WHERE fUuid = #{uuid}
     </update>
 
-    <update id="updateOnlyPosition">
-        UPDATE
-        t_customer_keyword
-        SET
-        fCurrentPosition = #{position},
-        fInitialPosition = IFNULL(fInitialPosition, #{position}),
-        fCapturePositionQueryTime = IFNULL(#{capturePositionQueryTime}, fCapturePositionQueryTime),
-        fCapturePositionIP = #{ip}, fCapturePositionCity = #{city},
-        fCaptureStatus = 0,
-        fUpdateTime = NOW()
-        WHERE fUuid = #{uuid}
-    </update>
-
     <update id="updateCustomerKeywordQueryTime">
         UPDATE t_customer_keyword
         SET fCaptureStatus = 0,
