@@ -1025,9 +1025,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         Double todayFee = null;
         CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordFee(customerKeywordUuid);
         //captureType
-        //job:抓取任务,会更新达标日期和金额;一天多次采集取最好
-        //update:可以更新当前已经达标的数据;一天多次采集取当前
-        //queue:队列抓取，只更新排名
+        //saveBest:会更新达标日期和金额;一天多次采集取最好
+        //update:会更新达标日期和金额;一天多次采集取当前
         if (position > 0 && position <= 10) {
             if (customerKeyword.getPositionFirstFee() != null && customerKeyword.getPositionFirstFee() > 0 && position == 1) {
                 todayFee = customerKeyword.getPositionFirstFee();
