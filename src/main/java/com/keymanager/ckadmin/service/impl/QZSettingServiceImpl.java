@@ -598,19 +598,19 @@ public class QZSettingServiceImpl extends
         }
         captureRankJobService.deleteCaptureRankJob(uuid, null);
         Map<String, String> groupMap = qzSettingDao.getPCPhoneGroupByUuid(uuid);
-        String pcGroup = groupMap.get("pcGroup");
-        if (pcGroup != null && customerKeywordService.getCustomerKeywordCountByOptimizeGroupName(pcGroup) == 0) {
-            groupService.deleteByGroupName(pcGroup);
-        }
-        String phoneGroup = groupMap.get("phoneGroup");
-        if (phoneGroup != null && customerKeywordService.getCustomerKeywordCountByOptimizeGroupName(pcGroup) == 0) {
-            groupService.deleteByGroupName(phoneGroup);
+        if (!groupMap.isEmpty()) {
+            String pcGroup = groupMap.get("pcGroup");
+            if (pcGroup != null && customerKeywordService.getCustomerKeywordCountByOptimizeGroupName(pcGroup) == 0) {
+                groupService.deleteByGroupName(pcGroup);
+            }
+            String phoneGroup = groupMap.get("phoneGroup");
+            if (phoneGroup != null && customerKeywordService.getCustomerKeywordCountByOptimizeGroupName(pcGroup) == 0) {
+                groupService.deleteByGroupName(phoneGroup);
+            }
         }
         qzCategoryTagService.deleteById(uuid);
         saveQzChargeMon(uuid, username, 4);
         userNoteBookService.deleteUserNoteBook(uuid);
-        // 删除同步关键词表的对应数据
-        customerKeywordService.deleteSysCustomerKeywordByQzId(uuid);
         qzSettingDao.deleteById(uuid);
     }
 
