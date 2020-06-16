@@ -908,7 +908,6 @@
                 url: '/internal/qzsetting/getQZSettingSearchEngineMap/' + terminal,
                 type: 'get',
                 asyns: false,
-                // 用于设置响应体的类型 注意 跟 data 参数没关系！！！
                 dataType: 'json',
                 success: function (res) {
                     if (res.code === 200) {
@@ -1147,7 +1146,7 @@
                 font.css("background-color", "mediumseagreen");
             }
 
-            initQZSettingKeywordCount(td.find(".other-rank_2"), data["customerKeywordCount"], data["categoryTagNames"], data["operationCombineName"]);
+            initQZSettingKeywordCount(td.find(".other-rank_2"), data["customerKeywordCount"], data["categoryTagNames"], data["operationCombineName"], data["isDefaultCombine"]);
 
             if (data['aiZhan'] !== undefined) {
                 generateQZKeywordTrendCharts(td.find("#keywordTrendCharts")[0], data['aiZhan']);
@@ -2050,7 +2049,7 @@
             keywordRecordCharts.setOption(option);
         }
 
-        function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames, operationCombineName) {
+        function initQZSettingKeywordCount(div, customerKeywordCount, categoryTagNames, operationCombineName, isDefaultCombine) {
             if (customerKeywordCount) {
                 div.parent().find(".other-rank .line1").find("div[name='newCount'] a").text(customerKeywordCount["newCount"]);
                 div.parent().find(".other-rank .line1").find("div[name='activeCount'] a").text(customerKeywordCount["activeCount"]);
@@ -2070,9 +2069,11 @@
             if (operationCombineName) {
                 div.find("#operationCombine span").prop("title", operationCombineName);
                 div.find("#operationCombine span a").text(operationCombineName);
+                if (isDefaultCombine) {
+                    div.find("#operationCombine span a").css("color", "red");
+                }
             }
         }
-
 
         function toDateFormat(time) {
             return time.getFullYear() + "-" +

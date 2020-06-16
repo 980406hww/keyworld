@@ -1296,7 +1296,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                                 errorFlag.append("6");
                                 groupSetting = groupSettingService.getGroupSetting(operationCombine);
                             }else {
-                                OperationCombine defaultOperationCombine = operationCombineService.getOperationCombineForSearchEngineDefaule(keywordVO.getSearchEngine(), machineInfo.getTerminalType());
+                                OperationCombine defaultOperationCombine = operationCombineService.getOperationCombineForSearchEngineDefault(keywordVO.getSearchEngine(), machineInfo.getTerminalType());
                                 if (defaultOperationCombine != null){
                                     errorFlag.append("6");
                                     groupSetting = groupSettingService.getGroupSetting(defaultOperationCombine);

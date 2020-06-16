@@ -42,5 +42,5 @@ public interface OperationCombineService extends IService<OperationCombine> {
 
     void updateSearchEngine(OperationCombine oc);
 
-    public OperationCombine getOperationCombineForSearchEngineDefaule(String searchEngine, String terminal);
+    public OperationCombine getOperationCombineForSearchEngineDefault(String searchEngine, String terminal);
 }

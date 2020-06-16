@@ -9,17 +9,7 @@ import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSaveCustomerKeywordsCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingSearchCriteria;
 import com.keymanager.ckadmin.dao.QZSettingDao;
-import com.keymanager.ckadmin.entity.CaptureRankJob;
-import com.keymanager.ckadmin.entity.Customer;
-import com.keymanager.ckadmin.entity.CustomerExcludeKeyword;
-import com.keymanager.ckadmin.entity.CustomerKeyword;
-import com.keymanager.ckadmin.entity.QZCaptureTitleLog;
-import com.keymanager.ckadmin.entity.QZCategoryTag;
-import com.keymanager.ckadmin.entity.QZChargeRule;
-import com.keymanager.ckadmin.entity.QZKeywordRankInfo;
-import com.keymanager.ckadmin.entity.QZOperationType;
-import com.keymanager.ckadmin.entity.QZSetting;
-import com.keymanager.ckadmin.entity.QzChargeMon;
+import com.keymanager.ckadmin.entity.*;
 import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.QZCaptureTitleLogStatusEnum;
 import com.keymanager.ckadmin.enums.QZSettingStatusEnum;
@@ -247,7 +237,18 @@ public class QZSettingServiceImpl extends
 
     private void getQZSettingGroupInfo(Map<String, Object> rankInfoVoMap, long uuid, String terminalType, String optimizeGroupName, Long qzUuid) {
         rankInfoVoMap.put("customerKeywordCount", qzSettingDao.getQZSettingGroupInfo(qzUuid, terminalType));
-        rankInfoVoMap.put("operationCombineName", operationCombineService.getOperationCombineName(optimizeGroupName));
+        String combineName = operationCombineService.getOperationCombineName(optimizeGroupName);
+        boolean isDefaultCombine = false;
+        if (combineName == null) {
+            QZSetting qzSetting = qzSettingDao.selectById(uuid);
+            OperationCombine operationCombine = operationCombineService.getOperationCombineForSearchEngineDefault(qzSetting.getSearchEngine(), terminalType);
+            if (null != operationCombine) {
+                combineName = operationCombine.getOperationCombineName();
+                isDefaultCombine = true;
+            }
+        }
+        rankInfoVoMap.put("operationCombineName", combineName);
+        rankInfoVoMap.put("isDefaultCombine", isDefaultCombine);
         rankInfoVoMap.put("categoryTagNames", qzCategoryTagService.findTagNameByQZSettingUuid(uuid));
         rankInfoVoMap.put("standardTime", qzOperationTypeService.getStandardTime(uuid, terminalType));
     }
