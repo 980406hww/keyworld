@@ -33,6 +33,19 @@ public class Utils {
 		}
 	}
 
+	public static long getIntervalMines(String str) {
+		//时间处理类
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		long currentTime = System.currentTimeMillis();
+		try {
+			long time = sdf.parse(str).getTime();
+			return (currentTime - time) / 1000 / 60;
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
 	public static int getIntervalDays(Date compareDate, Date date) {
 
 		Calendar calendar = Calendar.getInstance();

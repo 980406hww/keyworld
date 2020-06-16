@@ -39,17 +39,6 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
             String customerNameStr = config.getValue();
             if (StringUtil.isNotNullNorEmpty(customerNameStr)) {
                 String[] customerNames = customerNameStr.replaceAll(" ", "").split(",");
-                for (String customerName : customerNames) {
-                    // 处理新增状态的关键词 status = 2
-                    List<PtCustomerKeyword> ptKeywords = ptCustomerKeywordDao.selectNewPtKeyword(customerName);
-                    if (CollectionUtils.isNotEmpty(ptKeywords)) {
-                        Customer customer = customerService.selectByName(customerName);
-                        // 类似列表上传关键词，新增关键词并激活
-                        customerKeywordService.addCustomerKeywordsFromSeoSystem(ptKeywords, customer.getUuid());
-                        // 修改新增关键词的状态为激活并关联customerKeywordId
-                        this.updateBatchById(ptKeywords);
-                    }
-                }
 
                 // 处理有更新状态的关键词 status = 4 keyword, url, title
                 ptCustomerKeywordDao.updateCustomerKeyword();
@@ -66,6 +55,18 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
 
                 // 清理不再需要同步的客户数据
                 ptCustomerKeywordDao.cleanNotExistCustomerKeyword(customerNames);
+
+                for (String customerName : customerNames) {
+                    // 处理新增状态的关键词 status = 2
+                    List<PtCustomerKeyword> ptKeywords = ptCustomerKeywordDao.selectNewPtKeyword(customerName);
+                    if (CollectionUtils.isNotEmpty(ptKeywords)) {
+                        Customer customer = customerService.selectByName(customerName);
+                        // 类似列表上传关键词，新增关键词并激活
+                        customerKeywordService.addCustomerKeywordsFromSeoSystem(ptKeywords, customer.getUuid());
+                        // 修改新增关键词的状态为激活并关联customerKeywordId
+                        this.updateBatchById(ptKeywords);
+                    }
+                }
             }
         }
     }
