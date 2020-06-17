@@ -174,9 +174,27 @@
         LIMIT 1
     </select>
 
-    <select id="checkCaptureJobCompletedByCustomerUuid" resultType="java.lang.Integer">
-        select count(1) from t_capture_rank_job
-        where fCustomerUuid = #{customerUuid} and fCaptureRankJobStatus = 1 and (fEndTime &lt; current_date() or fEndTime is null)
+    <select id="checkCaptureJobCompletedByCustomerUuid" resultType="java.lang.Boolean">
+        SELECT IF(jobCount = completedCount, TRUE, FALSE) as result
+        FROM (
+             SELECT (
+                        select COUNT(1)
+                        from t_capture_rank_job
+                        where fCustomerUuid = #{customerUuid}
+                          and fCaptureRankJobStatus = 1
+                          and fExectionTime &lt; current_time()
+                    ) AS jobCount,
+                    (
+                        select COUNT(1)
+                        from t_capture_rank_job
+                        where fCustomerUuid = #{customerUuid}
+                          and fCaptureRankJobStatus = 1
+                          and fExectionTime &lt; current_time()
+                          and fLastExecutionDate = current_date()
+                          and fEndTime &gt; current_date()
+                          and fExectionStatus = 'Complete'
+                    ) AS completedCount
+         ) AS counts
     </select>
 
     <update id="updateCaptureRankJobsStatus">

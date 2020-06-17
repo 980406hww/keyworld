@@ -1960,15 +1960,29 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     if (StringUtil.isNotNullNorEmpty(customerNameStr)) {
                         String[] customerNames = customerNameStr.replaceAll(" ", "").split(",");
                         for (String customerName : customerNames) {
-                            // 根据客户id同步
-                            com.keymanager.ckadmin.entity.Customer customer = customerService2.selectByName(customerName);
-                            if (null != customer) {
-                                // 清空临时表数据 truncate
-                                customerKeywordDao.cleanPtCustomerKeyword();
-                                // 根据客户id，将数据临时存储在中间表 insert into
-                                customerKeywordDao.migrationRecordToPtCustomerKeyword(customer.getUuid(), "pt");
-                                // 更新排名 update
-                                ptCustomerKeywordService.updatePtKeywordCurrentPosition();
+                            // 读取客户记录同步时间的信息
+                            Config lastSyncConfig = configService.getConfig(Constants.CONFIG_TYPE_SYNC_PT_KEYWORD_TIME, customerName);
+                            // 上次同步时间是否超过30分钟
+                            boolean overHalfAnHour = Utils.getIntervalMines(lastSyncConfig.getValue()) >= 30;
+                            if (overHalfAnHour) {
+                                com.keymanager.ckadmin.entity.Customer customer = customerService2.selectByName(customerName);
+                                if (null != customer) {
+                                    // 根据客户id判断当前时间之前的任务是否完成
+                                    if (captureRankJobService.checkCaptureJobCompletedByCustomerUuid(customer.getUuid())) {
+                                        // 清空临时表数据 truncate
+                                        customerKeywordDao.cleanPtCustomerKeyword();
+                                        // 根据客户id，将数据临时存储在中间表 insert into
+                                        customerKeywordDao.migrationRecordToPtCustomerKeyword(customer.getUuid(), "pt");
+                                        // 更新排名 update
+                                        ptCustomerKeywordService.updatePtKeywordCurrentPosition();
+
+                                        // 当前时间
+                                        String currentTime = Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy-MM-dd HH:mm");
+                                        // 更新同步时间
+                                        lastSyncConfig.setValue(currentTime);
+                                        configService.updateConfig(lastSyncConfig);
+                                    }
+                                }
                             }
                         }
                     }
