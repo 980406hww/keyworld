@@ -1967,7 +1967,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                             if (overHalfAnHour) {
                                 com.keymanager.ckadmin.entity.Customer customer = customerService2.selectByName(customerName);
                                 if (null != customer) {
-                                    // 根据客户id判断当前时间段（两个小时）的任务是否完成
+                                    // 根据客户id判断当前时间之前的任务是否完成
                                     if (captureRankJobService.checkCaptureJobCompletedByCustomerUuid(customer.getUuid())) {
                                         // 清空临时表数据 truncate
                                         customerKeywordDao.cleanPtCustomerKeyword();
