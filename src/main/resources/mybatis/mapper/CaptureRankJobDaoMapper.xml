@@ -181,13 +181,15 @@
                         select COUNT(1)
                         from t_capture_rank_job
                         where fCustomerUuid = #{customerUuid}
-                          and fExectionTime BETWEEN TIMEDIFF(current_time(), '2:00:00') AND current_time()
+                          and fCaptureRankJobStatus = 1
+                          and fExectionTime &lt; current_time()
                     ) AS jobCount,
                     (
                         select COUNT(1)
                         from t_capture_rank_job
                         where fCustomerUuid = #{customerUuid}
-                          and fExectionTime BETWEEN TIMEDIFF(current_time(), '2:00:00') AND current_time()
+                          and fCaptureRankJobStatus = 1
+                          and fExectionTime &lt; current_time()
                           and fLastExecutionDate = current_date()
                           and fEndTime &gt; current_date()
                           and fExectionStatus = 'Complete'
