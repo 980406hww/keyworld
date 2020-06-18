@@ -11,7 +11,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 @Service(value = "productInfoService")
-public class ProdcutInfoServiceImpl implements ProductInfoService {
+public class ProductInfoServiceImpl implements ProductInfoService {
 
     @Resource
     private ProductInfoDao productInfoDao;

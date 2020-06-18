@@ -550,7 +550,7 @@ public class MachineInfoController extends SpringMVCBaseController {
                 machineInfoCriteria.setSwitchGroups(switchGroups);
             }
             performanceService.addPerformanceLog(machineInfoCriteria.getTerminalType() + ":searchCustomerKeywords", System.currentTimeMillis() - startMilleSeconds, null);
-            page = machineInfoService.searchMachineInfos(page, machineInfoCriteria, true);
+            page = machineInfoService.searchMachineInfos(page, machineInfoCriteria);
             List<MachineInfo> machineInfos = page.getRecords();
             resultBean.setCount(page.getTotal());
             resultBean.setData(machineInfos);

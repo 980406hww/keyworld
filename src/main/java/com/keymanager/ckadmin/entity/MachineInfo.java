@@ -8,12 +8,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.keymanager.util.Utils;
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @TableName(value = "t_machine_info")
-public class MachineInfo {
+public class MachineInfo implements Serializable {
 
     private static final long serialVersionUID = -7590694637780491359L;
     @NotBlank
@@ -190,11 +191,21 @@ public class MachineInfo {
     @TableField(exist = false)
     private boolean orange;
 
-    @TableField(exist=false)
+    @TableField(exist = false)
     private double price;
 
-    @TableField(exist=false)
+    @TableField(exist = false)
     private String productName;
+    /**
+     * 性价比预估值
+     */
+    @TableField(exist = false)
+    private int timesForOneRMB;
+    /**
+     * 成功率
+     */
+    @TableField(exist = false)
+    private double successRatio;
 
     public String getClientID() {
         return clientID;
@@ -672,5 +683,21 @@ public class MachineInfo {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public int getTimesForOneRMB() {
+        return timesForOneRMB;
+    }
+
+    public void setTimesForOneRMB(int timesForOneRMB) {
+        this.timesForOneRMB = timesForOneRMB;
+    }
+
+    public double getSuccessRatio() {
+        return successRatio;
+    }
+
+    public void setSuccessRatio(double successRatio) {
+        this.successRatio = successRatio;
     }
 }

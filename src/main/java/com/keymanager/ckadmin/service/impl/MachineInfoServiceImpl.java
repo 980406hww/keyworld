@@ -7,10 +7,12 @@ import com.keymanager.ckadmin.dao.MachineInfoDao;
 import com.keymanager.ckadmin.entity.*;
 import com.keymanager.ckadmin.enums.ClientStartUpStatusEnum;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
+import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.MachineInfoService;
 import com.keymanager.ckadmin.service.ProductInfoService;
 import com.keymanager.ckadmin.vo.*;
+import com.keymanager.util.Constants;
 import com.keymanager.util.DES;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
@@ -19,11 +21,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -40,6 +44,9 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
 
     @Resource
     private ProductInfoService productInfoService;
+    
+    @Resource(name = "configService2")
+    private ConfigService configService;
 
     @Override
     public Integer getUpgradingMachineCount(ClientUpgrade clientUpgrade) {
@@ -56,26 +63,40 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
     }
 
     @Override
-    public Page<MachineInfo> searchMachineInfos(Page<MachineInfo> page, MachineInfoCriteria machineInfoCriteria, boolean normalSearchFlag) {
-        if (normalSearchFlag) {
-            page.setRecords(machineInfoDao.searchMachineAndProductInfos(page, machineInfoCriteria));
-        } else {
-            page.setRecords(machineInfoDao.searchBadMachineInfo(page, machineInfoCriteria));
-        }
-        Map<String, String> passwordMap = new HashMap<>();
-        for (MachineInfo machineInfo : page.getRecords()) {
-            String password = passwordMap.get(machineInfo.getPassword());
-            if (password == null) {
-                if (StringUtil.isNullOrEmpty(machineInfo.getPassword())) {
-                    password = "";
-                } else if (machineInfo.getPassword().equals("doshows123")) {
-                    password = "8e587919308fcab0c34af756358b9053";
-                } else {
-                    password = DES.vncPasswordEncode(machineInfo.getPassword());
+    public Page<MachineInfo> searchMachineInfos(Page<MachineInfo> page, MachineInfoCriteria machineInfoCriteria) throws ParseException {
+        page.setRecords(machineInfoDao.searchMachineAndProductInfos(page, machineInfoCriteria));
+        if (CollectionUtils.isNotEmpty(page.getRecords())) {
+            Map<String, String> passwordMap = new HashMap<>(16);
+            // 获取清空机器操作次数和成功次数的日期
+            Config config = configService.getConfig(Constants.CONFIG_TYPE_CLEAN_TIME, Constants.CONFIG_KEY_CLEAN_NAME);
+            if (null != config) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String configValue = config.getValue();
+                Date cleanDate = sdf.parse(configValue);
+                for (MachineInfo machineInfo : page.getRecords()) {
+                    String password = passwordMap.get(machineInfo.getPassword());
+                    if (password == null) {
+                        if (StringUtil.isNullOrEmpty(machineInfo.getPassword())) {
+                            password = "";
+                        } else if (machineInfo.getPassword().equals("doshows123")) {
+                            password = "8e587919308fcab0c34af756358b9053";
+                        } else {
+                            password = DES.vncPasswordEncode(machineInfo.getPassword());
+                        }
+                        passwordMap.put(machineInfo.getPassword(), password);
+                    }
+                    int days;
+                    // 计算运行天数
+                    if (machineInfo.getStartUpTime().compareTo(cleanDate) < 0) {
+                        days = Utils.getIntervalDays(machineInfo.getStartUpTime(), new Date());
+                    } else {
+                        days = Utils.getIntervalDays(cleanDate, new Date());
+                    }
+                    machineInfo.setTimesForOneRMB((int) (machineInfo.getOptimizationSucceedCount() / (machineInfo.getPrice() / 30 * days)));
+                    machineInfo.setSuccessRatio(1.00 * machineInfo.getOptimizationSucceedCount() / machineInfo.getOptimizationTotalCount());
+                    machineInfo.setPassword(password);
                 }
-                passwordMap.put(machineInfo.getPassword(), password);
             }
-            machineInfo.setPassword(password);
         }
         return page;
     }
