@@ -1,7 +1,6 @@
 package com.keymanager.ckadmin.schedule;
 
 import com.keymanager.ckadmin.service.UserRefreshStatisticService;
-import com.keymanager.monitoring.shedule.TerminalRefreshStatInfoSchedule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -11,7 +10,7 @@ import javax.annotation.Resource;
 @Component
 public class UserRefreshStatisticSchedule {
 
-    private static Logger logger = LoggerFactory.getLogger(TerminalRefreshStatInfoSchedule.class);
+    private static Logger logger = LoggerFactory.getLogger(UserRefreshStatisticSchedule.class);
 
     @Resource(name="userRefreshStatisticService")
     private UserRefreshStatisticService userRefreshStatisticService;

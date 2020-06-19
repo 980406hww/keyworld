@@ -274,73 +274,73 @@
         t_machine_info mi
         LEFT JOIN t_product_info pi
         ON mi.fProductID = pi.fUuid
-        WHERE mi.fTerminalType = #{machineInfoCriteria.terminalType}
-        <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''">AND
-            mi.fClientID like '${machineInfoCriteria.clientID}%'
-        </if>
-        <if test="machineInfoCriteria.productID !=null and machineInfoCriteria.productID !='' ">
-            AND mi.fProductID =#{machineInfoCriteria.productID}
-        </if>
-        <if test="machineInfoCriteria.machineGroup != null and machineInfoCriteria.machineGroup != ''">
-            AND mi.fMachineGroup like '${machineInfoCriteria.machineGroup}%'
-        </if>
-        <if test="machineInfoCriteria.upgradeFailedReason != null and machineInfoCriteria.upgradeFailedReason != ''">
-            AND mi.fUpgradeFailedReason like '${machineInfoCriteria.upgradeFailedReason}%'
-        </if>
-        <if test="machineInfoCriteria.version != null and machineInfoCriteria.version != ''">AND
-            mi.fVersion like concat(#{machineInfoCriteria.version},'%')
-        </if>
-        <if test="machineInfoCriteria.targetVersion != null and machineInfoCriteria.targetVersion != ''">
-            AND mi.fTargetVersion like concat(#{machineInfoCriteria.targetVersion},'%')
-        </if>
-        <if test="machineInfoCriteria.city != null and machineInfoCriteria.city != ''">AND mi.fCity like
-            concat(#{machineInfoCriteria.city},'%')
-        </if>
-        <if test="machineInfoCriteria.valid != null and machineInfoCriteria.valid != ''">AND mi.fValid =
-            #{machineInfoCriteria.valid}
-        </if>
-        <if test="machineInfoCriteria.hasProblem != null">AND (mi.fContinuousFailCount &gt; 5 OR
-            mi.fTenMinsLastVisitTime &lt; NOW()) and mi.fValid = 1
-        </if>
-        <if test="machineInfoCriteria.renewal != null">AND mi.fRenewalDate &lt; DATE_ADD(CURRENT_DATE(),
-            INTERVAL -3 DAY) and mi.fValid = 1
-        </if>
-        <if test="machineInfoCriteria.noMachineGroup != null">AND (mi.fMachineGroup is null or
-            mi.fMachineGroup = '')
-        </if>
-        <if test="machineInfoCriteria.hasMachineGroup != null">AND mi.fMachineGroup > ''</if>
-        <if test="machineInfoCriteria.startUpStatus != null and machineInfoCriteria.startUpStatus != ''">
-            AND mi.fStartUpStatus = #{machineInfoCriteria.startUpStatus}
-        </if>
-        <if test="machineInfoCriteria.runningProgramType != null and machineInfoCriteria.runningProgramType != ''">
-            AND mi.fRunningProgramType = #{machineInfoCriteria.runningProgramType}
-        </if>
-        <if test="machineInfoCriteria.noVNC != null">AND (mi.fHost is null or mi.fHost = '')</if>
-        <if test="machineInfoCriteria.noUpgrade != null">AND (mi.fVersion &lt;&gt; mi.fTargetVersion)
-        </if>
-        <if test="machineInfoCriteria.noChangePassword != null">AND (mi.fPassword &lt;&gt;
-            mi.fTargetVPSPassword)
-        </if>
-        <if test="machineInfoCriteria.startUpClient != null">AND mi.fDownloadProgramType > ''</if>
-        <if test="machineInfoCriteria.vpsBackendSystemComputerID != null and machineInfoCriteria.vpsBackendSystemComputerID != ''">
-            AND mi.fVPSBackendSystemComputerID = #{machineInfoCriteria.vpsBackendSystemComputerID}
-        </if>
-        <if test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''">
-            AND mi.fSwitchGroupName = #{machineInfoCriteria.switchGroupName}
-        </if>
-        <if test="machineInfoCriteria.allowSwitchGroup != null and machineInfoCriteria.allowSwitchGroup != ''">
-            AND mi.fAllowSwitchGroup = #{machineInfoCriteria.allowSwitchGroup}
-        </if>
-        <if test="machineInfoCriteria.gtMemory != null and machineInfoCriteria.gtMemory != ''">AND mi.fMemory &gt;= #{machineInfoCriteria.gtMemory}</if>
-        <if test="machineInfoCriteria.ltMemory != null and machineInfoCriteria.ltMemory != ''">AND mi.fMemory &lt;= #{machineInfoCriteria.ltMemory}</if>
-        <if test="machineInfoCriteria.switchGroups != null">AND mi.fSwitchGroupName IN
-            <foreach collection="machineInfoCriteria.switchGroups" item="switchGroup" open="(" close=")" separator=",">
-                #{switchGroup}
-            </foreach>
-        </if>
-        <if test="machineInfoCriteria.orderBy != null and machineInfoCriteria.orderBy != ''">
-            ORDER BY ${machineInfoCriteria.orderBy}
-        </if>
+        <where>
+            <if test="machineInfoCriteria.clientID != null and machineInfoCriteria.clientID != ''">
+                AND mi.fClientID like '${machineInfoCriteria.clientID}%'
+            </if>
+            <if test="machineInfoCriteria.productID !=null and machineInfoCriteria.productID !='' ">
+                AND mi.fProductID =#{machineInfoCriteria.productID}
+            </if>
+            <if test="machineInfoCriteria.machineGroup != null and machineInfoCriteria.machineGroup != ''">
+                AND mi.fMachineGroup like '${machineInfoCriteria.machineGroup}%'
+            </if>
+            <if test="machineInfoCriteria.upgradeFailedReason != null and machineInfoCriteria.upgradeFailedReason != ''">
+                AND mi.fUpgradeFailedReason like '${machineInfoCriteria.upgradeFailedReason}%'
+            </if>
+            <if test="machineInfoCriteria.version != null and machineInfoCriteria.version != ''">
+                AND mi.fVersion like concat(#{machineInfoCriteria.version},'%')
+            </if>
+            and mi.fTerminalType = #{machineInfoCriteria.terminalType}
+            <if test="machineInfoCriteria.targetVersion != null and machineInfoCriteria.targetVersion != ''">
+                AND mi.fTargetVersion like concat(#{machineInfoCriteria.targetVersion},'%')
+            </if>
+            <if test="machineInfoCriteria.city != null and machineInfoCriteria.city != ''">
+                AND mi.fCity like concat(#{machineInfoCriteria.city},'%')
+            </if>
+            <if test="machineInfoCriteria.valid != null and machineInfoCriteria.valid != ''">
+                AND mi.fValid = #{machineInfoCriteria.valid}
+            </if>
+            <if test="machineInfoCriteria.hasProblem != null">
+                AND (mi.fContinuousFailCount &gt; 5 OR mi.fTenMinsLastVisitTime &lt; NOW()) and mi.fValid = 1
+            </if>
+            <if test="machineInfoCriteria.renewal != null">
+                AND mi.fRenewalDate &lt; DATE_ADD(CURRENT_DATE(), INTERVAL -3 DAY) and mi.fValid = 1
+            </if>
+            <if test="machineInfoCriteria.noMachineGroup != null">
+                AND (mi.fMachineGroup is null or mi.fMachineGroup = '')
+            </if>
+            <if test="machineInfoCriteria.hasMachineGroup != null">AND mi.fMachineGroup > ''</if>
+            <if test="machineInfoCriteria.startUpStatus != null and machineInfoCriteria.startUpStatus != ''">
+                AND mi.fStartUpStatus = #{machineInfoCriteria.startUpStatus}
+            </if>
+            <if test="machineInfoCriteria.runningProgramType != null and machineInfoCriteria.runningProgramType != ''">
+                AND mi.fRunningProgramType = #{machineInfoCriteria.runningProgramType}
+            </if>
+            <if test="machineInfoCriteria.noVNC != null">AND (mi.fHost is null or mi.fHost = '')</if>
+            <if test="machineInfoCriteria.noUpgrade != null">AND (mi.fVersion &lt;&gt; mi.fTargetVersion)
+            </if>
+            <if test="machineInfoCriteria.noChangePassword != null">AND (mi.fPassword &lt;&gt; mi.fTargetVPSPassword) </if>
+            <if test="machineInfoCriteria.startUpClient != null">AND mi.fDownloadProgramType > ''</if>
+            <if test="machineInfoCriteria.vpsBackendSystemComputerID != null and machineInfoCriteria.vpsBackendSystemComputerID != ''">
+                AND mi.fVPSBackendSystemComputerID = #{machineInfoCriteria.vpsBackendSystemComputerID}
+            </if>
+            <if test="machineInfoCriteria.switchGroupName != null and machineInfoCriteria.switchGroupName != ''">
+                AND mi.fSwitchGroupName = #{machineInfoCriteria.switchGroupName}
+            </if>
+            <if test="machineInfoCriteria.allowSwitchGroup != null and machineInfoCriteria.allowSwitchGroup != ''">
+                AND mi.fAllowSwitchGroup = #{machineInfoCriteria.allowSwitchGroup}
+            </if>
+            <if test="machineInfoCriteria.gtMemory != null and machineInfoCriteria.gtMemory != ''">AND mi.fMemory &gt;= #{machineInfoCriteria.gtMemory}</if>
+            <if test="machineInfoCriteria.ltMemory != null and machineInfoCriteria.ltMemory != ''">AND mi.fMemory &lt;= #{machineInfoCriteria.ltMemory}</if>
+            <if test="machineInfoCriteria.switchGroups != null">AND mi.fSwitchGroupName IN
+                <foreach collection="machineInfoCriteria.switchGroups" item="switchGroup" open="(" close=")" separator=",">
+                    #{switchGroup}
+                </foreach>
+            </if>
+            <if test="machineInfoCriteria.orderBy != null and machineInfoCriteria.orderBy != ''">
+                ORDER BY ${machineInfoCriteria.orderBy}
+            </if>
+        </where>
     </select>
 
     <select id="getMachineInfosForSwitchGroup"
@@ -392,8 +392,8 @@
         <include refid="selectCol"/>
         FROM
         t_machine_info mi
-        WHERE mi.fTerminalType = #{terminalType}
-        AND mi.fClientID = #{clientID}
+        WHERE mi.fClientID = #{clientID}
+        AND mi.fTerminalType = #{terminalType}
     </select>
 
     <select id="getMachineAndProductInfoByMachineID" parameterType="java.lang.String"
@@ -404,8 +404,8 @@
         t_machine_info mi
         LEFT JOIN t_product_info pi
         ON mi.fProductID = pi.fUuid
-        WHERE mi.fTerminalType = #{terminalType}
-        AND mi.fClientID = #{clientID}
+        WHERE mi.fClientID = #{clientID}
+        AND mi.fTerminalType = #{terminalType}
     </select>
 
     <update id="resetRestartStatusForProcessing">

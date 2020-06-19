@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 
 import java.util.Map;
+
+import com.keymanager.ckadmin.vo.ProductStatisticsVO;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,9 +52,17 @@ public class ProductController {
         return mv;
     }
 
+    @RequiresPermissions(value = "/internal/productManage/toProductStatistics" )
+    @RequestMapping(value = "/toProductStatistics", method = RequestMethod.GET)
+    public ModelAndView toProductStatistics() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("productManage/productStatistics");
+        return mv;
+    }
+
     @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @GetMapping(value = "/getAllProduct")
-    public ResultBean getAllProudct(){
+    public ResultBean getAllProduct(){
         ResultBean resultBean = new ResultBean();
         try {
             List<ProductInfo> productInfos = productInfoService.getAllProduct();
@@ -172,4 +182,21 @@ public class ProductController {
         }
     }
 
+    @RequiresPermissions(value = "/internal/productManage/toProductStatistics")
+    @PostMapping(value = "/getProductStatistics")
+    public ResultBean getProductStatistics(@RequestParam(required = false) Long productId, @RequestParam(required = false) String init) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        if ("init".equals(init)) {
+            return resultBean;
+        }
+        try {
+            List<ProductStatisticsVO> list = productInfoService.getAllProductStatistics(productId);
+            resultBean.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
 }

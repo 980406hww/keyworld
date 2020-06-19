@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -86,14 +87,26 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
                         passwordMap.put(machineInfo.getPassword(), password);
                     }
                     int days;
+                    Timestamp startUpTime = machineInfo.getStartUpTime() == null ? Utils.getCurrentTimestamp(): machineInfo.getStartUpTime();
                     // 计算运行天数
-                    if (machineInfo.getStartUpTime().compareTo(cleanDate) < 0) {
-                        days = Utils.getIntervalDays(machineInfo.getStartUpTime(), new Date());
+                    if (cleanDate.compareTo(startUpTime) > 0) {
+                        days = Utils.getIntervalDays(startUpTime, new Date());
                     } else {
                         days = Utils.getIntervalDays(cleanDate, new Date());
                     }
-                    machineInfo.setTimesForOneRMB((int) (machineInfo.getOptimizationSucceedCount() / (machineInfo.getPrice() / 30 * days)));
-                    machineInfo.setSuccessRatio(1.00 * machineInfo.getOptimizationSucceedCount() / machineInfo.getOptimizationTotalCount());
+                    // 计算性价比
+                    int timesForOneRMB = 0;
+                    if (machineInfo.getPrice() > 0.0) {
+                        timesForOneRMB = (int) (machineInfo.getOptimizationSucceedCount() / (machineInfo.getPrice() / 30 * days));
+                    }
+                    machineInfo.setTimesForOneRMB(timesForOneRMB);
+                    // 成功率
+                    double successRatio = 0;
+                    if (machineInfo.getOptimizationSucceedCount() > 0) {
+                        successRatio = 100.00 * machineInfo.getOptimizationSucceedCount() / machineInfo.getOptimizationTotalCount();
+                    }
+                    machineInfo.setSuccessRatio(successRatio);
+
                     machineInfo.setPassword(password);
                 }
             }
