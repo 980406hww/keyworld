@@ -81,10 +81,10 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         if (CollectionUtils.isNotEmpty(machineInfos)) {
             HashMap<String, HashMap<String, List<MachineInfo>>> machineMap = new HashMap<>(16);
             for (MachineInfo info : machineInfos) {
-                HashMap<String, List<MachineInfo>> machineInfoHashMap = machineMap.get(info.getProductName());
+                HashMap<String, List<MachineInfo>> machineInfoHashMap = machineMap.get(info.getProductName() + "###" + info.getProductId());
                 if (null == machineInfoHashMap) {
                     machineInfoHashMap = new HashMap<>(16);
-                    machineMap.put(info.getProductName(), machineInfoHashMap);
+                    machineMap.put(info.getProductName() + "###" + info.getProductId(), machineInfoHashMap);
                 }
                 List<MachineInfo> infoList = machineInfoHashMap.get(info.getHost() + ":" + info.getPort());
                 if (null == infoList) {
@@ -123,9 +123,12 @@ public class ProductInfoServiceImpl implements ProductInfoService {
                         }
 
                         ProductStatisticsVO vo = new ProductStatisticsVO();
-                        vo.setProductName(entry.getKey());
+                        String[] key = entry.getKey().split("###");
+                        vo.setProductId(Long.parseLong(key[1]));
+                        vo.setProductName(key[0]);
                         vo.setVncUrl(listEntry.getKey());
                         vo.setAvgTimesForOneRMB(totalTimes / infos.size());
+                        vo.setCount(entry.getValue().size());
                         productStatisticsVos.add(vo);
                     }
                 }

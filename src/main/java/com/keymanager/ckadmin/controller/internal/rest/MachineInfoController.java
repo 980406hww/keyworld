@@ -7,14 +7,12 @@ import com.keymanager.ckadmin.criteria.MachineInfoBatchUpdateCriteria;
 import com.keymanager.ckadmin.criteria.MachineInfoCriteria;
 import com.keymanager.ckadmin.criteria.MachineInfoGroupStatCriteria;
 import com.keymanager.ckadmin.entity.MachineInfo;
-import com.keymanager.ckadmin.entity.Role;
 import com.keymanager.ckadmin.entity.UserPageSetup;
 import com.keymanager.ckadmin.enums.TerminalTypeEnum;
 import com.keymanager.ckadmin.service.MachineInfoService;
 import com.keymanager.ckadmin.service.PerformanceService;
 import com.keymanager.ckadmin.service.UserPageSetupService;
 import com.keymanager.ckadmin.vo.MachineInfoGroupSummaryVO;
-import com.keymanager.ckadmin.vo.MachineInfoSummaryVO;
 import com.keymanager.util.FileUtil;
 import com.keymanager.util.Utils;
 import java.io.File;
@@ -47,10 +45,14 @@ public class MachineInfoController extends SpringMVCBaseController {
     private UserPageSetupService userPageSetupService;
 
     @RequiresPermissions("/internal/machineInfo/searchMachineInfos")
-    @RequestMapping(value = "/toMachineInfos", method = RequestMethod.GET)
-    public ModelAndView toMachineInfos() {
+    @RequestMapping(value = {"/toMachineInfos", "/toMachineInfos/{productId}"}, method = RequestMethod.GET)
+    public ModelAndView toMachineInfos(@PathVariable(name = "productId", required = false) Long productId) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/machineManage");
+        if (null != productId) {
+            mv.addObject("projectId", productId);
+            mv.addObject("runningProgramType", "Super");
+        }
         return mv;
     }
 

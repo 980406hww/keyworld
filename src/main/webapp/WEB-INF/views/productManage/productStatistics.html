@@ -133,6 +133,7 @@
             position: fixed;
             right: 25px;
         }
+
     </style>
 </head>
 
@@ -177,46 +178,6 @@
         var form = layui.form;
         var $ = layui.jquery;
         var common = layui.common;
-        var okLayer = layui.okLayer;
-        var active = {
-            reload: function () {
-                if (flag___) {
-                    let data = common.formToJsonObject('searchForm');
-                    data.init = null;
-                    table.reload('productStatisticsTable', {
-                        where: data,
-                        page: {
-                            curr: 1
-                        },
-                        done: function () {
-                        }
-                    });
-                }
-            }
-        };
-
-       /* function to_add_product() {
-            okLayer.open("产品管理 /  添加产品", "/internal/productManage/toAddProduct", "60%", "40%", function (layero) {
-                window[layero.find("iframe")[0]["name"]];
-            }, function () {
-                if (sign) {
-                    let pageConf = common.formToJsonObject('searchForm');
-                    searchProductStatistics(pageConf);
-                    sign = false;
-                }
-            });
-        }
-
-        function toUpdateProductInfo(data) {
-            okLayer.open("首页 / 产品管理 / 修改产品信息", "/internal/productManage/toUpdateProduct", "35%", "66%", function (layero) {
-                window[layero.find("iframe")[0]["name"]].iniProductInfo(data);
-            }, function () {
-                if (sign) {
-                    active['reload'].call(this);
-                    sign = false;
-                }
-            }, "80px")
-        }*/
 
         function searchProductStatistics(whereCondition) {
             whereCondition = common.jsonObjectTrim(whereCondition);
@@ -229,18 +190,16 @@
                 response: {
                     statusCode: 200
                 },
-                // size: 'sm',
+                size: 'sm',
                 id: 'productStatisticsTable',
-                even: true,
                 defaultToolbar: [],
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {field: 'productName', title: '产品名称', sort: true, align: 'left'},
-                    {field: 'vncUrl', title: 'vnc链接', sort: true, align: 'center'},
+                    {field: 'productName', title: '产品名称', align: 'left', templet: '#toMachineInfoTpl' },
+                    {field: 'vncUrl', title: 'vnc链接', align: 'left'},
                     {field: 'avgTimesForOneRMB', title: '平均性价比', sort: true, align: 'center'}
                 ]],
-                height: 'full-112',
                 loading: true,
                 done: function (res, curr, count) {
                     tableRowSpanNoFixedCol("productStatisticsTable", res.data);
@@ -269,16 +228,15 @@
             // 开始合并单元格操作
             let tBodyNode = targetTableNode.getElementsByClassName("layui-table-body")[0];
             let tdNodes = tBodyNode.getElementsByTagName("td");
+            let tempData;
             let flag = true;
-            debugger
             for (let i = 0, j = 0; i < tdNodes.length; i += 3, j++) {
-                if (data[j].avgTimesForOneRMB && data[j].avgTimesForOneRMB >= 0) {
-                    tdNodes[i].setAttribute("rowspan", data[j].avgTimesForOneRMB);
-                    console.log("1", tdNodes[i]);
-                    flag = !flag;
-                } else {
-                    console.log("2", tdNodes[i]);
+                if (tempData && tempData === data[j].productName) {
                     tdNodes[i].style.display = "none";
+                } else {
+                    tdNodes[i].setAttribute("rowspan", data[j].count);
+                    tempData = data[j].productName;
+                    flag = !flag;
                 }
                 if (flag) {
                     tdNodes[i].style.backgroundColor = '#f2f2f2';
@@ -297,15 +255,17 @@
         });
 
         searchProductStatistics({init: 'init'});
-    })
 
+        window.toMachineInfo = function (productId, productName) {
+            let url = '/internal/machineManage/toMachineInfos/' + productId;
+            let tit = productName + "--机器管理";
+            common.updateOrNewTab(url, tit, productId);
+        };
+    });
 
 </script>
-<script type="text/html" id="operationTpl">
-    <div class="layui-btn-group">
-        <button class="layui-btn layui-btn-xs" lay-event="updateProductInfo">修改</button>
-        <button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="deleteProduct">删除</button>
-    </div>
+<script type="text/html" id="toMachineInfoTpl">
+    <a href="javascript:void(0);" style="color: #0c7df5;" onclick="toMachineInfo('{{d.productId}}', '{{d.productName}}')">{{d.productName}}</a>
 </script>
 </body>
 </html>

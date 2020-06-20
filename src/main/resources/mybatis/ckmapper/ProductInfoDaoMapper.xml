@@ -26,6 +26,7 @@
 
     <select id="getAllProductStatistics" resultType="com.keymanager.ckadmin.entity.MachineInfo">
         select
+            mi.fProductID as 'productId',
             mi.fHost as 'host',
             mi.fPort as 'port',
             mi.fOptimizationSucceedCount as 'optimizationSucceedCount',
