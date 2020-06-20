@@ -1,7 +1,5 @@
 package com.keymanager.util;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -18,7 +16,7 @@ import java.util.zip.GZIPOutputStream;
 
 public class AESUtils {
 
-    private static final String myKey = "ss-kj-1234569999";
+    public static final String myKey = "ss-kj-1234569999";
     private static final byte[] myKeyBytes = myKey.getBytes(StandardCharsets.UTF_8);
 
     // 二进制转十六进制

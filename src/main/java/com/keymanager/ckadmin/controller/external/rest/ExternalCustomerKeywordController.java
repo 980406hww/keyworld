@@ -1,28 +1,21 @@
 package com.keymanager.ckadmin.controller.external.rest;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.base.ExternalBaseCriteria;
 import com.keymanager.ckadmin.entity.MachineInfo;
-import com.keymanager.ckadmin.service.CustomerKeywordService;
-import com.keymanager.ckadmin.service.MachineInfoService;
-import com.keymanager.ckadmin.service.PerformanceService;
-import com.keymanager.ckadmin.service.UserInfoService;
-import com.keymanager.ckadmin.service.UserRoleService;
+import com.keymanager.ckadmin.service.*;
 import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.util.Utils;
-import com.keymanager.ckadmin.vo.SearchEngineResultVO;
 import com.keymanager.ckadmin.vo.OptimizationMachineVO;
 import com.keymanager.ckadmin.vo.OptimizationVO;
-import com.keymanager.ckadmin.service.PerformanceService;
+import com.keymanager.ckadmin.vo.SearchEngineResultVO;
 import com.keymanager.monitoring.vo.UpdateOptimizedCountVO;
+import com.keymanager.util.AESTest;
 import com.keymanager.util.AESUtils;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -33,6 +26,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/external/customerkeyword")
@@ -255,6 +254,57 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
+
+    @RequestMapping(value = "/fetchCustomerKeywordZipOld", method = RequestMethod.GET)
+    public ResponseEntity<?> fetchCustomerKeywordForOptimizationOld(HttpServletRequest request) throws Exception {
+        long startMilleSeconds = System.currentTimeMillis();
+        String clientID = request.getParameter("clientID");
+        String userName = request.getParameter("userName");
+        if (StringUtils.isBlank(userName)) {
+            userName = request.getParameter("username");
+        }
+        String password = request.getParameter("password");
+        String version = request.getParameter("version");
+        StringBuilder errorFlag = new StringBuilder("");
+        try {
+            if (validUser(userName, password)) {
+                MachineInfo machineInfo = machineInfoService.selectById(clientID);
+                String s = "";
+                if (machineInfo != null) {
+                    String terminalType = machineInfo.getTerminalType();
+                    errorFlag.append("1");
+                    OptimizationVO optimizationVO = customerKeywordService.fetchCustomerKeywordForOptimization(machineInfo);
+                    errorFlag.append("2");
+                    if (optimizationVO != null) {
+                        machineInfoService.updateMachineInfoVersion(clientID, version, true);
+                        errorFlag.append("3");
+                        ObjectMapper mapper = new ObjectMapper();
+                        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+
+                        //通过该方法对mapper对象进行设置，所有序列化的对象都将按改规则进行系列化
+                        //Include.Include.ALWAYS 默认
+                        //Include.NON_DEFAULT 属性为默认值不序列化
+                        //Include.NON_EMPTY 属性为 空（“”） 或者为 NULL 都不序列化
+                        //Include.NON_NULL 属性为NULL 不序列化
+                        String data = mapper.writeValueAsString(optimizationVO);
+                        byte[] compress = AESTest.encrypt(data, AESUtils.myKey, 16);
+                        errorFlag.append("4");
+                        s = AESUtils.parseByte2HexStr(compress);
+                        errorFlag.append("5");
+                        performanceService.addPerformanceLog(terminalType + ":fetchCustomerKeywordZip2", System.currentTimeMillis() - startMilleSeconds, null);
+                        errorFlag.append("6");
+                    }
+                } else {
+                    logger.error("fetchCustomerKeywordZip,     Not found clientID:" + clientID);
+                }
+                return ResponseEntity.status(HttpStatus.OK).body(s);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.error("fetchCustomerKeywordZip: " + errorFlag.toString() + "clientID:" + clientID + ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
 
     private String getIP(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
