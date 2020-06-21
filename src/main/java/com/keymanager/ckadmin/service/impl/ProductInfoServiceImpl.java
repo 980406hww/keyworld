@@ -138,4 +138,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         }
         return null;
     }
+
+    @Override
+    public List<ProductInfo> getSupperProduct() {
+        return productInfoDao.getSupperProduct();
+    }
 }

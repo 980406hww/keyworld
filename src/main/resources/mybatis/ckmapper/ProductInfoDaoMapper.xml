@@ -44,6 +44,19 @@
         </where>
     </select>
 
+    <select id="getSupperProduct" resultType="com.keymanager.ckadmin.entity.ProductInfo">
+        select
+            pi.fUuid as 'uuid',
+            pi.fProductName as 'productName',
+        from t_machine_info mi
+          left join t_product_info pi
+            on mi.fProductID = pi.fUuid
+        where mi.fRunningProgramType = 'Super'
+        and mi.fValid = 1
+        group by pi.fUuid
+        order by pi.fProductName
+    </select>
+
     <update id="updateProductPriceForUuids">
         UPDATE t_product_info
         SET fProductPrice = #{productPrice},

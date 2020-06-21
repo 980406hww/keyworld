@@ -27,4 +27,6 @@ public interface ProductInfoService {
     void updateProductPriceForUuids(List<Long> uuids, String productPrice);
 
     List<ProductStatisticsVO> getAllProductStatistics(Long productId) throws ParseException;
+
+    List<ProductInfo> getSupperProduct();
 }

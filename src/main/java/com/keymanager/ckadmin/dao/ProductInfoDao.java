@@ -22,4 +22,6 @@ public interface ProductInfoDao extends BaseMapper<ProductInfo> {
     void updateProductPriceForUuids(@Param(value = "uuids") List<Long> uuids, @Param(value = "productPrice") String productPrice);
 
     List<MachineInfo> getAllProductStatistics(@Param("productId") Long productId);
+
+    List<ProductInfo> getSupperProduct();
 }

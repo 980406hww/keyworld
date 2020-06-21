@@ -146,11 +146,21 @@
                 <div class="my-collapse">
                     <div>
                         <div class="layui-inline">
-                            <input style="height: 30px" type="text" name="productName" id="productName" placeholder="产品名" autocomplete="off" class="layui-input layui-input-text" />
+                            <label class="layui-form-label">产品名</label>
+                            <div class="layui-input-inline">
+                                <select name="productId" id="productId" lay-search>
+                                    <option value="">请选择产品</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="layui-inline">
                             <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">
                                 搜索
+                            </button>
+                        </div>
+                        <div class="layui-inline">
+                            <button style="background: #897c00;color: #ffffff" class="layui-collapse my-btn" type="reset" id="resetBtn">
+                                重置
                             </button>
                         </div>
                     </div>
@@ -178,6 +188,33 @@
         var form = layui.form;
         var $ = layui.jquery;
         var common = layui.common;
+
+        initProduct();
+        function initProduct() {
+            $.ajax({
+                url: "/internal/productManage/getSupperProduct",
+                type: "GET",
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        var product = $("#productId");
+                        product.empty();
+                        product.append('<option value="">请选择产品</option>');
+                        if (res.data !== null) {
+                            $.each(res.data, function (idx, val) {
+                                product.append('<option value="' + val.uuid + '" >' + val.productName + '</option>')
+                            });
+                        }
+                        form.render('select')
+                    } else {
+                        common.showFailMsg("数据获取失败");
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络错误请稍后再试");
+                }
+            })
+        }
 
         function searchProductStatistics(whereCondition) {
             whereCondition = common.jsonObjectTrim(whereCondition);

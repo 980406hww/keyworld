@@ -182,6 +182,23 @@ public class ProductController {
         }
     }
 
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
+    @GetMapping(value = "/getSupperProduct")
+    public ResultBean getSupperProduct(){
+        ResultBean resultBean = new ResultBean();
+        try {
+            List<ProductInfo> products = productInfoService.getSupperProduct();
+            resultBean.setData(products);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+            return resultBean;
+        }
+        return resultBean;
+    }
+
     @RequiresPermissions(value = "/internal/productManage/toProductStatistics")
     @PostMapping(value = "/getProductStatistics")
     public ResultBean getProductStatistics(@RequestParam(required = false) Long productId, @RequestParam(required = false) String init) {
