@@ -5,6 +5,9 @@
     <select id="getMachineGroupWorkInfos" resultType="com.keymanager.ckadmin.entity.MachineGroupWorkInfo">
         SELECT
         ck.fMachineGroup AS "machineGroup",
+        ck.fType             AS "type",
+        ck.fTerminalType     AS "terminalType",
+        4 AS "maxInvalidCount",
         COUNT(1) AS "totalKeywordCount",
         SUM(IF(ck.fOptimizeRemainingCount > 0, 1, 0)) AS "needOptimizeKeywordCount",
         SUM(IF(ck.fInvalidRefreshCount >= 4, 1, 0)) AS "invalidKeywordCount",
