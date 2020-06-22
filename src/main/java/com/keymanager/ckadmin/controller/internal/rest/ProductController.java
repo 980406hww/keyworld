@@ -201,13 +201,10 @@ public class ProductController {
 
     @RequiresPermissions(value = "/internal/productManage/toProductStatistics")
     @PostMapping(value = "/getProductStatistics")
-    public ResultBean getProductStatistics(@RequestParam(required = false) Long productId, @RequestParam(required = false) String init) {
+    public ResultBean getProductStatistics(@RequestBody ProductCriteria criteria) {
         ResultBean resultBean = new ResultBean(200, "success");
-        if ("init".equals(init)) {
-            return resultBean;
-        }
         try {
-            List<ProductStatisticsVO> list = productInfoService.getAllProductStatistics(productId);
+            List<ProductStatisticsVO> list = productInfoService.getAllProductStatistics(criteria.getProductId());
             resultBean.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());

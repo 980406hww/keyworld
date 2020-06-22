@@ -2,17 +2,19 @@ package com.keymanager.ckadmin.vo;
 
 import java.io.Serializable;
 
+/**
+ * 产品统计页的数据包装类
+ */
 public class ProductStatisticsVO implements Serializable {
+
 
     private long productId;
 
     private String productName;
 
+    private int productAvgTimes;
+
     private String vncUrl;
-
-    private int avgTimesForOneRMB;
-
-    private int count;
 
     public long getProductId() {
         return productId;
@@ -20,14 +22,6 @@ public class ProductStatisticsVO implements Serializable {
 
     public void setProductId(long productId) {
         this.productId = productId;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
     }
 
     public String getProductName() {
@@ -38,19 +32,19 @@ public class ProductStatisticsVO implements Serializable {
         this.productName = productName;
     }
 
+    public int getProductAvgTimes() {
+        return productAvgTimes;
+    }
+
+    public void setProductAvgTimes(int productAvgTimes) {
+        this.productAvgTimes = productAvgTimes;
+    }
+
     public String getVncUrl() {
         return vncUrl;
     }
 
     public void setVncUrl(String vncUrl) {
         this.vncUrl = vncUrl;
-    }
-
-    public int getAvgTimesForOneRMB() {
-        return avgTimesForOneRMB;
-    }
-
-    public void setAvgTimesForOneRMB(int avgTimesForOneRMB) {
-        this.avgTimesForOneRMB = avgTimesForOneRMB;
     }
 }

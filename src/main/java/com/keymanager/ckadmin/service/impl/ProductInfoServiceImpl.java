@@ -7,6 +7,7 @@ import com.keymanager.ckadmin.entity.MachineInfo;
 import com.keymanager.ckadmin.entity.ProductInfo;
 import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.ProductInfoService;
+import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.vo.ProductStatisticsVO;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
@@ -86,10 +87,10 @@ public class ProductInfoServiceImpl implements ProductInfoService {
                     machineInfoHashMap = new HashMap<>(16);
                     machineMap.put(info.getProductName() + "###" + info.getProductId(), machineInfoHashMap);
                 }
-                List<MachineInfo> infoList = machineInfoHashMap.get(info.getHost() + ":" + info.getPort());
+                List<MachineInfo> infoList = machineInfoHashMap.get(info.getHost());
                 if (null == infoList) {
                     infoList = new ArrayList<>();
-                    machineInfoHashMap.put(info.getHost() + ":" + info.getPort(), infoList);
+                    machineInfoHashMap.put(info.getHost(), infoList);
                 }
                 infoList.add(info);
             }
@@ -102,6 +103,12 @@ public class ProductInfoServiceImpl implements ProductInfoService {
                 String configValue = config.getValue();
                 Date cleanDate = sdf.parse(configValue);
                 for (Map.Entry<String, HashMap<String, List<MachineInfo>>> entry : machineMap.entrySet()) {
+                    ProductStatisticsVO vo = new ProductStatisticsVO();
+                    int productTotalTimes = 0;
+                    int productMachineCount = 0;
+                    String[] key = entry.getKey().split("###");
+                    vo.setProductId(Long.parseLong(key[1]));
+                    vo.setProductName(key[0]);
                     for (Map.Entry<String, List<MachineInfo>> listEntry : entry.getValue().entrySet()) {
                         int totalTimes = 0;
                         List<MachineInfo> infos = listEntry.getValue();
@@ -122,18 +129,20 @@ public class ProductInfoServiceImpl implements ProductInfoService {
                             totalTimes += timesForOneRMB;
                         }
 
-                        ProductStatisticsVO vo = new ProductStatisticsVO();
-                        String[] key = entry.getKey().split("###");
-                        vo.setProductId(Long.parseLong(key[1]));
-                        vo.setProductName(key[0]);
-                        vo.setVncUrl(listEntry.getKey());
-                        vo.setAvgTimesForOneRMB(totalTimes / infos.size());
-                        vo.setCount(entry.getValue().size());
-                        productStatisticsVos.add(vo);
+                        String vncUrl = "<span>" + listEntry.getKey() + "  ----  " + totalTimes / infos.size() + "</span>";
+                        if (StringUtil.isNullOrEmpty(vo.getVncUrl())) {
+                            vo.setVncUrl(vncUrl);
+                        } else {
+                            vo.setVncUrl(vo.getVncUrl() + "<br><hr>" + vncUrl);
+                        }
+
+                        productTotalTimes += totalTimes;
+                        productMachineCount += infos.size();
                     }
+                    vo.setProductAvgTimes(productTotalTimes / productMachineCount);
+                    productStatisticsVos.add(vo);
                 }
             }
-
             return productStatisticsVos;
         }
         return null;
