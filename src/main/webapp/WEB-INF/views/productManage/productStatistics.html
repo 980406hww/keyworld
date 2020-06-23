@@ -108,13 +108,14 @@
             text-align: center;
         }
 
-        .layui-table-view .layui-table[lay-size=sm] .layui-table-cell {
+        .layui-table-cell {
             height: auto;
-            min-height: 20px;
-            line-height: normal;
+            min-height: 21px;
+            line-height: inherit;
         }
 
-        tr td:nth-child(3) > div {
+        tr td:nth-child(3) > div,
+        tr th:nth-child(3) > div{
             padding: 0;
         }
 
@@ -122,14 +123,39 @@
             margin: 5px 0;
         }
 
-        .layui-table-cell span {
-            margin: 0 15px;
+        .layui-table td,
+        .layui-table th {
+            padding: 0;
+            border-top: none;
+            border-left: none;
+            position: relative;
+            min-height: 21px;
+            line-height: 21px;
+            font-size: 14px;
         }
 
         .layui-table-page > div {
             height: 26px;
             position: fixed;
             right: 25px;
+        }
+
+        .left-span {
+            width: 200px;
+            min-height: 16px;
+            line-height: 16px;
+            padding: 5px 0 0 10px;
+            position: fixed;
+            border-right: 1px solid #e6e6e6;
+        }
+
+        .right-span {
+            float: right;
+            right: 220px;
+            width: 220px;
+            min-height: 16px;
+            line-height: 16px;
+            padding: 5px 0 0 10px;
         }
     </style>
 </head>
@@ -224,16 +250,17 @@
                 response: {
                     statusCode: 200
                 },
-                size: 'sm',
-                even: true,
+                // size: 'sm',
+                // even: true,
                 id: 'productStatisticsTable',
                 defaultToolbar: [],
                 contentType: 'application/json',
                 where: whereCondition,
                 cols: [[
-                    {field: 'productName', title: '产品名称', align: 'left', templet: '#toMachineInfoTpl'},
-                    {field: 'productAvgTimes', title: '产品的平均性价比(次/元)', sort: true, align: 'center'},
-                    {field: 'vncUrl', title: 'vnc ---- vnc分类下的平均性价比(次/元)', align: 'left'}
+                    {field: 'productName', title: '产品名称', align: 'left', width: '25%', templet: '#toMachineInfoTpl'},
+                    {field: 'productAvgTimes', title: '产品的平均性价比(次/元)', width: '15%', sort: true, align: 'center'},
+                    {field: 'vncUrl', title: '<span class="left-span">vnc链接</span><span class="right-span">vnc分类下的平均性价比(次/元)</span>', align: 'left',
+                        width: '25%'}
                 ]],
                 loading: true,
                 done: function (res, curr, count) {

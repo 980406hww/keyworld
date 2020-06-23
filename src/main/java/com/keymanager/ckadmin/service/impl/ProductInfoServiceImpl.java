@@ -129,7 +129,8 @@ public class ProductInfoServiceImpl implements ProductInfoService {
                             totalTimes += timesForOneRMB;
                         }
 
-                        String vncUrl = "<span>" + listEntry.getKey() + "  ----  " + totalTimes / infos.size() + "</span>";
+                        String vncUrl = "<span class=\"left-span\">" + listEntry.getKey() + "</span><span class=\"right-span\">" + totalTimes / infos.size() +
+                                "</span>";
                         if (StringUtil.isNullOrEmpty(vo.getVncUrl())) {
                             vo.setVncUrl(vncUrl);
                         } else {
