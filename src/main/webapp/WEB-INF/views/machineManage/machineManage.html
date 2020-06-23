@@ -237,7 +237,7 @@
                                     </div>
                                     <@shiro.hasAnyRoles name="Operation,Maintenance">
                                     <div class="layui-inline runningProgramType-box">
-                                        <select name="runningProgramType">
+                                        <select name="runningProgramType" id="runningProgramType">
                                             <option value='' selected>运行程序类型</option>
                                             <option value='New'>New</option>
                                             <option value='Old'>Old</option>
@@ -385,6 +385,8 @@
     var s_c = 0;
 
     let hasProblemTmp = '<#if hasProblemTmp?exists>${hasProblemTmp}</#if>';
+    var runningProgramType = '<#if runningProgramType?exists>${runningProgramType}</#if>';
+    var productId = '<#if productId?exists>${productId}</#if>';
 
     var bodyH = null;
     var tableH = null;
@@ -508,6 +510,10 @@
                                 product.append('<option value="' + val.uuid + '" >' + val.productName + '</option>')
                             });
                         }
+                        if (productId) {
+                            product.val(productId);
+                            $("#runningProgramType").val(runningProgramType);
+                        }
                         form.render('select')
                     } else {
                         common.showFailMsg("数据获取失败");
@@ -556,8 +562,11 @@
             form.render('checkbox');
         }
 
-        if (document.getElementById('machineGroup').value || hasProblemTmp === 'true') {
-            searchMachine(common.formToJsonObject('searchForm'));
+        if (document.getElementById('machineGroup').value || hasProblemTmp === 'true' || productId) {
+            let condition = common.formToJsonObject('searchForm');
+            condition.productID = productId;
+            condition.runningProgramType = runningProgramType;
+            searchMachine(condition);
         } else {
             searchMachine({init: 'init'});
         }
@@ -594,10 +603,18 @@
                     {field: 'broadbandAccountAndBroadbandPassword', align: 'left', title: '宽带账号<br>宽带密码', templet: '#broadbandAccountAndBroadbandPassword'},
                     {field: 'runningProgramTypes', align: 'left', title: '程序类型', templet: '#runningProgramTypes'},
                     {field: 'startUpStatusAndDownloadProgramType', align: 'left', title: '开机状态<br>下载程序类型', templet: '#startUpStatusAndDownloadProgramType', hide: true},
-                    {field: 'valids', align: 'left', title: '状态', templet: '#valid'},
+                    {field: 'valid', align: 'left', title: '状态', templet: '#valid'},
                     {field: 'upgradeFailedReasons', align: 'left', title: '失败原因', templet: '#upgradeFailedReasons'},
                     {field: 'vpsBackendSystemComputerID', align: 'left', title: '服务器ID', templet: '#vpsBackendSystemComputerIDs'},
                     {field: 'price',align: 'left', title: '价格'},
+                    {field: 'timesForOneRMB',align: 'left', title: '性价比 (次/元)'},
+                    {field: 'successRatio',align: 'left', title: '成功率', templet: function (d) {
+                            if (d.successRatio > 0) {
+                                return d.successRatio.toFixed(2) + '%';
+                            } else {
+                                return 0;
+                            }
+                        }},
                     {field: 'productName',align: 'left', title: '产品名', hide:true},
                     {field: 'openDate', align: 'left', title: '开通时间', templet: function(d){ return d.openDate? layui.util.toDateString(d.openDate, 'yyyy-MM-dd HH:mm'): "";}, hide:true},
                     {title: '操作', templet: '#operationTpl', align: 'center', minWidth: 198}

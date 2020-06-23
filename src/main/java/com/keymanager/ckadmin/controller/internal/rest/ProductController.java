@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 
 import java.util.Map;
+
+import com.keymanager.ckadmin.vo.ProductStatisticsVO;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,9 +52,17 @@ public class ProductController {
         return mv;
     }
 
+    @RequiresPermissions(value = "/internal/productManage/toProductStatistics" )
+    @RequestMapping(value = "/toProductStatistics", method = RequestMethod.GET)
+    public ModelAndView toProductStatistics() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("productManage/productStatistics");
+        return mv;
+    }
+
     @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
     @GetMapping(value = "/getAllProduct")
-    public ResultBean getAllProudct(){
+    public ResultBean getAllProduct(){
         ResultBean resultBean = new ResultBean();
         try {
             List<ProductInfo> productInfos = productInfoService.getAllProduct();
@@ -172,4 +182,35 @@ public class ProductController {
         }
     }
 
+    @RequiresPermissions(value = "/internal/productManage/toProductInfo" )
+    @GetMapping(value = "/getSupperProduct")
+    public ResultBean getSupperProduct(){
+        ResultBean resultBean = new ResultBean();
+        try {
+            List<ProductInfo> products = productInfoService.getSupperProduct();
+            resultBean.setData(products);
+            resultBean.setCode(200);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+            return resultBean;
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions(value = "/internal/productManage/toProductStatistics")
+    @PostMapping(value = "/getProductStatistics")
+    public ResultBean getProductStatistics(@RequestBody ProductCriteria criteria) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            List<ProductStatisticsVO> list = productInfoService.getAllProductStatistics(criteria.getProductId());
+            resultBean.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
 }
