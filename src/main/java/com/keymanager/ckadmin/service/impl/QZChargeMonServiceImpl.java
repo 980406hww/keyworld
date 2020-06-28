@@ -32,7 +32,7 @@ public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
 
     @Override
     public Map<String, Object> getQZChargeMonData(String searchEngines, String terminal, String time, String loginName) {
-        // 前台时间控件传的值
+        // 前台时间控件传的�
         String[] times = time.replaceAll(" ", "").split("~");
         Timestamp ltDate = Utils.parseDate(times[0], "yyyy-MM");
         Timestamp gtDate = Utils.parseDate(times[1], "yyyy-MM");
