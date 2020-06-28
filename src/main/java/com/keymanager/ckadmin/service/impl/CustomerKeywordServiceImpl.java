@@ -2,19 +2,9 @@ package com.keymanager.ckadmin.service.impl;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.keymanager.ckadmin.criteria.CustomerKeywordCleanTitleCriteria;
-import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
-import com.keymanager.ckadmin.criteria.ExternalCaptureJobCriteria;
-import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
-import com.keymanager.ckadmin.criteria.KeywordCriteria;
-import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
-import com.keymanager.ckadmin.criteria.PTKeywordCountCriteria;
-import com.keymanager.ckadmin.criteria.QZRateKewordCountCriteria;
-import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
-import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
+import com.keymanager.ckadmin.criteria.*;
 import com.keymanager.ckadmin.dao.CustomerKeywordDao;
-import com.keymanager.ckadmin.entity.CaptureRankJob;
-import com.keymanager.ckadmin.entity.CustomerKeyword;
+import com.keymanager.ckadmin.entity.*;
 import com.keymanager.ckadmin.enums.CollectMethod;
 import com.keymanager.ckadmin.enums.CustomerKeywordSourceEnum;
 import com.keymanager.ckadmin.enums.EntryTypeEnum;
@@ -24,36 +14,11 @@ import com.keymanager.ckadmin.service.*;
 import com.keymanager.ckadmin.util.Constants;
 import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.util.Utils;
-import com.keymanager.ckadmin.vo.CodeNameVo;
-import com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO;
-import com.keymanager.ckadmin.vo.CustomerKeywordIncludeVO;
-import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
-import com.keymanager.ckadmin.vo.CustomerKeywordUploadVO;
-import com.keymanager.ckadmin.vo.GroupVO;
-import com.keymanager.ckadmin.vo.KeywordCountVO;
-import com.keymanager.ckadmin.vo.KeywordStandardVO;
-import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
-import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
-import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
-import com.keymanager.ckadmin.vo.PTkeywordCountVO;
-import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
-import com.keymanager.ckadmin.vo.SearchEngineResultItemVO;
-import com.keymanager.ckadmin.vo.SearchEngineResultVO;
-import com.keymanager.ckadmin.entity.GroupSetting;
-import com.keymanager.ckadmin.entity.MachineInfo;
-import com.keymanager.ckadmin.entity.OperationCombine;
-import com.keymanager.ckadmin.vo.OptimizationMachineVO;
-import com.keymanager.ckadmin.vo.OptimizationVO;
+import com.keymanager.ckadmin.vo.*;
 import com.keymanager.monitoring.entity.PtCustomerKeyword;
 import com.keymanager.monitoring.vo.UpdateOptimizedCountSimpleVO;
 import com.keymanager.monitoring.vo.UpdateOptimizedCountVO;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import javax.annotation.Resource;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -61,6 +26,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Service("customerKeywordService2")
 public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, CustomerKeyword> implements CustomerKeywordService {
@@ -162,7 +134,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                                         }
                                     }
                                 }
-                                updateOptimizationQueryTime(customerKeywordUuids);
+                                if(CollectionUtils.isNotEmpty(customerKeywordUuids)) {
+                                    updateOptimizationQueryTime(customerKeywordUuids);
+                                }
                             } else {
                                 int count = 0;
                                 int repeatTimes = 0;
