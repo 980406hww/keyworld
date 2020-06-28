@@ -30,7 +30,7 @@
             mi.fHost as 'host',
             mi.fOptimizationSucceedCount as 'optimizationSucceedCount',
             mi.fOptimizationTotalCount as 'optimizationTotalCount',
-            mi.fStartUpTime as 'startUpTime',
+            mi.fOpenDate as 'openDate',
             pi.fProductName as 'productName',
             pi.fProductPrice as 'price'
         from t_machine_info mi

@@ -114,7 +114,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
                         List<MachineInfo> infos = listEntry.getValue();
                         for (MachineInfo info : infos) {
                             int days;
-                            Timestamp startUpTime = info.getStartUpTime() == null ? Utils.getCurrentTimestamp(): info.getStartUpTime();
+                            Date startUpTime = info.getOpenDate() == null ? Utils.getCurrentTimestamp(): info.getOpenDate();
                             // 计算运行天数
                             if (cleanDate.compareTo(startUpTime) > 0) {
                                 days = Utils.getIntervalDays(startUpTime, new Date());

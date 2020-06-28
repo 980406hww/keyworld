@@ -87,7 +87,7 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
                         passwordMap.put(machineInfo.getPassword(), password);
                     }
                     int days;
-                    Timestamp startUpTime = machineInfo.getStartUpTime() == null ? Utils.getCurrentTimestamp(): machineInfo.getStartUpTime();
+                    Date startUpTime = machineInfo.getOpenDate() == null ? Utils.getCurrentTimestamp(): machineInfo.getOpenDate();
                     // 计算运行天数
                     if (cleanDate.compareTo(startUpTime) > 0) {
                         days = Utils.getIntervalDays(startUpTime, new Date());
