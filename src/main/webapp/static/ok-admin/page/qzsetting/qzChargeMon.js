@@ -7,6 +7,20 @@ layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
     var table = layui.table;
     var laydate = layui.laydate;
 
+    laydate.render({
+        elem: '#time'
+        ,type: 'month'
+        ,range: '~'
+        ,format: 'yyyy-MM'
+        ,theme: 'grid'
+        ,btns: ['confirm']
+        ,max: 1 //1天后
+        ,value: initDate
+        ,done: function (value, date) {
+            conditionChanged();
+        }
+    });
+
     var chargeOption = {
         color: ['#51d02e', '#2aa0ea', '#fac600', '#ff3701', '#a951ec'],
         title: {
@@ -113,7 +127,7 @@ layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
         getChargeMonData(condition);
         qzChargeTableInit(condition);
     } else {
-        getChargeMonData({searchEngines: '', qzTerminal: '', time: "1"});
+        getChargeMonData({time: initDate});
     }
 
     function getChargeMonData(condition) {
@@ -235,21 +249,6 @@ layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
         conditionChanged();
     });
 
-    form.on('radio(time)', function (data) {
-        switch (data.value) {
-            case '1':
-                chargeOption.xAxis.axisLabel.interval = 1;
-                break;
-            case '2':
-                chargeOption.xAxis.axisLabel.interval = 3;
-                break;
-            default:
-                chargeOption.xAxis.axisLabel.interval = 3;
-                break;
-        }
-        conditionChanged();
-    });
-
     function conditionChanged() {
         let form_condition = common.formToJsonObject('form');
         getChargeMonData(form_condition);
@@ -294,17 +293,12 @@ layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
 
     if (condition) {
         let options = document.getElementById('qzTerminal').children;
-        let radios = document.getElementsByName('time');
         for (let i = 0; i < 3; i++) {
             options[i].removeAttribute('selected');
             if (options[i].value === condition.qzTerminal) {
                 options[i].setAttribute('selected', '');
             }
-            radios[i].checked = radios[i].value === condition.time;
         }
-        form.render('radio');
         getSeData('searchEngines', condition.searchEngines);
-    } else {
-        getSeData('searchEngines');
     }
 });

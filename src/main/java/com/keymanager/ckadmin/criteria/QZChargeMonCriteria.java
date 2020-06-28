@@ -4,6 +4,8 @@ import com.keymanager.ckadmin.criteria.base.BaseCriteria;
 
 public class QZChargeMonCriteria extends BaseCriteria {
 
+    private String qzDomain;
+    private String customerName;
     private String qzTerminal;
     private String searchEngine;
     private String dateStart;

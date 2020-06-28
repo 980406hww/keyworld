@@ -6,7 +6,10 @@ import com.keymanager.ckadmin.criteria.QZChargeMonCriteria;
 import com.keymanager.ckadmin.dao.QzChargeMonDao;
 import com.keymanager.ckadmin.entity.QzChargeMon;
 import com.keymanager.ckadmin.service.QzChargeMonService;
+import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.QZChargeMonCountVO;
+
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,32 +29,20 @@ public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
 
     @Override
     public Map<String, Object> getQZChargeMonData(String searchEngines, String terminal, String time, String loginName) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        int countTime = Integer.parseInt(time);
-        String dateFormat = "%Y-%m";
-        switch (countTime) {
-            case 1:
-                calendar.add(Calendar.YEAR, -1);
-                break;
-            case 2:
-                calendar.add(Calendar.YEAR, -3);
-                break;
-            default:
-                calendar.add(Calendar.DATE, countTime);
-                dateFormat = "%Y-%m-%d";
-                break;
-        }
-        String pattern = "yyyy-MM-dd";
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        // 前台时间控件传的值
+        String[] times = time.replaceAll(" ", "").split("~");
+        Timestamp ltDate = Utils.parseDate(times[0], "yyyy-MM");
+        Timestamp gtDate = Utils.parseDate(times[1], "yyyy-MM");
+        Date firstDayOfMonth = Utils.getFirstDayOfMonth(ltDate);
+        Date lastDayOfMonth = Utils.getLastDayOfMonth(gtDate);
         Map<String, Object> condition = new HashMap<>(6);
-        condition.put("ltDate", sdf.format(calendar.getTime()));
-        condition.put("gtDate", sdf.format(new Date()) + " 23:59:59");
+        condition.put("ltDate", firstDayOfMonth);
+        condition.put("gtDate", lastDayOfMonth);
         condition.put("searchEngine", searchEngines);
         condition.put("terminal", terminal);
-        condition.put("dateFormat", dateFormat);
         condition.put("loginName", loginName);
-        List<QZChargeMonCountVO> chargeMonCountVos = qzChargeMonDao.getQZChargeMonData(condition);
+
+        /*List<QZChargeMonCountVO> chargeMonCountVos = qzChargeMonDao.getQZChargeMonData(condition);
         if (CollectionUtils.isNotEmpty(chargeMonCountVos)) {
             List<String> date = new ArrayList<>();
             List<Long> addQzData = new ArrayList<>();
@@ -75,7 +66,7 @@ public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
             data.put("obtainedQzDataCount", obtainedQzData);
             data.put("deleteQzDataCount", deleteQzData);
             return data;
-        }
+        }*/
         return null;
     }
 

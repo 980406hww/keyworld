@@ -103,7 +103,7 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
         getCustomerKeywordPositionSummaryData(condition);
         tableInit(condition);
     } else {
-        getCustomerKeywordPositionSummaryData({searchEngine: '百度', terminal: 'PC', time: '-1000'});
+        getCustomerKeywordPositionSummaryData({searchEngine: '百度', terminal: 'PC', time: '-90'});
         tableInit({
             searchEngine: '百度',
             terminal: 'PC'

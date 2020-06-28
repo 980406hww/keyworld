@@ -496,6 +496,38 @@ public class Utils {
         }
     }
 
+    public static Date getFirstDayOfMonth(Date date) {
+        return getFirstDayOfMonth(date, 0);
+    }
+
+    public static Date getFirstDayOfMonth(Date date, int amount) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, amount);
+        calendar.set(Calendar.DATE, 1); // 设置为该月第一天
+        return calendar.getTime();
+    }
+
+    public static Date getLastDayOfMonth(Date date) {
+        return getLastDayOfMonth(date, 0);
+    }
+
+    public static Date getLastDayOfMonth(Date date, int amount) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, amount + 1);
+        calendar.set(Calendar.DATE, 0); // 设置为上月最后一天
+        return calendar.getTime();
+    }
+
+    public static String getMonth(Date date) {
+        return getMonth(date, 0);
+    }
+
+    public static String getMonth(Date date, int amount) {
+        return Utils.formatDate(getFirstDayOfMonth(date, amount), "yyyy-MM");
+    }
+
     public static void main(String[] args) {
 //		System.out.println(Utils.removeDigital("abc032"));
 //		System.out.println(Utils.prepareBaiduPageNumber(0));
@@ -506,9 +538,14 @@ public class Utils {
 //		// System.out.println(calculateOptimizePlanCount(3000, 2, 0));
 //		System.out.println(getCurrentTimestamp());
 //		System.out.println(addDay(getCurrentTimestamp(), 2));
-        for (int i = 0; i < 200; i++) {
-            System.out.println("结果： " + Utils.getRoundValue((Math.random() * 0.7 + 0.5), 2));
-            System.out.println("结果： " + Utils.getRoundValue(-(Math.random() * 0.7 + 0.5), 2));
-        }
+//        for (int i = 0; i < 200; i++) {
+//            System.out.println("结果： " + Utils.getRoundValue((Math.random() * 0.7 + 0.5), 2));
+//            System.out.println("结果： " + Utils.getRoundValue(-(Math.random() * 0.7 + 0.5), 2));
+//        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        System.out.println(sdf.format(getFirstDayOfMonth(new Date())));
+        System.out.println(sdf.format(getFirstDayOfMonth(new Date(), -2)));
+        System.out.println(sdf.format(getLastDayOfMonth(new Date())));
+        System.out.println(sdf.format(getLastDayOfMonth(new Date(), -2)));
     }
 }
