@@ -3,6 +3,7 @@ package com.keymanager.ckadmin.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.keymanager.ckadmin.criteria.QZChargeMonCriteria;
+import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.entity.QzChargeMon;
 import java.util.List;
 import java.util.Map;
@@ -14,4 +15,6 @@ public interface QzChargeMonService extends IService<QzChargeMon> {
     List<QzChargeMon> getMonDateByCondition(Page<QzChargeMon> page, QZChargeMonCriteria criteria);
 
     void deleteByQZSettingUuid(Long qzSettingUuid);
+
+    void insertQzChargeMonInfo(QZSetting qzSetting, int operationType, String terminalType, String loginName);
 }

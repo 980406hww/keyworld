@@ -3,10 +3,15 @@ package com.keymanager.ckadmin.controller.internal.rest;
 import com.keymanager.ckadmin.common.result.Menu;
 import com.keymanager.ckadmin.service.QZRateStatisticsService;
 import com.keymanager.ckadmin.service.ResourceService;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import com.keymanager.ckadmin.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -73,6 +78,10 @@ public class LayerUIAdminTestController {
     @RequestMapping("/home")
     public ModelAndView toConsole() {
         ModelAndView mv = new ModelAndView();
+        Date now = new Date();
+        String month = Utils.getMonth(now, -2);
+        String currentMonth = Utils.getMonth(now);
+        mv.addObject("initDate", month + " ~ " + currentMonth);
         mv.setViewName("home/home");
         return mv;
     }

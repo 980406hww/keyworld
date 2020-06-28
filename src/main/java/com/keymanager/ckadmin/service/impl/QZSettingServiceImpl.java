@@ -2,6 +2,7 @@ package com.keymanager.ckadmin.service.impl;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.keymanager.ckadmin.common.shiro.ShiroUser;
 import com.keymanager.ckadmin.criteria.ExternalQZSettingCriteria;
 import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
 import com.keymanager.ckadmin.criteria.QZSettingCriteria;
@@ -55,6 +56,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -955,6 +957,12 @@ public class QZSettingServiceImpl extends
     }
 
     private void saveQzChargeMon(Long uuid, String userName, int operationType) {
+        ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
+        Set<String> roles = shiroUser.getRoles();
+        if (!roles.contains("SEOSales")) {
+            return;
+        }
+
         QZSetting qzSetting = qzSettingDao.selectById(uuid);
         if (qzSetting.getRenewalStatus() == 4) {
             return;

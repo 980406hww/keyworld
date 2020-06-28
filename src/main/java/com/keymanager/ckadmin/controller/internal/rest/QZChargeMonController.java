@@ -57,7 +57,6 @@ public class QZChargeMonController extends SpringMVCBaseController {
                 resultBean.setData(data);
             }
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
@@ -88,7 +87,6 @@ public class QZChargeMonController extends SpringMVCBaseController {
             resultBean.setData(page.getRecords());
             resultBean.setCount(page.getTotal());
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
@@ -98,29 +96,11 @@ public class QZChargeMonController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/qzchargemon/toQzChargeMon")
-    @GetMapping(value = {"/toQzChargeMonWithParam/{time}/{terminal}/{search}", "/toQzChargeMonWithParam/{time}/{search}", "/toQzChargeMonWithParam/{time}/{terminal}",
-        "/toQzChargeMonWithParam/{time}"})
-    public ModelAndView toQzChargeMonWithParam(@PathVariable(name = "time") String time, @PathVariable(name = "terminal", required = false) String terminal,
-        @PathVariable(name = "search", required = false) String search) {
+    @GetMapping(value = "/toQzChargeMonWithParam/{time}")
+    public ModelAndView toQzChargeMonWithParam(@PathVariable(name = "time") String time) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("qzchargemon/qzChargeMon");
         mv.addObject("time", time);
-        if (null == terminal) {
-            mv.addObject("terminal", "");
-        } else {
-            mv.addObject("terminal", terminal);
-        }
-        if (null == search) {
-            mv.addObject("search", "");
-        } else {
-            try {
-                search = URLDecoder.decode(search, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-                logger.error(e.getMessage());
-            }
-            mv.addObject("search", search);
-        }
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         mv.addObject("dateStart", sdf.format(date));

@@ -33,8 +33,7 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
 
     void batchUpdateQZSettingUpdateStatus(@Param("uuids") String uuids);
 
-    void batchUpdateRenewalStatus(@Param("uuids") String uuids,
-        @Param("renewalStatus") int renewalStatus);
+    void batchUpdateRenewalStatus(@Param("uuids") String uuids, @Param("renewalStatus") int renewalStatus);
 
     Map<String, String> getPCPhoneGroupByUuid(@Param("uuid") Long uuid);
 

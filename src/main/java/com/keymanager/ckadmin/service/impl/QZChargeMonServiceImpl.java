@@ -4,12 +4,15 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.keymanager.ckadmin.criteria.QZChargeMonCriteria;
 import com.keymanager.ckadmin.dao.QzChargeMonDao;
+import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.entity.QzChargeMon;
+import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.QzChargeMonService;
+import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.QZChargeMonCountVO;
-import java.text.SimpleDateFormat;
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,33 +27,24 @@ public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
     @Resource(name = "qzChargeMonDao2")
     private QzChargeMonDao qzChargeMonDao;
 
+    @Resource(name = "customerService2")
+    private CustomerService customerService;
+
     @Override
     public Map<String, Object> getQZChargeMonData(String searchEngines, String terminal, String time, String loginName) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        int countTime = Integer.parseInt(time);
-        String dateFormat = "%Y-%m";
-        switch (countTime) {
-            case 1:
-                calendar.add(Calendar.YEAR, -1);
-                break;
-            case 2:
-                calendar.add(Calendar.YEAR, -3);
-                break;
-            default:
-                calendar.add(Calendar.DATE, countTime);
-                dateFormat = "%Y-%m-%d";
-                break;
-        }
-        String pattern = "yyyy-MM-dd";
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        // 前台时间控件传的值
+        String[] times = time.replaceAll(" ", "").split("~");
+        Timestamp ltDate = Utils.parseDate(times[0], "yyyy-MM");
+        Timestamp gtDate = Utils.parseDate(times[1], "yyyy-MM");
+        Date firstDayOfMonth = Utils.getFirstDayOfMonth(ltDate);
+        Date lastDayOfMonth = Utils.getLastDayOfMonth(gtDate);
         Map<String, Object> condition = new HashMap<>(6);
-        condition.put("ltDate", sdf.format(calendar.getTime()));
-        condition.put("gtDate", sdf.format(new Date()) + " 23:59:59");
+        condition.put("ltDate", firstDayOfMonth);
+        condition.put("gtDate", lastDayOfMonth);
         condition.put("searchEngine", searchEngines);
         condition.put("terminal", terminal);
-        condition.put("dateFormat", dateFormat);
         condition.put("loginName", loginName);
+
         List<QZChargeMonCountVO> chargeMonCountVos = qzChargeMonDao.getQZChargeMonData(condition);
         if (CollectionUtils.isNotEmpty(chargeMonCountVos)) {
             List<String> date = new ArrayList<>();
@@ -87,5 +81,21 @@ public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
     @Override
     public void deleteByQZSettingUuid(Long qzSettingUuid) {
         qzChargeMonDao.deleteByQZSettingUuid(qzSettingUuid);
+    }
+
+    @Override
+    public void insertQzChargeMonInfo(QZSetting qzSetting, int operationType, String terminalType, String loginName) {
+        QzChargeMon qzChargeMon = new QzChargeMon();
+        qzChargeMon.setOperationType(operationType);
+        qzChargeMon.setQzDomain(qzSetting.getDomain());
+        qzChargeMon.setQzCustomer(customerService.selectById(qzSetting.getCustomerUuid()).getContactPerson());
+        qzChargeMon.setSearchEngine(qzSetting.getSearchEngine());
+        qzChargeMon.setTerminalType(terminalType);
+        qzChargeMon.setOperationUser(loginName);
+        qzChargeMon.setQzSettingUuid(qzSetting.getUuid());
+        qzChargeMonDao.insert(qzChargeMon);
+        if (operationType == 4) {
+            qzChargeMonDao.deleteByQZSettingUuid(qzChargeMon.getQzSettingUuid());
+        }
     }
 }

@@ -2,14 +2,17 @@ package com.keymanager.ckadmin.controller.internal.rest;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.common.result.ResultBean;
+import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.QZChargeStatusCriteria;
 import com.keymanager.ckadmin.entity.QZChargeStatus;
 import com.keymanager.ckadmin.service.QZChargeStatusService;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequestMapping("/internal/qzchargestatus")
-public class QZChargeStatusController {
+public class QZChargeStatusController extends SpringMVCBaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(QZChargeStatusController.class);
 
@@ -62,7 +65,13 @@ public class QZChargeStatusController {
             Integer satisfaction = (Integer) dataMap.get("satisfaction");
             String msg = null == dataMap.get("customerMsg") ? "" : (String) dataMap.get("customerMsg");
             String loginName = (String) session.getAttribute("username");
-            qzChargeStatusService.saveQZChargeStatus(uuids, money, status, satisfaction, msg, loginName);
+            String terminalType = (String) dataMap.get("terminalType");
+            Set<String> roles = getCurrentUser().getRoles();
+            boolean flag = false;
+            if (roles.contains("SEOSales")) {
+                flag = true;
+            }
+            qzChargeStatusService.saveQZChargeStatus(uuids, money, status, satisfaction, msg, loginName, terminalType, flag);
         } catch (Exception e) {
             logger.error(e.getMessage());
             resultBean.setCode(400);

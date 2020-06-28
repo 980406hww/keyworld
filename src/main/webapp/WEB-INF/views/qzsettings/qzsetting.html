@@ -2183,6 +2183,7 @@
                     if (customerMsg && customerMsg.value.trim()) {
                         p_d.customerMsg = customerMsg.value.trim();
                     }
+                    p_d.terminalType = $("#terminalType").val();
                     $.ajax({
                         url: '/internal/qzchargestatus/saveQZChargeStatus',
                         type: 'post',
