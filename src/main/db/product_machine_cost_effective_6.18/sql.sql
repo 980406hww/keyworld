@@ -1,3 +1,7 @@
+# 重置机器操作总数和操作成功数
+update t_machine_info
+set fOptimizationTotalCount = 0, fOptimizationSucceedCount = 0
+WHERE fRunningProgramType = 'Super';
 
 # Super 运行程序类型的机器记录清理操作总数，成功次数的时间
 INSERT INTO `db_keyword`.`t_config` (`fConfigType`, `fKey`, `fValue`) VALUES ('CleanTime', 'Super', CURRENT_DATE());
