@@ -117,6 +117,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     @Autowired
     private PtCustomerKeywordService ptCustomerKeywordService;
 
+    @Autowired
+    private PtCustomerKeywordTemporaryService ptCustomerKeywordTemporaryService;
+
     @Resource(name = "customerService2")
     private com.keymanager.ckadmin.service.CustomerService customerService2;
 
@@ -1970,11 +1973,16 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                     // 根据客户id判断当前时间之前的任务是否完成
                                     if (captureRankJobService.checkCaptureJobCompletedByCustomerUuid(customer.getUuid())) {
                                         // 清空临时表数据 truncate
-                                        customerKeywordDao.cleanPtCustomerKeyword();
+                                        ptCustomerKeywordTemporaryService.cleanPtCustomerKeyword();
                                         // 根据客户id，将数据临时存储在中间表 insert into
-                                        customerKeywordDao.migrationRecordToPtCustomerKeyword(customer.getUuid(), "pt");
-                                        // 更新排名 update
-                                        ptCustomerKeywordService.updatePtKeywordCurrentPosition();
+                                        ptCustomerKeywordTemporaryService.migrationRecordToPtCustomerKeyword(customer.getUuid(), "pt");
+
+                                        do {
+                                            // 修改标识，意为更新中 行数 20000
+                                            ptCustomerKeywordTemporaryService.updatePtKeywordMarks();
+                                            // 更新排名 update
+                                            ptCustomerKeywordService.updatePtKeywordCurrentPosition();
+                                        } while (ptCustomerKeywordTemporaryService.searchPtKeywordTemporaryCount() > 0);
 
                                         // 当前时间
                                         String currentTime = Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy-MM-dd HH:mm");
