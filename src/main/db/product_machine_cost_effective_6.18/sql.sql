@@ -15,18 +15,10 @@ INSERT INTO `db_keyword`.`t_resource_new`
 VALUES ('产品统计', '/internal/productManage/toProductStatistics', null, 'fi-compass', (
     SELECT r.fUuid from t_resource_new r where r.fUrl = '#' AND r.fResourceName = '终端管理' AND fVersion = '2.0'), 8, 0, 1, 0, NOW(), '2.0');
 
-#将权限赋给运营人员, 技术人员
+#将权限赋给运维人员, 技术人员
 insert into t_role_resource_new(fRoleID, fResourceId)
 select tem_role.fUuid, tem_resource.fUuid
-from ((SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN ('Operation', 'Technical')) tem_role,
+from ((SELECT r.fUuid FROM t_role r WHERE r.fRoleName IN ('Maintenance', 'Technical')) tem_role,
       (select t.fUuid
        from t_resource_new tr JOIN t_resource_new t on tr.fUuid = t.fParentID
        where tr.fResourceName = '终端管理' AND t.fResourceName = '产品统计' AND tr.fVersion = '2.0') tem_resource);
-
-
-# 移除销售查看用户刷量统计的权限
-delete from t_role_resource_new
-where fRoleID = (SELECT r.fUuid FROM t_role r WHERE r.fRoleName = 'SEOSales' LIMIT 1)
-  and fResourceID = (select t.fUuid
-                     from t_resource_new tr JOIN t_resource_new t on tr.fUuid = t.fParentID
-                     where tr.fResourceName = '终端管理' AND t.fResourceName = '用户刷量统计' AND tr.fVersion = '2.0' limit 1);
