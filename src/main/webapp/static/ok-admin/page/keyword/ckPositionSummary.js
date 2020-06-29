@@ -99,11 +99,14 @@ layui.use(['jquery', 'form', 'common', 'table'], function () {
     keywordLogShow.showLoading({text: '数据加载中'});
 
     if (condition) {
-
         getCustomerKeywordPositionSummaryData(condition);
         tableInit(condition);
     } else {
-        getCustomerKeywordPositionSummaryData({searchEngine: '百度', terminal: 'PC', time: '-1000'});
+        getCustomerKeywordPositionSummaryData({
+            searchEngine: '百度',
+            terminal: 'PC',
+            time: '-90'
+        });
         tableInit({
             searchEngine: '百度',
             terminal: 'PC'

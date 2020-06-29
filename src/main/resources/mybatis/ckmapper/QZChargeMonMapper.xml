@@ -3,17 +3,19 @@
 <mapper namespace="com.keymanager.ckadmin.dao.QzChargeMonDao">
 
     <sql id="colID">
-        fUuid AS 'uuid',
-        fQzSettingUuid AS 'qzSettingUuid',
-        fQzDomain AS 'qzDomain',
-        fQzCustomer AS 'qzCustomer',
-        fTerminalType AS 'terminalType',
-        fOperationUser AS 'operationUser',
-        fOperationType AS 'operationType',
-        fIsDel AS 'fIsDel',
-        fOperationDate AS 'operationDate'
+        SELECT
+            fUuid AS 'uuid',
+            fQzSettingUuid AS 'qzSettingUuid',
+            fQzDomain AS 'qzDomain',
+            fQzCustomer AS 'qzCustomer',
+            fTerminalType AS 'terminalType',
+            fOperationUser AS 'operationUser',
+            fOperationType AS 'operationType',
+            fIsDel AS 'fIsDel',
+            fOperationDate AS 'operationDate'
+        FROM t_qz_charge_mon
     </sql>
-    <!--查询一条操作类型信息-->
+
     <select id="getQZChargeMonData" resultType="com.keymanager.ckadmin.vo.QZChargeMonCountVO">
         SELECT
             SUM(IF(fOperationType = 0, 1, 0))  AS 'stopQzData',
@@ -21,9 +23,9 @@
             SUM(IF(fOperationType = 2, 1, 0))  AS 'addQzData',
             SUM(IF(fOperationType = 3, 1, 0))  AS 'obtainedQzData',
             SUM(IF(fOperationType = 4, 1, 0))  AS 'deleteQzData',
-            DATE_FORMAT(fOperationDate, #{condition.dateFormat}) AS 'monthDate'
+            DATE_FORMAT(fOperationDate, '%Y年第%u周') AS 'monthDate'
         FROM t_qz_charge_mon
-        WHERE fOperationDate BETWEEN #{condition.ltDate}  AND #{condition.gtDate}
+        WHERE fOperationDate BETWEEN #{condition.ltDate} AND #{condition.gtDate}
         <if test="condition.searchEngine != null and condition.searchEngine != ''">
             AND fSearchEngine = #{condition.searchEngine}
         </if>
@@ -31,34 +33,49 @@
             AND fTerminalType = #{condition.terminal}
         </if>
         <if test="condition.loginName != null and condition.loginName != ''">
-            AND EXISTS(SELECT 1 FROM t_customer c WHERE c.fContactPerson = t_qz_charge_mon.fQzCustomer AND c.fUserID = #{condition.loginName})
+            AND EXISTS(
+                SELECT 1
+                FROM t_customer c
+                WHERE c.fContactPerson = t_qz_charge_mon.fQzCustomer
+                  AND c.fUserID = #{condition.loginName}
+            )
         </if>
-        GROUP BY DATE_FORMAT(fOperationDate, #{condition.dateFormat})
+        GROUP BY DATE_FORMAT(fOperationDate, '%Y%u')
     </select>
 
     <select id="getMonDateByCondition" resultType="com.keymanager.ckadmin.entity.QzChargeMon">
-        SELECT
         <include refid="colID"/>
-        FROM t_qz_charge_mon
-        WHERE 1 = 1
-        <if test="criteria.qzTerminal != null and criteria.qzTerminal != ''">
-            AND fTerminalType LIKE CONCAT('%', #{criteria.qzTerminal}, '%')
-        </if>
-        <if test="criteria.searchEngine != null and criteria.searchEngine != ''">
-            AND fSearchEngine = #{criteria.searchEngine}
-        </if>
-        <if test="criteria.operationType != null and criteria.operationType != ''">
-            AND fOperationType = #{criteria.operationType}
-        </if>
-        <if test="criteria.dateStart != null and criteria.dateStart != ''">
-            AND fOperationDate &gt;= #{criteria.dateStart}
-        </if>
-        <if test="criteria.dateEnd != null and criteria.dateEnd != ''">
-            AND fOperationDate &lt;= #{criteria.dateEnd}
-        </if>
-        <if test="criteria.loginName != null and criteria.loginName != ''">
-            AND EXISTS(SELECT 1 FROM t_customer c WHERE c.fContactPerson = t_qz_charge_mon.fQzCustomer AND c.fUserID = #{criteria.loginName})
-        </if>
+        <where>
+            <if test="criteria.customerName != null and criteria.customerName != ''">
+                AND fQzCustomer = #{criteria.customerName}
+            </if>
+            <if test="criteria.qzDomain != null and criteria.qzDomain != ''">
+                AND fQzDomain LIKE CONCAT(#{criteria.qzDomain}, '%')
+            </if>
+            <if test="criteria.searchEngine != null and criteria.searchEngine != ''">
+                AND fSearchEngine = #{criteria.searchEngine}
+            </if>
+            <if test="criteria.qzTerminal != null and criteria.qzTerminal != ''">
+                AND fTerminalType LIKE CONCAT('%', #{criteria.qzTerminal}, '%')
+            </if>
+            <if test="criteria.operationType != null">
+                AND fOperationType = #{criteria.operationType}
+            </if>
+            <if test="criteria.dateStart != null and criteria.dateStart != ''">
+                AND fOperationDate &gt;= #{criteria.dateStart}
+            </if>
+            <if test="criteria.dateEnd != null and criteria.dateEnd != ''">
+                AND fOperationDate &lt;= #{criteria.dateEnd}
+            </if>
+            <if test="criteria.loginName != null and criteria.loginName != ''">
+                AND EXISTS(
+                    SELECT 1
+                    FROM t_customer c
+                    WHERE c.fContactPerson = t_qz_charge_mon.fQzCustomer
+                    AND c.fUserID = #{criteria.loginName}
+                )
+            </if>
+        </where>
         ORDER BY fOperationDate DESC
     </select>
 

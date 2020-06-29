@@ -4,12 +4,30 @@ import com.keymanager.ckadmin.criteria.base.BaseCriteria;
 
 public class QZChargeMonCriteria extends BaseCriteria {
 
+    private String qzDomain;
+    private String customerName;
     private String qzTerminal;
     private String searchEngine;
     private String dateStart;
     private String dateEnd;
     private Integer operationType;
     private String loginName;
+
+    public String getQzDomain() {
+        return qzDomain;
+    }
+
+    public void setQzDomain(String qzDomain) {
+        this.qzDomain = qzDomain;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
 
     public String getLoginName() {
         return loginName;

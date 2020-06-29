@@ -56,7 +56,6 @@ public class QZRateStatisticsController extends SpringMVCBaseController {
             resultBean.setData(qzRateStatisticsService.generateEchartsData(qzRateStatisticsCountVos));
             return resultBean;
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
@@ -108,7 +107,6 @@ public class QZRateStatisticsController extends SpringMVCBaseController {
             resultBean.setCount(page.getTotal());
             return resultBean;
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
@@ -129,7 +127,6 @@ public class QZRateStatisticsController extends SpringMVCBaseController {
             resultBean.setData(qzRateStatisticsService.getQzRateHistory(qzUuid, terminalType));
             return resultBean;
         }catch (Exception e){
-            e.printStackTrace();
             logger.error(e.getMessage());
             resultBean.setCode(400);
             resultBean.setMsg(e.getMessage());
