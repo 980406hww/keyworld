@@ -5,8 +5,8 @@
     <select id="getMachineGroupWorkInfos" resultType="com.keymanager.ckadmin.entity.MachineGroupWorkInfo">
         SELECT
         ck.fMachineGroup AS "machineGroup",
-        ck.fType             AS "type",
-        ck.fTerminalType     AS "terminalType",
+        ck.fType         AS "type",
+        ck.fTerminalType AS "terminalType",
         4 AS "maxInvalidCount",
         COUNT(1) AS "totalKeywordCount",
         SUM(IF(ck.fOptimizeRemainingCount > 0, 1, 0)) AS "needOptimizeKeywordCount",
@@ -18,23 +18,24 @@
         SUM(ck.fOptimizedCount) AS "totalOptimizedCount",
         SUM(ck.fOptimizeRemainingCount) AS "needOptimizeCount",
         SUM(ck.fQueryCount) AS "queryCount"
-        FROM t_customer_keyword ck, t_group g
-        WHERE ck.fOptimizeGroupName = g.fGroupName
-        <if test="criteria.entryType!=null and criteria.entryType!=''">
-            AND ck.fType = #{criteria.entryType}
-        </if>
-        <if test="criteria.terminalType!=null and criteria.terminalType!=''">
-            AND ck.fTerminalType = #{criteria.terminalType}
-        </if>
-        AND ck.fStatus = 1
-        <if test="criteria.customerName != null and criteria.customerName != ''">
-            AND EXISTS (SELECT 1 FROM t_customer c WHERE ck.fCustomerUuid = c.fUuid AND c.fContactPerson LIKE CONCAT('%', #{criteria.customerName}, '%'))
-        </if>
-        <if test="criteria.machineGroup!=null and criteria.machineGroup!=''">
-            AND ck.fMachineGroup like concat(#{criteria.machineGroup}, '%')
-        </if>
+        FROM t_customer_keyword ck
+        <where>
+            <if test="criteria.machineGroup!=null and criteria.machineGroup!=''">
+                AND ck.fMachineGroup like concat(#{criteria.machineGroup}, '%')
+            </if>
+            <if test="criteria.entryType!=null and criteria.entryType!=''">
+                AND ck.fType = #{criteria.entryType}
+            </if>
+            <if test="criteria.terminalType!=null and criteria.terminalType!=''">
+                AND ck.fTerminalType = #{criteria.terminalType}
+            </if>
+            AND ck.fStatus = 1
+            <if test="criteria.customerName != null and criteria.customerName != ''">
+                AND EXISTS (SELECT 1 FROM t_customer c WHERE ck.fCustomerUuid = c.fUuid AND c.fContactPerson LIKE CONCAT('%', #{criteria.customerName}, '%'))
+            </if>
+        </where>
         GROUP BY ck.fMachineGroup, ck.fType, ck.fTerminalType
-        ORDER BY ck.fMachineGroup;
+        ORDER BY ck.fMachineGroup
     </select>
 
     <select id="getHistoryMachineGroupWorkInfo" resultType="com.keymanager.ckadmin.entity.MachineGroupWorkInfo">

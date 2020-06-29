@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>产品统计</title>
+    <link rel="stylesheet" href="/static/ok-admin/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/ok-admin/css/sub-page.css">
+    <style>
+
+        .layui-tab-content {
+            padding: 0;
+        }
+
+        .layui-card-body {
+            position: relative;
+            padding: 0;
+            line-height: 24px;
+        }
+
+        .layui-table, .layui-table-view {
+            margin: 0;
+            border-width: 1px;
+        }
+
+        .my-collapse > div:first-child {
+            margin-top: 10px;
+            background: #f2f2f2;
+            border: 0;
+        }
+        /* 下拉条件框 */
+        .my-collapse {
+            position: relative;
+            box-shadow: none;
+        }
+
+        .my-collapse * {
+            box-shadow: none;
+        }
+
+        .my-collapse .layui-form-select dl,
+        .my-collapse .layui-form-select .layui-anim {
+            top: 33px !important;
+        }
+
+        .my-collapse > div {
+            padding: 6px 5px;
+        }
+
+        .my-collapse button {
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .my-collapse .my-btn {
+            height: 30px !important;
+            line-height: 30px !important;
+            padding: 0 18px;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .my-collapse .my-btn:hover {
+            opacity: .8;
+            transition: opacity 0.5s;
+        }
+
+        .layui-input-inline input {
+            height: 30px;
+        }
+
+        .layui-form-pane .layui-form-label {
+            width: 116px;
+            padding: 8px 15px;
+            height: 30px;
+            line-height: 13px;
+            border-width: 1px;
+            border-style: solid;
+            border-radius: 2px 0 0 2px;
+            text-align: center;
+            background-color: #FBFBFB;
+            overflow: hidden;
+            box-sizing: border-box
+        }
+
+        .layui-inline label {
+            border-right: none;
+        }
+
+        .layui-form-pane .layui-form-checkbox {
+            margin: 0;
+        }
+
+        .layui-inline input {
+            width: 180px;
+            height: 30px;
+        }
+
+        .layui-inline:nth-child(1) input {
+            width: 140px;
+        }
+
+        .layui-table-body .laytable-cell-checkbox {
+            text-align: center;
+        }
+
+        .layui-table-cell {
+            height: auto;
+            min-height: 21px;
+            line-height: inherit;
+        }
+
+        tr td:nth-child(3) > div,
+        tr th:nth-child(3) > div{
+            padding: 0;
+        }
+
+        hr {
+            margin: 5px 0;
+        }
+
+        .layui-table td,
+        .layui-table th {
+            padding: 0;
+            border-top: none;
+            border-left: none;
+            position: relative;
+            min-height: 21px;
+            line-height: 21px;
+            font-size: 14px;
+        }
+
+        .layui-table-page > div {
+            height: 26px;
+            position: fixed;
+            right: 25px;
+        }
+
+        .left-span {
+            width: 200px;
+            min-height: 16px;
+            line-height: 16px;
+            padding: 5px 0 0 10px;
+            position: absolute;
+            border-right: 1px solid #e6e6e6;
+        }
+
+        .right-span {
+            float: right;
+            right: 220px;
+            width: 220px;
+            min-height: 16px;
+            line-height: 16px;
+            padding: 5px 0 0 10px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="ok-body">
+    <!--模糊搜索区域-->
+    <div class="layui-card ">
+        <div class="layui-card-body ">
+            <form class="layui-form layui-form-pane" id="searchForm">
+                <div class="my-collapse">
+                    <div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">产品名</label>
+                            <div class="layui-input-inline">
+                                <select name="productId" id="productId" lay-search>
+                                    <option value="">请选择产品</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">
+                                搜索
+                            </button>
+                        </div>
+                        <div class="layui-inline">
+                            <button style="background: #897c00;color: #ffffff" class="layui-collapse my-btn" type="reset" id="resetBtn">
+                                重置
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table class="layui-hide" id="productStatisticsTable" lay-filter="tableFilter"></table>
+</div>
+
+<script src="/static/ok-admin/lib/layui/layui.js"></script>
+<script src="/static/ok-admin/lib/nprogress/nprogress.js"></script>
+<script src="/static/ok-admin/js/somePublic.js"></script>
+<script>
+    var flag___ = false;
+    var sign = false;
+    // 进度条加载提示
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    };
+
+    layui.use(['table', 'form', 'jquery', 'okLayer', 'layer', "common"], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var common = layui.common;
+
+        initProduct();
+        function initProduct() {
+            $.ajax({
+                url: "/internal/productManage/getSupperProduct",
+                type: "GET",
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code === 200) {
+                        var product = $("#productId");
+                        product.empty();
+                        product.append('<option value="">请选择产品</option>');
+                        if (res.data !== null) {
+                            $.each(res.data, function (idx, val) {
+                                product.append('<option value="' + val.uuid + '" >' + val.productName + '</option>')
+                            });
+                        }
+                        form.render('select')
+                    } else {
+                        common.showFailMsg("数据获取失败");
+                    }
+                },
+                error: function () {
+                    common.showFailMsg("网络错误请稍后再试");
+                }
+            })
+        }
+
+        function searchProductStatistics(whereCondition) {
+            whereCondition = common.jsonObjectTrim(whereCondition);
+            table.render({
+                elem: '#productStatisticsTable',
+                url: '/internal/productManage/getProductStatistics',
+                method: 'post',
+                page: false,
+                autoSort: true,
+                response: {
+                    statusCode: 200
+                },
+                // size: 'sm',
+                // even: true,
+                id: 'productStatisticsTable',
+                defaultToolbar: [],
+                contentType: 'application/json',
+                where: whereCondition,
+                cols: [[
+                    {field: 'productName', title: '产品名称', align: 'left', width: '25%', templet: '#toMachineInfoTpl'},
+                    {field: 'productAvgTimes', title: '产品的平均性价比(次/元)', width: '15%', sort: true, align: 'center'},
+                    {field: 'vncUrl', title: '<span class="left-span">vnc链接</span><span class="right-span">vnc分类下的平均性价比(次/元)</span>', align: 'left',
+                        width: '25%'}
+                ]],
+                loading: true,
+                done: function (res, curr, count) {
+                    // tableRowSpanNoFixedCol("productStatisticsTable", res.data);
+                }
+            });
+        }
+
+        function tableRowSpanNoFixedCol(tableId, data) {
+            let allTableNode = document.getElementsByClassName("layui-table-view");
+            // 获取lay-id属性为tableId的表格元素的
+            let targetTableNode = null;
+            if (allTableNode.length > 0) {
+                for (let index = 0, length = allTableNode.length; index < length; index++) {
+                    // 通过lay-id属性过滤表格元素
+                    let tableLayId = allTableNode[index].getAttribute("lay-id");
+                    if (tableLayId === tableId) {
+                        targetTableNode = allTableNode[index];
+                        break;
+                    }
+                }
+            }
+            if (!targetTableNode) {
+                common.showFailMsg('没有找到ID为：' + tableId + '的表格');
+                return false;
+            }
+            // 开始合并单元格操作
+            let tBodyNode = targetTableNode.getElementsByClassName("layui-table-body")[0];
+            let tdNodes = tBodyNode.getElementsByTagName("td");
+            let tempData;
+            let flag = true;
+            for (let i = 0, j = 0; i < tdNodes.length; i += 4, j++) {
+                if (tempData && tempData === data[j].productName) {
+                    tdNodes[i].style.display = "none";
+                    tdNodes[i + 1].style.display = "none";
+                } else {
+                    tdNodes[i].setAttribute("rowspan", data[j].count);
+                    tdNodes[i + 1].setAttribute("rowspan", data[j].count);
+                    tempData = data[j].productName;
+                    flag = !flag;
+                }
+                if (flag) {
+                    tdNodes[i].style.backgroundColor = '#f2f2f2';
+                    tdNodes[i + 1].style.backgroundColor = '#f2f2f2';
+                    tdNodes[i + 2].style.backgroundColor = '#f2f2f2';
+                    tdNodes[i + 3].style.backgroundColor = '#f2f2f2';
+                }
+            }
+        }
+
+        form.on("submit(search)", function (data) {
+            var postData = data.field;
+            postData = common.jsonObjectTrim(postData);
+            searchProductStatistics(postData);
+            flag___ = true;
+            return false
+        });
+
+        searchProductStatistics({init: 'init'});
+
+        window.toMachineInfo = function (productId, productName) {
+            let url = '/internal/machineManage/toMachineInfos/' + productId;
+            let tit = productName + "--机器管理";
+            common.updateOrNewTab(url, tit, productId);
+        };
+    });
+
+</script>
+<script type="text/html" id="toMachineInfoTpl">
+    <a href="javascript:void(0);" style="color: #0c7df5;" onclick="toMachineInfo('{{d.productId}}', '{{d.productName}}')">{{d.productName}}</a>
+</script>
+</body>
+</html>

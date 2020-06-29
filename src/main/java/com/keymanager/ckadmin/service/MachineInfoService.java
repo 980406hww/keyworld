@@ -28,7 +28,7 @@ public interface MachineInfoService extends IService<MachineInfo> {
     void logMachineInfoTime(String terminalType, String clientID, String status, String freeSpace, String version, String
         city, int updateCount, String runningProgramType, int cpuCount, int memory);
 
-    Page<MachineInfo> searchMachineInfos(Page<MachineInfo> page, MachineInfoCriteria machineInfoCriteria, boolean normalSearchFlag);
+    Page<MachineInfo> searchMachineInfos(Page<MachineInfo> page, MachineInfoCriteria machineInfoCriteria) throws ParseException;
 
     void batchUpdateUpgradeFailedReason(List<String> clientIDs, String upgradeFailedReason);
 

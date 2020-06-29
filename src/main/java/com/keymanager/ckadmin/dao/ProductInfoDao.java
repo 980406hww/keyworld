@@ -2,8 +2,11 @@ package com.keymanager.ckadmin.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.keymanager.ckadmin.entity.MachineInfo;
 import com.keymanager.ckadmin.entity.ProductInfo;
 import java.util.List;
+
+import com.keymanager.ckadmin.vo.ProductStatisticsVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface ProductInfoDao extends BaseMapper<ProductInfo> {
@@ -17,4 +20,8 @@ public interface ProductInfoDao extends BaseMapper<ProductInfo> {
     List<ProductInfo> getProductsByName(@Param(value = "name") String name );
 
     void updateProductPriceForUuids(@Param(value = "uuids") List<Long> uuids, @Param(value = "productPrice") String productPrice);
+
+    List<MachineInfo> getAllProductStatistics(@Param("productId") Long productId);
+
+    List<ProductInfo> getSupperProduct();
 }

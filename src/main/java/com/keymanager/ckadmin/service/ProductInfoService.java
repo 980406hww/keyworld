@@ -2,6 +2,9 @@ package com.keymanager.ckadmin.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.keymanager.ckadmin.entity.ProductInfo;
+import com.keymanager.ckadmin.vo.ProductStatisticsVO;
+
+import java.text.ParseException;
 import java.util.List;
 
 public interface ProductInfoService {
@@ -22,4 +25,8 @@ public interface ProductInfoService {
     List<ProductInfo> getAllProduct();
 
     void updateProductPriceForUuids(List<Long> uuids, String productPrice);
+
+    List<ProductStatisticsVO> getAllProductStatistics(Long productId) throws ParseException;
+
+    List<ProductInfo> getSupperProduct();
 }

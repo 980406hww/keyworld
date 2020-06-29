@@ -54,8 +54,10 @@
             k.CAPTURE_POSITION_TIME = tpck.fCapturePositionQueryTime,
             k.CITY = tpck.fCity,
             k.CAPTURE_POSITION_CITY = tpck.fCapturePositionCity,
-            k.TITLE = tpck.fTitle
+            k.TITLE = tpck.fTitle,
+            tpck.fMark = 1
         WHERE k.CUSTOMER_KEYWORD_ID = tpck.fUuid
+          and tpck.fMark = 2
     </update>
 
     <update id="updateCustomerKeywordDiffStatus">

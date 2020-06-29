@@ -24,6 +24,37 @@
         where 1=1 <if test="name !=null and name !=''">and fProductName LIKE concat('%', #{name}, '%')</if>
     </select>
 
+    <select id="getAllProductStatistics" resultType="com.keymanager.ckadmin.entity.MachineInfo">
+        select
+            mi.fProductID as 'productId',
+            mi.fHost as 'host',
+            mi.fOptimizationSucceedCount as 'optimizationSucceedCount',
+            mi.fOptimizationTotalCount as 'optimizationTotalCount',
+            mi.fOpenDate as 'openDate',
+            pi.fProductName as 'productName',
+            pi.fProductPrice as 'price'
+        from t_machine_info mi
+                 left join t_product_info pi
+                           on mi.fProductID = pi.fUuid
+        <where>
+            <if test="productId != null">and mi.fProductID = #{productId}</if>
+            and mi.fRunningProgramType = 'Super'
+            and mi.fValid = 1
+        </where>
+    </select>
+
+    <select id="getSupperProduct" resultType="com.keymanager.ckadmin.entity.ProductInfo">
+        select
+            pi.fUuid as 'uuid',
+            pi.fProductName as 'productName'
+        from t_machine_info mi
+          left join t_product_info pi
+            on mi.fProductID = pi.fUuid
+        where mi.fRunningProgramType = 'Super'
+        and mi.fValid = 1
+        group by pi.fUuid
+    </select>
+
     <update id="updateProductPriceForUuids">
         UPDATE t_product_info
         SET fProductPrice = #{productPrice},

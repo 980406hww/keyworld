@@ -20,7 +20,7 @@
         SUM(ck.fOptimizedCount) AS "totalOptimizedCount",
         SUM(ck.fOptimizeRemainingCount) AS "needOptimizeCount",
         SUM(ck.fQueryCount) AS "queryCount"
-        FROM t_customer_keyword ck, t_group g
+        FROM t_customer_keyword ck
         <if test="(criteria.userName != null and criteria.userName != '') || (criteria.customerName != null and criteria.customerName != '')">
             , t_customer c
         </if>
@@ -31,20 +31,17 @@
             <if test="(criteria.userName != null and criteria.userName != '') || (criteria.customerName != null and criteria.customerName != '')">
                 AND ck.fCustomerUuid = c.fUuid
             </if>
-            AND ck.fOptimizeGroupName = g.fGroupName
             <if test="criteria.categoryTag != null and criteria.categoryTag != ''">
-                AND ot.fGroup = g.fGroupName
                 AND ot.fQZSettingUuid = qc.fQZSettingUuid
+            </if>
+            <if test="criteria.groupName != null and criteria.groupName != ''">
+                AND ck.fOptimizeGroupName like concat(#{criteria.groupName}, '%')
             </if>
             <if test="criteria.entryType != null and criteria.entryType != ''">
                 AND ck.fType = #{criteria.entryType}
             </if>
             <if test="criteria.terminalType != null and criteria.terminalType != ''">
                 AND ck.fTerminalType = #{criteria.terminalType}
-            </if>
-            <if test="criteria.groupName != null and criteria.groupName!=''">
-                AND ck.fOptimizeGroupName like concat(#{criteria.groupName}, '%')
-                AND g.fGroupName like concat(#{criteria.groupName}, '%')
             </if>
             <if test="criteria.machineGroup != null and criteria.machineGroup != ''">
                 AND ck.fMachineGroup = #{criteria.machineGroup}

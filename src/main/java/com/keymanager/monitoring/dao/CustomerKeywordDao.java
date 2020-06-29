@@ -240,14 +240,4 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
      * 根据qsId判断站点关键词当天是否已同步
      */
     Long searchExistingSysCustomerKeywordQsId(@Param("qsId") Long qsId);
-
-    /**
-     * 根据客户id，将数据临时存储在中间表
-     */
-    void migrationRecordToPtCustomerKeyword(@Param("cusId") Long cusId, @Param("type") String type);
-
-    /**
-     * 清空临时表数据
-     */
-    void cleanPtCustomerKeyword();
 }
