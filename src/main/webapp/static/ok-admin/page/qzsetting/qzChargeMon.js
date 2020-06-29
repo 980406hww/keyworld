@@ -17,7 +17,7 @@ layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
         ,max: 1 //1天后
         ,value: initDate
         ,done: function (value, date) {
-            conditionChanged();
+            conditionChanged(value);
         }
     });
 
@@ -120,9 +120,6 @@ layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
         ]
     };
 
-    var chargeLogShow = echarts.init(document.getElementById('chargeLogShow'));
-    chargeLogShow.showLoading({text: '数据加载中'});
-
     if (condition) {
         getChargeMonData(condition);
         qzChargeTableInit(condition);
@@ -131,6 +128,8 @@ layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
     }
 
     function getChargeMonData(condition) {
+        var chargeLogShow = echarts.init(document.getElementById('chargeLogShow'));
+        chargeLogShow.showLoading({text: '数据加载中'});
         $.ajax({
             url: '/internal/qzchargemon/getQZChargeMonData',
             type: 'post',
@@ -144,6 +143,8 @@ layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
                 chargeLogShow.hideLoading();
                 if (res.code === 200) {
                     chargeOption.xAxis.data = res.data.date;
+                    console.log(res.data.date);
+                    chargeOption.xAxis.axisLabel.interval = res.data.date.length / 6;
                     chargeOption.series[0].data = res.data.addQzDataCount;  // 新增
                     chargeOption.series[1].data = res.data.renewalQzDataCount;  // 续费
                     chargeOption.series[2].data = res.data.stopQzDataCount; // 暂停
@@ -249,8 +250,19 @@ layui.use(['jquery', 'form', 'common', 'table', 'laydate'], function () {
         conditionChanged();
     });
 
-    function conditionChanged() {
+    form.on("submit(search)", function (data) {
+        let postData = data.field;
+        postData = common.jsonObjectTrim(postData);
+        qzChargeTableInit(postData);
+        return false
+    });
+
+    function conditionChanged(value) {
         let form_condition = common.formToJsonObject('form');
+        if (value) {
+            initDate = value;
+            form_condition.time = value;
+        }
         getChargeMonData(form_condition);
         if (document.getElementById('searchForm')) {
             let searchForm_condition = common.formToJsonObject('searchForm');

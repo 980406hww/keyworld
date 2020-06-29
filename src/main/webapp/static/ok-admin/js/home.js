@@ -13,7 +13,7 @@ layui.config({base: "/static/ok-admin/js/"}).use(useModel, function () {
 
         window.toChargeMon = function () {
             let condition = common.formToJsonObject('form');
-            let url = '/internal/qzchargemon/toQzChargeMonWithParam/' + condition.time + '/' + condition.qzTerminal + '/' + condition.searchEngines;
+            let url = '/internal/qzchargemon/toQzChargeMonWithParam/' + condition.time;
             url = encodeURI(encodeURI(url));
             common.updateOrNewTab(url, '站点监控详情', 'qzChargeMon');
         };

@@ -23,7 +23,7 @@
             SUM(IF(fOperationType = 2, 1, 0))  AS 'addQzData',
             SUM(IF(fOperationType = 3, 1, 0))  AS 'obtainedQzData',
             SUM(IF(fOperationType = 4, 1, 0))  AS 'deleteQzData',
-            DATE_FORMAT(fOperationDate, '%y年第%u周') AS 'monthDate'
+            DATE_FORMAT(fOperationDate, '%Y年第%u周') AS 'monthDate'
         FROM t_qz_charge_mon
         WHERE fOperationDate BETWEEN #{condition.ltDate} AND #{condition.gtDate}
         <if test="condition.searchEngine != null and condition.searchEngine != ''">
@@ -40,14 +40,14 @@
                   AND c.fUserID = #{condition.loginName}
             )
         </if>
-        GROUP BY DATE_FORMAT(fOperationDate, '%y%u')
+        GROUP BY DATE_FORMAT(fOperationDate, '%Y%u')
     </select>
 
     <select id="getMonDateByCondition" resultType="com.keymanager.ckadmin.entity.QzChargeMon">
         <include refid="colID"/>
         <where>
-            <if test="criteria.qzCustomer != null and criteria.qzCustomer != ''">
-                AND fQzCustomer = #{criteria.qzCustomer}
+            <if test="criteria.customerName != null and criteria.customerName != ''">
+                AND fQzCustomer = #{criteria.customerName}
             </if>
             <if test="criteria.qzDomain != null and criteria.qzDomain != ''">
                 AND fQzDomain LIKE CONCAT(#{criteria.qzDomain}, '%')
@@ -58,7 +58,7 @@
             <if test="criteria.qzTerminal != null and criteria.qzTerminal != ''">
                 AND fTerminalType LIKE CONCAT('%', #{criteria.qzTerminal}, '%')
             </if>
-            <if test="criteria.operationType != null and criteria.operationType != ''">
+            <if test="criteria.operationType != null">
                 AND fOperationType = #{criteria.operationType}
             </if>
             <if test="criteria.dateStart != null and criteria.dateStart != ''">
@@ -75,8 +75,8 @@
                     AND c.fUserID = #{criteria.loginName}
                 )
             </if>
-            ORDER BY fOperationDate DESC
         </where>
+        ORDER BY fOperationDate DESC
     </select>
 
     <update id="deleteByQZSettingUuid">

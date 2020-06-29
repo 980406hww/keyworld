@@ -516,7 +516,7 @@ public class Utils {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.MONTH, amount + 1);
-        calendar.set(Calendar.DATE, 0); // 设置为上月最后一天
+        calendar.set(Calendar.DATE, 0);
         return calendar.getTime();
     }
 
@@ -538,14 +538,9 @@ public class Utils {
 //		// System.out.println(calculateOptimizePlanCount(3000, 2, 0));
 //		System.out.println(getCurrentTimestamp());
 //		System.out.println(addDay(getCurrentTimestamp(), 2));
-//        for (int i = 0; i < 200; i++) {
-//            System.out.println("结果： " + Utils.getRoundValue((Math.random() * 0.7 + 0.5), 2));
-//            System.out.println("结果： " + Utils.getRoundValue(-(Math.random() * 0.7 + 0.5), 2));
-//        }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        System.out.println(sdf.format(getFirstDayOfMonth(new Date())));
-        System.out.println(sdf.format(getFirstDayOfMonth(new Date(), -2)));
-        System.out.println(sdf.format(getLastDayOfMonth(new Date())));
-        System.out.println(sdf.format(getLastDayOfMonth(new Date(), -2)));
+        for (int i = 0; i < 200; i++) {
+            System.out.println("结果： " + Utils.getRoundValue((Math.random() * 0.7 + 0.5), 2));
+            System.out.println("结果： " + Utils.getRoundValue(-(Math.random() * 0.7 + 0.5), 2));
+        }
     }
 }

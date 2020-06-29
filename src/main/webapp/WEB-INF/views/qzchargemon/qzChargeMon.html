@@ -72,6 +72,15 @@
             position: fixed;
             right: 184px;
         }
+
+        .layui-input, .layui-select, .layui-textarea {
+            height: 30px;
+            line-height: 1.3;
+            background-color: rgb(255, 255, 255);
+            border-width: 1px;
+            border-style: solid;
+            border-radius: 2px;
+        }
     </style>
 </head>
 <body class="childrenBody home">
@@ -123,8 +132,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label">客户名称</label>
                 <div class="layui-input-block">
-                    <select name="customerName" id="customerUuid">
-                        <option value="" selected>请选择客户名称</option>
+                    <select name="customerName" id="customerUuid" lay-search>
                     </select>
                 </div>
             </div>
@@ -164,10 +172,10 @@
     </div>
 </script>
 <script>
-    var time = '<#if time?exists>${time}</#if>';
+    var initDate = '<#if time?exists>${time}</#if>';
     var dateStart = '<#if dateStart?exists>${dateStart}</#if>';
     var condition = {
-        time: time,
+        time: initDate,
         dateStart: dateStart,
         dateEnd: dateStart
     };
@@ -271,7 +279,7 @@
             });
         };
 
-        table.on('tool(table)', function (obj) {
+        /*table.on('tool(table)', function (obj) {
             let data = obj.data, event = obj.event;
             if (event === 'toQzSetting') {
                 $.ajax({
@@ -293,7 +301,7 @@
                     }
                 });
             }
-        });
+        });*/
     });
 </script>
 </html>

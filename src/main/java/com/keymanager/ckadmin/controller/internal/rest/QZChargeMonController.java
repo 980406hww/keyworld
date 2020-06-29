@@ -100,7 +100,7 @@ public class QZChargeMonController extends SpringMVCBaseController {
     public ModelAndView toQzChargeMonWithParam(@PathVariable(name = "time") String time) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("qzchargemon/qzChargeMon");
-        mv.addObject("time", time);
+        mv.addObject("time", time.replaceAll("%20", " "));
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         mv.addObject("dateStart", sdf.format(date));

@@ -13,6 +13,22 @@ public class QZChargeMonCriteria extends BaseCriteria {
     private Integer operationType;
     private String loginName;
 
+    public String getQzDomain() {
+        return qzDomain;
+    }
+
+    public void setQzDomain(String qzDomain) {
+        this.qzDomain = qzDomain;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
     public String getLoginName() {
         return loginName;
     }

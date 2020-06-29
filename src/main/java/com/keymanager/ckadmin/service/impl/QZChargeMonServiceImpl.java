@@ -8,6 +8,7 @@ import com.keymanager.ckadmin.entity.QZSetting;
 import com.keymanager.ckadmin.entity.QzChargeMon;
 import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.QzChargeMonService;
+import com.keymanager.ckadmin.util.StringUtils;
 import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.QZChargeMonCountVO;
 
@@ -32,13 +33,13 @@ public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
 
     @Override
     public Map<String, Object> getQZChargeMonData(String searchEngines, String terminal, String time, String loginName) {
-        // 前台时间控件传的�
+        // 前台时间控件传的值
         String[] times = time.replaceAll(" ", "").split("~");
         Timestamp ltDate = Utils.parseDate(times[0], "yyyy-MM");
         Timestamp gtDate = Utils.parseDate(times[1], "yyyy-MM");
         Date firstDayOfMonth = Utils.getFirstDayOfMonth(ltDate);
-        Date lastDayOfMonth = Utils.getLastDayOfMonth(gtDate);
-        Map<String, Object> condition = new HashMap<>(6);
+        Date lastDayOfMonth = Utils.getFirstDayOfMonth(gtDate, 1);
+        Map<String, Object> condition = new HashMap<>(8);
         condition.put("ltDate", firstDayOfMonth);
         condition.put("gtDate", lastDayOfMonth);
         condition.put("searchEngine", searchEngines);
@@ -61,7 +62,7 @@ public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
                 obtainedQzData.add(qzChargeMonCountVo.getObtainedQzData());
                 deleteQzData.add(qzChargeMonCountVo.getDeleteQzData());
             }
-            Map<String, Object> data = new HashMap<>(6);
+            Map<String, Object> data = new HashMap<>(8);
             data.put("date", date);
             data.put("addQzDataCount", addQzData);
             data.put("renewalQzDataCount", renewalQzData);
@@ -75,6 +76,9 @@ public class QZChargeMonServiceImpl extends ServiceImpl<QzChargeMonDao, QzCharge
 
     @Override
     public List<QzChargeMon> getMonDateByCondition(Page<QzChargeMon> page, QZChargeMonCriteria criteria) {
+        if (StringUtils.isNotBlank(criteria.getDateEnd())) {
+            criteria.setDateEnd(criteria.getDateEnd() + " 23:59:59");
+        }
         return qzChargeMonDao.getMonDateByCondition(page, criteria);
     }
 
