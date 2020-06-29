@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service("ptCustomerKeywordService2")
@@ -60,11 +61,23 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
                     // 处理新增状态的关键词 status = 2
                     List<PtCustomerKeyword> ptKeywords = ptCustomerKeywordDao.selectNewPtKeyword(customerName);
                     if (CollectionUtils.isNotEmpty(ptKeywords)) {
-                        Customer customer = customerService.selectByName(customerName);
-                        // 类似列表上传关键词，新增关键词并激活
-                        customerKeywordService.addCustomerKeywordsFromSeoSystem(ptKeywords, customer.getUuid());
-                        // 修改新增关键词的状态为激活并关联customerKeywordId
-                        this.updateBatchById(ptKeywords);
+                        // 考虑到数据量太大，可能出现sql超时问题
+                        // 一次处理5000条数据
+                        int fromIndex = 0, toIndex = 5000;
+                        ArrayList<PtCustomerKeyword> tempList;
+                        do {
+                            tempList = (ArrayList<PtCustomerKeyword>) ptKeywords.subList(fromIndex, Math.min(toIndex, ptKeywords.size()));
+
+                            Customer customer = customerService.selectByName(customerName);
+                            // 类似列表上传关键词，新增关键词并激活
+                            customerKeywordService.addCustomerKeywordsFromSeoSystem(tempList, customer.getUuid());
+                            // 修改新增关键词的状态为激活并关联customerKeywordId
+                            this.updateBatchById(tempList);
+
+                            fromIndex += 5000;
+                            toIndex += 5000;
+                            tempList.clear();
+                        } while (ptKeywords.size() > fromIndex);
                     }
                 }
             }
