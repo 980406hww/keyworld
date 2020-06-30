@@ -74,6 +74,14 @@
           AND k.STATUS = 4
     </update>
 
+    <update id="updatePtKeywordOperaStatus">
+        UPDATE cms_keyword k, t_pt_customer_keyword tpck
+        SET k.OPERA_STATUS = tpck.fOperaStatus,
+            tpck.fMark = 1
+        WHERE k.CUSTOMER_KEYWORD_ID = tpck.fUuid
+          and tpck.fMark = 2
+    </update>
+
     <delete id="deleteSaleDelKeywords">
         DELETE FROM cms_keyword
         WHERE CUSTOMER_KEYWORD_ID > ''

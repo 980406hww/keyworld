@@ -7,9 +7,16 @@
     </select>
 
     <insert id="migrationRecordToPtCustomerKeyword">
-        insert into  t_pt_customer_keyword
+        insert into t_pt_customer_keyword(fUuid, fTitle, fCurrentPosition, fPrice, fCaptureStatus, fCapturePositionQueryTime, fCity, fCapturePositionCity )
         SELECT fUuid, fTitle, fCurrentPosition, IF(fPositionFirstPageFee &gt; '', fPositionFirstPageFee, 0.00), fCaptureStatus,
-               fCapturePositionQueryTime, fCity, fCapturePositionCity, 0
+               fCapturePositionQueryTime, fCity, fCapturePositionCity
+        FROM t_customer_keyword
+        WHERE fCustomerUuid = #{cusId} AND fType = #{type} AND fStatus	= 1
+    </insert>
+
+    <insert id="insertIntoTemporaryData">
+        insert into t_pt_customer_keyword(fUuid, fOperaStatus )
+        SELECT fUuid, IF(fFailedCause > '' and fOptimizedCount = 0 and fInvalidRefreshCount = 9 and fLastOptimizeDateTime > current_date(), 0, 1)
         FROM t_customer_keyword
         WHERE fCustomerUuid = #{cusId} AND fType = #{type} AND fStatus	= 1
     </insert>

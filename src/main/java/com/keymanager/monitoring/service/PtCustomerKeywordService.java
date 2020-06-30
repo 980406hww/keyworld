@@ -106,4 +106,8 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
     public void updatePtKeywordCurrentPosition() {
         ptCustomerKeywordDao.updatePtKeywordCurrentPosition();
     }
+
+    public void updatePtKeywordOperaStatus() {
+        ptCustomerKeywordDao.updatePtKeywordOperaStatus();
+    }
 }

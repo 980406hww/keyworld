@@ -114,6 +114,7 @@ public class Constants {
     public final static String CONFIG_KEY_SYNC_CUSTOMER_NAME = "SyncCustomerName";
 
     public final static String CONFIG_TYPE_SYNC_PT_KEYWORD_TIME = "SyncPtKeywordTime";
+    public final static String CONFIG_TYPE_SYNC_PT_OPERA_STATUS_TIME = "SyncPtOperaStatusTime";
 
     public final static String CONFIG_TYPE_CLEAN_TIME = "CleanTime";
     public final static String CONFIG_KEY_CLEAN_NAME = "Super";

@@ -187,4 +187,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void updateCustomerKeywordIncludeStatus(Long customerKeywordUuid, Integer includeStatus);
 
     void updateCustomerKeywordIncludeCheckTime(Long customerKeywordUuid, Date startTime);
+
+    void checkCustomerKeywordOperaStatus();
 }

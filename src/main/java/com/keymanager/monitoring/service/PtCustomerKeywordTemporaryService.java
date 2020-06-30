@@ -15,8 +15,8 @@ public class PtCustomerKeywordTemporaryService extends ServiceImpl<PtCustomerKey
     private PtCustomerKeywordTemporaryDao ptCustomerKeywordTemporaryDao;
 
 
-    public void migrationRecordToPtCustomerKeyword(Long uuid, String pt) {
-        ptCustomerKeywordTemporaryDao.migrationRecordToPtCustomerKeyword(uuid, pt);
+    public void migrationRecordToPtCustomerKeyword(Long cusId, String type) {
+        ptCustomerKeywordTemporaryDao.migrationRecordToPtCustomerKeyword(cusId, type);
     }
 
     public void cleanPtCustomerKeyword() {
@@ -29,5 +29,9 @@ public class PtCustomerKeywordTemporaryService extends ServiceImpl<PtCustomerKey
 
     public void updatePtKeywordMarks(int rows) {
         ptCustomerKeywordTemporaryDao.updatePtKeywordMarks(rows);
+    }
+
+    public void insertIntoTemporaryData(Long cusId, String type) {
+        ptCustomerKeywordTemporaryDao.insertIntoTemporaryData(cusId, type);
     }
 }

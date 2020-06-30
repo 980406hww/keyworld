@@ -19,6 +19,8 @@ public interface ConfigService {
 
     Set<String> getNegativeKeyword();
 
+    void updateConfig(Config config);
+
     List<Config> findConfigs(String configType);
 
     void updateNegativeKeywordsFromConfig(String negativeKeywords);

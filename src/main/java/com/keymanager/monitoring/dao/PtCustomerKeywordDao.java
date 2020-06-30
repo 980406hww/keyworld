@@ -41,4 +41,6 @@ public interface PtCustomerKeywordDao extends BaseMapper<PtCustomerKeyword> {
      * 客户更新过的词需同步keyword，url，title到t_customer_keyword
      */
     void updateCustomerKeyword();
+
+    void updatePtKeywordOperaStatus();
 }

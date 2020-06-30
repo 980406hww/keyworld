@@ -16,6 +16,8 @@ import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.*;
 import com.keymanager.monitoring.entity.PtCustomerKeyword;
+import com.keymanager.monitoring.service.PtCustomerKeywordService;
+import com.keymanager.monitoring.service.PtCustomerKeywordTemporaryService;
 import com.keymanager.monitoring.vo.UpdateOptimizedCountSimpleVO;
 import com.keymanager.monitoring.vo.UpdateOptimizedCountVO;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
@@ -25,6 +27,7 @@ import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -77,6 +80,15 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     @Resource(name = "machineInfoService2")
     private MachineInfoService machineInfoService;
+
+    @Resource(name = "customerService2")
+    private CustomerService customerService;
+
+    @Autowired
+    private PtCustomerKeywordService ptCustomerKeywordService;
+
+    @Autowired
+    private PtCustomerKeywordTemporaryService ptCustomerKeywordTemporaryService;
 
     private final static LinkedBlockingQueue updateOptimizedResultQueue = new LinkedBlockingQueue();
 
@@ -1459,6 +1471,51 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
             customerKeywordDao.insert(customerKeyword);
             ptKeyword.setCustomerKeywordId(customerKeyword.getUuid());
+        }
+    }
+
+    @Override
+    public void checkCustomerKeywordOperaStatus() {
+        // 读取配置表需要同步pt关键词的客户信息
+        Config config = configService.getConfig(com.keymanager.util.Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD, com.keymanager.util.Constants.CONFIG_KEY_SYNC_CUSTOMER_NAME);
+        if (null != config) {
+            String customerNameStr = config.getValue();
+            if (com.keymanager.util.common.StringUtil.isNotNullNorEmpty(customerNameStr)) {
+                String[] customerNames = customerNameStr.replaceAll(" ", "").split(",");
+                // 默认行数 20000
+                int rows = 20000;
+                // 读取配置表同步更新排名sql的行数
+                Config defaultRowNumber = configService.getConfig(com.keymanager.util.Constants.CONFIG_TYPE_SYNC_KEYWORD_ROW_NUMBER, com.keymanager.util.Constants.CONFIG_KEY_SYNC_KEYWORD_ROW_NUMBER_NAME);
+                if (null != defaultRowNumber) {
+                    rows = Integer.parseInt(defaultRowNumber.getValue());
+                }
+                for (String customerName : customerNames) {
+                    // 读取客户记录同步操作状态时间的信息
+                    Config lastSyncConfig = configService.getConfig(com.keymanager.util.Constants.CONFIG_TYPE_SYNC_PT_OPERA_STATUS_TIME, customerName);
+                    // 上次同步操作状态时间是否超过10分钟
+                    boolean overHalfAnHour = com.keymanager.util.Utils.getIntervalMines(lastSyncConfig.getValue()) >= 10;
+                    if (overHalfAnHour) {
+                        Customer customer = customerService.selectByName(customerName);
+                        if (null != customer) {
+                            // 清空临时表数据 truncate
+                            ptCustomerKeywordTemporaryService.cleanPtCustomerKeyword();
+                            // 临时存放关键词操作状态 set fMark = 0
+                            ptCustomerKeywordTemporaryService.insertIntoTemporaryData(customer.getUuid(), "pt");
+                            do {
+                                // 修改标识，意为更新中，行数 rows set fMark = 2
+                                ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows);
+                                // 更新操作状态  set fMark = 1
+                                ptCustomerKeywordService.updatePtKeywordOperaStatus();
+                            } while (ptCustomerKeywordTemporaryService.searchPtKeywordTemporaryCount() > 0);
+                            // 当前时间
+                            String currentTime = Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy-MM-dd HH:mm");
+                            // 更新同步时间
+                            lastSyncConfig.setValue(currentTime);
+                            configService.updateConfig(lastSyncConfig);
+                        }
+                    }
+                }
+            }
         }
     }
 }

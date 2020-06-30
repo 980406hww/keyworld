@@ -39,6 +39,9 @@ public class PtCustomerKeywordTemporary implements Serializable {
     @TableField(value = "fMark")
     private Integer mark;
 
+    @TableField(value = "fOperaStatus")
+    private Integer operaStatus;
+
     public Long getUuid() {
         return uuid;
     }
@@ -109,5 +112,13 @@ public class PtCustomerKeywordTemporary implements Serializable {
 
     public void setMark(Integer mark) {
         this.mark = mark;
+    }
+
+    public Integer getOperaStatus() {
+        return operaStatus;
+    }
+
+    public void setOperaStatus(Integer operaStatus) {
+        this.operaStatus = operaStatus;
     }
 }

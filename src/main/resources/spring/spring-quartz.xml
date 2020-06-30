@@ -33,6 +33,7 @@
 				<ref bean="cronTriggerSyncQzCustomerKeyword" />
 				<ref bean="cronTriggerSyncPtCustomerKeyword" />
 				<ref bean="cronTriggerCheckPtCustomerKeywordStatus" />
+				<ref bean="cronTriggerSyncPTCustomerKeywordOperaStatus" />
 <!--				<ref bean="cronTriggerUserRefreshStatistic" />-->
 			</list>
 		</property>
@@ -381,6 +382,18 @@
 
 	<bean id="cronTriggerCheckPtCustomerKeywordStatusSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject" ref="checkPtCustomerKeywordStatusSchedule" />
+		<property name="targetMethod" value="runTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!-- 同步指定客户关键词的操作状态 -->
+	<bean id="cronTriggerSyncPTCustomerKeywordOperaStatus" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerSyncPTCustomerKeywordOperaStatusSchedule" />
+		<property name="cronExpression" value="0 0/5 23 * * ?" />
+	</bean>
+
+	<bean id="cronTriggerSyncPTCustomerKeywordOperaStatusSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="syncPTCustomerKeywordOperaStatusSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>
