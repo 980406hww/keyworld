@@ -114,12 +114,12 @@ public class ProductInfoServiceImpl implements ProductInfoService {
                         List<MachineInfo> infos = listEntry.getValue();
                         for (MachineInfo info : infos) {
                             int days;
-                            Date startUpTime = info.getOpenDate() == null ? Utils.getCurrentTimestamp(): info.getOpenDate();
+                            Date openDate = info.getOpenDate() == null ? Utils.getCurrentTimestamp(): info.getOpenDate();
                             // 计算运行天数
-                            if (cleanDate.compareTo(startUpTime) > 0) {
-                                days = Utils.getIntervalDays(startUpTime, new Date());
+                            if (cleanDate.compareTo(openDate) > 0) {
+                                days = Utils.getTwoDateIntervalDays(cleanDate, new Date());
                             } else {
-                                days = Utils.getIntervalDays(cleanDate, new Date());
+                                days = Utils.getTwoDateIntervalDays(openDate, new Date());
                             }
                             // 计算性价比
                             int timesForOneRMB = 0;

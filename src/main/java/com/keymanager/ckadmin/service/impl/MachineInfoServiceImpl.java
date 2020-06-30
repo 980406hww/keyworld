@@ -87,12 +87,12 @@ public class MachineInfoServiceImpl extends ServiceImpl<MachineInfoDao, MachineI
                         passwordMap.put(machineInfo.getPassword(), password);
                     }
                     int days;
-                    Date startUpTime = machineInfo.getOpenDate() == null ? Utils.getCurrentTimestamp(): machineInfo.getOpenDate();
+                    Date openDate = machineInfo.getOpenDate() == null ? Utils.getCurrentTimestamp(): machineInfo.getOpenDate();
                     // 计算运行天数
-                    if (cleanDate.compareTo(startUpTime) > 0) {
-                        days = Utils.getIntervalDays(startUpTime, new Date());
+                    if (cleanDate.compareTo(openDate) > 0) {
+                        days = Utils.getTwoDateIntervalDays(cleanDate, new Date());
                     } else {
-                        days = Utils.getIntervalDays(cleanDate, new Date());
+                        days = Utils.getTwoDateIntervalDays(openDate, new Date());
                     }
                     // 计算性价比
                     int timesForOneRMB = 0;

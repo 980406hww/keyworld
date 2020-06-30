@@ -62,6 +62,15 @@ public class Utils {
 
 	}
 
+	public static int getTwoDateIntervalDays(Date compareDate, Date date) {
+
+		long compareDateTime = compareDate.getTime();
+
+		long time = date.getTime();
+
+		return (int) ((time - compareDateTime) / (1000 * 60 * 60 * 24));
+	}
+
 	public static int getApartDayNum(String startTime, String endTime) {
 		// 返回相隔天数
 		int days = 0;
@@ -554,6 +563,14 @@ public class Utils {
 		for (int i = 0; i < 200; i++) {
 			System.out.println("结果： " + Utils.getRoundValue((Math.random() * 0.7 + 0.5), 2));
 			System.out.println("结果： " + Utils.getRoundValue(-(Math.random() * 0.7 + 0.5), 2));
+		}
+		String time1 = "2019-10-10";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			System.out.println(getIntervalDays(sdf.parse(time1), new Date()));
+			System.out.println(getTwoDateIntervalDays(sdf.parse(time1), new Date()));
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
 	}
 }
