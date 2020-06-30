@@ -1962,6 +1962,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                     String customerNameStr = config.getValue();
                     if (StringUtil.isNotNullNorEmpty(customerNameStr)) {
                         String[] customerNames = customerNameStr.replaceAll(" ", "").split(",");
+                        // 默认行数 20000
+                        int rows = 20000;
+                        // 读取配置表同步更新排名sql的行数
+                        Config defaultRowNumber = configService.getConfig(Constants.CONFIG_TYPE_SYNC_KEYWORD_ROW_NUMBER, Constants.CONFIG_KEY_SYNC_KEYWORD_ROW_NUMBER_NAME);
+                        if (null != defaultRowNumber) {
+                            rows = Integer.parseInt(defaultRowNumber.getValue());
+                        }
                         for (String customerName : customerNames) {
                             // 读取客户记录同步时间的信息
                             Config lastSyncConfig = configService.getConfig(Constants.CONFIG_TYPE_SYNC_PT_KEYWORD_TIME, customerName);
@@ -1978,8 +1985,8 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                         ptCustomerKeywordTemporaryService.migrationRecordToPtCustomerKeyword(customer.getUuid(), "pt");
 
                                         do {
-                                            // 修改标识，意为更新中 行数 20000
-                                            ptCustomerKeywordTemporaryService.updatePtKeywordMarks();
+                                            // 修改标识，意为更新中，行数 rows
+                                            ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows);
                                             // 更新排名 update
                                             ptCustomerKeywordService.updatePtKeywordCurrentPosition();
                                         } while (ptCustomerKeywordTemporaryService.searchPtKeywordTemporaryCount() > 0);

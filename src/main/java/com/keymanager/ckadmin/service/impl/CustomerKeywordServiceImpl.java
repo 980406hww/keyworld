@@ -1401,7 +1401,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public void addCustomerKeywordsFromSeoSystem(List<PtCustomerKeyword> ptKeywords, Long customerUuid) {
+    public void addCustomerKeywordsFromSeoSystem(List<PtCustomerKeyword> ptKeywords, Long customerUuid, String optimizeGroupName, String machineGroupName) {
         for (PtCustomerKeyword ptKeyword : ptKeywords) {
             ptKeyword.setStatus(1);
             CustomerKeyword customerKeyword = new CustomerKeyword();
@@ -1431,8 +1431,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             customerKeyword.setCurrentIndexCount(-1);
             customerKeyword.setOptimizePlanCount(50);
             customerKeyword.setOptimizeRemainingCount(50);
-            customerKeyword.setMachineGroup("super");
-            customerKeyword.setOptimizeGroupName("Default");
+            customerKeyword.setMachineGroup(machineGroupName);
+            customerKeyword.setOptimizeGroupName(optimizeGroupName);
             customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Excel.name());
 
             int queryInterval = 24 * 60 * 60;

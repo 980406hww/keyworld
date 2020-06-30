@@ -118,6 +118,19 @@ public class Constants {
     public final static String CONFIG_TYPE_CLEAN_TIME = "CleanTime";
     public final static String CONFIG_KEY_CLEAN_NAME = "Super";
 
+    public final static String CONFIG_TYPE_SYNC_KEYWORD_ROW_NUMBER = "SyncKeywordRowNumber";
+    public final static String CONFIG_KEY_SYNC_KEYWORD_ROW_NUMBER_NAME = "DefaultRowNumber";
+
+    public final static String CONFIG_TYPE_KEYWORD_SUB_LIST_SIZE = "KeywordSubListSize";
+    public final static String CONFIG_KEY_KEYWORD_SUB_LIST_NAME = "DefaultSize";
+
+    public final static String CONFIG_TYPE_DEFAULT_OPTIMIZE_GROUP = "DefaultOptimizeGroup";
+    public final static String CONFIG_KEY_DEFAULT_OPTIMIZE_GROUP_NAME = "DefaultOptimizeGroupName";
+
+    public final static String CONFIG_TYPE_DEFAULT_MACHINE_GROUP = "DefaultMachineGroup";
+    public final static String CONFIG_KEY_DEFAULT_MACHINE_GROUP_NAME = "DefaultMachineGroupName";
+
+
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
 
     static {

@@ -180,7 +180,7 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     void cacheCheckIncludeCustomerKeywordsQueue();
     
-    void addCustomerKeywordsFromSeoSystem(List<PtCustomerKeyword> ptKeywords, Long customerUuid);
+    void addCustomerKeywordsFromSeoSystem(List<PtCustomerKeyword> ptKeywords, Long customerUuid, String optimizeGroupName, String machineGroupName);
 
     List<CustomerKeywordIncludeVO> getCheckingEnteredKeywords();
 

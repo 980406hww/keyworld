@@ -69,7 +69,7 @@
 
     <update id="updateCustomerKeyword">
         UPDATE cms_keyword k, t_customer_keyword ck
-        SET ck.fKeyword = k.KEYWORD, ck.fUrl = k.URL, ck.fTitle = k.TITLE
+        SET ck.fKeyword = k.KEYWORD, ck.fUrl = k.URL, ck.fTitle = k.TITLE, k.STATUS = 1
         WHERE k.CUSTOMER_KEYWORD_ID = ck.fUuid
           AND k.STATUS = 4
     </update>

@@ -28,5 +28,5 @@ public interface PtCustomerKeywordTemporaryDao extends BaseMapper<PtCustomerKeyw
     /**
      * 修改标识，意为更新中
      */
-    void updatePtKeywordMarks();
+    void updatePtKeywordMarks(@Param("rows") int rows);
 }
