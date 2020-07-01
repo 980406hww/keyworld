@@ -27,8 +27,8 @@ public class PtCustomerKeywordTemporaryService extends ServiceImpl<PtCustomerKey
         return ptCustomerKeywordTemporaryDao.searchPtKeywordTemporaryCount();
     }
 
-    public void updatePtKeywordMarks(int rows, int mark) {
-        ptCustomerKeywordTemporaryDao.updatePtKeywordMarks(rows, mark);
+    public void updatePtKeywordMarks(int rows, int mark, int targetMark) {
+        ptCustomerKeywordTemporaryDao.updatePtKeywordMarks(rows, mark, targetMark);
     }
 
     public void insertIntoTemporaryData(Long cusId, String type) {

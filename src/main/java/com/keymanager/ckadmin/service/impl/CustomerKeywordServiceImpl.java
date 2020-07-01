@@ -1503,11 +1503,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                             ptCustomerKeywordTemporaryService.insertIntoTemporaryData(customer.getUuid(), "pt");
                             do {
                                 // 修改标识为更新中，行数 rows set fMark = 2
-                                ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 2);
+                                ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 2, 0);
                                 // 更新操作状态
                                 ptCustomerKeywordService.updatePtKeywordOperaStatus();
                                 // 修改标识为已更新，行数 rows set fMark = 1
-                                ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 1);
+                                ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 1, 2);
                             } while (ptCustomerKeywordTemporaryService.searchPtKeywordTemporaryCount() > 0);
                             // 当前时间
                             String currentTime = Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy-MM-dd HH:mm");
