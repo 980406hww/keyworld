@@ -35,3 +35,7 @@ VALUES ('SyncPtOperaStatusTime', 'guorenbaidu', '2020-06-30 18:40');
 # 先查询是否存在, 不存在执行insert语句
 select * from `db_keyword`.`t_config` WHERE fConfigType = 'SyncPtKeywordTime' and fKey = 'leibiaouc';
 #INSERT INTO `db_keyword`.`t_config` (`fConfigType`, `fKey`, `fValue`) VALUES ('SyncPtKeywordTime', 'leibiaouc', '2020-06-29 18:40');
+
+# 同步关键词操作状态的开关 1：开 0：关
+INSERT INTO `db_keyword`.`t_config` (`fConfigType`, `fKey`, `fValue`)
+VALUES ('SyncOperaStatusSwitch', 'SyncOperaStatusSwitchName', '1');
