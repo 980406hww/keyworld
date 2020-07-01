@@ -1492,9 +1492,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                 for (String customerName : customerNames) {
                     // 读取客户记录同步操作状态时间的信息
                     Config lastSyncConfig = configService.getConfig(com.keymanager.util.Constants.CONFIG_TYPE_SYNC_PT_OPERA_STATUS_TIME, customerName);
-                    // 上次同步操作状态时间是否超过10分钟
-                    boolean overHalfAnHour = com.keymanager.util.Utils.getIntervalMines(lastSyncConfig.getValue()) >= 10;
-                    if (overHalfAnHour) {
+                    // 上次同步操作状态时间，超过60分钟，认为是未同步
+                    boolean overAnHour = com.keymanager.util.Utils.getIntervalMines(lastSyncConfig.getValue()) > 60;
+                    if (overAnHour) {
                         Customer customer = customerService.selectByName(customerName);
                         if (null != customer) {
                             // 清空临时表数据 truncate
@@ -1502,10 +1502,12 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                             // 临时存放关键词操作状态 set fMark = 0
                             ptCustomerKeywordTemporaryService.insertIntoTemporaryData(customer.getUuid(), "pt");
                             do {
-                                // 修改标识，意为更新中，行数 rows set fMark = 2
-                                ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows);
-                                // 更新操作状态  set fMark = 1
+                                // 修改标识为更新中，行数 rows set fMark = 2
+                                ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 2);
+                                // 更新操作状态
                                 ptCustomerKeywordService.updatePtKeywordOperaStatus();
+                                // 修改标识为已更新，行数 rows set fMark = 1
+                                ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 1);
                             } while (ptCustomerKeywordTemporaryService.searchPtKeywordTemporaryCount() > 0);
                             // 当前时间
                             String currentTime = Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy-MM-dd HH:mm");

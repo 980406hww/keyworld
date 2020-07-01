@@ -389,7 +389,7 @@
 	<!-- 同步指定客户关键词的操作状态 -->
 	<bean id="cronTriggerSyncPTCustomerKeywordOperaStatus" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerSyncPTCustomerKeywordOperaStatusSchedule" />
-		<property name="cronExpression" value="0 0/5 23 * * ?" />
+		<property name="cronExpression" value="0 0/15 23 * * ?" />
 	</bean>
 
 	<bean id="cronTriggerSyncPTCustomerKeywordOperaStatusSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">

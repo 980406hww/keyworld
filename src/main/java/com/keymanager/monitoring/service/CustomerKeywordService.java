@@ -1985,10 +1985,12 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                         ptCustomerKeywordTemporaryService.migrationRecordToPtCustomerKeyword(customer.getUuid(), "pt");
 
                                         do {
-                                            // 修改标识，意为更新中，行数 rows
-                                            ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows);
+                                            // 修改标识为更新中，行数 rows
+                                            ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 2);
                                             // 更新排名 update
                                             ptCustomerKeywordService.updatePtKeywordCurrentPosition();
+                                            // 修改标识为已更新，行数 rows
+                                            ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 1);
                                         } while (ptCustomerKeywordTemporaryService.searchPtKeywordTemporaryCount() > 0);
 
                                         // 当前时间

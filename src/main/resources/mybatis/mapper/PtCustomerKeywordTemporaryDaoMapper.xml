@@ -22,7 +22,7 @@
     </insert>
 
     <update id="updatePtKeywordMarks">
-        update t_pt_customer_keyword set fMark = 2 where fMark = 0 limit #{rows}
+        update t_pt_customer_keyword set fMark = #{mark} where fMark = 0 limit #{rows}
     </update>
 
     <delete id="cleanPtCustomerKeyword">

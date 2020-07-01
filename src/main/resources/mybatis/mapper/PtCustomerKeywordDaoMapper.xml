@@ -54,8 +54,7 @@
             k.CAPTURE_POSITION_TIME = tpck.fCapturePositionQueryTime,
             k.CITY = tpck.fCity,
             k.CAPTURE_POSITION_CITY = tpck.fCapturePositionCity,
-            k.TITLE = tpck.fTitle,
-            tpck.fMark = 1
+            k.TITLE = tpck.fTitle
         WHERE k.CUSTOMER_KEYWORD_ID = tpck.fUuid
           and tpck.fMark = 2
     </update>
@@ -76,8 +75,7 @@
 
     <update id="updatePtKeywordOperaStatus">
         UPDATE cms_keyword k, t_pt_customer_keyword tpck
-        SET k.OPERA_STATUS = tpck.fOperaStatus,
-            tpck.fMark = 1
+        SET k.OPERA_STATUS = tpck.fOperaStatus
         WHERE k.CUSTOMER_KEYWORD_ID = tpck.fUuid
           and tpck.fMark = 2
     </update>
