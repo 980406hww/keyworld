@@ -175,7 +175,11 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<CustomerKeywordForCapturePosition> cacheCustomerKeywordForCapturePosition(@Param("terminalType") String terminalType, @Param("groupNames") List<String> groupNames,
                                                                                    @Param("customerUuid") Long customerUuid, @Param("startTime") Date startTime,
-                                                                                   @Param("captureStatus") Integer captureStatus);
+                                                                                   @Param("captureStatus") Integer captureStatus, @Param("saveTopThree") Boolean saveTopThree);
+
+    List<CustomerKeywordForCapturePosition> cacheCustomerKeywordForCapturePosition2(@Param("terminalType") String terminalType, @Param("groupName") String groupName,
+                                                                                    @Param("customerUuid") Long customerUuid, @Param("startTime") Date startTime,
+                                                                                    @Param("captureStatus") Integer captureStatus, @Param("saveTopThree") Boolean saveTopThree);
 
     List<Long> getCustomerKeywordUuidsForBDExcel(@Param("customerKeyword") CustomerKeyword customerKeyword, @Param("username") String username);
 
