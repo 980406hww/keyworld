@@ -224,7 +224,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     public CustomerKeywordForCapturePosition getCustomerKeywordForCapturePosition(String terminalType, List<String> groupNames, Long customerUuid,
-                                                                                  Date startTime, Long captureRankJobUuid) {
+                                                                                  Date startTime, Long captureRankJobUuid, Boolean saveTopThree) {
         Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
         if (captureRankJobStatus) {
             String key = terminalType + "_" + groupNames + "_" + customerUuid;
@@ -241,9 +241,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             if(capturePositionCustomerKeywordQueue.size() == 0){
                 synchronized (com.keymanager.monitoring.service.CustomerKeywordService.class) {
                     if(capturePositionCustomerKeywordQueue.size() == 0) {
-                        Collection<CustomerKeywordForCapturePosition> customerKeywordForCapturePositions = customerKeywordDao.cacheCustomerKeywordForCapturePosition(terminalType, groupNames, customerUuid, startTime, 0);
+                        Collection<CustomerKeywordForCapturePosition> customerKeywordForCapturePositions = customerKeywordDao.cacheCustomerKeywordForCapturePosition(terminalType, groupNames, customerUuid, startTime, 0, saveTopThree);
                         if (CollectionUtils.isEmpty(customerKeywordForCapturePositions)) {
-                            customerKeywordForCapturePositions = customerKeywordDao.cacheCustomerKeywordForCapturePosition(terminalType, groupNames, customerUuid, startTime, 1);
+                            customerKeywordForCapturePositions = customerKeywordDao.cacheCustomerKeywordForCapturePosition(terminalType, groupNames, customerUuid, startTime, 1, saveTopThree);
                         }
                         if (CollectionUtils.isEmpty(customerKeywordForCapturePositions)) {
                             return null;
@@ -262,6 +262,53 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             return customerKeywordForCapturePosition;
         }
         return new CustomerKeywordForCapturePosition();
+    }
+
+    @Override
+    public List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePosition2(String terminalType, String groupName, Long customerUuid,
+            Date startTime, Long captureRankJobUuid, Boolean saveTopThree) {
+        Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
+        if (captureRankJobStatus) {
+            String key = terminalType + "_" + groupName + "_" + customerUuid;
+            LinkedBlockingQueue capturePositionCustomerKeywordQueue = optimizeGroupNameQueueMap.get(key);
+            if(capturePositionCustomerKeywordQueue == null){
+                synchronized (com.keymanager.monitoring.service.CustomerKeywordService.class) {
+                    capturePositionCustomerKeywordQueue = optimizeGroupNameQueueMap.get(key);
+                    if(capturePositionCustomerKeywordQueue == null){
+                        capturePositionCustomerKeywordQueue = new LinkedBlockingQueue();
+                        optimizeGroupNameQueueMap.put(key, capturePositionCustomerKeywordQueue);
+                    }
+                }
+            }
+            if(capturePositionCustomerKeywordQueue.size() == 0){
+                synchronized (com.keymanager.monitoring.service.CustomerKeywordService.class) {
+                    if(capturePositionCustomerKeywordQueue.size() == 0) {
+                        Collection<CustomerKeywordForCapturePosition> customerKeywordForCapturePositions = customerKeywordDao.cacheCustomerKeywordForCapturePosition2(terminalType, groupName, customerUuid, startTime, 0, saveTopThree);
+                        if (CollectionUtils.isEmpty(customerKeywordForCapturePositions)) {
+                            customerKeywordForCapturePositions = customerKeywordDao.cacheCustomerKeywordForCapturePosition2(terminalType, groupName, customerUuid, startTime, 1, saveTopThree);
+                        }
+                        if (CollectionUtils.isEmpty(customerKeywordForCapturePositions)) {
+                            return new ArrayList<>();
+                        }
+                        List<Long> customerKeywordUuids = new ArrayList<Long>();
+                        for (CustomerKeywordForCapturePosition customerKeywordForCapturePosition : customerKeywordForCapturePositions) {
+                            capturePositionCustomerKeywordQueue.offer(customerKeywordForCapturePosition);
+                            customerKeywordUuids.add(customerKeywordForCapturePosition.getUuid());
+                        }
+                        customerKeywordDao.updateCapturePositionQueryTimeAndCaptureStatusTemp(customerKeywordUuids);
+                    }
+                }
+            }
+            List<CustomerKeywordForCapturePosition> CustomerKeywordForCapturePositions = new ArrayList<>();
+            do {
+                CustomerKeywordForCapturePosition customerKeywordForCapturePosition = (CustomerKeywordForCapturePosition)capturePositionCustomerKeywordQueue.poll();
+                customerKeywordForCapturePosition.setCaptureRankJobStatus(true);
+                CustomerKeywordForCapturePositions.add(customerKeywordForCapturePosition);
+            }while (CustomerKeywordForCapturePositions.size() < 10 && capturePositionCustomerKeywordQueue.size() > 0);
+
+            return CustomerKeywordForCapturePositions;
+        }
+        return new ArrayList<>();
     }
 
     public void updateOptimizedCount(){

@@ -13,6 +13,7 @@ import com.keymanager.ckadmin.entity.QZKeywordRankInfo;
 import com.keymanager.ckadmin.entity.QZOperationType;
 import com.keymanager.ckadmin.enums.CaptureRankExectionStatus;
 import com.keymanager.ckadmin.service.CaptureRankJobService;
+import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.CustomerService;
 import com.keymanager.ckadmin.service.QZChargeRuleService;
 import com.keymanager.ckadmin.service.QZOperationTypeService;
@@ -47,6 +48,9 @@ public class CaptureRankJobServiceImpl extends ServiceImpl<CaptureRankJobDao, Ca
 
     @Resource(name = "qzOperationTypeService2")
     private QZOperationTypeService qzOperationTypeService;
+
+    @Resource(name = "customerKeywordService2")
+    private CustomerKeywordService customerKeywordService;
 
     @Override
     public void qzAddCaptureRankJob(String group, long qzSettingUuid, long customerUuid,
@@ -181,6 +185,8 @@ public class CaptureRankJobServiceImpl extends ServiceImpl<CaptureRankJobDao, Ca
                     captureRankJob.setEndTime(new Date());
                     captureRankJob.setLastExecutionDate(new java.sql.Date(System.currentTimeMillis()));
                     captureRankJob.setExectionStatus(CaptureRankExectionStatus.Complete.name());
+                    String key = captureRankJob.getOperationType() + "_" + captureRankJob.getGroupNames() + "_" + captureRankJob.getCustomerUuid();
+                    customerKeywordService.clearOptimizeGroupNameQueueForKey(key);
                 }
                 captureRankJobDao.updateById(captureRankJob);
             }

@@ -1636,7 +1636,9 @@
         AND fCaptureStatus = #{captureStatus}
         <if test="startTime != null and captureStatus == 0">
             AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
-            AND !(ck.fCapturePositionQueryTime > CURRENT_DATE() AND ck.fCurrentPosition &lt; 4 AND ck.fCurrentPosition &gt; 0)
+            <if test="saveTopThree == true">
+                AND !(ck.fCapturePositionQueryTime > CURRENT_DATE() AND ck.fCurrentPosition &lt; 4 AND ck.fCurrentPosition &gt; 0)
+            </if>
         </if>
         <if test="startTime != null and captureStatus == 1">
             AND ck.fCapturePositionQueryTime <![CDATA[<]]> DATE_SUB( NOW(), INTERVAL 3 MINUTE )
@@ -1655,6 +1657,36 @@
                 AND ck.fOptimizeGroupName IS NULL
             </otherwise>
         </choose>
+        LIMIT 500
+    </select>
+
+    <select id="cacheCustomerKeywordForCapturePosition2" resultType="com.keymanager.value.CustomerKeywordForCapturePosition">
+        SELECT
+        ck.fUuid	AS	'uuid',
+        ck.fTerminalType	AS	'terminalType',
+        ck.fKeyword	AS	'keyword',
+        ck.fUrl	AS	'url',
+        ck.fTitle	AS	'title',
+        ck.fSearchEngine	AS	'searchEngine',
+        ck.fBearPawNumber AS 'bearPawNumber'
+        FROM t_customer_keyword ck
+        WHERE ck.fTerminalType = #{terminalType} and ck.fStatus = 1
+        AND fCaptureStatus = #{captureStatus}
+        <if test="startTime != null and captureStatus == 0">
+            AND ck.fCapturePositionQueryTime <![CDATA[<]]> #{startTime}
+            <if test="saveTopThree == true">
+                AND !(ck.fCapturePositionQueryTime > CURRENT_DATE() AND ck.fCurrentPosition &lt; 4 AND ck.fCurrentPosition &gt; 0)
+            </if>
+        </if>
+        <if test="startTime != null and captureStatus == 1">
+            AND ck.fCapturePositionQueryTime <![CDATA[<]]> DATE_SUB( NOW(), INTERVAL 3 MINUTE )
+        </if>
+        <if test="customerUuid != null">
+            AND ck.fCustomerUuid = #{customerUuid}
+        </if>
+        <if test="groupName != null">
+            AND ck.fOptimizeGroupName = #{groupName}
+        </if>
         LIMIT 500
     </select>
 

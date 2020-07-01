@@ -16,6 +16,7 @@ import com.keymanager.monitoring.vo.UpdateOptimizedCountVO;
 import com.keymanager.util.AESTest;
 import com.keymanager.util.AESUtils;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
+import java.util.ArrayList;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -128,15 +129,45 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
         Integer customerUuid = (requestMap.get("customerUuid") == null) ? null
                 : (Integer) requestMap.get("customerUuid");
         Integer captureRankJobUuid = (Integer) requestMap.get("captureRankJobUuid");
+        Boolean saveTopThree = requestMap.get("saveTopThree") == null ? true : (Boolean) requestMap.get("saveTopThree");
         try {
             if (validUser(userName, password)) {
                 CustomerKeywordForCapturePosition capturePosition = customerKeywordService.getCustomerKeywordForCapturePosition(terminalType,
-                        groupNames, customerUuid != null ? customerUuid.longValue() : null, startTime, captureRankJobUuid.longValue());
+                        groupNames, customerUuid != null ? customerUuid.longValue() : null, startTime, captureRankJobUuid.longValue(), saveTopThree);
                 if (capturePosition == null) {
                     capturePosition = new CustomerKeywordForCapturePosition();
                     capturePosition.setKeyword("end");
                 }
                 return new ResponseEntity<Object>(capturePosition, HttpStatus.OK);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.error("getCustomerKeywordForCapturePosition:        " + ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/getCustomerKeywordForCapturePosition2", method = RequestMethod.POST)
+    public ResponseEntity<?> getCustomerKeywordForCapturePosition2(
+            @RequestBody Map<String, Object> requestMap, HttpServletRequest request) throws Exception {
+        String userName = (String) requestMap.get("userName");
+        String password = (String) requestMap.get("password");
+        String terminalType = (String) requestMap.get("terminalType");
+        String groupName = (String) requestMap.get("groupName");
+        Date startTime = new Date((Long) requestMap.get("startTime"));
+        Integer customerUuid = (requestMap.get("customerUuid") == null) ? null : (Integer) requestMap.get("customerUuid");
+        Integer captureRankJobUuid = (Integer) requestMap.get("captureRankJobUuid");
+        Boolean saveTopThree = requestMap.get("saveTopThree") == null ? true : (Boolean) requestMap.get("saveTopThree");
+        try {
+            if (validUser(userName, password)) {
+                List<CustomerKeywordForCapturePosition> capturePositions = customerKeywordService.getCustomerKeywordForCapturePosition2(terminalType,
+                        groupName, customerUuid != null ? customerUuid.longValue() : null, startTime, captureRankJobUuid.longValue(), saveTopThree);
+                if (capturePositions.size() == 0) {
+                    CustomerKeywordForCapturePosition customerKeywordForCapturePosition = new CustomerKeywordForCapturePosition();
+                    customerKeywordForCapturePosition.setKeyword("end");
+                    capturePositions.add(customerKeywordForCapturePosition);
+                }
+                return new ResponseEntity<Object>(capturePositions, HttpStatus.OK);
             }
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -173,8 +173,9 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     void deleteSysCustomerKeywordByQzId(Long uuid);
 
-    CustomerKeywordForCapturePosition getCustomerKeywordForCapturePosition(String terminalType, List<String> groupNames, Long customerUuid,
-                                                                                  Date startTime, Long captureRankJobUuid);
+    CustomerKeywordForCapturePosition getCustomerKeywordForCapturePosition(String terminalType, List<String> groupNames, Long customerUuid, Date startTime, Long captureRankJobUuid, Boolean saveTopThree);
+
+    List<CustomerKeywordForCapturePosition> getCustomerKeywordForCapturePosition2(String terminalType, String groupName, Long customerUuid, Date startTime, Long captureRankJobUuid, Boolean saveTopThree);
 
     Boolean batchDownKeywordsForExcel(CustomerKeywordUploadVO customerKeywordUploadVo, String loginName);
 
@@ -189,4 +190,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void updateCustomerKeywordIncludeCheckTime(Long customerKeywordUuid, Date startTime);
 
     void checkCustomerKeywordOperaStatus();
+    
+    void clearOptimizeGroupNameQueueForKey(String key);
 }
