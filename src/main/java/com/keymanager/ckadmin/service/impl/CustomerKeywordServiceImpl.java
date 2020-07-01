@@ -223,6 +223,14 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         updateOptimizedResultQueue.offer(updateOptimizedCountVO);
     }
 
+    @Override
+    public void clearOptimizeGroupNameQueueForKey(String key){
+        LinkedBlockingQueue capturePositionCustomerKeywordQueue = optimizeGroupNameQueueMap.get(key);
+        if (capturePositionCustomerKeywordQueue != null && capturePositionCustomerKeywordQueue.size() == 0) {
+            optimizeGroupNameQueueMap.remove(key);
+        }
+    }
+
     public CustomerKeywordForCapturePosition getCustomerKeywordForCapturePosition(String terminalType, List<String> groupNames, Long customerUuid,
                                                                                   Date startTime, Long captureRankJobUuid, Boolean saveTopThree) {
         Boolean captureRankJobStatus = captureRankJobService.getCaptureRankJobStatus(captureRankJobUuid);
