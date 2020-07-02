@@ -172,35 +172,37 @@
         var common = layui.common;
         var element = layui.element;
 
-        var terminalType = $("#terminalType").val();
-        if (terminalType === '' || terminalType == null) {
-            terminalType = 'PC'
-        }
-
-        $.ajax({
-            url: '/internal/algorithmAutoTest/getAlgorithmTestPlanAddData/'+ terminalType,
-            type: 'get',
-            dataType: 'json',
-            success: function (res) {
-                // 一旦设置的 dataType 选项，就不再关心 服务端 响应的 Content-Type 了
-                // 客户端会主观认为服务端返回的就是 JSON 格式的字符串
-                var html = "";
-                for (var item in res.data.searchEngineMap) {
-                    html += "<option value='";
-                    html += item;
-                    html += "'";
-                    if (res.data.searchEngineMap[item] == "百度") {
-                        html += " selected";
-                    }
-                    html += ">";
-                    html += res.data.searchEngineMap[item];
-                    html += "</option>";
-                }
-                $("#searchEngine").empty();
-                $("#searchEngine").append(html);
-                form.render('select');
+        function init_search_engine(){
+            var terminalType = $("#terminalType").val();
+            if (terminalType === '' || terminalType == null) {
+                terminalType = 'PC'
             }
-        });
+
+            $.ajax({
+                url: '/internal/algorithmAutoTest/getAlgorithmTestPlanAddData/'+ terminalType,
+                type: 'get',
+                dataType: 'json',
+                success: function (res) {
+                    // 一旦设置的 dataType 选项，就不再关心 服务端 响应的 Content-Type 了
+                    // 客户端会主观认为服务端返回的就是 JSON 格式的字符串
+                    var html = "";
+                    for (var item in res.data.searchEngineMap) {
+                        html += "<option value='";
+                        html += item;
+                        html += "'";
+                        if (res.data.searchEngineMap[item] == "百度") {
+                            html += " selected";
+                        }
+                        html += ">";
+                        html += res.data.searchEngineMap[item];
+                        html += "</option>";
+                    }
+                    $("#searchEngine").empty();
+                    $("#searchEngine").append(html);
+                    form.render('select');
+                }
+            });
+        }
 
         function init_table_data(whereCondition) {
             whereCondition.entryType = 'pt';
@@ -597,9 +599,11 @@
             var d = data.elem.context.dataset;
             $('#terminalType').val(d.terminal);
             active['reload'].call(this);
+            init_search_engine();
         });
 
         init_table_data({init: 'init'});
+        init_search_engine();
 
         function toOperationCombine(data){
             var url = '/internal/groupsetting/toGroupSettingFromATP/'+data.terminalType +'/'+data.operationCombineName;

@@ -8,6 +8,8 @@ public class ProductCriteria extends BaseCriteria {
 
     private String productName;
 
+    private String terminalType;
+
     public Long getProductId() {
         return productId;
     }
@@ -22,5 +24,13 @@ public class ProductCriteria extends BaseCriteria {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public String getTerminalType() {
+        return terminalType;
+    }
+
+    public void setTerminalType(String terminalType) {
+        this.terminalType = terminalType;
     }
 }
