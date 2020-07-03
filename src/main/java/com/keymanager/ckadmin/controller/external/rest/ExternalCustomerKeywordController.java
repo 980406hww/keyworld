@@ -9,6 +9,7 @@ import com.keymanager.ckadmin.entity.MachineInfo;
 import com.keymanager.ckadmin.service.*;
 import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.util.Utils;
+import com.keymanager.ckadmin.vo.ExternalCustomerKeywordIndexVO;
 import com.keymanager.ckadmin.vo.OptimizationMachineVO;
 import com.keymanager.ckadmin.vo.OptimizationVO;
 import com.keymanager.ckadmin.vo.SearchEngineResultVO;
@@ -485,6 +486,22 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
             logger.error("updateCustomerKeywordIncludeStatus:        " + ex.getMessage());
         }
         return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/getTenCustomerKeywordsForCaptureIndex", method = RequestMethod.POST)
+    public ResponseEntity<?> getTenCustomerKeywordsForCaptureIndex(@RequestBody Map<String, Object> requestMap) throws Exception {
+        String userName = (String) requestMap.get("userName");
+        String password = (String) requestMap.get("password");
+        try {
+            if (validUser(userName, password)) {
+                List<ExternalCustomerKeywordIndexVO> customerKeywords = customerKeywordService.getCustomerKeywordForCaptureIndex();
+                return new ResponseEntity<Object>(customerKeywords, HttpStatus.OK);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            logger.error("getTenCustomerKeywordsForCaptureIndex:     " + ex.getMessage());
+        }
+        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
 }

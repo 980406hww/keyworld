@@ -15,11 +15,13 @@ import com.keymanager.ckadmin.vo.CodeNameVo;
 import com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordIncludeVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
+import com.keymanager.ckadmin.vo.ExternalCustomerKeywordIndexVO;
 import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.KeywordCountVO;
 import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
 import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
+import com.keymanager.monitoring.vo.ExternalCustomerKeywordVO;
 import com.keymanager.monitoring.vo.UpdateOptimizedCountSimpleVO;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import java.util.*;
@@ -194,4 +196,8 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void updateCustomerKeywordIncludeCheckTime(@Param("customerKeywordUuid") Long customerKeywordUuid, @Param("includeCheckTime") Date includeCheckTime);
 
     void updateCustomerKeywordFailedCause(@Param("customerKeywordUuid") Long customerKeywordUuid, @Param("failedCause") String failedCause);
+
+    List<ExternalCustomerKeywordIndexVO> getCustomerKeywordsForCaptureIndex();
+
+    void updateCaptureIndexQueryTimeByKeywords(@Param("customerKeywordUuids") List<Long> customerKeywordUuids);
 }
