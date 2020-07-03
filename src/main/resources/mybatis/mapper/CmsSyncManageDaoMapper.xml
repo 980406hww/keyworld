@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.CmsSyncManageDao">
+
+    <select id="selectCmsSyncManage" resultType="com.keymanager.monitoring.entity.CmsSyncManage">
+        select ID, USER_ID, COMPANY_CODE, TYPE from cms_sync_manage where COMPANY_CODE = #{companyCode} and TYPE = #{type} LIMIT 1
+    </select>
+
+</mapper>

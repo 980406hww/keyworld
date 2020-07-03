@@ -6,9 +6,7 @@ import com.keymanager.monitoring.entity.PtCustomerKeywordTemporary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-@Service
+@Service("ptCustomerKeywordTemporaryService2")
 public class PtCustomerKeywordTemporaryService extends ServiceImpl<PtCustomerKeywordTemporaryDao, PtCustomerKeywordTemporary> {
 
     @Autowired

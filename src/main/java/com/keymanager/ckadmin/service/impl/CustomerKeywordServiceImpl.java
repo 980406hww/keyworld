@@ -15,7 +15,9 @@ import com.keymanager.ckadmin.util.Constants;
 import com.keymanager.ckadmin.util.StringUtil;
 import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.*;
+import com.keymanager.monitoring.entity.CmsSyncManage;
 import com.keymanager.monitoring.entity.PtCustomerKeyword;
+import com.keymanager.monitoring.service.CmsSyncManageService;
 import com.keymanager.monitoring.service.PtCustomerKeywordService;
 import com.keymanager.monitoring.service.PtCustomerKeywordTemporaryService;
 import com.keymanager.monitoring.vo.UpdateOptimizedCountSimpleVO;
@@ -27,7 +29,6 @@ import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -84,11 +85,14 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Resource(name = "customerService2")
     private CustomerService customerService;
 
-    @Autowired
+    @Resource(name = "ptCustomerKeywordService2")
     private PtCustomerKeywordService ptCustomerKeywordService;
 
-    @Autowired
+    @Resource(name = "ptCustomerKeywordTemporaryService2")
     private PtCustomerKeywordTemporaryService ptCustomerKeywordTemporaryService;
+
+    @Resource(name = "cmsSyncManageService2")
+    private CmsSyncManageService syncManageService;
 
     private final static LinkedBlockingQueue updateOptimizedResultQueue = new LinkedBlockingQueue();
 
@@ -1480,7 +1484,6 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             customerKeyword.setSearchEngine(ptKeyword.getSearchEngine());
             customerKeyword.setTerminalType(ptKeyword.getTerminalType());
             customerKeyword.setOriginalUrl(ptKeyword.getUrl());
-//            customerKeyword.setBearPawNumber(ptKeyword.getBearPawNumber());
             customerKeyword.setCurrentPosition(ptKeyword.getCurrentPosition());
             customerKeyword.setTitle(ptKeyword.getTitle());
 
@@ -1539,7 +1542,6 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             if (null != config) {
                 String customerNameStr = config.getValue();
                 if (com.keymanager.util.common.StringUtil.isNotNullNorEmpty(customerNameStr)) {
-                    String[] customerNames = customerNameStr.replaceAll(" ", "").split(",");
                     // 默认行数 20000
                     int rows = 20000;
                     // 读取配置表同步更新排名sql的行数
@@ -1547,31 +1549,40 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                     if (null != defaultRowNumber) {
                         rows = Integer.parseInt(defaultRowNumber.getValue());
                     }
-                    for (String customerName : customerNames) {
-                        // 读取客户记录同步操作状态时间的信息
-                        Config lastSyncConfig = configService.getConfig(com.keymanager.util.Constants.CONFIG_TYPE_SYNC_PT_OPERA_STATUS_TIME, customerName);
-                        // 上次同步操作状态时间，超过60分钟，认为是未同步
-                        boolean overAnHour = com.keymanager.util.Utils.getIntervalMines(lastSyncConfig.getValue()) > 60;
-                        if (overAnHour) {
-                            Customer customer = customerService.selectByName(customerName);
-                            if (null != customer) {
-                                // 清空临时表数据 truncate
-                                ptCustomerKeywordTemporaryService.cleanPtCustomerKeyword();
-                                // 临时存放关键词操作状态 set fMark = 0
-                                ptCustomerKeywordTemporaryService.insertIntoTemporaryData(customer.getUuid(), "pt");
-                                do {
-                                    // 修改标识为更新中，行数 rows set fMark = 2
-                                    ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 2, 0);
-                                    // 更新操作状态
-                                    ptCustomerKeywordService.updatePtKeywordOperaStatus();
-                                    // 修改标识为已更新，行数 rows set fMark = 1
-                                    ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 1, 2);
-                                } while (ptCustomerKeywordTemporaryService.searchPtKeywordTemporaryCount() > 0);
-                                // 当前时间
-                                String currentTime = Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy-MM-dd HH:mm");
-                                // 更新同步时间
-                                lastSyncConfig.setValue(currentTime);
-                                configService.updateConfig(lastSyncConfig);
+
+                    HashMap<Long, HashMap<String, CmsSyncManage>> syncMap = syncManageService.searchSyncManageMap(customerNameStr, "pt");
+                    for (Map.Entry<Long, HashMap<String, CmsSyncManage>> entry : syncMap.entrySet()) {
+                        long userId = entry.getKey();
+                        for (CmsSyncManage syncManage : entry.getValue().values()) {
+                            // 读取客户记录同步操作状态时间的信息
+                            Config lastSyncConfig = configService.getConfig(com.keymanager.util.Constants.CONFIG_TYPE_SYNC_PT_OPERA_STATUS_TIME, syncManage.getCompanyCode());
+                            // 上次同步操作状态时间，超过60分钟，认为是未同步
+                            boolean overAnHour = com.keymanager.util.Utils.getIntervalMines(lastSyncConfig.getValue()) > 60;
+                            if (overAnHour) {
+                                Customer customer = customerService.selectByName(syncManage.getCompanyCode());
+                                if (null != customer) {
+                                    // 清空临时表数据 truncate
+                                    ptCustomerKeywordTemporaryService.cleanPtCustomerKeyword();
+                                    // 临时存放关键词操作状态 set fMark = 0
+                                    ptCustomerKeywordTemporaryService.insertIntoTemporaryData(customer.getUuid(), "pt");
+                                    do {
+                                        // 修改标识为更新中，行数 rows set fMark = 2
+                                        ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 2, 0);
+                                        // 更新操作状态
+                                        ptCustomerKeywordService.updatePtKeywordOperaStatus(userId);
+                                        // 修改标识为已更新，行数 rows set fMark = 1
+                                        ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 1, 2);
+                                    } while (ptCustomerKeywordTemporaryService.searchPtKeywordTemporaryCount() > 0);
+                                    // 当前时间
+                                    String currentTime = Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy-MM-dd HH:mm");;
+                                    // 更新同步时间
+                                    lastSyncConfig.setValue(currentTime);
+                                    configService.updateConfig(lastSyncConfig);
+
+                                    // 记录最近同步操作状态的时间
+                                    syncManage.setSyncOperaStatusTime(currentTime);
+                                    syncManageService.updateById(syncManage);
+                                }
                             }
                         }
                     }

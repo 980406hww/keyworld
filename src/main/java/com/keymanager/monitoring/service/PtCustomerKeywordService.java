@@ -5,7 +5,9 @@ import com.keymanager.ckadmin.entity.Customer;
 import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
 import com.keymanager.ckadmin.service.CustomerService;
+import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.monitoring.dao.PtCustomerKeywordDao;
+import com.keymanager.monitoring.entity.CmsSyncManage;
 import com.keymanager.monitoring.entity.PtCustomerKeyword;
 import com.keymanager.util.Constants;
 import com.keymanager.util.common.StringUtil;
@@ -15,7 +17,10 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 
 @Service("ptCustomerKeywordService2")
 public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, PtCustomerKeyword> {
@@ -32,30 +37,15 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
     @Resource(name = "configService2")
     private ConfigService configService;
 
+    @Resource(name = "cmsSyncManageService2")
+    private CmsSyncManageService syncManageService;
+
     public void updatePtCustomerKeywordStatus() {
         // 读取配置表需要同步pt关键词的客户信息
         Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD, Constants.CONFIG_KEY_SYNC_CUSTOMER_NAME);
         if (null != config) {
             String customerNameStr = config.getValue();
             if (StringUtil.isNotNullNorEmpty(customerNameStr)) {
-                String[] customerNames = customerNameStr.replaceAll(" ", "").split(",");
-
-                // 处理有更新状态的关键词 status = 4 keyword, url, title
-                ptCustomerKeywordDao.updateCustomerKeyword();
-
-                // 处理已删除的关键词 status = 3
-                List<Long> customerKeywordUuids = ptCustomerKeywordDao.selectCustomerDelKeywords();
-                if (CollectionUtils.isNotEmpty(customerKeywordUuids)) {
-                    customerKeywordService.deleteBatchIds(customerKeywordUuids);
-                }
-                ptCustomerKeywordDao.deleteSaleDelKeywords();
-
-                // 处理暂不操作的词 status = 0
-                ptCustomerKeywordDao.updateCustomerKeywordDiffStatus();
-
-                // 清理不再需要同步的客户数据
-                ptCustomerKeywordDao.cleanNotExistCustomerKeyword(customerNames);
-
                 // 一次处理 n条数据
                 int rows = 5000;
                 // 读取配置表一次操作的大小
@@ -63,6 +53,7 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
                 if (null != defaultSubListSize) {
                     rows = Integer.parseInt(defaultSubListSize.getValue());
                 }
+
                 // 默认优化组
                 String optimizeGroupName = "Default";
                 // 读取配置表默认优化组
@@ -70,6 +61,7 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
                 if (null != defaultOptimizeGroupName) {
                     optimizeGroupName = defaultOptimizeGroupName.getValue();
                 }
+
                 // 默认机器分组
                 String machineGroupName = "super";
                 // 读取配置表默认优化组
@@ -78,36 +70,62 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
                     machineGroupName = defaultMachineGroupName.getValue();
                 }
 
-                for (String customerName : customerNames) {
-                    // 处理新增状态的关键词 status = 2
-                    List<PtCustomerKeyword> ptKeywords = ptCustomerKeywordDao.selectNewPtKeyword(customerName);
-                    if (CollectionUtils.isNotEmpty(ptKeywords)) {
-                        int fromIndex = 0, toIndex = rows;
-                        List<PtCustomerKeyword> tempList;
-                        do {
-                            tempList = ptKeywords.subList(fromIndex, Math.min(toIndex, ptKeywords.size()));
+                HashMap<Long, HashMap<String, CmsSyncManage>> syncMap = syncManageService.searchSyncManageMap(customerNameStr, "pt");
+                if (!syncMap.isEmpty()) {
+                    for (Map.Entry<Long, HashMap<String, CmsSyncManage>> entry : syncMap.entrySet()) {
+                        long userId = entry.getKey();
+                        // 处理有更新状态的关键词 status = 4 keyword, url, title
+                        ptCustomerKeywordDao.updateCustomerKeyword(userId);
 
-                            Customer customer = customerService.selectByName(customerName);
-                            // 类似列表上传关键词，新增关键词并激活
-                            customerKeywordService.addCustomerKeywordsFromSeoSystem(tempList, customer.getUuid(), optimizeGroupName, machineGroupName);
-                            // 修改新增关键词的状态为激活并关联customerKeywordId
-                            this.updateBatchById(tempList);
+                        // 处理已删除的关键词 status = 3
+                        List<Long> customerKeywordUuids = ptCustomerKeywordDao.selectCustomerDelKeywords(userId);
+                        if (CollectionUtils.isNotEmpty(customerKeywordUuids)) {
+                            customerKeywordService.deleteBatchIds(customerKeywordUuids);
+                        }
+                        ptCustomerKeywordDao.deleteSaleDelKeywords(userId);
 
-                            fromIndex += rows;
-                            toIndex += rows;
-                            tempList.clear();
-                        } while (ptKeywords.size() > fromIndex);
+                        // 处理暂不操作的词 status = 0
+                        ptCustomerKeywordDao.updateCustomerKeywordDiffStatus(userId);
+
+                        for (CmsSyncManage cmsSyncManage : entry.getValue().values()) {
+                            // 处理新增状态的关键词 status = 2
+                            List<PtCustomerKeyword> ptKeywords = ptCustomerKeywordDao.selectNewPtKeyword(userId);
+                            if (CollectionUtils.isNotEmpty(ptKeywords)) {
+                                int fromIndex = 0, toIndex = rows;
+                                List<PtCustomerKeyword> tempList;
+                                Customer customer = customerService.selectByName(cmsSyncManage.getCompanyCode());
+                                if (null != customer) {
+                                    do {
+                                        tempList = ptKeywords.subList(fromIndex, Math.min(toIndex, ptKeywords.size()));
+                                        // 类似列表上传关键词，新增关键词并激活
+                                        customerKeywordService.addCustomerKeywordsFromSeoSystem(tempList, customer.getUuid(), optimizeGroupName, machineGroupName);
+                                        // 修改新增关键词的状态为激活并关联customerKeywordId
+                                        this.updateBatchById(tempList);
+                                        tempList.clear();
+
+                                        fromIndex += rows;
+                                        toIndex += rows;
+                                    } while (ptKeywords.size() > fromIndex);
+                                }
+                                // 当前时间
+                                String currentTime = Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy-MM-dd HH:mm");
+
+                                // 记录最近同步状态的时间
+                                cmsSyncManage.setSyncStatusTime(currentTime);
+                                syncManageService.updateById(cmsSyncManage);
+                            }
+                        }
                     }
                 }
             }
         }
     }
 
-    public void updatePtKeywordCurrentPosition() {
-        ptCustomerKeywordDao.updatePtKeywordCurrentPosition();
+    public void updatePtKeywordCurrentPosition(long userId) {
+        ptCustomerKeywordDao.updatePtKeywordCurrentPosition(userId);
     }
 
-    public void updatePtKeywordOperaStatus() {
-        ptCustomerKeywordDao.updatePtKeywordOperaStatus();
+    public void updatePtKeywordOperaStatus(long userId) {
+        ptCustomerKeywordDao.updatePtKeywordOperaStatus(userId);
     }
 }

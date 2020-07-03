@@ -13,34 +13,29 @@ public interface PtCustomerKeywordDao extends BaseMapper<PtCustomerKeyword> {
     /**
      * 查询新增的关键词
      */
-    List<PtCustomerKeyword> selectNewPtKeyword(@Param("customerName") String customerName);
+    List<PtCustomerKeyword> selectNewPtKeyword(@Param("userId") long userId);
 
     /**
      * 查询客户删除的词uuid集
      */
-    List<Long> selectCustomerDelKeywords();
+    List<Long> selectCustomerDelKeywords(@Param("userId") long userId);
 
     /**
      * 处理暂不操作的词
      */
-    void updateCustomerKeywordDiffStatus();
+    void updateCustomerKeywordDiffStatus(@Param("userId") long userId);
 
     /**
      * 清理销售已删除的词
      */
-    void deleteSaleDelKeywords();
+    void deleteSaleDelKeywords(@Param("userId") long userId);
 
-    /**
-     * 清理不再需要同步的客户数据
-     */
-    void cleanNotExistCustomerKeyword(@Param("customerNames") String[] customerNames);
-
-    void updatePtKeywordCurrentPosition();
+    void updatePtKeywordCurrentPosition(@Param("userId") long userId);
 
     /**
      * 客户更新过的词需同步keyword，url，title到t_customer_keyword
      */
-    void updateCustomerKeyword();
+    void updateCustomerKeyword(@Param("userId") long userId);
 
-    void updatePtKeywordOperaStatus();
+    void updatePtKeywordOperaStatus(@Param("userId") long userId);
 }

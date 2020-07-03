@@ -18,7 +18,7 @@ public class SyncPtCustomerKeywordSchedule {
     private CustomerKeywordService customerKeywordService;
 
     public void runTask() {
-        logger.info("============= " + " Sync Pt Customer Keyword Schedule Task " + "===================");
+        logger.info("============= " + " Sync Pt Customer Keyword Schedule Task Start" + "===================");
         try {
             // 同步指定的客户关键词
             customerKeywordService.getPTCustomerKeyword();
@@ -26,5 +26,6 @@ public class SyncPtCustomerKeywordSchedule {
             e.printStackTrace();
             logger.error(" Sync Pt Customer Keyword Schedule Task is error" + e.getMessage());
         }
+        logger.info("============= " + " Sync Pt Customer Keyword Schedule Task Finish" + "===================");
     }
 }

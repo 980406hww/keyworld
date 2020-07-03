@@ -16,11 +16,12 @@ public class SyncPTCustomerKeywordOperaStatusSchedule {
     private CustomerKeywordService customerKeywordService;
 
     public void runTask() {
-        logger.info("============= " + " Check CustomerKeyword OperaStatus Task " + "===================");
+        logger.info("============= " + " Check CustomerKeyword OperaStatus Task Start" + "===================");
         try {
             customerKeywordService.checkCustomerKeywordOperaStatus();
         } catch (Exception e) {
             logger.error(" Check CustomerKeyword OperaStatus Task Run error " + e.getMessage());
         }
+        logger.info("============= " + " Check CustomerKeyword OperaStatus Task Finish" + "===================");
     }
 }

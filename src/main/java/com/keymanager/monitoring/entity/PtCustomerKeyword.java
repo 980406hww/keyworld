@@ -16,6 +16,9 @@ public class PtCustomerKeyword implements Serializable {
     @TableId(value = "ID", type= IdType.AUTO)
     private Long id;
 
+    @TableField(value = "USER_ID")
+    private Long userId;
+
     @TableField(value = "CUSTOMER_KEYWORD_ID")
     private Long customerKeywordId;
 
@@ -34,17 +37,14 @@ public class PtCustomerKeyword implements Serializable {
     @TableField(value = "TERMINAL_TYPE")
     private String terminalType;
 
-    @TableField(value = "BEAR_PAW_NUM")
-    private String bearPawNumber;
+    @TableField(value = "KEYWORD_GROUP")
+    private String keywordGroup;
 
     @TableField(value = "STATUS")
     private Integer status;
 
-    @TableField(value = "CITY")
-    private String city;
-
-    @TableField(value = "COMPANY_CODE")
-    private String companyCode;
+    @TableField(value = "OPERA_STATUS")
+    private Integer operaStatus;
 
     @TableField(value = "CURRENT_POSITION")
     private Integer currentPosition;
@@ -52,14 +52,8 @@ public class PtCustomerKeyword implements Serializable {
     @TableField(value = "PRICE_PER_DAY")
     private Double pricePreDay;
 
-    @TableField(value = "CAPTURE_POSITION_CITY")
-    private String capturePositionCity;
-
     @TableField(value = "CAPTURE_POSITION_TIME")
     private Date capturePositionTime;
-
-    @TableField(value = "CAPTURE_STATUS")
-    private Integer captureStatus;
 
     @TableField(value = "CREATE_TIME")
     private Date createTime;
@@ -73,6 +67,14 @@ public class PtCustomerKeyword implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getCustomerKeywordId() {
@@ -123,12 +125,12 @@ public class PtCustomerKeyword implements Serializable {
         this.terminalType = terminalType;
     }
 
-    public String getBearPawNumber() {
-        return bearPawNumber;
+    public String getKeywordGroup() {
+        return keywordGroup;
     }
 
-    public void setBearPawNumber(String bearPawNumber) {
-        this.bearPawNumber = bearPawNumber;
+    public void setKeywordGroup(String keywordGroup) {
+        this.keywordGroup = keywordGroup;
     }
 
     public Integer getStatus() {
@@ -139,20 +141,12 @@ public class PtCustomerKeyword implements Serializable {
         this.status = status;
     }
 
-    public String getCity() {
-        return city;
+    public Integer getOperaStatus() {
+        return operaStatus;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCompanyCode() {
-        return companyCode;
-    }
-
-    public void setCompanyCode(String companyCode) {
-        this.companyCode = companyCode;
+    public void setOperaStatus(Integer operaStatus) {
+        this.operaStatus = operaStatus;
     }
 
     public Integer getCurrentPosition() {
@@ -171,28 +165,12 @@ public class PtCustomerKeyword implements Serializable {
         this.pricePreDay = pricePreDay;
     }
 
-    public String getCapturePositionCity() {
-        return capturePositionCity;
-    }
-
-    public void setCapturePositionCity(String capturePositionCity) {
-        this.capturePositionCity = capturePositionCity;
-    }
-
     public Date getCapturePositionTime() {
         return capturePositionTime;
     }
 
     public void setCapturePositionTime(Date capturePositionTime) {
         this.capturePositionTime = capturePositionTime;
-    }
-
-    public Integer getCaptureStatus() {
-        return captureStatus;
-    }
-
-    public void setCaptureStatus(Integer captureStatus) {
-        this.captureStatus = captureStatus;
     }
 
     public Date getCreateTime() {
