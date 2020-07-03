@@ -66,11 +66,11 @@ public interface QZSettingDao extends BaseMapper<QZSetting> {
     /**
      * replace 替换站点信息
      */
-    void replaceQZSettings(@Param("qzSettingForSyncs") List<QZSettingForSync> qzSettingForSyncs, @Param("qzCustomerTag") String qzCustomerTag);
+    void replaceQZSettings(@Param("qzSettingForSyncs") List<QZSettingForSync> qzSettingForSyncs, @Param("userId") long userId);
 
     /**
-     * 清空 sys_qz_setting 表的数据
+     * 根据userId清空 sys_qz_setting 表的数据
      */
-    void deleteSysQzSettings(@Param("qzCustomerTag") String qzCustomerTag);
+    void deleteSysQzSettings(@Param("userId") long userId);
 }
 

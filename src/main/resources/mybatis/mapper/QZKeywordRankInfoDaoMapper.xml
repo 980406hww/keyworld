@@ -178,31 +178,15 @@
             qk.fQZSettingUuid AS 'qsId',
             qk.fTerminalType AS 'terminalType',
             qk.fWebsiteType AS 'websiteType',
-            qk.fDataProcessingStatus AS 'processingType',
             qk.fTopTen AS 'topTen',
             qk.fTopTwenty AS 'topTwenty',
             qk.fTopThirty AS 'topThirty',
             qk.fTopForty AS 'topForty',
             qk.fTopFifty AS 'topFifty',
-            qk.fTopHundred AS 'topHundred',
-            qk.fDate AS 'date',
-            qk.fIncrease AS 'increase',
-            qk.fTodayDifference AS 'todayDiffVal',
-            qk.fOneWeekDifference AS 'oneWeekDiffVal',
-            qk.fBaiduRecordFullDate AS 'recordDate',
-            qk.fRecord AS 'record',
-            qk.fCreateTopTenNum AS 'initTopTenNum',
-            qk.fCreateTopFiftyNum AS 'initTopFiftyNum'
+            qk.fDate AS 'date'
         FROM t_qz_keyword_rank_info qk
         WHERE qk.fQZSettingUuid = #{qzSettingUuid}
-        <choose>
-            <when test="searchEngine == '百度'">
-                AND qk.fWebsiteType = 'xt'
-            </when>
-            <otherwise>
-                AND qk.fWebsiteType = 'designationWord'
-            </otherwise>
-        </choose>
+        AND qk.fWebsiteType = 'xt'
         LIMIT #{limitRow}
     </select>
 
@@ -210,30 +194,21 @@
         REPLACE INTO sys_qz_keyword_rank VALUES
         <foreach collection="qzKeywordRanks" item="qzKeywordRank" separator=",">
             (
-            #{qzKeywordRank.qkId},
-            #{qzKeywordRank.qsId},
-            #{qzKeywordRank.terminalType},
-            #{qzKeywordRank.websiteType},
-            #{qzKeywordRank.processingType},
-            #{qzKeywordRank.topTen},
-            #{qzKeywordRank.topTwenty},
-            #{qzKeywordRank.topThirty},
-            #{qzKeywordRank.topForty},
-            #{qzKeywordRank.topFifty},
-            #{qzKeywordRank.topHundred},
-            #{qzKeywordRank.date},
-            #{qzKeywordRank.increase},
-            #{qzKeywordRank.todayDiffVal},
-            #{qzKeywordRank.oneWeekDiffVal},
-            #{qzKeywordRank.recordDate},
-            #{qzKeywordRank.record},
-            #{qzKeywordRank.initTopTenNum},
-            #{qzKeywordRank.initTopFiftyNum}
+                #{qzKeywordRank.qkId},
+                #{qzKeywordRank.qsId},
+                #{qzKeywordRank.terminalType},
+                #{qzKeywordRank.websiteType},
+                #{qzKeywordRank.topTen},
+                #{qzKeywordRank.topTwenty},
+                #{qzKeywordRank.topThirty},
+                #{qzKeywordRank.topForty},
+                #{qzKeywordRank.topFifty},
+                #{qzKeywordRank.date}
             )
         </foreach>
     </insert>
 
     <delete id="deleteSysQzKeywordRanks">
-        DELETE FROM sys_qz_keyword_rank WHERE QS_ID IN (SELECT DISTINCT QS_ID FROM sys_qz_setting WHERE COMPANY_CODE = #{qzCustomerTag})
+        DELETE FROM sys_qz_keyword_rank WHERE QS_ID IN (SELECT DISTINCT QS_ID FROM sys_qz_setting WHERE USER_ID = #{userId})
     </delete>
 </mapper>

@@ -17,6 +17,7 @@ import com.keymanager.ckadmin.util.Utils;
 import com.keymanager.ckadmin.vo.*;
 import com.keymanager.monitoring.entity.CmsSyncManage;
 import com.keymanager.monitoring.entity.PtCustomerKeyword;
+import com.keymanager.monitoring.entity.SysCustomerKeyword;
 import com.keymanager.monitoring.service.CmsSyncManageService;
 import com.keymanager.monitoring.service.PtCustomerKeywordService;
 import com.keymanager.monitoring.service.PtCustomerKeywordTemporaryService;
@@ -1495,37 +1496,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             customerKeyword.setPositionFifthFee(fee);
             customerKeyword.setPositionFirstPageFee(fee);
 
-            customerKeyword.setCollectMethod(CollectMethod.PerDay.getCode());
-            customerKeyword.setManualCleanTitle(true);
-            customerKeyword.setServiceProvider("baidutop123");
-            customerKeyword.setCurrentIndexCount(-1);
-            customerKeyword.setOptimizePlanCount(50);
-            customerKeyword.setOptimizeRemainingCount(50);
             customerKeyword.setMachineGroup(machineGroupName);
             customerKeyword.setOptimizeGroupName(optimizeGroupName);
-            customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Excel.name());
-
-            int queryInterval = 24 * 60 * 60;
-            if (null != customerKeyword.getOptimizePlanCount() && customerKeyword.getOptimizePlanCount() > 0) {
-                int optimizeTodayCount = (int) Math.floor(Utils.getRoundValue(customerKeyword.getOptimizePlanCount() *
-                        (Math.random() * 0.7 + 0.5), 1));
-                queryInterval = queryInterval / optimizeTodayCount;
-                customerKeyword.setOptimizeTodayCount(optimizeTodayCount);
-                customerKeyword.setOptimizeRemainingCount(optimizeTodayCount);
-            }
-
-            customerKeyword.setQueryInterval(queryInterval);
-            customerKeyword.setCaptureStatus(0); // 默认值 0
-            customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
-            customerKeyword.setCapturePositionQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));
-            customerKeyword.setCaptureIndexQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));
-            customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
-            customerKeyword.setLastReachStandardDate(Utils.yesterday());
-            customerKeyword.setQueryTime(new Date());
-            customerKeyword.setQueryDate(new Date());
-            customerKeyword.setUpdateTime(new Date());
-            customerKeyword.setCreateTime(new Date());
-            customerKeyword.setIncludeCheckTime(new Date());
+            setCustomerKeywordProperValue(customerKeyword);
 
             customerKeywordDao.insert(customerKeyword);
             ptKeyword.setCustomerKeywordId(customerKeyword.getUuid());
@@ -1533,56 +1506,109 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public void checkCustomerKeywordOperaStatus() {
-        // 同步关键词操作状态的开关 1：开 0：关
-        Config syncSwitch = configService.getConfig(com.keymanager.util.Constants.CONFIG_TYPE_SYNC_OPERA_STATUS_SWITCH, com.keymanager.util.Constants.CONFIG_KEY_SYNC_OPERA_STATUS_SWITCH_NAME);
-        if (null != syncSwitch && "1".equals(syncSwitch.getValue())) {
-            // 读取配置表需要同步pt关键词的客户信息
-            Config config = configService.getConfig(com.keymanager.util.Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD, com.keymanager.util.Constants.CONFIG_KEY_SYNC_CUSTOMER_NAME);
-            if (null != config) {
-                String customerNameStr = config.getValue();
-                if (com.keymanager.util.common.StringUtil.isNotNullNorEmpty(customerNameStr)) {
-                    // 默认行数 20000
-                    int rows = 20000;
-                    // 读取配置表同步更新排名sql的行数
-                    Config defaultRowNumber = configService.getConfig(com.keymanager.util.Constants.CONFIG_TYPE_SYNC_KEYWORD_ROW_NUMBER, com.keymanager.util.Constants.CONFIG_KEY_SYNC_KEYWORD_ROW_NUMBER_NAME);
-                    if (null != defaultRowNumber) {
-                        rows = Integer.parseInt(defaultRowNumber.getValue());
-                    }
+    public void addQzCustomerKeywordsFromSeoSystem(List<SysCustomerKeyword> qzKeywords, Long customerUuid, long qsId, String optimizeGroupName, String machineGroupName) {
+        for (SysCustomerKeyword keyword : qzKeywords) {
+            keyword.setStatus(1);
+            CustomerKeyword customerKeyword = new CustomerKeyword();
+            customerKeyword.setCustomerUuid(customerUuid);
+            customerKeyword.setQzSettingUuid(qsId);
+            customerKeyword.setType("qz");
+            customerKeyword.setStatus(1);
+            customerKeyword.setKeyword(keyword.getKeyword());
+            customerKeyword.setUrl(keyword.getUrl());
+            customerKeyword.setSearchEngine(keyword.getSearchEngine());
+            customerKeyword.setTerminalType(keyword.getTerminalType());
+            customerKeyword.setOriginalUrl(keyword.getUrl());
+            customerKeyword.setCurrentPosition(keyword.getCurrentPosition());
 
-                    HashMap<Long, HashMap<String, CmsSyncManage>> syncMap = syncManageService.searchSyncManageMap(customerNameStr, "pt");
-                    for (Map.Entry<Long, HashMap<String, CmsSyncManage>> entry : syncMap.entrySet()) {
-                        long userId = entry.getKey();
-                        for (CmsSyncManage syncManage : entry.getValue().values()) {
-                            // 读取客户记录同步操作状态时间的信息
-                            Config lastSyncConfig = configService.getConfig(com.keymanager.util.Constants.CONFIG_TYPE_SYNC_PT_OPERA_STATUS_TIME, syncManage.getCompanyCode());
-                            // 上次同步操作状态时间，超过60分钟，认为是未同步
-                            boolean overAnHour = com.keymanager.util.Utils.getIntervalMines(lastSyncConfig.getValue()) > 60;
-                            if (overAnHour) {
-                                Customer customer = customerService.selectByName(syncManage.getCompanyCode());
-                                if (null != customer) {
-                                    // 清空临时表数据 truncate
-                                    ptCustomerKeywordTemporaryService.cleanPtCustomerKeyword();
-                                    // 临时存放关键词操作状态 set fMark = 0
-                                    ptCustomerKeywordTemporaryService.insertIntoTemporaryData(customer.getUuid(), "pt");
-                                    do {
-                                        // 修改标识为更新中，行数 rows set fMark = 2
-                                        ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 2, 0);
-                                        // 更新操作状态
-                                        ptCustomerKeywordService.updatePtKeywordOperaStatus(userId);
-                                        // 修改标识为已更新，行数 rows set fMark = 1
-                                        ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 1, 2);
-                                    } while (ptCustomerKeywordTemporaryService.searchPtKeywordTemporaryCount() > 0);
-                                    // 当前时间
-                                    String currentTime = Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy-MM-dd HH:mm");;
-                                    // 更新同步时间
-                                    lastSyncConfig.setValue(currentTime);
-                                    configService.updateConfig(lastSyncConfig);
+            customerKeyword.setMachineGroup(machineGroupName);
+            customerKeyword.setOptimizeGroupName(optimizeGroupName);
+            setCustomerKeywordProperValue(customerKeyword);
 
-                                    // 记录最近同步操作状态的时间
-                                    syncManage.setSyncOperaStatusTime(currentTime);
-                                    syncManageService.updateById(syncManage);
-                                }
+            customerKeywordDao.insert(customerKeyword);
+            keyword.setKeywordId(customerKeyword.getUuid());
+        }
+    }
+
+    private void setCustomerKeywordProperValue(CustomerKeyword customerKeyword) {
+        customerKeyword.setCollectMethod(CollectMethod.PerDay.getCode());
+        customerKeyword.setManualCleanTitle(true);
+        customerKeyword.setServiceProvider("baidutop123");
+        customerKeyword.setCurrentIndexCount(-1);
+        customerKeyword.setOptimizePlanCount(50);
+        customerKeyword.setOptimizeRemainingCount(50);
+        customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Excel.name());
+
+        int queryInterval = 24 * 60 * 60;
+        if (null != customerKeyword.getOptimizePlanCount() && customerKeyword.getOptimizePlanCount() > 0) {
+            int optimizeTodayCount = (int) Math.floor(Utils.getRoundValue(customerKeyword.getOptimizePlanCount() *
+                    (Math.random() * 0.7 + 0.5), 1));
+            queryInterval = queryInterval / optimizeTodayCount;
+            customerKeyword.setOptimizeTodayCount(optimizeTodayCount);
+            customerKeyword.setOptimizeRemainingCount(optimizeTodayCount);
+        }
+
+        customerKeyword.setQueryInterval(queryInterval);
+        customerKeyword.setCaptureStatus(0); // 默认值 0
+        customerKeyword.setAutoUpdateNegativeDateTime(Utils.getCurrentTimestamp());
+        customerKeyword.setCapturePositionQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));
+        customerKeyword.setCaptureIndexQueryTime(Utils.addDay(Utils.getCurrentTimestamp(), -2));
+        customerKeyword.setStartOptimizedTime(Utils.getCurrentTimestamp());
+        customerKeyword.setLastReachStandardDate(Utils.yesterday());
+        customerKeyword.setQueryTime(new Date());
+        customerKeyword.setQueryDate(new Date());
+        customerKeyword.setUpdateTime(new Date());
+        customerKeyword.setCreateTime(new Date());
+        customerKeyword.setIncludeCheckTime(new Date());
+    }
+
+    @Override
+    public void checkPtCustomerKeywordOperaStatus() {
+        // 读取配置表需要同步pt关键词的客户信息
+        Config config = configService.getConfig(com.keymanager.util.Constants.CONFIG_TYPE_SYNC_CUSTOMER_PT_KEYWORD, com.keymanager.util.Constants.CONFIG_KEY_SYNC_CUSTOMER_NAME);
+        if (null != config) {
+            String customerNameStr = config.getValue();
+            if (com.keymanager.util.common.StringUtil.isNotNullNorEmpty(customerNameStr)) {
+                // 默认行数 20000
+                int rows = 20000;
+                // 读取配置表同步更新排名sql的行数
+                Config defaultRowNumber = configService.getConfig(com.keymanager.util.Constants.CONFIG_TYPE_SYNC_KEYWORD_ROW_NUMBER, com.keymanager.util.Constants.CONFIG_KEY_SYNC_KEYWORD_ROW_NUMBER_NAME);
+                if (null != defaultRowNumber) {
+                    rows = Integer.parseInt(defaultRowNumber.getValue());
+                }
+
+                HashMap<Long, HashMap<String, CmsSyncManage>> syncMap = syncManageService.searchSyncManageMap(customerNameStr, "pt");
+                for (Map.Entry<Long, HashMap<String, CmsSyncManage>> entry : syncMap.entrySet()) {
+                    long userId = entry.getKey();
+                    for (CmsSyncManage syncManage : entry.getValue().values()) {
+                        // 读取客户记录同步操作状态时间的信息
+                        Config lastSyncConfig = configService.getConfig(com.keymanager.util.Constants.CONFIG_TYPE_SYNC_PT_OPERA_STATUS_TIME, syncManage.getCompanyCode());
+                        // 上次同步操作状态时间，超过60分钟，认为是未同步
+                        boolean overAnHour = com.keymanager.util.Utils.getIntervalMines(lastSyncConfig.getValue()) > 60;
+                        if (overAnHour) {
+                            Customer customer = customerService.selectByName(syncManage.getCompanyCode());
+                            if (null != customer) {
+                                // 清空临时表数据 delete
+                                ptCustomerKeywordTemporaryService.cleanPtCustomerKeyword();
+                                // 临时存放关键词操作状态 set fMark = 0
+                                ptCustomerKeywordTemporaryService.insertIntoTemporaryData(customer.getUuid(), "pt");
+                                do {
+                                    // 修改标识为更新中，行数 rows set fMark = 2
+                                    ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 2, 0);
+                                    // 更新操作状态
+                                    ptCustomerKeywordService.updatePtKeywordOperaStatus(userId);
+                                    // 修改标识为已更新，行数 rows set fMark = 1
+                                    ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 1, 2);
+                                } while (ptCustomerKeywordTemporaryService.searchPtKeywordTemporaryCount() > 0);
+                                // 当前时间
+                                String currentTime = Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy-MM-dd HH:mm");;
+                                // 更新同步时间
+                                lastSyncConfig.setValue(currentTime);
+                                configService.updateConfig(lastSyncConfig);
+
+                                // 记录最近同步操作状态的时间
+                                syncManage.setSyncOperaStatusTime(currentTime);
+                                syncManageService.updateById(syncManage);
                             }
                         }
                     }

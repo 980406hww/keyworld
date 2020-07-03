@@ -120,6 +120,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     @Resource(name = "ptCustomerKeywordTemporaryService2")
     private PtCustomerKeywordTemporaryService ptCustomerKeywordTemporaryService;
 
+    @Resource(name = "qzCustomerKeywordTemporaryService2")
+    private QzCustomerKeywordTemporaryService qzCustomerKeywordTemporaryService;
+
     @Resource(name = "customerService2")
     private com.keymanager.ckadmin.service.CustomerService customerService2;
 
@@ -1943,11 +1946,22 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public void batchInsertCustomerKeywordByCustomerUuid(Long customerUuid, Long qsId) {
-        // 数据重复判断
+    public void modifyCustomerKeyword(Long qsId, int rows) {
+        // 根据qsId判断站点是否已同步
         Long existQsId = customerKeywordDao.searchExistingSysCustomerKeywordQsId(qsId);
-        if (null == existQsId) {
-            customerKeywordDao.batchInsertCustomerKeywordByCustomerUuid(customerUuid, qsId);
+        if (null != existQsId) {
+            // 清空临时表数据 delete
+            qzCustomerKeywordTemporaryService.cleanQzCustomerKeyword();
+            // 根据客户id，将数据临时存储在中间表 insert into
+            qzCustomerKeywordTemporaryService.migrationRecordToQzCustomerKeyword(qsId, "qz");
+            do {
+                // 修改标识为更新中，行数 rows
+                qzCustomerKeywordTemporaryService.updateQzKeywordMarks(rows, 2, 0);
+                // 更新排名 update
+                customerKeywordDao.modifyCustomerKeyword(qsId);
+                // 修改标识为已更新，行数 rows
+                qzCustomerKeywordTemporaryService.updateQzKeywordMarks(rows, 1, 2);
+            } while (qzCustomerKeywordTemporaryService.searchQzKeywordTemporaryCount() > 0);
         }
     }
 
@@ -1985,7 +1999,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                     if (null != customer) {
                                         // 根据客户id判断当前时间之前的任务是否完成
                                         if (captureRankJobService.checkCaptureJobCompletedByCustomerUuid(customer.getUuid())) {
-                                            // 清空临时表数据 truncate
+                                            // 清空临时表数据 delete
                                             ptCustomerKeywordTemporaryService.cleanPtCustomerKeyword();
                                             // 根据客户id，将数据临时存储在中间表 insert into
                                             ptCustomerKeywordTemporaryService.migrationRecordToPtCustomerKeyword(customer.getUuid(), "pt");

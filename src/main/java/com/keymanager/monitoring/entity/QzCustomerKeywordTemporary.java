@@ -7,25 +7,25 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
 import java.util.Date;
 
-@TableName(value = "t_pt_customer_keyword")
-public class PtCustomerKeywordTemporary implements Serializable {
+@TableName(value = "t_qz_customer_keyword")
+public class QzCustomerKeywordTemporary implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "fUuid")
     private Long uuid;
 
-    @TableField(value = "fTitle")
-    private String title;
-
     @TableField(value = "fCurrentPosition")
     private Integer currentPosition;
 
-    @TableField(value = "fPrice")
-    private Double price;
-
     @TableField(value = "fCapturePositionQueryTime")
     private Date capturePositionQueryTime;
+
+    @TableField(value = "fOptimizePlanCount")
+    private int optimizePlanCount;
+
+    @TableField(value = "fOptimizedCount")
+    private int optimizedCount;
 
     @TableField(value = "fMark")
     private Integer mark;
@@ -41,14 +41,6 @@ public class PtCustomerKeywordTemporary implements Serializable {
         this.uuid = uuid;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public Integer getCurrentPosition() {
         return currentPosition;
     }
@@ -57,20 +49,28 @@ public class PtCustomerKeywordTemporary implements Serializable {
         this.currentPosition = currentPosition;
     }
 
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
     public Date getCapturePositionQueryTime() {
         return capturePositionQueryTime;
     }
 
     public void setCapturePositionQueryTime(Date capturePositionQueryTime) {
         this.capturePositionQueryTime = capturePositionQueryTime;
+    }
+
+    public int getOptimizePlanCount() {
+        return optimizePlanCount;
+    }
+
+    public void setOptimizePlanCount(int optimizePlanCount) {
+        this.optimizePlanCount = optimizePlanCount;
+    }
+
+    public int getOptimizedCount() {
+        return optimizedCount;
+    }
+
+    public void setOptimizedCount(int optimizedCount) {
+        this.optimizedCount = optimizedCount;
     }
 
     public Integer getMark() {

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.QzCustomerKeywordTemporaryDao">
+
+    <select id="searchQzKeywordTemporaryCount" resultType="java.lang.Integer">
+        select count(1) from t_qz_customer_keyword where fMark = 0 limit 1
+    </select>
+
+    <insert id="migrationRecordToQzCustomerKeyword">
+        insert into t_qz_customer_keyword(fUuid, fCurrentPosition, fCapturePositionQueryTime, fOptimizePlanCount, fOptimizedCount )
+        SELECT fUuid, fCurrentPosition, fCapturePositionQueryTime, fOptimizePlanCount, fOptimizedCount
+        FROM t_customer_keyword
+        WHERE fQZSettingUuid = #{qsId} AND fStatus	= 1
+    </insert>
+
+    <insert id="insertIntoTemporaryData">
+        insert into t_qz_customer_keyword(fUuid, fOperaStatus )
+        SELECT fUuid, IF(fCurrentPosition = 0 and fFailedCause > '' and fOptimizedCount = 0 and fInvalidRefreshCount = 9 and fLastOptimizeDateTime > current_date(), 0, 1)
+        FROM t_customer_keyword
+        WHERE fQZSettingUuid = #{qsId} AND fStatus	= 1
+    </insert>
+
+    <update id="updateQzKeywordMarks">
+        update t_qz_customer_keyword set fMark = #{mark} where fMark = #{targetMark} limit #{rows}
+    </update>
+
+    <update id="updateQzKeywordOperaStatus">
+        UPDATE sys_customer_keyword k, t_qz_customer_keyword tqck
+        SET k.OPERA_STATUS = tqck.fOperaStatus
+        WHERE k.QS_ID = #{qsId}
+          and k.KEYWORD_ID = tqck.fUuid
+          and tqck.fMark = 2
+    </update>
+
+    <delete id="cleanQzCustomerKeyword">
+        delete from t_qz_customer_keyword
+    </delete>
+</mapper>

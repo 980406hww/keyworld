@@ -21,6 +21,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -63,37 +64,55 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	@Autowired
 	private ConfigService configService;
-
+	
+	@Resource(name = "cmsSyncManageService2")
+	private CmsSyncManageService syncManageService;
+	
 	public void getQZCustomerKeyword() {
 		// 读取配置表需要同步的客户网站标签
 		Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_QZ_CUSTOMER_KEYWORD, Constants.CONFIG_KEY_SYNC_QZ_CUSTOMER_TAG);
 		if (null != config) {
 			String syncQzCustomerTagStr = config.getValue();
 			if (StringUtil.isNotNullNorEmpty(syncQzCustomerTagStr)) {
-				String[] syncQzCustomerTags = syncQzCustomerTagStr.replaceAll(" ", "").split(",");
-				for (String qzCustomerTag : syncQzCustomerTags) {
-					// 根据网站标签查找操作中的站点信息，进行转储，利用站点id转储站点曲线信息（百度：`xt`曲线，非百度: 指定词曲线）
-					List<QZSettingForSync> qzSettingForSyncs = qzSettingDao.getAvailableQZSettingsByTagName(qzCustomerTag);
-					List<QZKeywordRankForSync> qzKeywordRanks = new ArrayList<>();
-					if (CollectionUtils.isNotEmpty(qzSettingForSyncs)) {
-						for (QZSettingForSync qzSettingForSync : qzSettingForSyncs) {
-							String searchEngine = qzSettingForSync.getSearchEngine();
-							int limitRow = qzSettingForSync.getPcGroup() != null ? 1 : 0;
-							limitRow = qzSettingForSync.getPhoneGroup() != null ? (limitRow + 1) : limitRow;
-							List<QZKeywordRankForSync> qzKeywordRankForSyncs = qzKeywordRankInfoService.getQZKeywordRankInfoByQZSettingUuid(qzSettingForSync.getQsId(), searchEngine, limitRow);
-							if (CollectionUtils.isNotEmpty(qzKeywordRankForSyncs)) {
-								qzKeywordRanks.addAll(qzKeywordRankForSyncs);
+				// 默认行数 20000
+				int rows = 20000;
+				// 读取配置表同步更新排名sql的行数
+				Config defaultRowNumber = configService.getConfig(Constants.CONFIG_TYPE_SYNC_KEYWORD_ROW_NUMBER, Constants.CONFIG_KEY_SYNC_KEYWORD_ROW_NUMBER_NAME);
+				if (null != defaultRowNumber) {
+					rows = Integer.parseInt(defaultRowNumber.getValue());
+				}
+				HashMap<Long, HashMap<String, CmsSyncManage>> syncMap = syncManageService.searchSyncManageMap(syncQzCustomerTagStr, "qz");
+				for (Map.Entry<Long, HashMap<String, CmsSyncManage>> entry : syncMap.entrySet()) {
+					long userId = entry.getKey();
+					for (CmsSyncManage syncManage : entry.getValue().values()) {
+						// 根据网站标签查找操作中的站点信息，进行转储，利用站点id转储站点曲线信息（操作词曲线）
+						List<QZSettingForSync> qzSettingForSyncs = qzSettingDao.getAvailableQZSettingsByTagName(syncManage.getCompanyCode());
+						List<QZKeywordRankForSync> qzKeywordRanks = new ArrayList<>();
+						if (CollectionUtils.isNotEmpty(qzSettingForSyncs)) {
+							for (QZSettingForSync qzSettingForSync : qzSettingForSyncs) {
+								String searchEngine = qzSettingForSync.getSearchEngine();
+								int limitRow = qzSettingForSync.getPcGroup() != null ? 1 : 0;
+								limitRow = qzSettingForSync.getPhoneGroup() != null ? (limitRow + 1) : limitRow;
+								List<QZKeywordRankForSync> qzKeywordRankForSyncs = qzKeywordRankInfoService.getQZKeywordRankInfoByQZSettingUuid(qzSettingForSync.getQsId(), searchEngine, limitRow);
+								if (CollectionUtils.isNotEmpty(qzKeywordRankForSyncs)) {
+									qzKeywordRanks.addAll(qzKeywordRankForSyncs);
+								}
+								// 转储关键词信息
+								customerKeywordService.modifyCustomerKeyword(qzSettingForSync.getQsId(), rows);
 							}
-							// 转储关键词信息
-							customerKeywordService.batchInsertCustomerKeywordByCustomerUuid(qzSettingForSync.getCustomerId(), qzSettingForSync.getQsId());
+							// 转储站点曲线信息，先清空，后同步
+							if (CollectionUtils.isNotEmpty(qzKeywordRanks)) {
+								qzKeywordRankInfoService.replaceQZKeywordRanks(qzKeywordRanks, userId);
+							}
+							// 转储站点信息，先清空，后同步
+							qzSettingDao.deleteSysQzSettings(userId);
+							qzSettingDao.replaceQZSettings(qzSettingForSyncs, userId);
 						}
-						// 转储站点曲线信息，先清空，后同步
-						if (CollectionUtils.isNotEmpty(qzKeywordRanks)) {
-							qzKeywordRankInfoService.replaceQZKeywordRanks(qzKeywordRanks, qzCustomerTag);
-						}
-						// 转储站点信息，先清空，后同步
-						qzSettingDao.deleteSysQzSettings(qzCustomerTag);
-						qzSettingDao.replaceQZSettings(qzSettingForSyncs, qzCustomerTag);
+						// 当前时间
+						String currentTime = Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy-MM-dd HH:mm");
+						// 记录最近同步排名的时间
+						syncManage.setSyncStatusTime(currentTime);
+						syncManageService.updateById(syncManage);
 					}
 				}
 			}
@@ -1218,5 +1237,9 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 
 	public String findQZCustomer(String domain) {
 		return qzSettingDao.findQZCustomer(domain);
+	}
+
+	public List<QZSettingForSync> getAvailableQZSettingsByTagName(String qzCustomerTag) {
+		return qzSettingDao.getAvailableQZSettingsByTagName(qzCustomerTag);
 	}
 }
