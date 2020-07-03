@@ -171,7 +171,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
                 HashMap<String, List<MachineInfo>> machineInfoHashMap = machineMap.get(info.getProductName() + "###" + info.getProductId());
                 if (null == machineInfoHashMap) {
                     machineInfoHashMap = new HashMap<>(16);
-                    machineMap.put(info.getProductName() + "###" + info.getProductId(), machineInfoHashMap);
+                    machineMap.put(info.getProductName() + "###" + info.getProductId() + "###" + info.getProductSuppliers(), machineInfoHashMap);
                 }
                 List<MachineInfo> infoList = machineInfoHashMap.get(info.getHost());
                 if (null == infoList) {
@@ -195,6 +195,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
                     String[] key = entry.getKey().split("###");
                     vo.setProductId(Long.parseLong(key[1]));
                     vo.setProductName(key[0]);
+                    vo.setProductSuppliers(key[2]);
                     for (Map.Entry<String, List<MachineInfo>> listEntry : entry.getValue().entrySet()) {
                         int totalTimes = 0;
                         List<MachineInfo> infos = listEntry.getValue();

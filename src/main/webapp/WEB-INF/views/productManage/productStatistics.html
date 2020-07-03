@@ -141,7 +141,7 @@
         }
 
         .left-span {
-            width: 200px;
+            width: 300px;
             min-height: 16px;
             line-height: 16px;
             padding: 5px 0 0 10px;
@@ -276,9 +276,10 @@
                 where: whereCondition,
                 cols: [[
                     {field: 'productName', title: '产品名称', align: 'left', width: '25%', templet: '#toMachineInfoTpl'},
-                    {field: 'productAvgTimes', title: '产品的平均性价比(次/元)', width: '15%', sort: true, align: 'center'},
-                    {field: 'vncUrl', title: '<span class="left-span">vnc链接</span><span class="right-span">vnc分类下的平均性价比(次/元)</span>', align: 'left',
-                        width: '25%'}
+                    {field: 'productSuppliers', title: '产品供应商', align: 'left', width: '10%'},
+                    {field: 'productAvgTimes', title: '产品的平均性价比(次/元)', width: '20%', sort: true, align: 'center'},
+                    {field: 'vncUrl', title: '<span class="left-span">vnc链接</span><span class="right-span" style="width: 310px;">vnc分类下的平均性价比(次/元)</span>', align: 'left',
+                        width: '45%'}
                 ]],
                 loading: true,
                 done: function (res, curr, count) {

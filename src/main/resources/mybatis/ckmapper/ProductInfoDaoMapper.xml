@@ -88,7 +88,8 @@
         mi.fOptimizationTotalCount as 'optimizationTotalCount',
         mi.fOpenDate as 'openDate',
         pi.fProductName as 'productName',
-        pi.fProductPrice as 'price'
+        pi.fProductPrice as 'price',
+        pi.fSuppliers as 'productSuppliers'
         from t_machine_info mi
         left join t_product_info pi
         on mi.fProductID = pi.fUuid

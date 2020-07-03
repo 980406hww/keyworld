@@ -12,6 +12,8 @@ public class ProductStatisticsVO implements Serializable {
 
     private String productName;
 
+    private String productSuppliers;
+
     private int productAvgTimes;
 
     private String vncUrl;
@@ -30,6 +32,14 @@ public class ProductStatisticsVO implements Serializable {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public String getProductSuppliers() {
+        return productSuppliers;
+    }
+
+    public void setProductSuppliers(String productSuppliers) {
+        this.productSuppliers = productSuppliers;
     }
 
     public int getProductAvgTimes() {
