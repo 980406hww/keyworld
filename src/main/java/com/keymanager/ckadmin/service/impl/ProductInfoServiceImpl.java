@@ -15,7 +15,6 @@ import com.keymanager.util.Utils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -164,15 +163,19 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
     @Override
     public List<ProductStatisticsVO> getProductStatisticsForTerminalType(ProductCriteria productCriteria) throws ParseException {
+        // 获取所有机器的产品和vnc信息。
         List<MachineInfo> machineInfos = productInfoDao.getProductStatisticsForTerminalType(productCriteria);
         if (CollectionUtils.isNotEmpty(machineInfos)) {
             HashMap<String, HashMap<String, List<MachineInfo>>> machineMap = new HashMap<>(16);
             for (MachineInfo info : machineInfos) {
-                HashMap<String, List<MachineInfo>> machineInfoHashMap = machineMap.get(info.getProductName() + "###" + info.getProductId());
+                // 产品名###产品ID###产品供应商为KEY，获取MAP。
+                HashMap<String, List<MachineInfo>> machineInfoHashMap = machineMap.get(info.getProductName() + "###" + info.getProductId() + "###" + info.getProductSuppliers());
+                // MAP为空的话获取创建一个新的MAP。
                 if (null == machineInfoHashMap) {
                     machineInfoHashMap = new HashMap<>(16);
                     machineMap.put(info.getProductName() + "###" + info.getProductId() + "###" + info.getProductSuppliers(), machineInfoHashMap);
                 }
+                // host为key，进行分类。
                 List<MachineInfo> infoList = machineInfoHashMap.get(info.getHost());
                 if (null == infoList) {
                     infoList = new ArrayList<>();
@@ -228,6 +231,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
                         productMachineCount += infos.size();
                     }
                     vo.setProductAvgTimes(productTotalTimes / productMachineCount);
+                    vo.setMachineCount(productMachineCount);
                     productStatisticsVos.add(vo);
                 }
             }
