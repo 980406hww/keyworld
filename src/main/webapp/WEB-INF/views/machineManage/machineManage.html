@@ -86,7 +86,7 @@
 
     .my-hide {
         padding-bottom: 1px !important;
-        height: 70px;
+        height: 105px;
         background: #fff;
         border-bottom: 1px solid #e6e6e6;
         border-bottom-right-radius: 2px;
@@ -357,6 +357,12 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">主机链接</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="host" id="host" placeholder="请输入主机链接" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -387,6 +393,7 @@
     let hasProblemTmp = '<#if hasProblemTmp?exists>${hasProblemTmp}</#if>';
     var runningProgramType = '<#if runningProgramType?exists>${runningProgramType}</#if>';
     var productId = '<#if productId?exists>${productId}</#if>';
+    var vncHost = '<#if vncHost?exists>${vncHost}</#if>';
 
     var bodyH = null;
     var tableH = null;
@@ -513,6 +520,7 @@
                         if (productId) {
                             product.val(productId);
                             $("#runningProgramType").val(runningProgramType);
+                            $("#host").val(vncHost);
                         }
                         form.render('select')
                     } else {
@@ -566,6 +574,7 @@
             let condition = common.formToJsonObject('searchForm');
             condition.productID = productId;
             condition.runningProgramType = runningProgramType;
+            condition.host = vncHost;
             searchMachine(condition);
         } else {
             searchMachine({init: 'init'});
@@ -606,6 +615,7 @@
                     {field: 'valid', align: 'left', title: '状态', templet: '#valid'},
                     {field: 'upgradeFailedReasons', align: 'left', title: '失败原因', templet: '#upgradeFailedReasons'},
                     {field: 'vpsBackendSystemComputerID', align: 'left', title: '服务器ID', templet: '#vpsBackendSystemComputerIDs'},
+                    {field: 'host', align: 'left', title: 'vnc链接', templet: '#vpsVNCHostPost', hide: true},
                     {field: 'price',align: 'left', title: '价格'},
                     {field: 'timesForOneRMB',align: 'left', title: '性价比 (次/元)'},
                     {field: 'successRatio',align: 'left', title: '成功率', templet: function (d) {
@@ -616,6 +626,7 @@
                             }
                         }},
                     {field: 'productName',align: 'left', title: '产品名', hide:true},
+                    {field: 'productSuppliers',align: 'left', title: '产品供应商', hide:true},
                     {field: 'openDate', align: 'left', title: '开通时间', templet: function(d){ return d.openDate? layui.util.toDateString(d.openDate, 'yyyy-MM-dd HH:mm'): "";}, hide:true},
                     {title: '操作', templet: '#operationTpl', align: 'center', minWidth: 198}
                 ]],
@@ -1580,6 +1591,10 @@
 
 <script type="text/html" id="valid">
     {{d.valid ? "监控中" : "暂停监控"}}
+</script>
+
+<script type="text/html" id="vpsVNCHostPost">
+    {{d.port == null ? d.host : d.host + ":" + d.port}}
 </script>
 
 <script type="text/html" id="operationTpl">
