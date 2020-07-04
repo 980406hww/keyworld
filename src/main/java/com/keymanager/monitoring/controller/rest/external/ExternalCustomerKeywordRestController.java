@@ -629,7 +629,7 @@ public class ExternalCustomerKeywordRestController extends SpringMVCBaseControll
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/getTenCustomerKeywordsForCaptureIndex", method = RequestMethod.POST)
+    @RequestMapping(value = "/getTenCustomerKeywordsForCaptureIndex2", method = RequestMethod.POST)
     public ResponseEntity<?> getTenCustomerKeywordsForCaptureIndex(
         @RequestBody BaseCriteria baseCriteria) throws Exception {
         try {
