@@ -85,7 +85,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 				for (Map.Entry<Long, HashMap<String, CmsSyncManage>> entry : syncMap.entrySet()) {
 					long userId = entry.getKey();
 					for (CmsSyncManage syncManage : entry.getValue().values()) {
-						// 根据网站标签查找操作中的站点信息，进行转储，利用站点id转储站点曲线信息（操作词曲线）
+						// 根据网站标签查找操作中的站点信息，进行转储站点曲线信息（操作词曲线）
 						List<QZSettingForSync> qzSettingForSyncs = qzSettingDao.getAvailableQZSettingsByTagName(syncManage.getCompanyCode());
 						List<QZKeywordRankForSync> qzKeywordRanks = new ArrayList<>();
 						if (CollectionUtils.isNotEmpty(qzSettingForSyncs)) {

@@ -194,5 +194,5 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     
     void clearOptimizeGroupNameQueueForKey(String key);
 
-    void addQzCustomerKeywordsFromSeoSystem(List<SysCustomerKeyword> qzKeywords, Long customerUuid, long qsId, String optimizeGroupName, String machineGroupName);
+    void addQzCustomerKeywordsFromSeoSystem(List<SysCustomerKeyword> qzKeywords, Long customerUuid, Long qsId, String optimizeGroupName, String machineGroupName);
 }

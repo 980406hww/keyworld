@@ -39,7 +39,6 @@ import com.keymanager.ckadmin.vo.QZSettingCountVO;
 import com.keymanager.ckadmin.vo.QZSettingVO;
 import com.keymanager.enums.CollectMethod;
 import com.keymanager.monitoring.entity.CmsSyncManage;
-import com.keymanager.monitoring.entity.PtCustomerKeyword;
 import com.keymanager.monitoring.service.CmsSyncManageService;
 import com.keymanager.monitoring.service.QzCustomerKeywordTemporaryService;
 import com.keymanager.monitoring.vo.QZSettingForSync;

@@ -1506,7 +1506,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public void addQzCustomerKeywordsFromSeoSystem(List<SysCustomerKeyword> qzKeywords, Long customerUuid, long qsId, String optimizeGroupName, String machineGroupName) {
+    public void addQzCustomerKeywordsFromSeoSystem(List<SysCustomerKeyword> qzKeywords, Long customerUuid, Long qsId, String optimizeGroupName, String machineGroupName) {
         for (SysCustomerKeyword keyword : qzKeywords) {
             keyword.setStatus(1);
             CustomerKeyword customerKeyword = new CustomerKeyword();

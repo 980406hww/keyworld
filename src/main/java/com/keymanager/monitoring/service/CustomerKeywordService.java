@@ -126,6 +126,9 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     @Resource(name = "customerService2")
     private com.keymanager.ckadmin.service.CustomerService customerService2;
 
+    @Resource(name = "cmsSyncManageService2")
+    private CmsSyncManageService syncManageService;
+
     private final static LinkedBlockingQueue updateOptimizedResultQueue = new LinkedBlockingQueue();
 
     private final static Map<String, LinkedBlockingQueue> machineGroupQueueMap = new HashMap<String, LinkedBlockingQueue>();
@@ -1964,9 +1967,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
             } while (qzCustomerKeywordTemporaryService.searchQzKeywordTemporaryCount() > 0);
         }
     }
-
-    @Resource(name = "cmsSyncManageService2")
-    private CmsSyncManageService syncManageService;
 
     public void getPTCustomerKeyword() {
         // 读取配置表客户pt关键词同步标识  1: 开  0: 关
