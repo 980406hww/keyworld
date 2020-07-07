@@ -18,6 +18,7 @@ public class MachineInfoCriteria extends BaseCriteria {
     private String upgradeFailedReason; // 失败原因
     private String valid; // 状态
     private String hasProblem; // 停了
+    private String host; // 主机链接
     private String showFetchKeywordStatus; // 显示取词状态
 
     private String renewal; // 续费
@@ -149,6 +150,14 @@ public class MachineInfoCriteria extends BaseCriteria {
 
     public void setHasProblem(String hasProblem) {
         this.hasProblem = hasProblem;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public String getShowFetchKeywordStatus() {

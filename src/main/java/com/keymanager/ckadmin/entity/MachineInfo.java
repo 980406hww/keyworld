@@ -207,6 +207,9 @@ public class MachineInfo implements Serializable {
     @TableField(exist = false)
     private double successRatio;
 
+    @TableField(exist = false)
+    private String productSuppliers;
+
     public String getClientID() {
         return clientID;
     }
@@ -699,5 +702,13 @@ public class MachineInfo implements Serializable {
 
     public void setSuccessRatio(double successRatio) {
         this.successRatio = successRatio;
+    }
+
+    public String getProductSuppliers() {
+        return productSuppliers;
+    }
+
+    public void setProductSuppliers(String productSuppliers) {
+        this.productSuppliers = productSuppliers;
     }
 }

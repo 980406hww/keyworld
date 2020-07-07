@@ -1815,4 +1815,25 @@
         SET fFailedCause = #{failedCause}
         WHERE fUuid = #{customerKeywordUuid}
     </update>
+
+    <select id="getCustomerKeywordsForCaptureIndex" resultType="com.keymanager.ckadmin.vo.ExternalCustomerKeywordIndexVO">
+        SELECT
+        ck.fUuid AS 'uuid',
+        ck.fKeyword	AS	'keyword',
+        ck.fTerminalType AS 'terminalType'
+        FROM t_customer_keyword ck
+        WHERE ck.fCurrentIndexCount = -1
+        AND ck.fType = 'qz'
+        AND ck.fCaptureIndexQueryTime &lt;= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+        LIMIT 500
+    </select>
+
+    <update id="updateCaptureIndexQueryTimeByKeywords">
+        UPDATE t_customer_keyword
+        SET fCaptureIndexQueryTime = NOW()
+        WHERE fUuid IN
+        <foreach item="customerKeywordUuid" collection="customerKeywordUuids" open="(" separator="," close=")">
+            #{customerKeywordUuid}
+        </foreach>
+    </update>
 </mapper>

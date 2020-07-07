@@ -120,7 +120,7 @@ public class ProductController {
             return resultBean;
         try {
             Page<ProductInfo> page=new Page<>(criteria.getPage(),criteria.getLimit());
-            page = productInfoService.getProductsByName(page,criteria.getProductName());
+            page = productInfoService.getProducts(page, criteria);
             resultBean.setData(page.getRecords());
             resultBean.setCount(page.getTotal());
         } catch (Exception e) {
@@ -205,6 +205,21 @@ public class ProductController {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
             List<ProductStatisticsVO> list = productInfoService.getAllProductStatistics(criteria.getProductId());
+            resultBean.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
+
+    @RequiresPermissions(value = "/internal/productManage/toProductStatistics")
+    @PostMapping(value = "/getProductStatisticsForTerminalType")
+    public ResultBean getProductStatisticsForTerminalType(@RequestBody ProductCriteria criteria) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            List<ProductStatisticsVO> list = productInfoService.getProductStatisticsForTerminalType(criteria);
             resultBean.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());

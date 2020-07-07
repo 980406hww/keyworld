@@ -107,6 +107,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     private final static LinkedBlockingQueue customerKeywordCheckIncludeQueue = new LinkedBlockingQueue();
 
+    private final static LinkedBlockingQueue customerKeywordCaptureIndexQueue = new LinkedBlockingQueue();
+
     @Override
     public void cacheCustomerKeywords() {
         List<String> machineGroups = customerKeywordDao.getMachineGroups();
@@ -402,6 +404,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
         machineGroupQueueVos.add(new MachineGroupQueueVO("Update", updateOptimizedResultQueue.size()));
         machineGroupQueueVos.add(new MachineGroupQueueVO("CheckInclude", customerKeywordCheckIncludeQueue.size()));
+        machineGroupQueueVos.add(new MachineGroupQueueVO("Index", customerKeywordCaptureIndexQueue.size()));
 
         for (Map.Entry<String, LinkedBlockingQueue> entry : optimizeGroupNameQueueMap.entrySet()) {
             machineGroupQueueVos.add(new MachineGroupQueueVO(entry.getKey(), entry.getValue().size()));
@@ -1616,6 +1619,29 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             }
         }
     }
+
+    public List<ExternalCustomerKeywordIndexVO> getCustomerKeywordForCaptureIndex(){
+        if (customerKeywordCaptureIndexQueue.size() == 0){
+            Collection<ExternalCustomerKeywordIndexVO> customerKeywordIndexVOs = customerKeywordDao.getCustomerKeywordsForCaptureIndex();
+            if (CollectionUtils.isEmpty(customerKeywordIndexVOs)) {
+                return new ArrayList<>();
+            }
+            List<Long> customerKeywordUuids = new ArrayList<Long>();
+            for (ExternalCustomerKeywordIndexVO externalCustomerKeywordIndexVO : customerKeywordIndexVOs) {
+                customerKeywordCaptureIndexQueue.offer(externalCustomerKeywordIndexVO);
+                customerKeywordUuids.add(externalCustomerKeywordIndexVO.getUuid());
+            }
+            customerKeywordDao.updateCaptureIndexQueryTimeByKeywords(customerKeywordUuids);
+        }
+        List<ExternalCustomerKeywordIndexVO> resultCustomerKeywordIndexVOs = new ArrayList<>();
+        do {
+            ExternalCustomerKeywordIndexVO externalCustomerKeywordIndexVO = (ExternalCustomerKeywordIndexVO) customerKeywordCaptureIndexQueue.poll();
+            resultCustomerKeywordIndexVOs.add(externalCustomerKeywordIndexVO);
+        }while (resultCustomerKeywordIndexVOs.size() < 10 && customerKeywordCaptureIndexQueue.size() > 0);
+
+        return resultCustomerKeywordIndexVOs;
+    }
+
 }
 
 

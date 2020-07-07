@@ -98,7 +98,8 @@
         mi.fProductID as "productId",
         mi.fOpenDate as "openDate",
         pi.fProductName AS "productName",
-        pi.fProductPrice AS "price"
+        pi.fProductPrice AS "price",
+        pi.fSuppliers AS "productSuppliers"
     </sql>
 
     <update id="updateOptimizationResultFromCache" parameterType="java.util.Collection">
@@ -226,6 +227,9 @@
         <if test="machineInfoCriteria.hasProblem != null">AND (mi.fContinuousFailCount &gt; 5 OR
             mi.fTenMinsLastVisitTime &lt; NOW()) and mi.fValid = 1
         </if>
+        <if test="machineInfoCriteria.host != null">
+            AND mi.fHost like concat(#{machineInfoCriteria.host},'%')
+        </if>
         <if test="machineInfoCriteria.renewal != null">AND mi.fRenewalDate &lt; DATE_ADD(CURRENT_DATE(),
             INTERVAL -3 DAY) and mi.fValid = 1
         </if>
@@ -302,6 +306,9 @@
             </if>
             <if test="machineInfoCriteria.hasProblem != null">
                 AND (mi.fContinuousFailCount &gt; 5 OR mi.fTenMinsLastVisitTime &lt; NOW()) and mi.fValid = 1
+            </if>
+            <if test="machineInfoCriteria.host != null">
+                AND mi.fHost like concat(#{machineInfoCriteria.host},'%')
             </if>
             <if test="machineInfoCriteria.renewal != null">
                 AND mi.fRenewalDate &lt; DATE_ADD(CURRENT_DATE(), INTERVAL -3 DAY) and mi.fValid = 1

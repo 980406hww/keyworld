@@ -141,7 +141,7 @@
         }
 
         .left-span {
-            width: 200px;
+            width: 300px;
             min-height: 16px;
             line-height: 16px;
             padding: 5px 0 0 10px;
@@ -152,7 +152,7 @@
         .right-span {
             float: right;
             right: 220px;
-            width: 220px;
+            width: 330px;
             min-height: 16px;
             line-height: 16px;
             padding: 5px 0 0 10px;
@@ -161,37 +161,49 @@
 </head>
 
 <body>
+
 <div class="ok-body">
-    <!--模糊搜索区域-->
-    <div class="layui-card ">
-        <div class="layui-card-body ">
-            <form class="layui-form layui-form-pane" id="searchForm">
-                <div class="my-collapse">
-                    <div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">产品名</label>
-                            <div class="layui-input-inline">
-                                <select name="productId" id="productId" lay-search>
-                                    <option value="">请选择产品</option>
-                                </select>
+    <div class="layui-tab layui-tab-card" lay-filter="keywordTab">
+        <ul class="layui-tab-title" id="tabItem">
+            <li lay-id="PC" class="layui-this" data-terminal="PC">电脑</li>
+            <li lay-id="Phone" data-terminal="Phone">手机</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <!--模糊搜索区域-->
+                <div class="layui-card">
+                    <div class="layui-card-body ">
+                        <form class="layui-form layui-form-pane" id="searchForm">
+                            <input type="hidden" name="terminalType" id="terminalType" value="PC">
+                            <div class="my-collapse">
+                                <div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">产品名</label>
+                                        <div class="layui-input-inline">
+                                            <select name="productId" id="productId" lay-search>
+                                                <option value="">请选择产品</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">
+                                            搜索
+                                        </button>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <button style="background: #897c00;color: #ffffff" class="layui-collapse my-btn" type="reset" id="resetBtn">
+                                            重置
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="layui-inline">
-                            <button class="layui-btn" lay-submit="" lay-filter="search" id="searchBtn">
-                                搜索
-                            </button>
-                        </div>
-                        <div class="layui-inline">
-                            <button style="background: #897c00;color: #ffffff" class="layui-collapse my-btn" type="reset" id="resetBtn">
-                                重置
-                            </button>
-                        </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+                <table class="layui-hide" id="productStatisticsTable" lay-filter="tableFilter"></table>
+            </div>
         </div>
     </div>
-    <table class="layui-hide" id="productStatisticsTable" lay-filter="tableFilter"></table>
 </div>
 
 <script src="/static/ok-admin/lib/layui/layui.js"></script>
@@ -206,11 +218,12 @@
         NProgress.done();
     };
 
-    layui.use(['table', 'form', 'jquery', 'okLayer', 'layer', "common"], function () {
+    layui.use(['table', 'form', 'jquery', 'okLayer', 'layer', "common", "element"], function () {
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
         var common = layui.common;
+        var element = layui.element;
 
         initProduct();
         function initProduct() {
@@ -241,9 +254,14 @@
 
         function searchProductStatistics(whereCondition) {
             whereCondition = common.jsonObjectTrim(whereCondition);
+            var terminalType = $("#terminalType").val();
+            if (terminalType === '' || terminalType == null) {
+                terminalType = 'PC'
+            }
+            whereCondition.terminalType = terminalType;
             table.render({
                 elem: '#productStatisticsTable',
-                url: '/internal/productManage/getProductStatistics',
+                url: '/internal/productManage/getProductStatisticsForTerminalType',
                 method: 'post',
                 page: false,
                 autoSort: true,
@@ -258,9 +276,11 @@
                 where: whereCondition,
                 cols: [[
                     {field: 'productName', title: '产品名称', align: 'left', width: '25%', templet: '#toMachineInfoTpl'},
-                    {field: 'productAvgTimes', title: '产品的平均性价比(次/元)', width: '15%', sort: true, align: 'center'},
+                    {field: 'productSuppliers', title: '产品供应商', align: 'left', width: '10%'},
+                    {field: 'productAvgTimes', title: '产品的平均性价比(次/元)', width: '16%', sort: true, align: 'center'},
+                    {field: 'machineCount', title: '机器数量', align: 'center', width: '9%'},
                     {field: 'vncUrl', title: '<span class="left-span">vnc链接</span><span class="right-span">vnc分类下的平均性价比(次/元)</span>', align: 'left',
-                        width: '25%'}
+                        width: '40%'}
                 ]],
                 loading: true,
                 done: function (res, curr, count) {
@@ -311,6 +331,19 @@
             }
         }
 
+        var active = {
+            reload: function () {
+                if (true) {
+                    var data = common.formToJsonObject('searchForm');
+                    data = common.jsonObjectTrim(data);
+                    data.init = '';
+                    table.reload('productStatisticsTable', {
+                        where: data
+                    },true);
+                }
+            },
+        };
+
         form.on("submit(search)", function (data) {
             var postData = data.field;
             postData = common.jsonObjectTrim(postData);
@@ -319,12 +352,32 @@
             return false
         });
 
+        element.on('tab(keywordTab)', function (data) {
+            var d = data.elem.context.dataset;
+            $('#terminalType').val(d.terminal);
+            active['reload'].call(this);
+        });
+
         searchProductStatistics({init: 'init'});
 
         window.toMachineInfo = function (productId, productName) {
-            let url = '/internal/machineManage/toMachineInfos/' + productId;
+            var terminalType = $("#terminalType").val();
+            if (terminalType === '' || terminalType == null) {
+                terminalType = 'PC'
+            }
+            let url = '/internal/machineManage/toMachineInfos/' + productId + '/' + terminalType;
             let tit = productName + "--机器管理";
             common.updateOrNewTab(url, tit, productId);
+        };
+
+        window.toMachineInfoForVncHost = function (productId, productName, host) {
+            var terminalType = $("#terminalType").val();
+            if (terminalType === '' || terminalType == null) {
+                terminalType = 'PC'
+            }
+            let url = '/internal/machineManage/toMachineInfos/' + productId + '/' + terminalType + '/' + host;
+            let tit = productName + "--机器管理";
+            common.updateOrNewTab(url, tit);
         };
     });
 

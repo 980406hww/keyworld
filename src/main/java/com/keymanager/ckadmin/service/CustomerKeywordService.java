@@ -18,6 +18,7 @@ import com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordIncludeVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordUploadVO;
+import com.keymanager.ckadmin.vo.ExternalCustomerKeywordIndexVO;
 import com.keymanager.ckadmin.vo.GroupVO;
 import com.keymanager.ckadmin.vo.KeywordStandardVO;
 import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
@@ -194,5 +195,7 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     
     void clearOptimizeGroupNameQueueForKey(String key);
 
+    List<ExternalCustomerKeywordIndexVO> getCustomerKeywordForCaptureIndex();
+    
     void addQzCustomerKeywordsFromSeoSystem(List<SysCustomerKeyword> qzKeywords, Long customerUuid, Long qsId, String optimizeGroupName, String machineGroupName);
 }

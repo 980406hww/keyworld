@@ -45,13 +45,19 @@ public class MachineInfoController extends SpringMVCBaseController {
     private UserPageSetupService userPageSetupService;
 
     @RequiresPermissions("/internal/machineInfo/searchMachineInfos")
-    @RequestMapping(value = {"/toMachineInfos", "/toMachineInfos/{productId}"}, method = RequestMethod.GET)
-    public ModelAndView toMachineInfos(@PathVariable(name = "productId", required = false) Long productId) {
+    @RequestMapping(value = {"/toMachineInfos", "/toMachineInfos/{productId}/{terminalType}", "/toMachineInfos/{productId}/{terminalType}/{vncHost:.+}"}, method = RequestMethod.GET)
+    public ModelAndView toMachineInfos(@PathVariable(name = "productId", required = false) Long productId,
+                                       @PathVariable(name = "terminalType", required = false) String terminalType,
+                                       @PathVariable(name = "vncHost", required = false) String vncHost) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("machineManage/machineManage");
         if (null != productId) {
             mv.addObject("projectId", productId);
             mv.addObject("runningProgramType", "Super");
+            mv.addObject("terminalTypeFromATP", terminalType);
+        }
+        if (null != vncHost) {
+            mv.addObject("vncHost", vncHost);
         }
         return mv;
     }

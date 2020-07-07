@@ -24,6 +24,19 @@
         where 1=1 <if test="name !=null and name !=''">and fProductName LIKE concat('%', #{name}, '%')</if>
     </select>
 
+    <select id="getProducts" resultType="com.keymanager.ckadmin.entity.ProductInfo">
+        SELECT
+            fUuid AS 'uuid',
+            fProductName AS 'productName',
+            fProductPrice AS 'productPrice',
+            fSuppliers AS 'suppliers'
+        FROM
+            t_product_info
+        <where>
+            <if test="productCriteria.productName !=null and productCriteria.productName !=''">AND fProductName LIKE concat('%', #{productCriteria.productName}, '%')</if>
+        </where>
+    </select>
+
     <select id="getAllProductStatistics" resultType="com.keymanager.ckadmin.entity.MachineInfo">
         select
             mi.fProductID as 'productId',
@@ -44,15 +57,17 @@
     </select>
 
     <select id="getSupperProduct" resultType="com.keymanager.ckadmin.entity.ProductInfo">
-        select
-            pi.fUuid as 'uuid',
-            pi.fProductName as 'productName'
-        from t_machine_info mi
-          left join t_product_info pi
-            on mi.fProductID = pi.fUuid
-        where mi.fRunningProgramType = 'Super'
-        and mi.fValid = 1
-        group by pi.fUuid
+        SELECT
+            pi.fUuid AS 'uuid',
+            pi.fProductName AS 'productName'
+        FROM
+            t_product_info pi
+            LEFT JOIN t_machine_info mi ON mi.fProductID = pi.fUuid
+        WHERE
+            mi.fRunningProgramType = 'Super'
+            AND mi.fValid = 1
+        GROUP BY
+            pi.fUuid
     </select>
 
     <update id="updateProductPriceForUuids">
@@ -64,4 +79,25 @@
             #{uuid}
         </foreach>
     </update>
+
+    <select id="getProductStatisticsForTerminalType" resultType="com.keymanager.ckadmin.entity.MachineInfo">
+        select
+        mi.fProductID as 'productId',
+        mi.fHost as 'host',
+        mi.fOptimizationSucceedCount as 'optimizationSucceedCount',
+        mi.fOptimizationTotalCount as 'optimizationTotalCount',
+        mi.fOpenDate as 'openDate',
+        pi.fProductName as 'productName',
+        pi.fProductPrice as 'price',
+        pi.fSuppliers as 'productSuppliers'
+        from t_machine_info mi
+        left join t_product_info pi
+        on mi.fProductID = pi.fUuid
+        <where>
+            <if test="productCriteria.productId != null">and mi.fProductID = #{productCriteria.productId}</if>
+            <if test="productCriteria.terminalType != null">and mi.fTerminalType = #{productCriteria.terminalType}</if>
+            and mi.fRunningProgramType = 'Super'
+            and mi.fValid = 1
+        </where>
+    </select>
 </mapper>
