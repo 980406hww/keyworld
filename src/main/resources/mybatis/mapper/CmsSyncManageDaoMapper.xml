@@ -3,7 +3,14 @@
 <mapper namespace="com.keymanager.monitoring.dao.CmsSyncManageDao">
 
     <select id="selectCmsSyncManage" resultType="com.keymanager.monitoring.entity.CmsSyncManage">
-        select ID, USER_ID, COMPANY_CODE, TYPE from cms_sync_manage where COMPANY_CODE = #{companyCode} and TYPE = #{type} LIMIT 1
+        select ID as id,
+               USER_ID as userId,
+               COMPANY_CODE as companyCode,
+               TYPE as type
+        from cms_sync_manage
+        where COMPANY_CODE = #{companyCode}
+          and TYPE = #{type}
+        LIMIT 1
     </select>
 
 </mapper>

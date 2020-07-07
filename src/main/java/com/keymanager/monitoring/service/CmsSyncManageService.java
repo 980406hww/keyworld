@@ -22,7 +22,7 @@ public class CmsSyncManageService extends ServiceImpl<CmsSyncManageDao, CmsSyncM
             if (null != ptSyncManage) {
                 long mapKey = ptSyncManage.getUserId();
                 HashMap<String, CmsSyncManage> valueMap = syncMap.get(mapKey);
-                if (valueMap.isEmpty()) {
+                if (valueMap == null) {
                     valueMap = new HashMap<>();
                     syncMap.put(mapKey, valueMap);
                 }

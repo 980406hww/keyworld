@@ -548,10 +548,11 @@
     </select>
 
     <insert id="replaceQZSettings">
-        REPLACE INTO sys_qz_setting VALUES(USER_ID, QS_ID, DOMAIN, SEARCH_ENGINE, PC_GROUP, PHONE_GROUP)
+        REPLACE INTO sys_qz_setting(USER_ID, QS_ID, DOMAIN, SEARCH_ENGINE, PC_GROUP, PHONE_GROUP)
+        VALUES
         <foreach collection="qzSettingForSyncs" item="qzSettingForSync" separator=",">
             (
-                #{userId}
+                #{userId},
                 #{qzSettingForSync.qsId},
                 #{qzSettingForSync.domain},
                 #{qzSettingForSync.searchEngine},
