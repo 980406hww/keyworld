@@ -2019,7 +2019,7 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                                             configService.updateConfig(lastSyncConfig);
 
                                             // 记录最近同步排名的时间
-                                            syncManage.setSyncStatusTime(currentTime);
+                                            syncManage.setSyncPositionTime(currentTime);
                                             syncManageService.updateById(syncManage);
                                         }
                                     }

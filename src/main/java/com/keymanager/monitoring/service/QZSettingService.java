@@ -111,7 +111,7 @@ public class QZSettingService extends ServiceImpl<QZSettingDao, QZSetting> {
 						// 当前时间
 						String currentTime = Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy-MM-dd HH:mm");
 						// 记录最近同步排名的时间
-						syncManage.setSyncStatusTime(currentTime);
+						syncManage.setSyncPositionTime(currentTime);
 						syncManageService.updateById(syncManage);
 					}
 				}
