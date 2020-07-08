@@ -15,7 +15,7 @@
 
     <insert id="insertIntoTemporaryData">
         insert into t_pt_customer_keyword(fUuid, fOperaStatus )
-        SELECT fUuid, IF(fCurrentPosition = 0 and fFailedCause > '' and fOptimizedCount = 0 and fInvalidRefreshCount = 9 and fLastOptimizeDateTime > current_date(), 0, 1)
+        SELECT fUuid, IF(fCurrentPosition = 0 and fFailedCause > '' and fOptimizedCount = 0 and fInvalidRefreshCount  &lt; 7 and fLastOptimizeDateTime > current_date(), 0, 1)
         FROM t_customer_keyword
         WHERE fCustomerUuid = #{cusId} AND fType = #{type} AND fStatus	= 1
     </insert>
