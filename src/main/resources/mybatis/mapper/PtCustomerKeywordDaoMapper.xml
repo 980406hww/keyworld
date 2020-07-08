@@ -11,15 +11,10 @@
             TITLE AS 'title',
             SEARCH_ENGINE AS 'searchEngine',
             TERMINAL_TYPE AS 'terminalType',
-            BEAR_PAW_NUM AS 'bearPawNumber',
             PRICE_PER_DAY AS 'pricePreDay',
             CURRENT_POSITION AS 'currentPosition',
             STATUS AS 'status',
-            CITY AS 'city',
-            COMPANY_CODE AS 'companyCode',
-            CAPTURE_POSITION_CITY AS 'capturePositionCity',
             CAPTURE_POSITION_TIME AS 'capturePositionTime',
-            CAPTURE_STATUS AS 'captureStatus',
             CREATE_TIME AS 'createTime',
             UPDATE_TIME AS 'updateTime'
         FROM cms_keyword
@@ -37,61 +32,56 @@
             PRICE_PER_DAY AS 'pricePreDay',
             CURRENT_POSITION AS 'currentPosition'
         FROM cms_keyword
-        WHERE COMPANY_CODE = #{customerName} AND STATUS = 2
+        WHERE USER_ID = #{userId}
+          and STATUS = 2
     </select>
 
     <select id="selectCustomerDelKeywords" resultType="java.lang.Long">
         SELECT CUSTOMER_KEYWORD_ID FROM cms_keyword
-        WHERE CUSTOMER_KEYWORD_ID > ''
-        AND STATUS = 3
+        WHERE USER_ID = #{userId}
+          and CUSTOMER_KEYWORD_ID > ''
+          and STATUS = 3
     </select>
 
     <update id="updatePtKeywordCurrentPosition">
         UPDATE cms_keyword k, t_pt_customer_keyword tpck
         SET k.CURRENT_POSITION = tpck.fCurrentPosition,
             k.PRICE_PER_DAY = tpck.fPrice,
-            k.CAPTURE_STATUS = tpck.fCaptureStatus,
             k.CAPTURE_POSITION_TIME = tpck.fCapturePositionQueryTime,
-            k.CITY = tpck.fCity,
-            k.CAPTURE_POSITION_CITY = tpck.fCapturePositionCity,
             k.TITLE = tpck.fTitle
-        WHERE k.CUSTOMER_KEYWORD_ID = tpck.fUuid
+        WHERE k.USER_ID = #{userId}
+          and k.CUSTOMER_KEYWORD_ID = tpck.fUuid
           and tpck.fMark = 2
     </update>
 
     <update id="updateCustomerKeywordDiffStatus">
         UPDATE cms_keyword k, t_customer_keyword ck
         SET k.STATUS = 0
-        WHERE k.CUSTOMER_KEYWORD_ID = ck.fUuid
-        AND ck.fStatus = 0
+        WHERE k.USER_ID = #{userId}
+          and k.CUSTOMER_KEYWORD_ID = ck.fUuid
+          and ck.fStatus = 0
     </update>
 
     <update id="updateCustomerKeyword">
         UPDATE cms_keyword k, t_customer_keyword ck
         SET ck.fKeyword = k.KEYWORD, ck.fUrl = k.URL, ck.fTitle = k.TITLE, k.STATUS = 1
-        WHERE k.CUSTOMER_KEYWORD_ID = ck.fUuid
+        WHERE k.USER_ID = #{userId}
+          and k.CUSTOMER_KEYWORD_ID = ck.fUuid
           AND k.STATUS = 4
     </update>
 
     <update id="updatePtKeywordOperaStatus">
         UPDATE cms_keyword k, t_pt_customer_keyword tpck
         SET k.OPERA_STATUS = tpck.fOperaStatus
-        WHERE k.CUSTOMER_KEYWORD_ID = tpck.fUuid
+        WHERE k.USER_ID = #{userId}
+          and k.CUSTOMER_KEYWORD_ID = tpck.fUuid
           and tpck.fMark = 2
     </update>
 
     <delete id="deleteSaleDelKeywords">
         DELETE FROM cms_keyword
-        WHERE CUSTOMER_KEYWORD_ID > ''
-        AND NOT EXISTS (SELECT 1 FROM t_customer_keyword WHERE fUuid = CUSTOMER_KEYWORD_ID)
+        WHERE USER_ID = #{userId}
+          and CUSTOMER_KEYWORD_ID > ''
+          and NOT EXISTS (SELECT 1 FROM t_customer_keyword WHERE fUuid = CUSTOMER_KEYWORD_ID)
     </delete>
-
-    <delete id="cleanNotExistCustomerKeyword">
-        DELETE FROM cms_keyword
-        WHERE COMPANY_CODE NOT IN
-        <foreach collection="customerNames" item="name" open="(" separator="," close=")">
-            #{name}
-        </foreach>
-    </delete>
-
 </mapper>

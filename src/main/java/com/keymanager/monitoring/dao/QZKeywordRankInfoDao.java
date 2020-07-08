@@ -37,9 +37,11 @@ public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
     List<QZKeywordRankInfo> searchExistingExtraQZKeywordRankInfo (@Param("qzSettingUuid") Long qzSettingUuid, @Param("terminalType")String terminalType);
 
     /**
-     * 百度同步操作词曲线，非百度同步指定词曲线（2019-12-06） 若操作词曲线的跨度大于指定词时，都使用操作词曲线
+     * 同步操作词曲线
      */
-    List<QZKeywordRankForSync> getQZKeywordRankInfoByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid, @Param("searchEngine") String searchEngine, @Param("limitRow") int limitRow);
+    List<QZKeywordRankForSync> getQZKeywordRankInfoByQZSettingUuid(@Param("qzSettingUuid") Long qzSettingUuid,
+                                                                   @Param("searchEngine") String searchEngine,
+                                                                   @Param("limitRow") int limitRow);
 
     /**
      * replace 站点曲线数据
@@ -47,7 +49,7 @@ public interface QZKeywordRankInfoDao extends BaseMapper<QZKeywordRankInfo> {
     void replaceQZKeywordRanks(@Param("qzKeywordRanks") List<QZKeywordRankForSync> qzKeywordRanks);
 
     /**
-     * 清空 sys_qz_keyword_rank 表的数据
+     * 根据userId 删除 sys_qz_keyword_rank 表的数据
      */
-    void deleteSysQzKeywordRanks(@Param("qzCustomerTag") String qzCustomerTag);
+    void deleteSysQzKeywordRanks(@Param("userId") long userId);
 }

@@ -8,31 +8,25 @@ import com.baomidou.mybatisplus.enums.IdType;
 import java.io.Serializable;
 import java.util.Date;
 
-@TableName(value = "cms_keyword")
-public class PtCustomerKeyword implements Serializable {
+@TableName(value = "sys_customer_keyword")
+public class SysCustomerKeyword implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "ID", type= IdType.AUTO)
     private Long id;
 
-    @TableField(value = "USER_ID")
-    private Long userId;
+    @TableField(value = "KEYWORD_ID")
+    private Long keywordId;
 
-    @TableField(value = "CUSTOMER_KEYWORD_ID")
-    private Long customerKeywordId;
+    @TableField(value = "QS_ID")
+    private Long qsId;
 
     @TableField(value = "KEYWORD")
     private String keyword;
 
     @TableField(value = "URL")
     private String url;
-
-    @TableField(value = "TITLE")
-    private String title;
-
-    @TableField(value = "SEARCH_ENGINE")
-    private String searchEngine;
 
     @TableField(value = "TERMINAL_TYPE")
     private String terminalType;
@@ -46,20 +40,29 @@ public class PtCustomerKeyword implements Serializable {
     @TableField(value = "OPERA_STATUS")
     private Integer operaStatus;
 
+    @TableField(value = "INITIAL_POSITION")
+    private Integer initialPosition;
+
     @TableField(value = "CURRENT_POSITION")
     private Integer currentPosition;
 
-    @TableField(value = "PRICE_PER_DAY")
-    private Double pricePreDay;
-
     @TableField(value = "CAPTURE_POSITION_TIME")
     private Date capturePositionTime;
+
+    @TableField(value = "OPTIMIZE_PLAN_COUNT")
+    private Integer optimizePlanCount;
+
+    @TableField(value = "OPTIMIZED_COUNT")
+    private Integer optimizedCount;
 
     @TableField(value = "CREATE_TIME")
     private Date createTime;
 
     @TableField(value = "UPDATE_TIME")
     private Date updateTime;
+
+    @TableField(exist = false)
+    private String searchEngine;
 
     public Long getId() {
         return id;
@@ -69,20 +72,20 @@ public class PtCustomerKeyword implements Serializable {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getKeywordId() {
+        return keywordId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setKeywordId(Long keywordId) {
+        this.keywordId = keywordId;
     }
 
-    public Long getCustomerKeywordId() {
-        return customerKeywordId;
+    public Long getQsId() {
+        return qsId;
     }
 
-    public void setCustomerKeywordId(Long customerKeywordId) {
-        this.customerKeywordId = customerKeywordId;
+    public void setQsId(Long qsId) {
+        this.qsId = qsId;
     }
 
     public String getKeyword() {
@@ -99,22 +102,6 @@ public class PtCustomerKeyword implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getSearchEngine() {
-        return searchEngine;
-    }
-
-    public void setSearchEngine(String searchEngine) {
-        this.searchEngine = searchEngine;
     }
 
     public String getTerminalType() {
@@ -149,6 +136,14 @@ public class PtCustomerKeyword implements Serializable {
         this.operaStatus = operaStatus;
     }
 
+    public Integer getInitialPosition() {
+        return initialPosition;
+    }
+
+    public void setInitialPosition(Integer initialPosition) {
+        this.initialPosition = initialPosition;
+    }
+
     public Integer getCurrentPosition() {
         return currentPosition;
     }
@@ -157,20 +152,28 @@ public class PtCustomerKeyword implements Serializable {
         this.currentPosition = currentPosition;
     }
 
-    public Double getPricePreDay() {
-        return pricePreDay;
-    }
-
-    public void setPricePreDay(Double pricePreDay) {
-        this.pricePreDay = pricePreDay;
-    }
-
     public Date getCapturePositionTime() {
         return capturePositionTime;
     }
 
     public void setCapturePositionTime(Date capturePositionTime) {
         this.capturePositionTime = capturePositionTime;
+    }
+
+    public Integer getOptimizePlanCount() {
+        return optimizePlanCount;
+    }
+
+    public void setOptimizePlanCount(Integer optimizePlanCount) {
+        this.optimizePlanCount = optimizePlanCount;
+    }
+
+    public Integer getOptimizedCount() {
+        return optimizedCount;
+    }
+
+    public void setOptimizedCount(Integer optimizedCount) {
+        this.optimizedCount = optimizedCount;
     }
 
     public Date getCreateTime() {
@@ -187,5 +190,13 @@ public class PtCustomerKeyword implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
     }
 }

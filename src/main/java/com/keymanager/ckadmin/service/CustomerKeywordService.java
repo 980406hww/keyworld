@@ -29,6 +29,7 @@ import com.keymanager.ckadmin.vo.PTkeywordCountVO;
 import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
 import com.keymanager.ckadmin.vo.SearchEngineResultVO;
 import com.keymanager.monitoring.entity.PtCustomerKeyword;
+import com.keymanager.monitoring.entity.SysCustomerKeyword;
 import com.keymanager.monitoring.vo.UpdateOptimizedCountVO;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
 import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
@@ -190,9 +191,11 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     void updateCustomerKeywordIncludeCheckTime(Long customerKeywordUuid, Date startTime);
 
-    void checkCustomerKeywordOperaStatus();
+    void checkPtCustomerKeywordOperaStatus();
     
     void clearOptimizeGroupNameQueueForKey(String key);
 
     List<ExternalCustomerKeywordIndexVO> getCustomerKeywordForCaptureIndex();
+    
+    void addQzCustomerKeywordsFromSeoSystem(List<SysCustomerKeyword> qzKeywords, Long customerUuid, Long qsId, String optimizeGroupName, String machineGroupName);
 }

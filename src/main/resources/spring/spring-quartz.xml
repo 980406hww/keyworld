@@ -32,8 +32,8 @@
 				<ref bean="cronTriggerAutoSaveTestDataStatisticsSchedule"/>
 				<ref bean="cronTriggerSyncQzCustomerKeyword" />
 				<ref bean="cronTriggerSyncPtCustomerKeyword" />
-				<ref bean="cronTriggerCheckPtCustomerKeywordStatus" />
-				<ref bean="cronTriggerSyncPTCustomerKeywordOperaStatus" />
+				<ref bean="cronTriggerCheckCustomerKeywordStatus" />
+				<ref bean="cronTriggerSyncCustomerKeywordOperaStatus" />
 <!--				<ref bean="cronTriggerUserRefreshStatistic" />-->
 			</list>
 		</property>
@@ -353,7 +353,7 @@
 	<!-- 同步客户QZ关键词和曲线信息 -->
 	<bean id="cronTriggerSyncQzCustomerKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerSyncQzCustomerKeywordSchedule" />
-		<property name="cronExpression" value="0 25 23 * * ?" />
+		<property name="cronExpression" value="0 25 12,23 * * ?" />
 	</bean>
 
 	<bean id="cronTriggerSyncQzCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -375,25 +375,25 @@
 	</bean>
 
 	<!-- 监控客户pt关键词的状态变化 -->
-	<bean id="cronTriggerCheckPtCustomerKeywordStatus" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="cronTriggerCheckPtCustomerKeywordStatusSchedule" />
+	<bean id="cronTriggerCheckCustomerKeywordStatus" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerCheckCustomerKeywordStatusSchedule" />
 		<property name="cronExpression" value="0 0/20 8-21 * * ?" />
 	</bean>
 
-	<bean id="cronTriggerCheckPtCustomerKeywordStatusSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="checkPtCustomerKeywordStatusSchedule" />
+	<bean id="cronTriggerCheckCustomerKeywordStatusSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="checkCustomerKeywordStatusSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>
 
 	<!-- 同步指定客户关键词的操作状态 -->
-	<bean id="cronTriggerSyncPTCustomerKeywordOperaStatus" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="cronTriggerSyncPTCustomerKeywordOperaStatusSchedule" />
+	<bean id="cronTriggerSyncCustomerKeywordOperaStatus" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="cronTriggerSyncCustomerKeywordOperaStatusSchedule" />
 		<property name="cronExpression" value="0 0/15 23 * * ?" />
 	</bean>
 
-	<bean id="cronTriggerSyncPTCustomerKeywordOperaStatusSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="syncPTCustomerKeywordOperaStatusSchedule" />
+	<bean id="cronTriggerSyncCustomerKeywordOperaStatusSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="syncCustomerKeywordOperaStatusSchedule" />
 		<property name="targetMethod" value="runTask" />
 		<property name="concurrent" value="false" />
 	</bean>

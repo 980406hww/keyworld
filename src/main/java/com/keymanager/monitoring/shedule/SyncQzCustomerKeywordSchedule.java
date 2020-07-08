@@ -18,7 +18,7 @@ public class SyncQzCustomerKeywordSchedule {
     private QZSettingService qzSettingService;
 
     public void runTask() {
-        logger.info("============= " + " Sync QZ Customer Data Schedule Task " + "===================");
+        logger.info("============= " + " Sync QZ Customer Data Schedule Task Start " + "===================");
         try {
             // 同步客户QZ关键词和曲线信息
             qzSettingService.getQZCustomerKeyword();
@@ -26,5 +26,6 @@ public class SyncQzCustomerKeywordSchedule {
             e.printStackTrace();
             logger.error(" Sync Customer Keyword Schedule Task is error" + e.getMessage());
         }
+        logger.info("============= " + " Sync QZ Customer Data Schedule Task Finish " + "===================");
     }
 }

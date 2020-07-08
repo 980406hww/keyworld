@@ -1706,29 +1706,20 @@
         </foreach>
     </update>
 
-    <insert id="batchInsertCustomerKeywordByCustomerUuid">
-        INSERT INTO sys_customer_keyword
-		SELECT
-            qs.fUuid AS 'QS_ID',
-            ck.fUrl  AS 'URL',
-            ck.fTerminalType AS 'TERMINAL_TYPE',
-            ck.fCustomerUuid AS 'CUSTOMER_ID',
-            ck.fKeyword AS 'KEYWORD',
-            ck.fInitialPosition AS 'INITIAL_POSITION',
-            ck.fCurrentPosition AS 'CURRENT_POSITION',
-            ck.fOptimizePlanCount AS 'OPTIMIZE_PLAN_COUNT',
-            ck.fOptimizedCount AS 'OPTIMIZED_COUNT',
-            CURRENT_DATE() AS 'CREATE_TIME'
-		FROM t_customer_keyword ck
-		LEFT JOIN t_qz_setting qs
-		ON qs.fCustomerUuid = ck.fCustomerUuid
-		WHERE qs.fUuid = #{qsId}
-		AND ck.fQZSettingUuid = #{qsId}
-		AND ck.fCustomerUuid = #{customerUuid}
+    <insert id="modifyCustomerKeyword">
+        update sys_customer_keyword sck, t_qz_customer_keyword qck
+        set
+            sck.CURRENT_POSITION = qck.fCurrentPosition,
+            sck.CAPTURE_POSITION_TIME = qck.fCapturePositionQueryTime,
+            sck.OPTIMIZE_PLAN_COUNT= qck.fOptimizePlanCount,
+            sck.OPTIMIZED_COUNT = qck.fOptimizedCount
+        where sck.QS_ID = #{qsId}
+          and sck.KEYWORD_ID = qck.fUuid
+          and qck.fMark = 2
     </insert>
 
     <select id="searchExistingSysCustomerKeywordQsId" resultType="java.lang.Long">
-        SELECT QS_ID FROM sys_customer_keyword sck WHERE QS_ID = #{qsId} AND CREATE_TIME = CURRENT_DATE() LIMIT 1
+        SELECT QS_ID FROM sys_customer_keyword sck WHERE QS_ID = #{qsId} LIMIT 1
     </select>
 
 </mapper>

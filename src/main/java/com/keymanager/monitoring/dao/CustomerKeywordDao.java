@@ -232,12 +232,12 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void batchUpdateIndexAndOptimizePlanCount(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
 
     /**
-     * 批量插入数据
+     * 批量更新数据
      */
-    void batchInsertCustomerKeywordByCustomerUuid(@Param("customerUuid") Long customerUuid, @Param("qsId") Long qsId);
+    void modifyCustomerKeyword(@Param("qsId") Long qsId);
 
     /**
-     * 根据qsId判断站点关键词当天是否已同步
+     * 根据qsId判断站点是否已同步
      */
     Long searchExistingSysCustomerKeywordQsId(@Param("qsId") Long qsId);
 }

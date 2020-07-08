@@ -114,14 +114,20 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
     @Autowired
     private CustomerExcludeKeywordService customerExcludeKeywordService;
 
-    @Autowired
+    @Resource(name = "ptCustomerKeywordService2")
     private PtCustomerKeywordService ptCustomerKeywordService;
 
-    @Autowired
+    @Resource(name = "ptCustomerKeywordTemporaryService2")
     private PtCustomerKeywordTemporaryService ptCustomerKeywordTemporaryService;
+
+    @Resource(name = "qzCustomerKeywordTemporaryService2")
+    private QzCustomerKeywordTemporaryService qzCustomerKeywordTemporaryService;
 
     @Resource(name = "customerService2")
     private com.keymanager.ckadmin.service.CustomerService customerService2;
+
+    @Resource(name = "cmsSyncManageService2")
+    private CmsSyncManageService syncManageService;
 
     private final static LinkedBlockingQueue updateOptimizedResultQueue = new LinkedBlockingQueue();
 
@@ -1943,11 +1949,22 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
         }
     }
 
-    public void batchInsertCustomerKeywordByCustomerUuid(Long customerUuid, Long qsId) {
-        // 数据重复判断
+    public void modifyCustomerKeyword(Long qsId, int rows) {
+        // 根据qsId判断站点是否已同步
         Long existQsId = customerKeywordDao.searchExistingSysCustomerKeywordQsId(qsId);
-        if (null == existQsId) {
-            customerKeywordDao.batchInsertCustomerKeywordByCustomerUuid(customerUuid, qsId);
+        if (null != existQsId) {
+            // 清空临时表数据 delete
+            qzCustomerKeywordTemporaryService.cleanQzCustomerKeyword();
+            // 根据客户id，将数据临时存储在中间表 insert into
+            qzCustomerKeywordTemporaryService.migrationRecordToQzCustomerKeyword(qsId, "qz");
+            do {
+                // 修改标识为更新中，行数 rows
+                qzCustomerKeywordTemporaryService.updateQzKeywordMarks(rows, 2, 0);
+                // 更新排名 update
+                customerKeywordDao.modifyCustomerKeyword(qsId);
+                // 修改标识为已更新，行数 rows
+                qzCustomerKeywordTemporaryService.updateQzKeywordMarks(rows, 1, 2);
+            } while (qzCustomerKeywordTemporaryService.searchQzKeywordTemporaryCount() > 0);
         }
     }
 
@@ -1961,7 +1978,6 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                 if (null != config) {
                     String customerNameStr = config.getValue();
                     if (StringUtil.isNotNullNorEmpty(customerNameStr)) {
-                        String[] customerNames = customerNameStr.replaceAll(" ", "").split(",");
                         // 默认行数 20000
                         int rows = 20000;
                         // 读取配置表同步更新排名sql的行数
@@ -1969,35 +1985,43 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                         if (null != defaultRowNumber) {
                             rows = Integer.parseInt(defaultRowNumber.getValue());
                         }
-                        for (String customerName : customerNames) {
-                            // 读取客户记录同步时间的信息
-                            Config lastSyncConfig = configService.getConfig(Constants.CONFIG_TYPE_SYNC_PT_KEYWORD_TIME, customerName);
-                            // 上次同步时间是否超过30分钟
-                            boolean overHalfAnHour = Utils.getIntervalMines(lastSyncConfig.getValue()) >= 30;
-                            if (overHalfAnHour) {
-                                com.keymanager.ckadmin.entity.Customer customer = customerService2.selectByName(customerName);
-                                if (null != customer) {
-                                    // 根据客户id判断当前时间之前的任务是否完成
-                                    if (captureRankJobService.checkCaptureJobCompletedByCustomerUuid(customer.getUuid())) {
-                                        // 清空临时表数据 truncate
-                                        ptCustomerKeywordTemporaryService.cleanPtCustomerKeyword();
-                                        // 根据客户id，将数据临时存储在中间表 insert into
-                                        ptCustomerKeywordTemporaryService.migrationRecordToPtCustomerKeyword(customer.getUuid(), "pt");
 
-                                        do {
-                                            // 修改标识为更新中，行数 rows
-                                            ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 2, 0);
-                                            // 更新排名 update
-                                            ptCustomerKeywordService.updatePtKeywordCurrentPosition();
-                                            // 修改标识为已更新，行数 rows
-                                            ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 1, 2);
-                                        } while (ptCustomerKeywordTemporaryService.searchPtKeywordTemporaryCount() > 0);
+                        HashMap<Long, HashMap<String, CmsSyncManage>> syncMap = syncManageService.searchSyncManageMap(customerNameStr, "pt");
+                        for (Map.Entry<Long, HashMap<String, CmsSyncManage>> entry : syncMap.entrySet()) {
+                            Long userId = entry.getKey();
+                            for (CmsSyncManage syncManage : entry.getValue().values()) {
+                                // 读取客户记录同步时间的信息
+                                Config lastSyncConfig = configService.getConfig(Constants.CONFIG_TYPE_SYNC_PT_KEYWORD_TIME, syncManage.getCompanyCode());
+                                // 上次同步时间是否超过30分钟
+                                boolean overHalfAnHour = Utils.getIntervalMines(lastSyncConfig.getValue()) >= 30;
+                                if (overHalfAnHour) {
+                                    com.keymanager.ckadmin.entity.Customer customer = customerService2.selectByName(syncManage.getCompanyCode());
+                                    if (null != customer) {
+                                        // 根据客户id判断当前时间之前的任务是否完成
+                                        if (captureRankJobService.checkCaptureJobCompletedByCustomerUuid(customer.getUuid())) {
+                                            // 清空临时表数据 delete
+                                            ptCustomerKeywordTemporaryService.cleanPtCustomerKeyword();
+                                            // 根据客户id，将数据临时存储在中间表 insert into
+                                            ptCustomerKeywordTemporaryService.migrationRecordToPtCustomerKeyword(customer.getUuid(), "pt");
+                                            do {
+                                                // 修改标识为更新中，行数 rows
+                                                ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 2, 0);
+                                                // 更新排名 update
+                                                ptCustomerKeywordService.updatePtKeywordCurrentPosition(userId);
+                                                // 修改标识为已更新，行数 rows
+                                                ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 1, 2);
+                                            } while (ptCustomerKeywordTemporaryService.searchPtKeywordTemporaryCount() > 0);
 
-                                        // 当前时间
-                                        String currentTime = Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy-MM-dd HH:mm");
-                                        // 更新同步时间
-                                        lastSyncConfig.setValue(currentTime);
-                                        configService.updateConfig(lastSyncConfig);
+                                            // 当前时间
+                                            String currentTime = Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy-MM-dd HH:mm");
+                                            // 更新同步排名的时间
+                                            lastSyncConfig.setValue(currentTime);
+                                            configService.updateConfig(lastSyncConfig);
+
+                                            // 记录最近同步排名的时间
+                                            syncManage.setSyncStatusTime(currentTime);
+                                            syncManageService.updateById(syncManage);
+                                        }
                                     }
                                 }
                             }

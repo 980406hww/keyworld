@@ -38,6 +38,10 @@ import com.keymanager.ckadmin.vo.QZSearchEngineVO;
 import com.keymanager.ckadmin.vo.QZSettingCountVO;
 import com.keymanager.ckadmin.vo.QZSettingVO;
 import com.keymanager.enums.CollectMethod;
+import com.keymanager.monitoring.entity.CmsSyncManage;
+import com.keymanager.monitoring.service.CmsSyncManageService;
+import com.keymanager.monitoring.service.QzCustomerKeywordTemporaryService;
+import com.keymanager.monitoring.vo.QZSettingForSync;
 import com.keymanager.util.Constants;
 import com.keymanager.util.Utils;
 import com.keymanager.util.common.StringUtil;
@@ -57,6 +61,7 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,11 +74,13 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2019-09-05
  */
 @Service("qzSettingService2")
-public class QZSettingServiceImpl extends
-    ServiceImpl<QZSettingDao, QZSetting> implements QZSettingService {
+public class QZSettingServiceImpl extends ServiceImpl<QZSettingDao, QZSetting> implements QZSettingService {
 
     @Resource(name = "qzSettingDao2")
     private QZSettingDao qzSettingDao;
+
+    @Autowired
+    private com.keymanager.monitoring.dao.QZSettingDao monitoringQZSettingDao;
 
     @Resource(name = "qzKeywordRankInfoService2")
     private QZKeywordRankInfoService qzKeywordRankInfoService;
@@ -116,6 +123,9 @@ public class QZSettingServiceImpl extends
 
     @Resource(name = "userNoteBookService2")
     private UserNoteBookService userNoteBookService;
+
+    @Resource(name = "cmsSyncManageService2")
+    private CmsSyncManageService syncManageService;
 
     @Override
     public Page<QZSetting> searchQZSetting(Page<QZSetting> page, QZSettingSearchCriteria qzSettingCriteria) {
@@ -954,6 +964,65 @@ public class QZSettingServiceImpl extends
     @Override
     public Map<String, Object> getQzSettingRenewalStatusCount(String loginName) {
         return qzSettingDao.getQzSettingRenewalStatusCount(loginName);
+    }
+
+    @Resource(name = "qzCustomerKeywordTemporaryService2")
+    private QzCustomerKeywordTemporaryService qzCustomerKeywordTemporaryService;
+
+    @Override
+    public void checkQzCustomerKeywordOperaStatus() {
+        // 读取配置表需要同步的客户网站标签
+        Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_QZ_CUSTOMER_KEYWORD, Constants.CONFIG_KEY_SYNC_QZ_CUSTOMER_TAG);
+        if (null != config) {
+            String syncQzCustomerTagStr = config.getValue();
+            if (StringUtil.isNotNullNorEmpty(syncQzCustomerTagStr)) {
+                // 默认行数 20000
+                int rows = 20000;
+                // 读取配置表同步更新排名sql的行数
+                Config defaultRowNumber = configService.getConfig(Constants.CONFIG_TYPE_SYNC_KEYWORD_ROW_NUMBER, Constants.CONFIG_KEY_SYNC_KEYWORD_ROW_NUMBER_NAME);
+                if (null != defaultRowNumber) {
+                    rows = Integer.parseInt(defaultRowNumber.getValue());
+                }
+
+                HashMap<Long, HashMap<String, CmsSyncManage>> syncMap = syncManageService.searchSyncManageMap(syncQzCustomerTagStr, "qz");
+                for (Map.Entry<Long, HashMap<String, CmsSyncManage>> entry : syncMap.entrySet()) {
+                    for (CmsSyncManage syncManage : entry.getValue().values()) {
+                        // 读取客户记录同步操作状态时间的信息
+                        Config lastSyncConfig = configService.getConfig(Constants.CONFIG_TYPE_SYNC_PT_OPERA_STATUS_TIME, syncManage.getCompanyCode());
+                        // 上次同步操作状态时间，超过60分钟，认为是未同步
+                        boolean overAnHour = Utils.getIntervalMines(lastSyncConfig.getValue()) > 60;
+                        if (overAnHour) {
+                            List<QZSettingForSync> qzSettingForSyncs = monitoringQZSettingDao.getAvailableQZSettingsByTagName(syncManage.getCompanyCode());
+                            if (CollectionUtils.isNotEmpty(qzSettingForSyncs)) {
+                                for (QZSettingForSync settingForSync : qzSettingForSyncs) {
+                                    // 清空临时表数据 delete
+                                    qzCustomerKeywordTemporaryService.cleanQzCustomerKeyword();
+                                    // 临时存放关键词操作状态 set fMark = 0
+                                    qzCustomerKeywordTemporaryService.insertIntoTemporaryData(settingForSync.getQsId());
+                                    do {
+                                        // 修改标识为更新中，行数 rows set fMark = 2
+                                        qzCustomerKeywordTemporaryService.updateQzKeywordMarks(rows, 2, 0);
+                                        // 更新操作状态
+                                        qzCustomerKeywordTemporaryService.updateQzKeywordOperaStatus(settingForSync.getQsId());
+                                        // 修改标识为已更新，行数 rows set fMark = 1
+                                        qzCustomerKeywordTemporaryService.updateQzKeywordMarks(rows, 1, 2);
+                                    } while (qzCustomerKeywordTemporaryService.searchQzKeywordTemporaryCount() > 0);
+                                }
+                                // 当前时间
+                                String currentTime = Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy-MM-dd HH:mm");;
+                                // 更新同步时间
+                                lastSyncConfig.setValue(currentTime);
+                                configService.updateConfig(lastSyncConfig);
+
+                                // 记录最近同步操作状态的时间
+                                syncManage.setSyncOperaStatusTime(currentTime);
+                                syncManageService.updateById(syncManage);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void saveQzChargeMon(Long uuid, String userName, int operationType) {

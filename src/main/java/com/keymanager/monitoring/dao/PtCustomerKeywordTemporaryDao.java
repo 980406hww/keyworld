@@ -31,7 +31,7 @@ public interface PtCustomerKeywordTemporaryDao extends BaseMapper<PtCustomerKeyw
     void updatePtKeywordMarks(@Param("rows") int rows, @Param("mark") int mark, @Param("targetMark") int targetMark);
 
     /**
-     * 临时存放关键词操作状态
+     * 临时存放pt关键词操作状态
      */
     void insertIntoTemporaryData(@Param("cusId") Long cusId, @Param("type") String type);
 }

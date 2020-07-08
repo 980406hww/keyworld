@@ -260,8 +260,8 @@ public class QZKeywordRankInfoService extends ServiceImpl<QZKeywordRankInfoDao, 
         return qzKeywordRankInfoDao.getQZKeywordRankInfoByQZSettingUuid(qzSettingUuid, searchEngine, limitRow);
     }
 
-    public void replaceQZKeywordRanks(List<QZKeywordRankForSync> qzKeywordRanks, String qzCustomerTag) {
-        qzKeywordRankInfoDao.deleteSysQzKeywordRanks(qzCustomerTag);
+    public void replaceQZKeywordRanks(List<QZKeywordRankForSync> qzKeywordRanks, long userId) {
+        qzKeywordRankInfoDao.deleteSysQzKeywordRanks(userId);
         qzKeywordRankInfoDao.replaceQZKeywordRanks(qzKeywordRanks);
     }
 }

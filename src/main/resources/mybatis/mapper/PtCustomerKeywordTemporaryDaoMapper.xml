@@ -7,9 +7,8 @@
     </select>
 
     <insert id="migrationRecordToPtCustomerKeyword">
-        insert into t_pt_customer_keyword(fUuid, fTitle, fCurrentPosition, fPrice, fCaptureStatus, fCapturePositionQueryTime, fCity, fCapturePositionCity )
-        SELECT fUuid, fTitle, fCurrentPosition, IF(fPositionFirstPageFee &gt; '', fPositionFirstPageFee, 0.00), fCaptureStatus,
-               fCapturePositionQueryTime, fCity, fCapturePositionCity
+        insert into t_pt_customer_keyword(fUuid, fTitle, fCurrentPosition, fPrice, fCapturePositionQueryTime )
+        SELECT fUuid, fTitle, fCurrentPosition, IF(fPositionFirstPageFee &gt; '', fPositionFirstPageFee, 0.00), fCapturePositionQueryTime
         FROM t_customer_keyword
         WHERE fCustomerUuid = #{cusId} AND fType = #{type} AND fStatus	= 1
     </insert>
@@ -26,6 +25,6 @@
     </update>
 
     <delete id="cleanPtCustomerKeyword">
-        truncate table t_pt_customer_keyword
+        delete from t_pt_customer_keyword
     </delete>
 </mapper>

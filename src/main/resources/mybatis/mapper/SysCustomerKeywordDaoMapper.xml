@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keymanager.monitoring.dao.SysCustomerKeywordDao">
+
+    <select id="selectNewQzKeyword" resultType="com.keymanager.monitoring.entity.SysCustomerKeyword">
+        SELECT
+            sck.ID AS 'id',
+            sck.KEYWORD_ID AS 'keywordId',
+            sck.KEYWORD AS 'keyword',
+            sck.URL AS 'url',
+            sck.TERMINAL_TYPE AS 'terminalType',
+            sck.CURRENT_POSITION AS 'currentPosition',
+            sqz.SEARCH_ENGINE AS 'searchEngine'
+        FROM sys_customer_keyword sck, sys_qz_setting sqz
+        WHERE sck.QS_ID = sqz.QS_ID
+          and sck.QS_ID = #{qsId}
+          and sck.STATUS = 2
+    </select>
+
+    <select id="selectCustomerDelKeywords" resultType="java.lang.Long">
+        SELECT KEYWORD_ID FROM sys_customer_keyword
+        WHERE QS_ID = #{qsId}
+          and KEYWORD_ID > ''
+          and STATUS = 3
+    </select>
+
+    <update id="updateQzKeywordCurrentPosition">
+        UPDATE sys_customer_keyword k, t_pt_customer_keyword tpck
+        SET k.CURRENT_POSITION = tpck.fCurrentPosition,
+            k.CAPTURE_POSITION_TIME = tpck.fCapturePositionQueryTime
+        WHERE k.QS_ID = #{qsId}
+          and k.KEYWORD_ID = tpck.fUuid
+          and tpck.fMark = 2
+    </update>
+
+    <update id="updateCustomerKeywordDiffStatus">
+        UPDATE sys_customer_keyword k, t_customer_keyword ck
+        SET k.STATUS = 0
+        WHERE k.QS_ID = #{qsId}
+          and k.KEYWORD_ID = ck.fUuid
+          and ck.fStatus = 0
+    </update>
+
+    <update id="updateCustomerKeyword">
+        UPDATE sys_customer_keyword k, t_customer_keyword ck
+        SET ck.fKeyword = k.KEYWORD, ck.fUrl = k.URL, k.STATUS = 1
+        WHERE k.QS_ID = #{qsId}
+          and k.KEYWORD_ID = ck.fUuid
+          AND k.STATUS = 4
+    </update>
+
+    <update id="updateQzKeywordOperaStatus">
+        UPDATE sys_customer_keyword k, t_pt_customer_keyword tpck
+        SET k.OPERA_STATUS = tpck.fOperaStatus
+        WHERE k.QS_ID = #{qsId}
+          and k.KEYWORD_ID = tpck.fUuid
+          and tpck.fMark = 2
+    </update>
+
+    <delete id="deleteSaleDelKeywords">
+        DELETE FROM sys_customer_keyword
+        WHERE QS_ID = #{qsId}
+          and KEYWORD_ID > ''
+          and NOT EXISTS (SELECT 1 FROM t_customer_keyword WHERE fUuid = KEYWORD_ID)
+    </delete>
+</mapper>
