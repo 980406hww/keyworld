@@ -353,7 +353,7 @@
 	<!-- 同步客户QZ关键词和曲线信息 -->
 	<bean id="cronTriggerSyncQzCustomerKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="cronTriggerSyncQzCustomerKeywordSchedule" />
-		<property name="cronExpression" value="0 25 12,23 * * ?" />
+		<property name="cronExpression" value="0 25 6,12,23 * * ?" />
 	</bean>
 
 	<bean id="cronTriggerSyncQzCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
