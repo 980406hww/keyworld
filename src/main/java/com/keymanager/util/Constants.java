@@ -134,6 +134,8 @@ public class Constants {
     public final static String CONFIG_TYPE_SYNC_OPERA_STATUS_SWITCH = "SyncOperaStatusSwitch";
     public final static String CONFIG_KEY_SYNC_OPERA_STATUS_SWITCH_NAME = "SyncOperaStatusSwitchName";
 
+
+
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
 
     static {

@@ -240,11 +240,11 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
                     }
                 },
                 {field: 'status', title: '状态', align: 'center', width: '80', templet: '#statusTpl'},
+                {field: 'invalidDays', title: '无效天数', align: 'left', width: '80', hide: true},
                 {field: 'failedCause', title: '失败原因', align: 'left', width: '80',},
                 {field: 'optimizeGroupName', title: '优化分组', align: 'left', width: '80'},
                 {field: 'machineGroup', title: '机器分组', align: 'left', width: '80'},
                 {field: 'remarks', title: '备注', align: 'left', width: '80', hide: true, templet: '#remarksTpl'},
-                {field: 'includeStatus', title: '收录状态', align: 'left', width: '80', hide: true, templet: '#includeStatusTpl'},
                 {title: '操作', align: 'center', width: '120', templet: '#operationTpl'}
             ]],
             height: 'full-110',
@@ -460,10 +460,65 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
             case 'clear_select_fail_reason':
                 clear_select_fail_reason();
                 break;
+            case 'reset_current_invalidDays':
+                reset_invalidDays("current");
+                break;
+            case 'reset_select_invalidDays':
+                reset_invalidDays("select");
+                break;
             default:
                 break;
         }
     });
+
+    function reset_invalidDays(type){
+        let postData = {};
+        let msg;
+        switch (type) {
+            case 'current':
+                msg = "是否重置当前关键词无效天数？"
+                postData = common.formToJsonObject('searchForm');
+                break;
+            case 'select':
+                msg = "是否重置选中关键词无效天数？";
+                let uuidArr = get_selected_uuid_arr();
+                if (uuidArr.length <= 0) {
+                    common.showFailMsg('请选择要重置的词');
+                    return
+                }
+                postData.uuids = uuidArr;
+                postData.terminalType = $("#terminalType").val();
+                break;
+            default:
+                return;
+        }
+        layer.confirm(msg, {icon: 3, title: '重置关键词无效天数'}, function (index) {
+            $.ajax({
+                url: '/internal/customerKeyword/resetInvalidDays',
+                data: JSON.stringify(postData),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                timeout: 5000,
+                type: 'POST',
+                success: function (result) {
+                    if (result.code === 200) {
+                        common.showSuccessMsg('操作成功', active['reload'].call(this));
+                    } else {
+                        common.showFailMsg('操作失败');
+                    }
+                },
+                error: function () {
+                    common.showFailMsg('未知错误，请稍后重试');
+                },
+                complete: function () {
+                    layer.close(index);
+                }
+            });
+        });
+
+    }
 
     function clear_current_fail_reason() {
         layer.confirm('确定清空当前词的失败原因吗？', function (index) {

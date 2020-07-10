@@ -131,6 +131,8 @@ public class Constants {
     public final static String CONFIG_TYPE_INDUSTRY_QQ_REG = "IndustryQqReg";
     public final static String CONFIG_KEY_INDUSTRY_QQ_REG = "IndustryQqReg";
 
+    public final static String CONFIG_TYPE_INVALID_DAYS = "InvalidDays";
+    public final static String CONFIG_KEY_INVALID_MAX_DAYS_NAME = "MaxDays";
 
     public final static Map<String, String> ACCOUNT_LOG_STATUS_MAP = new HashMap<String, String>();
 
