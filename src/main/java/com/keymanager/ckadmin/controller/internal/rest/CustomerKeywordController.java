@@ -1008,7 +1008,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         return resultBean;
     }
 
-    @RequiresRoles("Operation")
+    @RequiresPermissions("/internal/customerKeyword/updateCustomerKeywordStatus")
     @PostMapping(value = "/resetInvalidDays")
     public ResultBean resetInvalidDays(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
         ResultBean resultBean = new ResultBean(200, "success");

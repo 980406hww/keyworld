@@ -181,15 +181,7 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     Boolean batchDownKeywordsForExcel(CustomerKeywordUploadVO customerKeywordUploadVo, String loginName);
 
-    void cacheCheckIncludeCustomerKeywordsQueue();
-    
     void addCustomerKeywordsFromSeoSystem(List<PtCustomerKeyword> ptKeywords, Long customerUuid, String optimizeGroupName, String machineGroupName);
-
-    List<CustomerKeywordIncludeVO> getCheckingEnteredKeywords();
-
-    void updateCustomerKeywordIncludeStatus(Long customerKeywordUuid, Integer includeStatus);
-
-    void updateCustomerKeywordIncludeCheckTime(Long customerKeywordUuid, Date startTime);
 
     void checkPtCustomerKeywordOperaStatus();
     
@@ -199,13 +191,11 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     
     void addQzCustomerKeywordsFromSeoSystem(List<SysCustomerKeyword> qzKeywords, Long customerUuid, Long qsId, String optimizeGroupName, String machineGroupName);
 
-    void resetOptimizationInfo();
+    void resetOptimizationInfo(int invalidMaxDays);
 
-    void resetOptimizationInfoForNoOptimizeDate();
+    void resetOptimizationInfoForNoOptimizeDate(int invalidMaxDays);
 
-    void updateCustomerKeywordInvalidDays();
-
-    void updateInvalidFlagForInvalidDays();
+    void updateCustomerKeywordInvalidDays(int invalidMaxDays);
 
     void resetInvalidDays(KeywordCriteria keywordCriteria);
 }

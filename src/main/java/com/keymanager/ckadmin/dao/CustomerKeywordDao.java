@@ -187,23 +187,13 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void batchDownKeywordByExcel(@Param("uuids") List<Long> uuids);
 
-    List<CustomerKeywordIncludeVO> fetchCustomerKeywordsForIncludeCheck();
-
-    void updateIncludeCheckTimeByUuids(@Param("uuids") List<Long> uuids);
-
-    void updateCustomerKeywordIncludeStatus(@Param("customerKeywordUuid") Long customerKeywordUuid, @Param("includeStatus") Integer includeStatus);
-
-    void updateCustomerKeywordIncludeCheckTime(@Param("customerKeywordUuid") Long customerKeywordUuid, @Param("includeCheckTime") Date includeCheckTime);
-
-    void updateCustomerKeywordFailedCause(@Param("customerKeywordUuid") Long customerKeywordUuid, @Param("failedCause") String failedCause);
-
     List<ExternalCustomerKeywordIndexVO> getCustomerKeywordsForCaptureIndex();
 
     void updateCaptureIndexQueryTimeByKeywords(@Param("customerKeywordUuids") List<Long> customerKeywordUuids);
 
-    void resetOptimizationInfo();
+    void resetOptimizationInfo(@Param("invalidMaxDays") int invalidMaxDays);
 
-    void resetOptimizationInfoForNoOptimizeDate();
+    void resetOptimizationInfoForNoOptimizeDate(@Param("invalidMaxDays") int invalidMaxDays);
 
     void updateCustomerKeywordInvalidDays(@Param("invalidMaxDays") int invalidMaxDays);
 

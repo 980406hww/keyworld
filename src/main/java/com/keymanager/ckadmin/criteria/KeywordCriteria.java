@@ -63,10 +63,8 @@ public class KeywordCriteria extends BaseCriteria {
 
     private String deleteType;
 
-    private Integer includeStatus;
-
     private Integer gtInvalidDays;//无效天数起始
-    private Integer ltInvalidDays;//无效天数指数结束
+    private Integer ltInvalidDays;//无效天数结束
 
     public Long getQzUuid() {
         return qzUuid;
@@ -430,14 +428,6 @@ public class KeywordCriteria extends BaseCriteria {
 
     public void setLtStartOptimizedTime(String ltStartOptimizedTime) {
         this.ltStartOptimizedTime = ltStartOptimizedTime;
-    }
-
-    public Integer getIncludeStatus() {
-        return includeStatus;
-    }
-
-    public void setIncludeStatus(Integer includeStatus) {
-        this.includeStatus = includeStatus;
     }
 
     public Integer getGtInvalidDays() {

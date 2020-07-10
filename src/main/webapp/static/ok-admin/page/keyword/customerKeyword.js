@@ -245,7 +245,6 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
                 {field: 'optimizeGroupName', title: '优化分组', align: 'left', width: '80'},
                 {field: 'machineGroup', title: '机器分组', align: 'left', width: '80'},
                 {field: 'remarks', title: '备注', align: 'left', width: '80', hide: true, templet: '#remarksTpl'},
-                {field: 'includeStatus', title: '收录状态', align: 'left', width: '80', hide: true, templet: '#includeStatusTpl'},
                 {title: '操作', align: 'center', width: '120', templet: '#operationTpl'}
             ]],
             height: 'full-110',
