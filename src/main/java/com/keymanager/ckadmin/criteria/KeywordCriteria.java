@@ -65,6 +65,9 @@ public class KeywordCriteria extends BaseCriteria {
 
     private Integer includeStatus;
 
+    private Integer gtInvalidDays;//无效天数起始
+    private Integer ltInvalidDays;//无效天数指数结束
+
     public Long getQzUuid() {
         return qzUuid;
     }
@@ -435,5 +438,21 @@ public class KeywordCriteria extends BaseCriteria {
 
     public void setIncludeStatus(Integer includeStatus) {
         this.includeStatus = includeStatus;
+    }
+
+    public Integer getGtInvalidDays() {
+        return gtInvalidDays;
+    }
+
+    public void setGtInvalidDays(Integer gtInvalidDays) {
+        this.gtInvalidDays = gtInvalidDays;
+    }
+
+    public Integer getLtInvalidDays() {
+        return ltInvalidDays;
+    }
+
+    public void setLtInvalidDays(Integer ltInvalidDays) {
+        this.ltInvalidDays = ltInvalidDays;
     }
 }

@@ -243,6 +243,18 @@
                                             </div>
                                         </div>
 
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label" style="width: 90px">无效天数范围</label>
+                                            <div class="layui-input-inline" style="width: 60px;">
+                                                <input type="number" name="gtInvalidDays" placeholder=">=" autocomplete="off" class="layui-input"
+                                                       onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" lay-verify="num">
+                                            </div>
+                                            <div class="layui-input-inline" style="width: 60px;">
+                                                <input type="number" name="ltInvalidDays" placeholder="<=" autocomplete="off" class="layui-input"
+                                                       onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" lay-verify="num">
+                                            </div>
+                                        </div>
+
                                         <@shiro.hasRole name="Technical">
                                         <div class="layui-inline">
                                             <label class="layui-form-label" style="width: 100px">抓排名失败标识</label>

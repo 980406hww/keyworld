@@ -200,4 +200,14 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<ExternalCustomerKeywordIndexVO> getCustomerKeywordsForCaptureIndex();
 
     void updateCaptureIndexQueryTimeByKeywords(@Param("customerKeywordUuids") List<Long> customerKeywordUuids);
+
+    void resetOptimizationInfo();
+
+    void resetOptimizationInfoForNoOptimizeDate();
+
+    void updateCustomerKeywordInvalidDays(@Param("invalidMaxDays") int invalidMaxDays);
+
+    void updateInvalidFlagForInvalidDays(@Param("invalidMaxDays") int invalidMaxDays);
+
+    void resetInvalidDays(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
 }

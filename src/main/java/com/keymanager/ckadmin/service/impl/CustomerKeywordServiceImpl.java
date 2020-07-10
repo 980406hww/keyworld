@@ -1642,6 +1642,34 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         return resultCustomerKeywordIndexVOs;
     }
 
+    @Override
+    public void resetOptimizationInfo(){
+        customerKeywordDao.resetOptimizationInfo();
+    }
+
+    @Override
+    public void resetOptimizationInfoForNoOptimizeDate(){
+        customerKeywordDao.resetOptimizationInfoForNoOptimizeDate();
+    }
+
+    @Override
+    public void updateCustomerKeywordInvalidDays(){
+        Config config = configService.getConfig(com.keymanager.util.Constants.CONFIG_TYPE_INVALID_DAYS, com.keymanager.util.Constants.CONFIG_KEY_INVALID_MAX_DAYS_NAME);
+        int invalidMaxDays = Integer.parseInt(config.getValue());
+        customerKeywordDao.updateCustomerKeywordInvalidDays(invalidMaxDays);
+    }
+
+    @Override
+    public void updateInvalidFlagForInvalidDays(){
+        Config config = configService.getConfig(com.keymanager.util.Constants.CONFIG_TYPE_INVALID_DAYS, com.keymanager.util.Constants.CONFIG_KEY_INVALID_MAX_DAYS_NAME);
+        int invalidMaxDays = Integer.parseInt(config.getValue());
+        customerKeywordDao.updateInvalidFlagForInvalidDays(invalidMaxDays);
+    }
+
+    @Override
+    public void resetInvalidDays(KeywordCriteria keywordCriteria){
+        customerKeywordDao.resetInvalidDays(keywordCriteria);
+    }
 }
 
 

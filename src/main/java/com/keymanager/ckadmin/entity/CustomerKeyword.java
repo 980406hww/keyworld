@@ -298,6 +298,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fIncludeCheckTime")
     private Date includeCheckTime;
 
+    @TableField(value = "invalidDays")
+    private int invalidDays;
+
     @TableField(exist = false)
     private String runImmediate;
 
@@ -1159,5 +1162,13 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setIncludeCheckTime(Date includeCheckTime) {
         this.includeCheckTime = includeCheckTime;
+    }
+
+    public int getInvalidDays() {
+        return invalidDays;
+    }
+
+    public void setInvalidDays(int invalidDays) {
+        this.invalidDays = invalidDays;
     }
 }

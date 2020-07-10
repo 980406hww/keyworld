@@ -198,4 +198,14 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     List<ExternalCustomerKeywordIndexVO> getCustomerKeywordForCaptureIndex();
     
     void addQzCustomerKeywordsFromSeoSystem(List<SysCustomerKeyword> qzKeywords, Long customerUuid, Long qsId, String optimizeGroupName, String machineGroupName);
+
+    void resetOptimizationInfo();
+
+    void resetOptimizationInfoForNoOptimizeDate();
+
+    void updateCustomerKeywordInvalidDays();
+
+    void updateInvalidFlagForInvalidDays();
+
+    void resetInvalidDays(KeywordCriteria keywordCriteria);
 }

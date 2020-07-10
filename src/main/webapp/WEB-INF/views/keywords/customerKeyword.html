@@ -290,6 +290,17 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">无效天数范围</label>
+                                            <div class="layui-input-inline" style="width: 90.5px;">
+                                                <input type="number" name="gtInvalidDays" placeholder=">=" autocomplete="off" class="layui-input"
+                                                       onkeyup="this.value=this.value.replace(/[^.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
+                                            </div>
+                                            <div class="layui-input-inline" style="width: 90.5px;">
+                                                <input type="number" name="ltInvalidDays" placeholder="<=" autocomplete="off" class="layui-input"
+                                                       onkeyup="this.value=this.value.replace(/[^.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

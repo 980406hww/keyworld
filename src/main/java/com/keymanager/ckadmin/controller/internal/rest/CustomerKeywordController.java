@@ -1007,4 +1007,28 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         }
         return resultBean;
     }
+
+    @RequiresRoles("Operation")
+    @PostMapping(value = "/resetInvalidDays")
+    public ResultBean resetInvalidDays(@RequestBody KeywordCriteria keywordCriteria, HttpServletRequest request) {
+        ResultBean resultBean = new ResultBean(200, "success");
+        try {
+            if (CollectionUtils.isEmpty(keywordCriteria.getUuids()) && keywordCriteria.getCustomerUuid() == null) {
+                resultBean.setCode(400);
+                resultBean.setMsg(null);
+                return resultBean;
+            }
+            String userName = (String) request.getSession().getAttribute("username");
+            boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(userName));
+            if (!isDepartmentManager) {
+                keywordCriteria.setUserName(userName);
+            }
+            customerKeywordService.resetInvalidDays(keywordCriteria);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            resultBean.setCode(400);
+            resultBean.setMsg(e.getMessage());
+        }
+        return resultBean;
+    }
 }

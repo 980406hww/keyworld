@@ -177,6 +177,16 @@
                 </button>
             </div>
         </@shiro.hasRole>
+        <@shiro.hasRole name="Operation">
+        <div class="layui-btn-group">
+            <button class="layui-btn layui-btn-sm" id="reset_current_invalidDays" lay-event="reset_current_invalidDays">
+                重置当前无效天数
+            </button>
+            <button class="layui-btn layui-btn-sm" id="reset_select_invalidDays" lay-event="reset_select_invalidDays">
+                重置选中无效天数
+            </button>
+        </div>
+        </@shiro.hasRole>
         <div class="layui-btn-group">
             <@shiro.hasPermission name="/SuperUserSimpleKeywordList.xls">
                 <a class="layui-btn layui-btn-sm" href="/SuperUserSimpleKeywordList.xls">
