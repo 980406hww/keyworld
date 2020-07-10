@@ -1840,7 +1840,7 @@
         WHERE fStatus = 1
         AND fFailedCause &gt; ''
         AND fOptimizedCount = 0
-        AND fInvalidRefreshCount &gt;= 4
+        AND fInvalidRefreshCount &gt;= 3
         AND fInvalidDays &lt;= #{invalidMaxDays}
     </update>
     
