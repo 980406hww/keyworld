@@ -15,9 +15,18 @@
 
     <insert id="insertIntoTemporaryData">
         insert into t_qz_customer_keyword(fUuid, fOperaStatus )
-        SELECT fUuid, IF(fCurrentPosition = 0 and fFailedCause > '' and fOptimizedCount = 0 and fInvalidRefreshCount = 9 and fLastOptimizeDateTime > current_date(), 0, 1)
+        SELECT fUuid, IF(fCurrentPosition = 0 and fFailedCause &gt; '' and fOptimizedCount = 0
+                             and fInvalidRefreshCount &gt;= 2 and fLastOptimizeDateTime &gt; current_date(), 0, 1)
         FROM t_customer_keyword
         WHERE fQZSettingUuid = #{qsId} AND fStatus	= 1
+    </insert>
+
+    <insert id="temporarilyStoreData">
+        insert into t_qz_customer_keyword(fUuid, fKeyword, fUrl )
+        SELECT KEYWORD_ID, KEYWORD, URL
+        FROM sys_customer_keyword
+        WHERE QS_ID = #{qsId}
+          AND STATUS = 4
     </insert>
 
     <update id="updateQzKeywordMarks">
@@ -29,6 +38,14 @@
         SET k.OPERA_STATUS = tqck.fOperaStatus
         WHERE k.QS_ID = #{qsId}
           and k.KEYWORD_ID = tqck.fUuid
+          and tqck.fMark = 2
+    </update>
+
+    <update id="updateCustomerKeywordStatusByQsID">
+        UPDATE t_customer_keyword ck, t_qz_customer_keyword tqck
+        SET ck.fKeyword = tqck.fKeyword, ck.fUrl = tqck.fUrl, ck.fStatus = 1
+        WHERE ck.fUuid = tqck.fUuid
+          and ck.fQZSettingUuid = #{qsId}
           and tqck.fMark = 2
     </update>
 

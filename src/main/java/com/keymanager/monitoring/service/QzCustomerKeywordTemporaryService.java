@@ -35,4 +35,12 @@ public class QzCustomerKeywordTemporaryService extends ServiceImpl<QzCustomerKey
     public void updateQzKeywordOperaStatus(long qsId) {
         qzCustomerKeywordTemporaryDao.updateQzKeywordOperaStatus(qsId);
     }
+
+    public void temporarilyStoreData(long qsId) {
+        qzCustomerKeywordTemporaryDao.temporarilyStoreData(qsId);
+    }
+
+    public void updateCustomerKeywordStatusByQsID(long qsId) {
+        qzCustomerKeywordTemporaryDao.updateCustomerKeywordStatusByQsID(qsId);
+    }
 }

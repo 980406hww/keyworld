@@ -20,7 +20,6 @@
     <select id="selectCustomerDelKeywords" resultType="java.lang.Long">
         SELECT KEYWORD_ID FROM sys_customer_keyword
         WHERE QS_ID = #{qsId}
-          and KEYWORD_ID > ''
           and STATUS = 3
     </select>
 
@@ -33,22 +32,6 @@
           and tpck.fMark = 2
     </update>
 
-    <update id="updateCustomerKeywordDiffStatus">
-        UPDATE sys_customer_keyword k, t_customer_keyword ck
-        SET k.STATUS = 0
-        WHERE k.QS_ID = #{qsId}
-          and k.KEYWORD_ID = ck.fUuid
-          and ck.fStatus = 0
-    </update>
-
-    <update id="updateCustomerKeyword">
-        UPDATE sys_customer_keyword k, t_customer_keyword ck
-        SET ck.fKeyword = k.KEYWORD, ck.fUrl = k.URL, k.STATUS = 1
-        WHERE k.QS_ID = #{qsId}
-          and k.KEYWORD_ID = ck.fUuid
-          AND k.STATUS = 4
-    </update>
-
     <update id="updateQzKeywordOperaStatus">
         UPDATE sys_customer_keyword k, t_pt_customer_keyword tpck
         SET k.OPERA_STATUS = tpck.fOperaStatus
@@ -57,10 +40,9 @@
           and tpck.fMark = 2
     </update>
 
-    <delete id="deleteSaleDelKeywords">
+    <delete id="delBeDeletedKeyword">
         DELETE FROM sys_customer_keyword
         WHERE QS_ID = #{qsId}
-          and KEYWORD_ID > ''
-          and NOT EXISTS (SELECT 1 FROM t_customer_keyword WHERE fUuid = KEYWORD_ID)
+          and STATUS = 3
     </delete>
 </mapper>

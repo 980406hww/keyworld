@@ -39,7 +39,6 @@
     <select id="selectCustomerDelKeywords" resultType="java.lang.Long">
         SELECT CUSTOMER_KEYWORD_ID FROM cms_keyword
         WHERE USER_ID = #{userId}
-          and CUSTOMER_KEYWORD_ID > ''
           and STATUS = 3
     </select>
 
@@ -54,22 +53,6 @@
           and tpck.fMark = 2
     </update>
 
-    <update id="updateCustomerKeywordDiffStatus">
-        UPDATE cms_keyword k, t_customer_keyword ck
-        SET k.STATUS = 0
-        WHERE k.USER_ID = #{userId}
-          and k.CUSTOMER_KEYWORD_ID = ck.fUuid
-          and ck.fStatus = 0
-    </update>
-
-    <update id="updateCustomerKeyword">
-        UPDATE cms_keyword k, t_customer_keyword ck
-        SET ck.fKeyword = k.KEYWORD, ck.fUrl = k.URL, ck.fTitle = k.TITLE, k.STATUS = 1
-        WHERE k.USER_ID = #{userId}
-          and k.CUSTOMER_KEYWORD_ID = ck.fUuid
-          AND k.STATUS = 4
-    </update>
-
     <update id="updatePtKeywordOperaStatus">
         UPDATE cms_keyword k, t_pt_customer_keyword tpck
         SET k.OPERA_STATUS = tpck.fOperaStatus
@@ -78,10 +61,9 @@
           and tpck.fMark = 2
     </update>
 
-    <delete id="deleteSaleDelKeywords">
+    <delete id="delBeDeletedKeyword">
         DELETE FROM cms_keyword
         WHERE USER_ID = #{userId}
-          and CUSTOMER_KEYWORD_ID > ''
-          and NOT EXISTS (SELECT 1 FROM t_customer_keyword WHERE fUuid = CUSTOMER_KEYWORD_ID)
+          and STATUS = 3
     </delete>
 </mapper>

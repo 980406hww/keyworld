@@ -34,4 +34,8 @@ public interface PtCustomerKeywordTemporaryDao extends BaseMapper<PtCustomerKeyw
      * 临时存放pt关键词操作状态
      */
     void insertIntoTemporaryData(@Param("cusId") Long cusId, @Param("type") String type);
+
+    void temporarilyStoreData(@Param("userId") long userId);
+
+    void updateCustomerKeywordStatus();
 }

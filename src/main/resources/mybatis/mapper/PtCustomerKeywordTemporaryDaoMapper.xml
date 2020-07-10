@@ -20,8 +20,22 @@
         WHERE fCustomerUuid = #{cusId} AND fType = #{type} AND fStatus	= 1
     </insert>
 
+    <insert id="temporarilyStoreData">
+        insert into t_pt_customer_keyword(fUuid, fKeyword, fUrl, fTitle )
+        SELECT CUSTOMER_KEYWORD_ID, KEYWORD, URL, TITLE
+        FROM cms_keyword
+        WHERE USER_ID = #{userId} AND STATUS = 4
+    </insert>
+
     <update id="updatePtKeywordMarks">
         update t_pt_customer_keyword set fMark = #{mark} where fMark = #{targetMark} limit #{rows}
+    </update>
+
+    <update id="updateCustomerKeywordStatus">
+        UPDATE t_customer_keyword ck, t_pt_customer_keyword tqck
+        SET ck.fKeyword = tqck.fKeyword, ck.fUrl = tqck.fUrl, ck.fTitle = tqck.fTitle, ck.fStatus = 1
+        WHERE ck.fUuid = tqck.fUuid
+          and tqck.fMark = 2
     </update>
 
     <delete id="cleanPtCustomerKeyword">

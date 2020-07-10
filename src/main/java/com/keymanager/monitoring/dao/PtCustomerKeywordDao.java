@@ -21,21 +21,11 @@ public interface PtCustomerKeywordDao extends BaseMapper<PtCustomerKeyword> {
     List<Long> selectCustomerDelKeywords(@Param("userId") long userId);
 
     /**
-     * 处理暂不操作的词
+     * 清理已删除的词
      */
-    void updateCustomerKeywordDiffStatus(@Param("userId") long userId);
-
-    /**
-     * 清理销售已删除的词
-     */
-    void deleteSaleDelKeywords(@Param("userId") long userId);
+    void delBeDeletedKeyword(@Param("userId") long userId);
 
     void updatePtKeywordCurrentPosition(@Param("userId") long userId);
-
-    /**
-     * 客户更新过的词需同步keyword，url，title到t_customer_keyword
-     */
-    void updateCustomerKeyword(@Param("userId") long userId);
 
     void updatePtKeywordOperaStatus(@Param("userId") long userId);
 }

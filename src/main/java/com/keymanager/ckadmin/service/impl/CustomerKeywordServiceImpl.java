@@ -1584,16 +1584,17 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                 for (Map.Entry<Long, HashMap<String, CmsSyncManage>> entry : syncMap.entrySet()) {
                     long userId = entry.getKey();
                     for (CmsSyncManage syncManage : entry.getValue().values()) {
-                        // 读取客户记录同步操作状态时间的信息
-                        Config lastSyncConfig = configService.getConfig(com.keymanager.util.Constants.CONFIG_TYPE_SYNC_PT_OPERA_STATUS_TIME, syncManage.getCompanyCode());
-                        // 上次同步操作状态时间，超过60分钟，认为是未同步
-                        boolean overAnHour = com.keymanager.util.Utils.getIntervalMines(lastSyncConfig.getValue()) > 60;
-                        if (overAnHour) {
-                            Customer customer = customerService.selectByName(syncManage.getCompanyCode());
-                            if (null != customer) {
+                        String customerName = syncManage.getCompanyCode();
+                        Customer customer = customerService.selectByName(customerName);
+                        if (null != customer) {
+                            // 读取客户记录同步操作状态时间的信息
+                            Config lastSyncConfig = configService.getConfig(com.keymanager.util.Constants.CONFIG_TYPE_SYNC_PT_OPERA_STATUS_TIME, customerName);
+                            // 上次同步操作状态时间，超过60分钟，认为是未同步
+                            boolean overAnHour = com.keymanager.util.Utils.getIntervalMines(lastSyncConfig.getValue()) > 60;
+                            if (overAnHour) {
                                 // 清空临时表数据 delete
                                 ptCustomerKeywordTemporaryService.cleanPtCustomerKeyword();
-                                // 临时存放关键词操作状态 set fMark = 0
+                                // 临时存放关键词操作状态
                                 ptCustomerKeywordTemporaryService.insertIntoTemporaryData(customer.getUuid(), "pt");
                                 do {
                                     // 修改标识为更新中，行数 rows set fMark = 2

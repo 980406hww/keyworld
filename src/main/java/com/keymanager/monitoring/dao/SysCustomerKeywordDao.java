@@ -21,21 +21,11 @@ public interface SysCustomerKeywordDao extends BaseMapper<SysCustomerKeyword> {
     List<Long> selectCustomerDelKeywords(@Param("qsId") long qsId);
 
     /**
-     * 处理暂不操作的词
+     * 清理已删除的词
      */
-    void updateCustomerKeywordDiffStatus(@Param("qsId") long qsId);
-
-    /**
-     * 清理销售已删除的词
-     */
-    void deleteSaleDelKeywords(@Param("qsId") long qsId);
+    void delBeDeletedKeyword(@Param("qsId") long qsId);
 
     void updateQzKeywordCurrentPosition(@Param("qsId") long qsId);
-
-    /**
-     * 客户更新过的词需同步keyword，url到t_customer_keyword
-     */
-    void updateCustomerKeyword(@Param("qsId") long qsId);
 
     void updateQzKeywordOperaStatus(@Param("qsId") long qsId);
 }

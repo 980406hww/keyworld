@@ -34,4 +34,8 @@ public interface QzCustomerKeywordTemporaryDao extends BaseMapper<QzCustomerKeyw
     void insertIntoTemporaryData(@Param("qsId") Long qsId);
 
     void updateQzKeywordOperaStatus(@Param("qsId") long qsId);
+
+    void temporarilyStoreData(@Param("qsId") long qsId);
+
+    void updateCustomerKeywordStatusByQsID(@Param("qsId") long qsId);
 }

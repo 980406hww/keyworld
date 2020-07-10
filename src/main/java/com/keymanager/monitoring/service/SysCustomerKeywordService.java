@@ -43,6 +43,9 @@ public class SysCustomerKeywordService extends ServiceImpl<SysCustomerKeywordDao
     @Resource(name = "customerService2")
     private CustomerService customerService;
 
+    @Resource(name = "qzCustomerKeywordTemporaryService2")
+    private QzCustomerKeywordTemporaryService qzCustomerKeywordTemporaryService;
+
     public void updateQzCustomerKeywordStatus() {
         // 读取配置表需要同步的客户网站标签
         Config config = configService.getConfig(Constants.CONFIG_TYPE_SYNC_QZ_CUSTOMER_KEYWORD, Constants.CONFIG_KEY_SYNC_QZ_CUSTOMER_TAG);
@@ -77,30 +80,38 @@ public class SysCustomerKeywordService extends ServiceImpl<SysCustomerKeywordDao
                 if (!syncMap.isEmpty()) {
                     for (Map.Entry<Long, HashMap<String, CmsSyncManage>> entry : syncMap.entrySet()) {
                         for (CmsSyncManage cmsSyncManage : entry.getValue().values()) {
-                            List<QZSettingForSync> qzSettingForSyncs = qzSettingService.getAvailableQZSettingsByTagName(cmsSyncManage.getCompanyCode());
-                            if (CollectionUtils.isNotEmpty(qzSettingForSyncs)) {
-                                for (QZSettingForSync settingForSync : qzSettingForSyncs) {
-                                    long qsId = settingForSync.getQsId();
-                                    // 处理有更新状态的关键词 status = 4 keyword, url
-                                    sysCustomerKeywordDao.updateCustomerKeyword(qsId);
+                            String customerName = cmsSyncManage.getCompanyCode();
+                            Customer customer = customerService.selectByName(customerName);
+                            if (null != customer) {
+                                List<QZSettingForSync> qzSettingForSyncs = qzSettingService.getAvailableQZSettingsByTagName(customerName);
+                                if (CollectionUtils.isNotEmpty(qzSettingForSyncs)) {
+                                    for (QZSettingForSync settingForSync : qzSettingForSyncs) {
+                                        long qsId = settingForSync.getQsId();
+                                        // 清空临时表数据 delete
+                                        qzCustomerKeywordTemporaryService.cleanQzCustomerKeyword();
+                                        // 临时存放需要更新状态的关键词
+                                        qzCustomerKeywordTemporaryService.temporarilyStoreData(qsId);
+                                        do {
+                                            // 修改标识为更新中，行数 rows set fMark = 2
+                                            qzCustomerKeywordTemporaryService.updateQzKeywordMarks(rows, 2, 0);
+                                            // 处理有更新状态的关键词 keyword, url
+                                            qzCustomerKeywordTemporaryService.updateCustomerKeywordStatusByQsID(qsId);
+                                            // 修改标识为已更新，行数 rows set fMark = 1
+                                            qzCustomerKeywordTemporaryService.updateQzKeywordMarks(rows, 1, 2);
+                                        } while (qzCustomerKeywordTemporaryService.searchQzKeywordTemporaryCount() > 0);
 
-                                    // 处理已删除的关键词 status = 3
-                                    List<Long> customerKeywordUuids = sysCustomerKeywordDao.selectCustomerDelKeywords(qsId);
-                                    if (CollectionUtils.isNotEmpty(customerKeywordUuids)) {
-                                        customerKeywordService.deleteBatchIds(customerKeywordUuids);
-                                    }
-                                    sysCustomerKeywordDao.deleteSaleDelKeywords(qsId);
+                                        // 处理已删除的关键词 status = 3
+                                        List<Long> customerKeywordUuids = sysCustomerKeywordDao.selectCustomerDelKeywords(qsId);
+                                        if (CollectionUtils.isNotEmpty(customerKeywordUuids)) {
+                                            customerKeywordService.deleteBatchIds(customerKeywordUuids);
+                                        }
+                                        sysCustomerKeywordDao.delBeDeletedKeyword(qsId);
 
-                                    // 处理暂不操作的词 status = 0
-                                    sysCustomerKeywordDao.updateCustomerKeywordDiffStatus(qsId);
-
-                                    // 处理新增状态的关键词 status = 2
-                                    List<SysCustomerKeyword> ptKeywords = sysCustomerKeywordDao.selectNewQzKeyword(qsId);
-                                    if (CollectionUtils.isNotEmpty(ptKeywords)) {
-                                        int fromIndex = 0, toIndex = rows;
-                                        List<SysCustomerKeyword> tempList;
-                                        Customer customer = customerService.selectByName(cmsSyncManage.getCompanyCode());
-                                        if (null != customer) {
+                                        // 处理新增状态的关键词 status = 2
+                                        List<SysCustomerKeyword> ptKeywords = sysCustomerKeywordDao.selectNewQzKeyword(qsId);
+                                        if (CollectionUtils.isNotEmpty(ptKeywords)) {
+                                            int fromIndex = 0, toIndex = rows;
+                                            List<SysCustomerKeyword> tempList;
                                             do {
                                                 tempList = ptKeywords.subList(fromIndex, Math.min(toIndex, ptKeywords.size()));
                                                 // 类似列表上传关键词，新增关键词并激活
@@ -114,13 +125,13 @@ public class SysCustomerKeywordService extends ServiceImpl<SysCustomerKeywordDao
                                             } while (ptKeywords.size() > fromIndex);
                                         }
                                     }
-                                }
-                                // 当前时间
-                                String currentTime = Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy-MM-dd HH:mm");
+                                    // 当前时间
+                                    String currentTime = Utils.formatDatetime(Utils.getCurrentTimestamp(), "yyyy-MM-dd HH:mm");
 
-                                // 记录最近同步状态的时间
-                                cmsSyncManage.setSyncStatusTime(currentTime);
-                                syncManageService.updateById(cmsSyncManage);
+                                    // 记录最近同步状态的时间
+                                    cmsSyncManage.setSyncStatusTime(currentTime);
+                                    syncManageService.updateById(cmsSyncManage);
+                                }
                             }
                         }
                     }
