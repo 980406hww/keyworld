@@ -50,7 +50,7 @@ public class SysCustomerKeyword implements Serializable {
     private Date capturePositionTime;
 
     @TableField(value = "DELETE_FLAG")
-    private Date deleteFlag;
+    private Integer deleteFlag;
 
     @TableField(value = "OPTIMIZE_PLAN_COUNT")
     private Integer optimizePlanCount;
@@ -163,11 +163,11 @@ public class SysCustomerKeyword implements Serializable {
         this.capturePositionTime = capturePositionTime;
     }
 
-    public Date getDeleteFlag() {
+    public Integer getDeleteFlag() {
         return deleteFlag;
     }
 
-    public void setDeleteFlag(Date deleteFlag) {
+    public void setDeleteFlag(Integer deleteFlag) {
         this.deleteFlag = deleteFlag;
     }
 

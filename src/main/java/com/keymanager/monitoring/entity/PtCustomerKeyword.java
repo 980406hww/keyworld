@@ -56,7 +56,7 @@ public class PtCustomerKeyword implements Serializable {
     private Date capturePositionTime;
 
     @TableField(value = "DELETE_FLAG")
-    private Date deleteFlag;
+    private Integer deleteFlag;
 
     @TableField(value = "CREATE_TIME")
     private Date createTime;
@@ -176,11 +176,11 @@ public class PtCustomerKeyword implements Serializable {
         this.capturePositionTime = capturePositionTime;
     }
 
-    public Date getDeleteFlag() {
+    public Integer getDeleteFlag() {
         return deleteFlag;
     }
 
-    public void setDeleteFlag(Date deleteFlag) {
+    public void setDeleteFlag(Integer deleteFlag) {
         this.deleteFlag = deleteFlag;
     }
 
