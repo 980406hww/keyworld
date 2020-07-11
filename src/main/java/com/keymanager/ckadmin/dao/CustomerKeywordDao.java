@@ -200,4 +200,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     List<ExternalCustomerKeywordIndexVO> getCustomerKeywordsForCaptureIndex();
 
     void updateCaptureIndexQueryTimeByKeywords(@Param("customerKeywordUuids") List<Long> customerKeywordUuids);
+
+    void updateSyncKeywordStatus(List<Long> uuids);
 }

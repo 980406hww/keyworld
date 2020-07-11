@@ -61,9 +61,11 @@
           and tpck.fMark = 2
     </update>
 
-    <delete id="delBeDeletedKeyword">
-        DELETE FROM cms_keyword
-        WHERE USER_ID = #{userId}
-          and STATUS = 3
-    </delete>
+    <update id="updatePtKeywordStatus">
+        update cms_keyword
+        set STATUS = 1
+        where USER_ID = #{userId}
+          and STATUS = 4
+        limit #{rows}
+    </update>
 </mapper>

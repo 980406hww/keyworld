@@ -87,6 +87,7 @@ public class SysCustomerKeywordService extends ServiceImpl<SysCustomerKeywordDao
                                 if (CollectionUtils.isNotEmpty(qzSettingForSyncs)) {
                                     for (QZSettingForSync settingForSync : qzSettingForSyncs) {
                                         long qsId = settingForSync.getQsId();
+                                        // 处理有更新的关键词 status = 4
                                         // 清空临时表数据 delete
                                         qzCustomerKeywordTemporaryService.cleanQzCustomerKeyword();
                                         // 临时存放需要更新状态的关键词
@@ -98,14 +99,15 @@ public class SysCustomerKeywordService extends ServiceImpl<SysCustomerKeywordDao
                                             qzCustomerKeywordTemporaryService.updateCustomerKeywordStatusByQsID(qsId);
                                             // 修改标识为已更新，行数 rows set fMark = 1
                                             qzCustomerKeywordTemporaryService.updateQzKeywordMarks(rows, 1, 2);
+                                            // 更新 cms_keyword status 4 => 1 limit rows
+                                            sysCustomerKeywordDao.updateQzKeywordStatus(qsId, rows);
                                         } while (qzCustomerKeywordTemporaryService.searchQzKeywordTemporaryCount() > 0);
 
-                                        // 处理已删除的关键词 status = 3
+                                        // 处理已下架的关键词 status = 3
                                         List<Long> customerKeywordUuids = sysCustomerKeywordDao.selectCustomerDelKeywords(qsId);
                                         if (CollectionUtils.isNotEmpty(customerKeywordUuids)) {
-                                            customerKeywordService.deleteBatchIds(customerKeywordUuids);
+                                            customerKeywordService.updateSyncKeywordStatus(customerKeywordUuids, rows);
                                         }
-                                        sysCustomerKeywordDao.delBeDeletedKeyword(qsId);
 
                                         // 处理新增状态的关键词 status = 2
                                         List<SysCustomerKeyword> ptKeywords = sysCustomerKeywordDao.selectNewQzKeyword(qsId);

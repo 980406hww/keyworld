@@ -1643,6 +1643,20 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         return resultCustomerKeywordIndexVOs;
     }
 
+    @Override
+    public void updateSyncKeywordStatus(List<Long> uuids, int rows) {
+        int fromIndex = 0, toIndex = rows;
+        List<Long> tempList;
+        do {
+            tempList = uuids.subList(fromIndex, Math.min(toIndex, uuids.size()));
+            // 根据uuids, 修改关键词的状态为 下架
+            customerKeywordDao.updateSyncKeywordStatus(tempList);
+            tempList.clear();
+            fromIndex += rows;
+            toIndex += rows;
+        } while (uuids.size() > fromIndex);
+    }
+
 }
 
 

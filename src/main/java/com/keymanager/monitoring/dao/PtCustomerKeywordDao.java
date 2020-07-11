@@ -20,12 +20,9 @@ public interface PtCustomerKeywordDao extends BaseMapper<PtCustomerKeyword> {
      */
     List<Long> selectCustomerDelKeywords(@Param("userId") long userId);
 
-    /**
-     * 清理已删除的词
-     */
-    void delBeDeletedKeyword(@Param("userId") long userId);
-
     void updatePtKeywordCurrentPosition(@Param("userId") long userId);
 
     void updatePtKeywordOperaStatus(@Param("userId") long userId);
+
+    void updatePtKeywordStatus(@Param("userId") long userId, @Param("rows") int rows);
 }

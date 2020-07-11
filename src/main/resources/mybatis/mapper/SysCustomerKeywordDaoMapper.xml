@@ -40,9 +40,11 @@
           and tpck.fMark = 2
     </update>
 
-    <delete id="delBeDeletedKeyword">
-        DELETE FROM sys_customer_keyword
-        WHERE QS_ID = #{qsId}
-          and STATUS = 3
-    </delete>
+    <update id="updateQzKeywordStatus">
+        update sys_customer_keyword
+        set STATUS = 1
+        where QS_ID = #{qsId}
+          and STATUS = 4
+        limit #{rows}
+    </update>
 </mapper>
