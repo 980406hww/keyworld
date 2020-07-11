@@ -450,44 +450,6 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
         return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/getCheckingIncludeKeywords", method = RequestMethod.POST)
-    public ResponseEntity<?> getCheckingIncludeKeywords(@RequestBody Map<String, Object> requestMap) {
-        try {
-            String userName = (String) requestMap.get("userName");
-            String password = (String) requestMap.get("password");
-            if (validUser(userName, password)) {
-                return new ResponseEntity<Object>(customerKeywordService.getCheckingEnteredKeywords(), HttpStatus.OK);
-            }
-            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            logger.error("getNoEnteredKeywords:  " + ex.getMessage());
-        }
-        return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-    }
-
-    @RequestMapping(value = "/updateCustomerKeywordIncludeStatus", method = RequestMethod.POST)
-    public ResponseEntity<?> updateCustomerKeywordIncludeStatus(@RequestBody Map<String, Object> requestMap) {
-        String userName = (String) requestMap.get("userName");
-        String password = (String) requestMap.get("password");
-        try {
-            if (validUser(userName, password)) {
-                Long customerKeywordUuid = Long.parseLong(requestMap.get("customerKeywordUuid").toString());
-                Integer includeStatus = (Integer) requestMap.get("includeStatus");
-                if (null != includeStatus && includeStatus > -1) {
-                    customerKeywordService.updateCustomerKeywordIncludeStatus(customerKeywordUuid, includeStatus);
-                } else {
-                    customerKeywordService.updateCustomerKeywordIncludeCheckTime(customerKeywordUuid, new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24));
-                }
-                return new ResponseEntity<Object>(true, HttpStatus.OK);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            logger.error("updateCustomerKeywordIncludeStatus:        " + ex.getMessage());
-        }
-        return new ResponseEntity<Object>(false, HttpStatus.BAD_REQUEST);
-    }
-
     @RequestMapping(value = "/getTenCustomerKeywordsForCaptureIndex", method = RequestMethod.POST)
     public ResponseEntity<?> getTenCustomerKeywordsForCaptureIndex(@RequestBody Map<String, Object> requestMap) throws Exception {
         String userName = (String) requestMap.get("userName");

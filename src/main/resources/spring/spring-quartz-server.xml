@@ -98,15 +98,4 @@
 		<property name="concurrent" value="false" />
 	</bean>
 
-	<bean id="cronTriggerCacheCheckIncludeCustomerKeyword" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail" ref="cronTriggerCacheCheckIncludeCustomerKeywordSchedule"/>
-		<property name="cronExpression" value="0 0/2 18-23 * * ?" />
-	</bean>
-
-	<bean id="cronTriggerCacheCheckIncludeCustomerKeywordSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="cacheCheckIncludeCustomerKeywordSchedule" />
-		<property name="targetMethod" value="runTask" />
-		<property name="concurrent" value="false" />
-	</bean>
-
 </beans>

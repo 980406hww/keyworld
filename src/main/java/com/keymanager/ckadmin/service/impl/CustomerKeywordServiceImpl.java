@@ -105,8 +105,6 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
 
     private final static ArrayBlockingQueue<CustomerKeyWordCrawlRankVO> customerKeywordCrawlQZRankQueue = new ArrayBlockingQueue<>(30000);
 
-    private final static LinkedBlockingQueue customerKeywordCheckIncludeQueue = new LinkedBlockingQueue();
-
     private final static LinkedBlockingQueue customerKeywordCaptureIndexQueue = new LinkedBlockingQueue();
 
     @Override
@@ -403,7 +401,6 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         }
 
         machineGroupQueueVos.add(new MachineGroupQueueVO("Update", updateOptimizedResultQueue.size()));
-        machineGroupQueueVos.add(new MachineGroupQueueVO("CheckInclude", customerKeywordCheckIncludeQueue.size()));
         machineGroupQueueVos.add(new MachineGroupQueueVO("Index", customerKeywordCaptureIndexQueue.size()));
 
         for (Map.Entry<String, LinkedBlockingQueue> entry : optimizeGroupNameQueueMap.entrySet()) {
@@ -554,7 +551,6 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         customerKeyword.setQueryDate(new Date());
         customerKeyword.setUpdateTime(new Date());
         customerKeyword.setCreateTime(new Date());
-        customerKeyword.setIncludeCheckTime(new Date());
         return customerKeyword;
     }
 
@@ -763,7 +759,6 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             customerKeyword.setType(type);
             customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
             customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
-            customerKeyword.setIncludeCheckTime(Utils.getCurrentTimestamp());
             customerKeyword.setTerminalType(terminalType);
             customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Excel.name());
         }
@@ -1015,7 +1010,6 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         customerKeyword.setSequence(maxSequence);
         customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
         customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
-        customerKeyword.setIncludeCheckTime(Utils.getCurrentTimestamp());
         customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.UI.name());
     }
 
@@ -1252,7 +1246,6 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         customerKeyword.setAutoUpdateNegativeTime(Utils.getCurrentTimestamp());
         customerKeyword.setCreateTime(Utils.getCurrentTimestamp());
         customerKeyword.setUpdateTime(Utils.getCurrentTimestamp());
-        customerKeyword.setIncludeCheckTime(Utils.getCurrentTimestamp());
         customerKeyword.setCustomerKeywordSource(CustomerKeywordSourceEnum.Plugin.name());
         return customerKeyword;
     }
@@ -1430,52 +1423,6 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public void cacheCheckIncludeCustomerKeywordsQueue(){
-        if (customerKeywordCheckIncludeQueue.size() < 4000) {
-            List<CustomerKeywordIncludeVO> customerKeywordIncludeVOs;
-            do {
-                customerKeywordIncludeVOs = customerKeywordDao.fetchCustomerKeywordsForIncludeCheck();
-                if (CollectionUtils.isNotEmpty(customerKeywordIncludeVOs)) {
-                    List<Long> customerKeywordUuids = new ArrayList<>();
-                    for (CustomerKeywordIncludeVO keywordincludeVo : customerKeywordIncludeVOs) {
-                        if (customerKeywordCheckIncludeQueue.offer(keywordincludeVo)) {
-                            customerKeywordUuids.add(keywordincludeVo.getUuid());
-                        } else {
-                            break;
-                        }
-                    }
-                    customerKeywordDao.updateIncludeCheckTimeByUuids(customerKeywordUuids);
-                }
-            } while (customerKeywordCheckIncludeQueue.size() < 10000 && CollectionUtils.isNotEmpty(customerKeywordIncludeVOs));
-        }
-
-    }
-
-    @Override
-    public synchronized List<CustomerKeywordIncludeVO> getCheckingEnteredKeywords(){
-        if (customerKeywordCheckIncludeQueue.size() > 0) {
-            List<CustomerKeywordIncludeVO> customerKeywordIncludeVOs = new ArrayList<>();
-            do {
-                Object obj = customerKeywordCheckIncludeQueue.poll();
-                customerKeywordIncludeVOs.add((CustomerKeywordIncludeVO) obj);
-            } while (customerKeywordCheckIncludeQueue.size() > 0 && customerKeywordIncludeVOs.size() < 10);
-            return customerKeywordIncludeVOs;
-        }
-        return null;
-    }
-
-    @Override
-    public void updateCustomerKeywordIncludeStatus(Long customerKeywordUuid, Integer includeStatus){
-        customerKeywordDao.updateCustomerKeywordFailedCause(customerKeywordUuid, "关键词site未收录");
-        customerKeywordDao.updateCustomerKeywordIncludeStatus(customerKeywordUuid, includeStatus);
-    }
-
-    @Override
-    public void updateCustomerKeywordIncludeCheckTime(Long customerKeywordUuid, Date includeCheckTime){
-        customerKeywordDao.updateCustomerKeywordIncludeCheckTime(customerKeywordUuid, includeCheckTime);
-    }
-
-    @Override
     public void addCustomerKeywordsFromSeoSystem(List<PtCustomerKeyword> ptKeywords, Long customerUuid, String optimizeGroupName, String machineGroupName) {
         for (PtCustomerKeyword ptKeyword : ptKeywords) {
             ptKeyword.setStatus(1);
@@ -1562,7 +1509,6 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         customerKeyword.setQueryDate(new Date());
         customerKeyword.setUpdateTime(new Date());
         customerKeyword.setCreateTime(new Date());
-        customerKeyword.setIncludeCheckTime(new Date());
     }
 
     @Override
@@ -1644,6 +1590,26 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
+    public void resetOptimizationInfo(int invalidMaxDays){
+        customerKeywordDao.resetOptimizationInfo(invalidMaxDays);
+    }
+
+    @Override
+    public void resetOptimizationInfoForNoOptimizeDate(int invalidMaxDays){
+        customerKeywordDao.resetOptimizationInfoForNoOptimizeDate(invalidMaxDays);
+    }
+
+    @Override
+    public void updateCustomerKeywordInvalidDays(int invalidMaxDays){
+        customerKeywordDao.updateCustomerKeywordInvalidDays(invalidMaxDays);
+    }
+
+    @Override
+    public void resetInvalidDays(KeywordCriteria keywordCriteria){
+        customerKeywordDao.resetInvalidDays(keywordCriteria);
+    }
+    
+    @Override
     public void updateSyncKeywordStatus(List<Long> uuids, int rows) {
         int fromIndex = 0, toIndex = rows;
         List<Long> tempList;
@@ -1656,7 +1622,6 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             toIndex += rows;
         } while (uuids.size() > fromIndex);
     }
-
 }
 
 

@@ -81,10 +81,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void setBigKeywordIndicator(@Param("uuids") List<Long> uuids);
 
-    void resetOptimizationInfo();
-
-    void resetOptimizationInfoForNoOptimizeDate();
-
     Long getCustomerKeywordUuidForOptimization(@Param("terminalType") String terminalType, @Param("groupName") String groupName, @Param("bigKeyword") boolean bigKeyword);
 
     CustomerKeyword getCustomerKeywordForOptimization(@Param("uuid") Long uuid);

@@ -618,14 +618,6 @@
         HAVING count(1) = 0
     </select>
 
-    <update id="resetOptimizationInfoForNoOptimizeDate" timeout="200000">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeTodayCount = fOptimizePlanCount * ROUND((RAND()*0.7+0.5),1), fQueryInterval = (24*60*60)/fOptimizeTodayCount, fOptimizeRemainingCount = fOptimizeTodayCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fFailedCause = IF(fFailedCause = '关键字site未收录', fFailedCause, ''), fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = DATE_ADD(NOW(), INTERVAL ROUND(RAND(1000)*1000) SECOND) WHERE fOptimizeDate IS NULL
-    </update>
-
-    <update id="resetOptimizationInfo">
-        UPDATE t_customer_keyword SET fOptimizedCount = 0, fOptimizeTodayCount = fOptimizePlanCount * ROUND((RAND()*0.7+0.5),1), fQueryInterval = (24*60*60)/fOptimizeTodayCount, fOptimizeRemainingCount = fOptimizeTodayCount, fInvalidRefreshCount = 0, fInvalidFlag = 0, fFailedCause = IF(fFailedCause = '关键字site未收录', fFailedCause, ''), fOptimizeDate = CURRENT_DATE(), fQueryCount = 0, fQueryDate = CURRENT_DATE(), fQueryTime = DATE_ADD(NOW(), INTERVAL ROUND(RAND(1000)*1000) SECOND) WHERE fOptimizeDate <![CDATA[<]]> CURRENT_DATE() LIMIT 200000
-    </update>
-
     <select id="searchRemainingOptimizationCount" resultType="java.util.Map">
         SELECT ck.fUuid as 'uuid', fOptimizeRemainingCount AS 'remainingCount' FROM t_customer_keyword ck
         WHERE ck.fOptimizeGroupName = #{groupName} AND ck.fOptimizeRemainingCount > 1 and ck.fStatus = 1
@@ -1289,7 +1281,7 @@
         fKeyword AS 'keyword',
         fTerminalType AS 'terminalType',
         fSearchEngine AS 'searchEngine',
-        GROUP_CONCAT(CONCAT(fCurrentPosition, '_', fUuid) ORDER BY fCurrentPosition,fPositionFirstFee DESC SEPARATOR ',') AS 'uuids'
+        GROUP_CONCAT(CONCAT(fCurrentPosition, '_', fUuid) ORDER BY fCurrentPosition, fPositionFirstFee DESC, fUuid SEPARATOR ',') AS 'uuids'
         FROM t_customer_keyword
         WHERE fOptimizeGroupName IN
         <foreach item="item" collection="monitorConfigs" open="(" separator="," close=")">
@@ -1297,7 +1289,7 @@
         </foreach>
         and fStatus = 1
         GROUP BY fKeyword,fTerminalType,fSearchEngine
-        HAVING count(1) &gt; 10
+        HAVING count(1) &gt; 6
     </select>
 
     <update id="updateCustomerKeywordCt">
@@ -1698,7 +1690,7 @@
             <if test="customerKeyword.currentIndexCount == -1">
                 , fCaptureIndexQueryTime = DATE_SUB(NOW(), INTERVAL 30 MINUTE)
             </if>
-            , fOptimizePlanCount = #{customerKeyword.optimizePlanCount}
+            , fOptimizePlanCount = IF(fKeywordEffect = "Important", fOptimizePlanCount, #{customerKeyword.optimizePlanCount})
             , fOptimizeTodayCount = fOptimizePlanCount * ROUND(RAND() * 0.7 + 0.5)
             , fQueryInterval = IF(fOptimizeTodayCount > 0, (24 * 60 * 60 / fOptimizeTodayCount), 24 * 60 * 60)
             , fQueryTime = DATE_ADD(CURRENT_DATE(), INTERVAL fOptimizedCount * fQueryInterval SECOND)

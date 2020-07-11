@@ -1,6 +1,13 @@
-package com.keymanager.monitoring.shedule;
+package com.keymanager.ckadmin.schedule;
 
-import com.keymanager.monitoring.service.*;
+import com.keymanager.ckadmin.entity.Config;
+import com.keymanager.ckadmin.util.Constants;
+import com.keymanager.ckadmin.service.ConfigService;
+import com.keymanager.monitoring.service.CustomerKeywordInvalidCountLogService;
+import com.keymanager.ckadmin.service.CustomerKeywordService;
+import com.keymanager.monitoring.service.MachineInfoService;
+import com.keymanager.monitoring.service.PerformanceService;
+import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +20,10 @@ public class ResetInfoDailySchedule {
 	@Autowired
 	private CustomerKeywordInvalidCountLogService customerKeywordInvalidCountLogService;
 
-	@Autowired
+	@Resource(name = "configService2")
 	private ConfigService configService;
 
-	@Autowired
+	@Resource(name = "customerKeywordService2")
 	private CustomerKeywordService customerKeywordService;
 
 	@Autowired
@@ -29,6 +36,8 @@ public class ResetInfoDailySchedule {
 		logger.info("============= "+" Reset information Daily Task "+"===================");
 		long startMilleSeconds = System.currentTimeMillis();
 		try {
+			Config config = configService.getConfig(Constants.CONFIG_TYPE_INVALID_DAYS, Constants.CONFIG_KEY_INVALID_MAX_DAYS_NAME);
+			int invalidMaxDays = Integer.parseInt(config.getValue());
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting");
 			logger.info("============= Reset information Daily Task starting ===================");
 			//customerKeywordInvalidCountLogService.addCustomerKeywordInvalidCountLog();
@@ -37,17 +46,19 @@ public class ResetInfoDailySchedule {
 			//configService.updateOptimizationDateAsToday();
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 3");
 			logger.info("============= Reset information Daily Task starting 3===================");
-			for(int i = 0; i < 20; i++) {
-				customerKeywordService.resetOptimizationInfo();
-				performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 3， --- " + i );
-			}
+			customerKeywordService.updateCustomerKeywordInvalidDays(invalidMaxDays);
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 4");
 			logger.info("============= Reset information Daily Task starting 4===================");
-			customerKeywordService.resetOptimizationInfoForNoOptimizeDate();
+			for(int i = 0; i < 20; i++) {
+				customerKeywordService.resetOptimizationInfo(invalidMaxDays);
+				performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 4， --- " + i );
+			}
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 5");
 			logger.info("============= Reset information Daily Task starting 5===================");
+			customerKeywordService.resetOptimizationInfoForNoOptimizeDate(invalidMaxDays);
+			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 6");
+			logger.info("============= Reset information Daily Task starting 6===================");
 			machineInfoService.resetOptimizationInfo();
-
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "ended");
 			logger.info("============= "+" End Reset information Daily Task "+"===================");
 		} catch (Exception e) {
