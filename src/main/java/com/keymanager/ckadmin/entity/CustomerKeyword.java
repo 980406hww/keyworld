@@ -292,7 +292,7 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fCustomerKeywordSource")
     private String customerKeywordSource;
 
-    @TableField(value = "invalidDays")
+    @TableField(value = "fInvalidDays")
     private int invalidDays;
 
     @TableField(exist = false)
