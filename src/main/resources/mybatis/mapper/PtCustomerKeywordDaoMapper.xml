@@ -37,9 +37,11 @@
     </select>
 
     <select id="selectCustomerDelKeywords" resultType="java.lang.Long">
-        SELECT CUSTOMER_KEYWORD_ID FROM cms_keyword
+        SELECT CUSTOMER_KEYWORD_ID
+        FROM cms_keyword
         WHERE USER_ID = #{userId}
           and STATUS = 3
+          and DELETE_FLAG = 1
     </select>
 
     <update id="updatePtKeywordCurrentPosition">

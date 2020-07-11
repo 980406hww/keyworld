@@ -103,10 +103,10 @@ public class SysCustomerKeywordService extends ServiceImpl<SysCustomerKeywordDao
                                             sysCustomerKeywordDao.updateQzKeywordStatus(qsId, rows);
                                         } while (qzCustomerKeywordTemporaryService.searchQzKeywordTemporaryCount() > 0);
 
-                                        // 处理已下架的关键词 status = 3
+                                        // 处理已删除的关键词 status = 3 deleteFlag = 1
                                         List<Long> customerKeywordUuids = sysCustomerKeywordDao.selectCustomerDelKeywords(qsId);
                                         if (CollectionUtils.isNotEmpty(customerKeywordUuids)) {
-                                            customerKeywordService.updateSyncKeywordStatus(customerKeywordUuids, rows);
+                                            customerKeywordService.deleteBatchIds(customerKeywordUuids);
                                         }
 
                                         // 处理新增状态的关键词 status = 2

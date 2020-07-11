@@ -1850,13 +1850,4 @@
         WHERE c.fUuid = ck.fCustomerUuid
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
-
-    <update id="updateSyncKeywordStatus">
-        update t_customer_keyword
-        set fStatus = 3 where fUuid in (
-            <foreach collection="uuids" item="item" separator=",">
-                #{item}
-            </foreach>
-        )
-    </update>
 </mapper>

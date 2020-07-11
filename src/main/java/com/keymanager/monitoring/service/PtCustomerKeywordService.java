@@ -93,10 +93,10 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
                             ptCustomerKeywordDao.updatePtKeywordStatus(userId, rows);
                         } while (ptCustomerKeywordTemporaryService.searchPtKeywordTemporaryCount() > 0);
 
-                        // 处理已下架的关键词 status = 3
+                        // 处理已删除的关键词 status = 3 deleteFlag = 1
                         List<Long> customerKeywordUuids = ptCustomerKeywordDao.selectCustomerDelKeywords(userId);
                         if (CollectionUtils.isNotEmpty(customerKeywordUuids)) {
-                            customerKeywordService.updateSyncKeywordStatus(customerKeywordUuids, rows);
+                            customerKeywordService.deleteBatchIds(customerKeywordUuids);
                         }
 
                         for (CmsSyncManage cmsSyncManage : entry.getValue().values()) {

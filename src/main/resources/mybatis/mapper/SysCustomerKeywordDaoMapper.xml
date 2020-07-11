@@ -21,6 +21,7 @@
         SELECT KEYWORD_ID FROM sys_customer_keyword
         WHERE QS_ID = #{qsId}
           and STATUS = 3
+          and DELETE_FLAG = 1
     </select>
 
     <update id="updateQzKeywordCurrentPosition">

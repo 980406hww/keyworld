@@ -201,5 +201,4 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void resetInvalidDays(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
 
-    void updateSyncKeywordStatus(List<Long> uuids);
 }

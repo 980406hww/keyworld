@@ -198,6 +198,4 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void updateCustomerKeywordInvalidDays(int invalidMaxDays);
 
     void resetInvalidDays(KeywordCriteria keywordCriteria);
-    
-    void updateSyncKeywordStatus(List<Long> customerKeywordUuids, int rows);
 }
