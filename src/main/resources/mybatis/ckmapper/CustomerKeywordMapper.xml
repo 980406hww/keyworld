@@ -1850,4 +1850,10 @@
         WHERE c.fUuid = ck.fCustomerUuid
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
+
+    <select id="getNotResetKeywordCount" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM t_customer_keyword
+        WHERE fOptimizeDate <![CDATA[<]]> CURRENT_DATE()
+    </select>
 </mapper>

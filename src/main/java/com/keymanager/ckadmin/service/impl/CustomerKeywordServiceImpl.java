@@ -1608,6 +1608,11 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     public void resetInvalidDays(KeywordCriteria keywordCriteria){
         customerKeywordDao.resetInvalidDays(keywordCriteria);
     }
+
+    @Override
+    public int getNotResetKeywordCount(){
+        return customerKeywordDao.getNotResetKeywordCount();
+    }
 }
 
 
