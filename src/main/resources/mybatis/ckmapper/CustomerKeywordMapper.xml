@@ -1836,10 +1836,9 @@
 
     <update id="updateCustomerKeywordInvalidDays">
         UPDATE t_customer_keyword
-        SET fInvalidDays = fInvalidDays + 1
+        SET fInvalidDays = IF(fOptimizedCount > 0, 0, fInvalidDays + 1)
         WHERE fStatus = 1
         AND fFailedCause &gt; ''
-        AND fOptimizedCount = 0
         AND fInvalidRefreshCount &gt;= 3
         AND fInvalidDays &lt;= #{invalidMaxDays}
     </update>

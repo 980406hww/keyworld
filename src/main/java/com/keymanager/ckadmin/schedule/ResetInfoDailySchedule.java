@@ -49,7 +49,8 @@ public class ResetInfoDailySchedule {
 			customerKeywordService.updateCustomerKeywordInvalidDays(invalidMaxDays);
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 4");
 			logger.info("============= Reset information Daily Task starting 4===================");
-			for(int i = 0; customerKeywordService.getNotResetKeywordCount() > 0; i++) {
+			int notResetKeywordCount = customerKeywordService.getNotResetKeywordCount();
+			for(int i = 0; notResetKeywordCount > 0; notResetKeywordCount -= 200000, i++) {
 				customerKeywordService.resetOptimizationInfo(invalidMaxDays);
 				performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 4， --- " + i );
 			}
