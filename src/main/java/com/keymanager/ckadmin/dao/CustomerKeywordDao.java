@@ -63,7 +63,7 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<CustomerKeywordSummaryInfoVO> searchCustomerKeywordSummaryInfo(@Param("entryType") String entryType, @Param("customerUuid") long customerUuid);
 
-    List<KeywordCountVO> getCustomerKeywordsCountByCustomerUuid(@Param("customerUuid") Long customerUuid, @Param("type") String type);
+    List<KeywordCountVO> getCustomerKeywordsCountByCustomerUuid(@Param("customerUuid") Long customerUuid, @Param("type") String type, @Param("invalidMaxDays") Integer invalidMaxDays);
 
     void resetInvalidRefreshCount(@Param("criteria") RefreshStatisticsCriteria criteria);
 
@@ -202,5 +202,11 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
     void resetInvalidDays(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
 
     int getNotResetKeywordCount();
+
+    List<KeywordCriteria> getRepeatedKeyword(@Param("loginNames") List<String> loginNames);
+
+    List<CustomerKeyword> searchCustomerKeywordInfoByUsers(@Param("keywordCriteria") KeywordCriteria keywordCriteria, @Param("loginNames") List<String> loginNames);
+
+    void updateCustomerKeywordPriority(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
 
 }

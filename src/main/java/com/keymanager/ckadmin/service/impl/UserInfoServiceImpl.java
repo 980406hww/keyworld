@@ -104,4 +104,9 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
     public List<String> selectUserNames() {
         return userInfoDao.selectUserNames();
     }
+
+    @Override
+    public List<String> selectUserLoginNamesByOrganizationName(String organizationName){
+        return userInfoDao.selectUserLoginNamesByOrganizationName(organizationName);
+    }
 }

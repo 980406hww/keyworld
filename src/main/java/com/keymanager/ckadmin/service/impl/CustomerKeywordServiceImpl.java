@@ -592,7 +592,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public Map<String, Object> getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String type) {
         Map<String, Object> map = null;
-        List<KeywordCountVO> keywordCountVos = customerKeywordDao.getCustomerKeywordsCountByCustomerUuid(customerUuid, type);
+        Config config = configService.getConfig(Constants.CONFIG_TYPE_INVALID_DAYS, Constants.CONFIG_KEY_INVALID_MAX_DAYS_NAME);
+        int invalidMaxDays = Integer.parseInt(config.getValue());
+        List<KeywordCountVO> keywordCountVos = customerKeywordDao.getCustomerKeywordsCountByCustomerUuid(customerUuid, type, invalidMaxDays);
         if (CollectionUtils.isNotEmpty(keywordCountVos)) {
             map = new HashMap<>(3);
             int totalCount = 0;
@@ -1612,6 +1614,36 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public int getNotResetKeywordCount(){
         return customerKeywordDao.getNotResetKeywordCount();
+    }
+
+    @Override
+    public void updateCustomerKeywordPriority(int invalidMaxDays){
+        List<String> loginNames = userInfoService.selectUserLoginNamesByOrganizationName("整站销售部");
+        List<KeywordCriteria> repeatedKeywords = customerKeywordDao.getRepeatedKeyword(loginNames);
+        for (KeywordCriteria repeatedKeyword: repeatedKeywords){
+            List<CustomerKeyword> customerKeywords = customerKeywordDao.searchCustomerKeywordInfoByUsers(repeatedKeyword, loginNames);
+            for (CustomerKeyword customerKeyword: customerKeywords){
+                double priority = 10;
+                if (customerKeyword.getInvalidDays() > invalidMaxDays) {
+                    priority = 0;
+                }else{
+                    priority -= customerKeyword.getInvalidDays() * 3;
+                    double positionPriority = customerKeyword.getCurrentPosition().doubleValue() / 10;
+                    priority = customerKeyword.getCurrentPosition() == 0 || priority - positionPriority < 1? 1: priority - positionPriority;
+                }
+                customerKeyword.setPriority(priority);
+            }
+            Collections.sort(customerKeywords, new Comparator<CustomerKeyword>() {
+                @Override
+                public int compare(CustomerKeyword o1, CustomerKeyword o2) {
+                    return o2.getPriority().compareTo(o1.getPriority());
+                }
+            });
+            for (int i = 0; i < customerKeywords.size() - 1; i++){
+                customerKeywords.get(i).setOptimizeStatus(i<6?1:0);
+            }
+            customerKeywordDao.updateCustomerKeywordPriority(customerKeywords);
+        }
     }
 }
 

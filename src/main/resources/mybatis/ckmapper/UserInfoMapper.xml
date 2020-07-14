@@ -60,4 +60,15 @@
         FROM t_userinfo
         WHERE fStatus = 0
     </select>
+
+    <select id="selectUserLoginNamesByOrganizationName" resultType="java.lang.String">
+        SELECT
+            u.fLoginName
+        FROM
+            t_userinfo u
+            INNER JOIN t_organization o ON u.fOrganizationID = o.fUuid
+        WHERE
+            o.fOrganizationName = #{organizationName}
+            AND fStatus = 0
+    </select>
 </mapper>

@@ -12,6 +12,7 @@ public class KeywordCountVO {
     private String terminalType;
     private Integer totalCount;
     private Integer activeCount;
+    private Integer invalidPauseCount;
 
     public String getTerminalType() {
         return terminalType;
@@ -35,5 +36,13 @@ public class KeywordCountVO {
 
     public void setActiveCount(Integer activeCount) {
         this.activeCount = activeCount;
+    }
+
+    public Integer getInvalidPauseCount() {
+        return invalidPauseCount;
+    }
+
+    public void setInvalidPauseCount(Integer invalidPauseCount) {
+        this.invalidPauseCount = invalidPauseCount;
     }
 }

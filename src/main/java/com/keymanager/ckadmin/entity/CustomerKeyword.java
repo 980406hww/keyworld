@@ -295,6 +295,12 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fInvalidDays")
     private int invalidDays;
 
+    @TableField(value = "fPriority")
+    private Double priority;
+
+    @TableField(value = "fOptimizeStatus")
+    private int optimizeStatus;
+
     @TableField(exist = false)
     private String runImmediate;
 
@@ -1148,5 +1154,21 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setInvalidDays(int invalidDays) {
         this.invalidDays = invalidDays;
+    }
+
+    public Double getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Double priority) {
+        this.priority = priority;
+    }
+
+    public int getOptimizeStatus() {
+        return optimizeStatus;
+    }
+
+    public void setOptimizeStatus(int optimizeStatus) {
+        this.optimizeStatus = optimizeStatus;
     }
 }

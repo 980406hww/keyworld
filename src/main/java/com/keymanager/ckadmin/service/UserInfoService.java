@@ -22,4 +22,6 @@ public interface UserInfoService extends IService<UserInfo> {
     Object selectUserInfoTrees2();
 
     List<String> selectUserNames();
+
+    List<String> selectUserLoginNamesByOrganizationName(String organizationName);
 }

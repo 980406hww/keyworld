@@ -200,4 +200,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     void resetInvalidDays(KeywordCriteria keywordCriteria);
 
     int getNotResetKeywordCount();
+
+    void updateCustomerKeywordPriority(int invalidMaxDays);
 }

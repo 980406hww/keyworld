@@ -370,7 +370,8 @@
         SELECT
             ck.fTerminalType AS 'terminalType',
             COUNT(1)         AS 'totalCount',
-            SUM(IF(ck.fStatus = 1, 1, 0)) AS 'activeCount'
+            SUM(IF(ck.fStatus = 1, 1, 0)) AS 'activeCount',
+            SUM(IF(ck.fInvalidDays &gt; #{invalidMaxDays}, 1, 0)) AS 'invalidPauseCount'
         FROM t_customer_keyword ck
         WHERE ck.fCustomerUuid = #{customerUuid}
         AND ck.fType = #{type}
@@ -1808,7 +1809,7 @@
         fQueryInterval = (24*60*60)/fOptimizeTodayCount,
         fOptimizeRemainingCount = fOptimizeTodayCount,
         fInvalidRefreshCount = 0,
-        fInvalidFlag = IF(fInvalidDays &gt; #{invalidMaxDays}, 1, 0),
+        fInvalidFlag = IF(fInvalidDays &gt; #{invalidMaxDays}, 1, IF(fOptimizeStatus = 1, 0, 1)),
         fFailedCause = '',
         fOptimizeDate = CURRENT_DATE(),
         fQueryCount = 0,
@@ -1824,7 +1825,7 @@
         fQueryInterval = (24*60*60)/fOptimizeTodayCount,
         fOptimizeRemainingCount = fOptimizeTodayCount,
         fInvalidRefreshCount = 0,
-        fInvalidFlag = IF(fInvalidDays &gt; #{invalidMaxDays}, 1, 0),
+        fInvalidFlag = IF(fInvalidDays &gt; #{invalidMaxDays}, 1, IF(fOptimizeStatus = 1, 0, 1)),
         fFailedCause = '',
         fOptimizeDate = CURRENT_DATE(),
         fQueryCount = 0,
@@ -1855,4 +1856,72 @@
         FROM t_customer_keyword
         WHERE fOptimizeDate <![CDATA[<]]> CURRENT_DATE()
     </select>
+
+    <select id="getRepeatedKeyword" resultType="com.keymanager.ckadmin.criteria.KeywordCriteria">
+        SELECT
+            TEMP.keyword AS 'keyword',
+            TEMP.searchEngine AS 'searchEngine',
+            TEMP.terminalType AS 'terminalType'
+        FROM
+            (
+            SELECT
+                ck.fKeyword AS 'keyword',
+                ck.fSearchEngine AS 'searchEngine',
+                ck.fTerminalType AS 'terminalType',
+                COUNT( 1 ) AS 'keywordCount'
+            FROM
+                t_customer_keyword ck
+                INNER JOIN t_customer c ON c.fUuid = ck.fCustomerUuid
+            WHERE ck.fStatus = 1
+                AND c.fUserID IN
+                <foreach collection="loginNames" item="loginName" open="(" separator="," close=")">
+                    #{loginName}
+                </foreach>
+            GROUP BY
+                ck.fKeyword,
+                ck.fSearchEngine,
+                ck.fTerminalType
+            ) TEMP
+        WHERE
+            TEMP.keywordCount > 6
+    </select>
+
+    <select id="searchCustomerKeywordInfoByUsers" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
+        SELECT
+            ck.fUuid AS 'uuid',
+            ck.fkeyword AS 'keyword',
+            ck.fCurrentPosition AS 'currentPosition',
+            ck.fInvalidDays AS 'invalidDays'
+        FROM
+            t_customer_keyword ck
+            INNER JOIN t_customer c ON c.fUuid = ck.fCustomerUuid
+        WHERE ck.fStatus = 1
+            AND ck.fKeyword = #{keywordCriteria.keyword}
+            AND ck.fSearchEngine = #{keywordCriteria.searchEngine}
+            AND ck.fTerminalType = #{keywordCriteria.terminalType}
+            AND c.fUserID IN
+            <foreach collection="loginNames" item="loginName" open="(" separator="," close=")">
+                #{loginName}
+            </foreach>
+    </select>
+
+    <update id="updateCustomerKeywordPriority">
+        UPDATE t_customer_keyword
+        <trim prefix="SET" suffixOverrides=",">
+            <trim prefix="fPriority =  (case" suffix="end),">
+                <foreach collection="customerKeywords" item="customerKeyword">
+                    when fUuid = #{customerKeyword.uuid} then #{customerKeyword.priority}
+                </foreach>
+            </trim>
+            <trim prefix="fOptimizeStatus =  (case" suffix="end),">
+                <foreach collection="customerKeywords" item="customerKeyword">
+                    when fUuid = #{customerKeyword.uuid} then #{customerKeyword.optimizeStatus}
+                </foreach>
+            </trim>
+        </trim>
+        WHERE fUuid IN
+        <foreach item="customerKeyword" index="index" collection="customerKeywords" open="(" separator="," close=")">
+            #{customerKeyword.uuid}
+        </foreach>
+    </update>
 </mapper>
