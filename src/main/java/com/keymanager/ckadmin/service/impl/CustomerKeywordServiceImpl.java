@@ -1623,14 +1623,14 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         for (KeywordCriteria repeatedKeyword: repeatedKeywords){
             List<CustomerKeyword> customerKeywords = customerKeywordDao.searchCustomerKeywordInfoByUsers(repeatedKeyword, loginNames);
             for (CustomerKeyword customerKeyword: customerKeywords){
-                double priority = 10;
-                if (customerKeyword.getInvalidDays() > invalidMaxDays) {
-                    priority = 0;
-                }else{
-                    priority -= customerKeyword.getInvalidDays() * 3;
-                    double positionPriority = customerKeyword.getCurrentPosition().doubleValue() / 10;
-                    priority = customerKeyword.getCurrentPosition() == 0 || priority - positionPriority < 1? 1: priority - positionPriority;
+                double priority = 0;
+                Integer currentPosition = customerKeyword.getCurrentPosition();
+                if (currentPosition > 0 && currentPosition <= 10){
+                    priority += 100;
+                }else if(currentPosition > 10 && currentPosition < 100){
+                    priority += 10 - currentPosition.doubleValue()/10;
                 }
+                priority += customerKeyword.getInvalidDays() > invalidMaxDays ? 0 : 10;
                 customerKeyword.setPriority(priority);
             }
             Collections.sort(customerKeywords, new Comparator<CustomerKeyword>() {
@@ -1640,7 +1640,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
                 }
             });
             for (int i = 0; i < customerKeywords.size() - 1; i++){
-                customerKeywords.get(i).setOptimizeStatus(i<6?1:0);
+                customerKeywords.get(i).setOptimizeStatus(i < 6 ? 1 : 0);
             }
             customerKeywordDao.updateCustomerKeywordPriority(customerKeywords);
         }

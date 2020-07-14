@@ -1,0 +1,2 @@
+ALTER TABLE t_customer_keyword ADD COLUMN `fOptimizeStatus` int(4) NOT NULL DEFAULT 1 COMMENT '操作状态' AFTER fFailedCause;
+ALTER TABLE t_customer_keyword ADD COLUMN `fPriority` decimal(11,2) NOT NULL DEFAULT 0 COMMENT '操作优先级' AFTER fFailedCause;
