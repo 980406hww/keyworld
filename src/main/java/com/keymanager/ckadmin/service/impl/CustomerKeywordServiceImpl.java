@@ -1620,12 +1620,14 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     public void updateRepeatedCustomerKeywordOptimizeStatus(int invalidMaxDays){
         List<String> loginNames = userInfoService.selectUserLoginNamesByOrganizationName("整站销售部");
         List<CustomerKeywordRepeatedVO> repeatedKeywords = customerKeywordDao.getRepeatedKeyword(invalidMaxDays, loginNames);
+        List<Long> updateKeywordUuids = new ArrayList<>();
         for (CustomerKeywordRepeatedVO repeatedKeyword: repeatedKeywords){
             String[] repeatedKeywordUuidStrs = repeatedKeyword.getKeywordUuids().split(",");
             Long[] repeatedKeywordUuids = (Long[])ConvertUtils.convert(repeatedKeywordUuidStrs, Long.class);
             List<Long> repeatedKeywordUuidList = new ArrayList<>(Arrays.asList(repeatedKeywordUuids));
-            customerKeywordDao.updateCustomerKeywordOptimizeStatus(repeatedKeywordUuidList.subList(6, repeatedKeywordUuidList.size()));
+            updateKeywordUuids.addAll(repeatedKeywordUuidList.subList(6, repeatedKeywordUuidList.size()));
         }
+        customerKeywordDao.updateCustomerKeywordOptimizeStatus(updateKeywordUuids);
     }
 }
 
