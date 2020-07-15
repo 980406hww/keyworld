@@ -204,6 +204,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<CustomerKeywordRepeatedVO> getRepeatedKeyword(@Param("invalidMaxDays") int invalidMaxDays, @Param("loginNames") List<String> loginNames);
 
-    void updateCustomerKeywordOptimizeStatus(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
+    void updateCustomerKeywordOptimizeStatus(@Param("customerKeywordUuids") List<Long> customerKeywordUuids);
 
 }

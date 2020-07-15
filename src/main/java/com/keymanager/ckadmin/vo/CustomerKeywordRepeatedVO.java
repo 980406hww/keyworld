@@ -4,7 +4,7 @@ public class CustomerKeywordRepeatedVO {
     private String keyword;
     private String terminalType;
     private String searchEngine;
-    private String positions;
+    private String keywordUuids;
 
     public String getKeyword() {
         return keyword;
@@ -30,11 +30,11 @@ public class CustomerKeywordRepeatedVO {
         this.searchEngine = searchEngine;
     }
 
-    public String getPositions() {
-        return positions;
+    public String getKeywordUuids() {
+        return keywordUuids;
     }
 
-    public void setPositions(String positions) {
-        this.positions = positions;
+    public void setKeywordUuids(String positions) {
+        this.keywordUuids = positions;
     }
 }

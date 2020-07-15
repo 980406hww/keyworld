@@ -1617,19 +1617,14 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public void updateCustomerKeywordPriority(int invalidMaxDays){
+    public void updateRepeatedCustomerKeywordOptimizeStatus(int invalidMaxDays){
         List<String> loginNames = userInfoService.selectUserLoginNamesByOrganizationName("整站销售部");
         List<CustomerKeywordRepeatedVO> repeatedKeywords = customerKeywordDao.getRepeatedKeyword(invalidMaxDays, loginNames);
         for (CustomerKeywordRepeatedVO repeatedKeyword: repeatedKeywords){
-            List<CustomerKeyword> customerKeywords = new ArrayList<>();
-            String[] repeatedKeywordUuids = repeatedKeyword.getPositions().split(",");
-            for (int i = 0; i < repeatedKeywordUuids.length; i++){
-                CustomerKeyword tempKeyword = new CustomerKeyword();
-                tempKeyword.setUuid(Long.valueOf(repeatedKeywordUuids[i]));
-                tempKeyword.setOptimizeStatus(i <= 6 ? 1 : 0);
-                customerKeywords.add(tempKeyword);
-            }
-            customerKeywordDao.updateCustomerKeywordOptimizeStatus(customerKeywords);
+            String[] repeatedKeywordUuidStrs = repeatedKeyword.getKeywordUuids().split(",");
+            Long[] repeatedKeywordUuids = (Long[])ConvertUtils.convert(repeatedKeywordUuidStrs, Long.class);
+            List<Long> repeatedKeywordUuidList = new ArrayList<>(Arrays.asList(repeatedKeywordUuids));
+            customerKeywordDao.updateCustomerKeywordOptimizeStatus(repeatedKeywordUuidList.subList(6, repeatedKeywordUuidList.size()));
         }
     }
 }

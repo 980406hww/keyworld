@@ -1809,8 +1809,9 @@
         fQueryInterval = (24*60*60)/fOptimizeTodayCount,
         fOptimizeRemainingCount = fOptimizeTodayCount,
         fInvalidRefreshCount = 0,
-        fInvalidFlag = IF(fInvalidDays &gt; #{invalidMaxDays}, 1, IF(fOptimizeStatus = 1, 0, 1)),
+        fInvalidFlag = IF(fInvalidDays &gt; #{invalidMaxDays}, 1, 0),
         fFailedCause = '',
+        fOptimizeStatus = 1,
         fOptimizeDate = CURRENT_DATE(),
         fQueryCount = 0,
         fQueryDate = CURRENT_DATE(),
@@ -1825,8 +1826,9 @@
         fQueryInterval = (24*60*60)/fOptimizeTodayCount,
         fOptimizeRemainingCount = fOptimizeTodayCount,
         fInvalidRefreshCount = 0,
-        fInvalidFlag = IF(fInvalidDays &gt; #{invalidMaxDays}, 1, IF(fOptimizeStatus = 1, 0, 1)),
+        fInvalidFlag = IF(fInvalidDays &gt; #{invalidMaxDays}, 1, 0),
         fFailedCause = '',
+        fOptimizeStatus = 1,
         fOptimizeDate = CURRENT_DATE(),
         fQueryCount = 0,
         fQueryDate = CURRENT_DATE(),
@@ -1869,7 +1871,7 @@
                 ck.fType,
                 ck.fPositionFirstFee,
                 ck.fUuid
-            ) AS 'positions'
+            ) AS 'keywordUuids'
         FROM
             t_customer_keyword ck
             INNER JOIN t_customer c ON c.fUuid = ck.fCustomerUuid
@@ -1890,16 +1892,11 @@
 
     <update id="updateCustomerKeywordOptimizeStatus">
         UPDATE t_customer_keyword
-        <trim prefix="SET" suffixOverrides=",">
-            <trim prefix="fOptimizeStatus =  (case" suffix="end),">
-                <foreach collection="customerKeywords" item="customerKeyword">
-                    when fUuid = #{customerKeyword.uuid} then #{customerKeyword.optimizeStatus}
-                </foreach>
-            </trim>
-        </trim>
+        SET fOptimizeStatus = 0,
+        fInvalidFlag = 1
         WHERE fUuid IN
-        <foreach item="customerKeyword" index="index" collection="customerKeywords" open="(" separator="," close=")">
-            #{customerKeyword.uuid}
+        <foreach item="customerKeywordUuid" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
+            #{customerKeywordUuid}
         </foreach>
     </update>
 </mapper>

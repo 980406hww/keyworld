@@ -47,7 +47,6 @@ public class ResetInfoDailySchedule {
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 3");
 			logger.info("============= Reset information Daily Task starting 3===================");
 			customerKeywordService.updateCustomerKeywordInvalidDays(invalidMaxDays);
-			customerKeywordService.updateCustomerKeywordPriority(invalidMaxDays);
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 4");
 			logger.info("============= Reset information Daily Task starting 4===================");
 			int notResetKeywordCount = customerKeywordService.getNotResetKeywordCount();
@@ -58,6 +57,7 @@ public class ResetInfoDailySchedule {
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 5");
 			logger.info("============= Reset information Daily Task starting 5===================");
 			customerKeywordService.resetOptimizationInfoForNoOptimizeDate(invalidMaxDays);
+			customerKeywordService.updateRepeatedCustomerKeywordOptimizeStatus(invalidMaxDays);
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 6");
 			logger.info("============= Reset information Daily Task starting 6===================");
 			machineInfoService.resetOptimizationInfo();

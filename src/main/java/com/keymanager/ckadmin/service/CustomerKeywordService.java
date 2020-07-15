@@ -201,5 +201,5 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     int getNotResetKeywordCount();
 
-    void updateCustomerKeywordPriority(int invalidMaxDays);
+    void updateRepeatedCustomerKeywordOptimizeStatus(int invalidMaxDays);
 }
