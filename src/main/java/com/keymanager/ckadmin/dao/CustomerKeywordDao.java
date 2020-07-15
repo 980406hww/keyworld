@@ -14,6 +14,7 @@ import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.vo.CodeNameVo;
 import com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordIncludeVO;
+import com.keymanager.ckadmin.vo.CustomerKeywordRepeatedVO;
 import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
 import com.keymanager.ckadmin.vo.ExternalCustomerKeywordIndexVO;
 import com.keymanager.ckadmin.vo.GroupVO;
@@ -197,16 +198,12 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateCustomerKeywordInvalidDays(@Param("invalidMaxDays") int invalidMaxDays);
 
-    void updateInvalidFlagForInvalidDays(@Param("invalidMaxDays") int invalidMaxDays);
-
     void resetInvalidDays(@Param("keywordCriteria") KeywordCriteria keywordCriteria);
 
     int getNotResetKeywordCount();
 
-    List<KeywordCriteria> getRepeatedKeyword(@Param("loginNames") List<String> loginNames);
+    List<CustomerKeywordRepeatedVO> getRepeatedKeyword(@Param("invalidMaxDays") int invalidMaxDays, @Param("loginNames") List<String> loginNames);
 
-    List<CustomerKeyword> searchCustomerKeywordInfoByUsers(@Param("keywordCriteria") KeywordCriteria keywordCriteria, @Param("loginNames") List<String> loginNames);
-
-    void updateCustomerKeywordPriority(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
+    void updateCustomerKeywordOptimizeStatus(@Param("customerKeywords") List<CustomerKeyword> customerKeywords);
 
 }

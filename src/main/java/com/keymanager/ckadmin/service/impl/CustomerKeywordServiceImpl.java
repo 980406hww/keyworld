@@ -1619,30 +1619,17 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public void updateCustomerKeywordPriority(int invalidMaxDays){
         List<String> loginNames = userInfoService.selectUserLoginNamesByOrganizationName("整站销售部");
-        List<KeywordCriteria> repeatedKeywords = customerKeywordDao.getRepeatedKeyword(loginNames);
-        for (KeywordCriteria repeatedKeyword: repeatedKeywords){
-            List<CustomerKeyword> customerKeywords = customerKeywordDao.searchCustomerKeywordInfoByUsers(repeatedKeyword, loginNames);
-            for (CustomerKeyword customerKeyword: customerKeywords){
-                double priority = 0;
-                Integer currentPosition = customerKeyword.getCurrentPosition();
-                if (currentPosition > 0 && currentPosition <= 10){
-                    priority += 100;
-                }else if(currentPosition > 10 && currentPosition < 100){
-                    priority += 10 - currentPosition.doubleValue()/10;
-                }
-                priority += customerKeyword.getInvalidDays() > invalidMaxDays ? 0 : 10;
-                customerKeyword.setPriority(priority);
+        List<CustomerKeywordRepeatedVO> repeatedKeywords = customerKeywordDao.getRepeatedKeyword(invalidMaxDays, loginNames);
+        for (CustomerKeywordRepeatedVO repeatedKeyword: repeatedKeywords){
+            List<CustomerKeyword> customerKeywords = new ArrayList<>();
+            String[] repeatedKeywordUuids = repeatedKeyword.getPositions().split(",");
+            for (int i = 0; i < repeatedKeywordUuids.length; i++){
+                CustomerKeyword tempKeyword = new CustomerKeyword();
+                tempKeyword.setUuid(Long.valueOf(repeatedKeywordUuids[i]));
+                tempKeyword.setOptimizeStatus(i <= 6 ? 1 : 0);
+                customerKeywords.add(tempKeyword);
             }
-            Collections.sort(customerKeywords, new Comparator<CustomerKeyword>() {
-                @Override
-                public int compare(CustomerKeyword o1, CustomerKeyword o2) {
-                    return o2.getPriority().compareTo(o1.getPriority());
-                }
-            });
-            for (int i = 0; i < customerKeywords.size() - 1; i++){
-                customerKeywords.get(i).setOptimizeStatus(i < 6 ? 1 : 0);
-            }
-            customerKeywordDao.updateCustomerKeywordPriority(customerKeywords);
+            customerKeywordDao.updateCustomerKeywordOptimizeStatus(customerKeywords);
         }
     }
 }
