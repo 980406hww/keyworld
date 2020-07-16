@@ -26,6 +26,11 @@ public class RefreshStatisticsCriteria extends BaseCriteria {
 
     private String password;
 
+    private Integer gtInvalidDays; //无效天数起始
+    private Integer ltInvalidDays; //无效天数指数结束
+
+    private Integer optimizeStatus; //操作状态
+
     public String getPassword() {
         return password;
     }
@@ -111,5 +116,29 @@ public class RefreshStatisticsCriteria extends BaseCriteria {
 
     public void setHistoryDate(String historyDate) {
         this.historyDate = historyDate;
+    }
+
+    public Integer getGtInvalidDays() {
+        return gtInvalidDays;
+    }
+
+    public void setGtInvalidDays(Integer gtInvalidDays) {
+        this.gtInvalidDays = gtInvalidDays;
+    }
+
+    public Integer getLtInvalidDays() {
+        return ltInvalidDays;
+    }
+
+    public void setLtInvalidDays(Integer ltInvalidDays) {
+        this.ltInvalidDays = ltInvalidDays;
+    }
+
+    public Integer getOptimizeStatus() {
+        return optimizeStatus;
+    }
+
+    public void setOptimizeStatus(Integer optimizeStatus) {
+        this.optimizeStatus = optimizeStatus;
     }
 }

@@ -553,6 +553,9 @@
         <if test="keywordCriteria.ltInvalidDays != null">
             AND ck.fInvalidDays &lt;= #{keywordCriteria.ltInvalidDays}
         </if>
+        <if test="keywordCriteria.optimizeStatus != null">
+            AND ck.fOptimizeStatus = #{keywordCriteria.optimizeStatus}
+        </if>
     </sql>
 
     <sql id="updateCustomerKeywordsCriteria">
@@ -682,6 +685,9 @@
         </if>
         <if test="keywordCriteria.ltInvalidDays != null">
             AND ck.fInvalidDays &lt;= #{keywordCriteria.ltInvalidDays}
+        </if>
+        <if test="keywordCriteria.optimizeStatus != null">
+            AND ck.fOptimizeStatus = #{keywordCriteria.optimizeStatus}
         </if>
     </sql>
 

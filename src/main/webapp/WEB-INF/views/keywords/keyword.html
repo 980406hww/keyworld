@@ -155,7 +155,7 @@
 
                                         <div class="layui-inline">
                                             <label class="layui-form-label" style="width: 90px">关键字来源</label>
-                                            <div class="layui-input-inline" style="width: 120px">
+                                            <div class="layui-input-inline" style="width: 130px">
                                                 <select name="customerKeywordSource" id="customerKeywordSource">
                                                     <option value="">关键字来源</option>
                                                     <option value="Capture">机器采集词</option>
@@ -235,12 +235,22 @@
                                         <div class="layui-inline">
                                             <label class="layui-form-label" style="width: 90px">无效天数范围</label>
                                             <div class="layui-input-inline" style="width: 60px;">
-                                                <input type="number" name="gtInvalidDays" placeholder=">=" autocomplete="off" class="layui-input"
+                                                <input type="number" name="gtInvalidDays" placeholder=">=" autocomplete="off" class="layui-input" value="<#if gtInvalidDays?exists>${gtInvalidDays}</#if>"
                                                        onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" lay-verify="num">
                                             </div>
                                             <div class="layui-input-inline" style="width: 60px;">
-                                                <input type="number" name="ltInvalidDays" placeholder="<=" autocomplete="off" class="layui-input"
+                                                <input type="number" name="ltInvalidDays" placeholder="<=" autocomplete="off" class="layui-input" value="<#if ltInvalidDays?exists>${ltInvalidDays}</#if>"
                                                        onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" lay-verify="num">
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">操作状态</label>
+                                            <div class="layui-input-inline" style="width: 120px">
+                                                <select name="optimizeStatus" id="optimizeStatus">
+                                                    <option value="">全部</option>
+                                                    <option value="0">暂不操作</option>
+                                                    <option value="1">正在操作</option>
+                                                </select>
                                             </div>
                                         </div>
 
@@ -285,6 +295,7 @@
     var searchEngine = '<#if SearchEngine?exists>${SearchEngine}</#if>';
     var belongUser = '<#if belongUser?exists>${belongUser}</#if>';
     var terminal225 = '<#if terminalType2?exists>${terminalType2}<#else>PC</#if>';
+    var optimizeStatus = '<#if optimizeStatus?exists>${optimizeStatus}</#if>';
     var dataTmp = {
         status: '<#if status?exists>${status}</#if>',
         type: '<#if businessType?exists>${businessType}</#if>',

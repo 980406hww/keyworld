@@ -46,6 +46,15 @@
             <if test="criteria.machineGroup != null and criteria.machineGroup != ''">
                 AND ck.fMachineGroup = #{criteria.machineGroup}
             </if>
+            <if test="criteria.gtInvalidDays != null">
+                AND ck.fInvalidDays &gt;= #{criteria.gtInvalidDays}
+            </if>
+            <if test="criteria.ltInvalidDays != null">
+                AND ck.fInvalidDays &lt;= #{criteria.ltInvalidDays}
+            </if>
+            <if test="criteria.optimizeStatus != null">
+                AND ck.fOptimizeStatus = #{criteria.optimizeStatus}
+            </if>
             <if test="criteria.customerName != null and criteria.customerName != ''">
                 AND c.fContactPerson like concat('%', #{criteria.customerName}, '%')
             </if>
