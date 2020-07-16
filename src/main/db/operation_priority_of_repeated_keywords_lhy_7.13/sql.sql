@@ -1,0 +1,1 @@
+ALTER TABLE t_customer_keyword ADD COLUMN `fOptimizeStatus` int(4) NOT NULL DEFAULT 1 COMMENT '操作状态' AFTER fFailedCause;

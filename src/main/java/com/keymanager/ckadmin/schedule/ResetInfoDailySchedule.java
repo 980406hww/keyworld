@@ -57,6 +57,7 @@ public class ResetInfoDailySchedule {
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 5");
 			logger.info("============= Reset information Daily Task starting 5===================");
 			customerKeywordService.resetOptimizationInfoForNoOptimizeDate(invalidMaxDays);
+			customerKeywordService.updateRepeatedCustomerKeywordOptimizeStatus(invalidMaxDays);
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "starting 6");
 			logger.info("============= Reset information Daily Task starting 6===================");
 			machineInfoService.resetOptimizationInfo();

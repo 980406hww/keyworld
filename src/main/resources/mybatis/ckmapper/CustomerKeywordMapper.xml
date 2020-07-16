@@ -370,7 +370,8 @@
         SELECT
             ck.fTerminalType AS 'terminalType',
             COUNT(1)         AS 'totalCount',
-            SUM(IF(ck.fStatus = 1, 1, 0)) AS 'activeCount'
+            SUM(IF(ck.fStatus = 1, 1, 0)) AS 'activeCount',
+            SUM(IF(ck.fInvalidDays &gt; #{invalidMaxDays}, 1, 0)) AS 'invalidPauseCount'
         FROM t_customer_keyword ck
         WHERE ck.fCustomerUuid = #{customerUuid}
         AND ck.fType = #{type}
@@ -1810,6 +1811,7 @@
         fInvalidRefreshCount = 0,
         fInvalidFlag = IF(fInvalidDays &gt; #{invalidMaxDays}, 1, 0),
         fFailedCause = '',
+        fOptimizeStatus = 1,
         fOptimizeDate = CURRENT_DATE(),
         fQueryCount = 0,
         fQueryDate = CURRENT_DATE(),
@@ -1826,6 +1828,7 @@
         fInvalidRefreshCount = 0,
         fInvalidFlag = IF(fInvalidDays &gt; #{invalidMaxDays}, 1, 0),
         fFailedCause = '',
+        fOptimizeStatus = 1,
         fOptimizeDate = CURRENT_DATE(),
         fQueryCount = 0,
         fQueryDate = CURRENT_DATE(),
@@ -1855,4 +1858,45 @@
         FROM t_customer_keyword
         WHERE fOptimizeDate <![CDATA[<]]> CURRENT_DATE()
     </select>
+
+    <select id="getRepeatedKeyword" resultType="com.keymanager.ckadmin.vo.CustomerKeywordRepeatedVO">
+        SELECT
+            ck.fTerminalType AS 'terminalType',
+            ck.fSearchEngine AS 'searchEngine',
+            ck.fKeyword AS 'keyword',
+            GROUP_CONCAT(
+                CAST( ck.fUuid AS CHAR )
+                ORDER BY
+                IF (ck.fCurrentPosition > 0, ck.fCurrentPosition, 100 ),
+                ck.fType,
+                ck.fPositionFirstFee,
+                ck.fUuid
+            ) AS 'keywordUuids'
+        FROM
+            t_customer_keyword ck
+            INNER JOIN t_customer c ON c.fUuid = ck.fCustomerUuid
+        WHERE
+            ck.fStatus = 1
+            AND ck.fInvalidDays &lt;= #{invalidMaxDays}
+            AND c.fUserID IN
+            <foreach collection="loginNames" item="loginName" open="(" separator="," close=")">
+                #{loginName}
+            </foreach>
+        GROUP BY
+            ck.fTerminalType,
+            ck.fSearchEngine,
+            ck.fKeyword
+        HAVING
+            COUNT( 1 ) > 6
+    </select>
+
+    <update id="updateCustomerKeywordOptimizeStatus">
+        UPDATE t_customer_keyword
+        SET fOptimizeStatus = 0,
+        fInvalidFlag = 1
+        WHERE fUuid IN
+        <foreach item="customerKeywordUuid" index="index" collection="customerKeywordUuids" open="(" separator="," close=")">
+            #{customerKeywordUuid}
+        </foreach>
+    </update>
 </mapper>

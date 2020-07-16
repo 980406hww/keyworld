@@ -1290,6 +1290,9 @@ function generate_customer_info(contactPerson, data, terminalType, type, custome
                     '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","1","' + type + '","' + terminalType + '",this)>激活关键字</a>'
             }
             htm += ')</span>';
+            if (data.invalidPauseCount > 0){
+                htm += '<span>无效暂停 : <a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '/4","' + title + '","' + id + '")>' + data.invalidPauseCount + '</a></span>';
+            }
         } else {
             htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>查看' + terminalTypeName + '关键字</span></a>';
         }

@@ -592,7 +592,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public Map<String, Object> getCustomerKeywordsCountByCustomerUuid(Long customerUuid, String type) {
         Map<String, Object> map = null;
-        List<KeywordCountVO> keywordCountVos = customerKeywordDao.getCustomerKeywordsCountByCustomerUuid(customerUuid, type);
+        Config config = configService.getConfig(Constants.CONFIG_TYPE_INVALID_DAYS, Constants.CONFIG_KEY_INVALID_MAX_DAYS_NAME);
+        int invalidMaxDays = Integer.parseInt(config.getValue());
+        List<KeywordCountVO> keywordCountVos = customerKeywordDao.getCustomerKeywordsCountByCustomerUuid(customerUuid, type, invalidMaxDays);
         if (CollectionUtils.isNotEmpty(keywordCountVos)) {
             map = new HashMap<>(3);
             int totalCount = 0;
@@ -1612,6 +1614,20 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public int getNotResetKeywordCount(){
         return customerKeywordDao.getNotResetKeywordCount();
+    }
+
+    @Override
+    public void updateRepeatedCustomerKeywordOptimizeStatus(int invalidMaxDays){
+        List<String> loginNames = userInfoService.selectUserLoginNamesByOrganizationName("整站销售部");
+        List<CustomerKeywordRepeatedVO> repeatedKeywords = customerKeywordDao.getRepeatedKeyword(invalidMaxDays, loginNames);
+        List<Long> updateKeywordUuids = new ArrayList<>();
+        for (CustomerKeywordRepeatedVO repeatedKeyword: repeatedKeywords){
+            String[] repeatedKeywordUuidStrs = repeatedKeyword.getKeywordUuids().split(",");
+            Long[] repeatedKeywordUuids = (Long[])ConvertUtils.convert(repeatedKeywordUuidStrs, Long.class);
+            List<Long> repeatedKeywordUuidList = new ArrayList<>(Arrays.asList(repeatedKeywordUuids));
+            updateKeywordUuids.addAll(repeatedKeywordUuidList.subList(6, repeatedKeywordUuidList.size()));
+        }
+        customerKeywordDao.updateCustomerKeywordOptimizeStatus(updateKeywordUuids);
     }
 }
 

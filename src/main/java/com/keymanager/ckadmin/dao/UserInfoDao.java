@@ -23,4 +23,6 @@ public interface UserInfoDao extends BaseMapper<UserInfo> {
     UserInfo getUserInfo(@Param("loginName")String loginName);
 
     List<String> selectUserNames();
+
+    List<String> selectUserLoginNamesByOrganizationName(@Param("organizationName") String organizationName);
 }

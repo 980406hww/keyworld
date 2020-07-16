@@ -342,9 +342,9 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/toCustomerKeywords")
-    @GetMapping(value = "/toCustomerKeywords/{businessType}/{terminalType}/{customerUuid}")
+    @GetMapping(value = {"/toCustomerKeywords/{businessType}/{terminalType}/{customerUuid}", "/toCustomerKeywords/{businessType}/{terminalType}/{customerUuid}/{invalidDays}"})
     public ModelAndView toCustomerKeywords(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "customerUuid") Long customerUuid) {
+        @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "invalidDays", required = false) Integer invalidDays) {
         ModelAndView mv = new ModelAndView();
         Customer customer = customerService.getCustomerByCustomerUuid(terminalType, businessType, customerUuid);
         mv.setViewName("keywords/customerKeyword");
@@ -353,6 +353,9 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         mv.addObject("terminalType2", terminalType);
         mv.addObject("customer", customer);
         mv.addObject("customerUuid", customerUuid);
+        if (null != invalidDays){
+            mv.addObject("invalidDays", invalidDays);
+        }
         return mv;
     }
 
