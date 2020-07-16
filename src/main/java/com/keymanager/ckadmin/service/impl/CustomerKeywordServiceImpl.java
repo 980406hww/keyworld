@@ -1627,7 +1627,10 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             List<Long> repeatedKeywordUuidList = new ArrayList<>(Arrays.asList(repeatedKeywordUuids));
             updateKeywordUuids.addAll(repeatedKeywordUuidList.subList(6, repeatedKeywordUuidList.size()));
         }
-        customerKeywordDao.updateCustomerKeywordOptimizeStatus(updateKeywordUuids);
+        for (int i = 0; i < updateKeywordUuids.size(); i+=5000){
+            customerKeywordDao.updateCustomerKeywordOptimizeStatus(updateKeywordUuids.subList(i, Math.min(i + 5000, updateKeywordUuids.size())));
+        }
+
     }
 }
 
