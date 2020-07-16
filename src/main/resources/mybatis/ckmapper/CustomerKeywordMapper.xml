@@ -1869,7 +1869,7 @@
                 ORDER BY
                 IF (ck.fCurrentPosition > 0, ck.fCurrentPosition, 100 ),
                 ck.fType,
-                ck.fPositionFirstFee,
+                ck.fPositionFirstFee DESC,
                 ck.fUuid
             ) AS 'keywordUuids'
         FROM
