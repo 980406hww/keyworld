@@ -144,6 +144,27 @@
                                         <input type="text" name="customerName" id="customerName" autocomplete="off" placeholder="请输入客户名称" class="layui-input">
                                     </div>
                                     <div class="layui-inline">
+                                        <label class="layui-form-label">无效天数范围</label>
+                                        <div class="layui-input-inline" style="width: 90.5px;">
+                                            <input type="number" name="gtInvalidDays" id="gtInvalidDays" placeholder=">=" autocomplete="off" class="layui-input" style="width: 90.5px;"
+                                                   onkeyup="this.value=this.value.replace(/[^.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
+                                        </div>
+                                        <div class="layui-input-inline" style="width: 90.5px;">
+                                            <input type="number" name="ltInvalidDays" id="ltInvalidDays" placeholder="<=" autocomplete="off" class="layui-input" style="width: 90.5px;"
+                                                   onkeyup="this.value=this.value.replace(/[^.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">操作状态</label>
+                                        <div class="layui-input-inline">
+                                            <select name="optimizeStatus" id="optimizeStatus">
+                                                <option value="">全部</option>
+                                                <option value="0">暂不操作</option>
+                                                <option value="1">正在操作</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
 
                                         <div class="layui-input-inline">
                                             <input type="text" class="layui-input" name="historyDate" id="historyDate" placeholder="历史记录">
@@ -197,15 +218,21 @@
 
         <@shiro.hasPermission name = "/internal/customerKeyword/searchCustomerKeywordLists" >
         window.searchCustomerKeywords = function (group) {
+            let gtInvalidDays = document.getElementById('gtInvalidDays').value;
+            let ltInvalidDays = document.getElementById('ltInvalidDays').value;
+            let optimizeStatus = document.getElementById('optimizeStatus').value;
             let data = {
                 group: group,
                 type: document.getElementById('entryType').value,
                 terminal: document.getElementById('terminalType').value,
-                irc: 0
+                irc: 0,
+                gtInvalidDays: gtInvalidDays!==""?gtInvalidDays:"null",
+                ltInvalidDays: ltInvalidDays!==""?ltInvalidDays:"null",
+                optimizeStatus: optimizeStatus!==""?optimizeStatus:"null"
             };
             let title = group + '-关键字';
             let id = group + '-sl' + data.type + data.terminal;
-            let url = '/internal/customerKeyword/toKeywordsFromRS/' + data.type + '/' + data.terminal + '/' + data.irc + '/' + data.group;
+            let url = '/internal/customerKeyword/toKeywordsFromRS/' + data.type + '/' + data.terminal + '/' + data.irc + '/' + data.group + '/' + data.gtInvalidDays + '/' + data.ltInvalidDays + '/' + data.optimizeStatus;
             common.updateOrNewTab(url, title, id);
         };
         </@shiro.hasPermission>

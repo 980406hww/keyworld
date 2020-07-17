@@ -354,7 +354,7 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         mv.addObject("customer", customer);
         mv.addObject("customerUuid", customerUuid);
         if (null != invalidDays){
-            mv.addObject("invalidDays", invalidDays);
+            mv.addObject("gtInvalidDays", invalidDays);
         }
         return mv;
     }
@@ -938,9 +938,12 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
-    @GetMapping(value = {"/toKeywordsFromRS/{businessType}/{terminalType}/{irc}/{group}", "/toKeywordsFromRS/{businessType}/{terminalType}/{irc}","/toKeywordsFromUS/{businessType}/{terminalType}/{irc}/{userName}"})
+    @GetMapping(value = {"/toKeywordsFromRS/{businessType}/{terminalType}/{irc}/{group}", "/toKeywordsFromRS/{businessType}/{terminalType}/{irc}", "/toKeywordsFromUS/{businessType}/{terminalType}/{irc}/{userName}",
+            "/toKeywordsFromRS/{businessType}/{terminalType}/{irc}/{group}/{gtInvalidDays}/{ltInvalidDays}/{optimizeStatus}"})
     public ModelAndView toKeywordsFromRS(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "group", required = false) String group, @PathVariable(name = "irc", required = false) Integer irc,@PathVariable(name="userName",required = false) String userName) {
+            @PathVariable(name = "group", required = false) String group, @PathVariable(name = "irc", required = false) Integer irc,
+            @PathVariable(name="userName",required = false) String userName, @PathVariable(name="gtInvalidDays",required = false) String gtInvalidDays,
+            @PathVariable(name="ltInvalidDays",required = false) String ltInvalidDays, @PathVariable(name="optimizeStatus",required = false) String optimizeStatus) {
         ModelAndView mv = null;
         try {
             mv = new ModelAndView();
@@ -956,6 +959,15 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             }
             if (null != irc) {
                 mv.addObject("irc", irc == 0 ? "" : irc);
+            }
+            if (null != gtInvalidDays) {
+                mv.addObject("gtInvalidDays", gtInvalidDays.equals("null") ? "" : gtInvalidDays);
+            }
+            if (null != ltInvalidDays) {
+                mv.addObject("ltInvalidDays", ltInvalidDays.equals("null") ? "" : ltInvalidDays);
+            }
+            if (null != optimizeStatus) {
+                mv.addObject("optimizeStatus", optimizeStatus.equals("null") ? "" : optimizeStatus);
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
