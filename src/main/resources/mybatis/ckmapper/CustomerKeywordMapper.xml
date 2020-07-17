@@ -1809,9 +1809,10 @@
         fQueryInterval = (24*60*60)/fOptimizeTodayCount,
         fOptimizeRemainingCount = fOptimizeTodayCount,
         fInvalidRefreshCount = 0,
-        fInvalidFlag = IF(fInvalidDays &gt; #{invalidMaxDays}, 1, 0),
+        fInvalidFlag = IF(fInvalidDays &lt;= #{invalidMaxDays}, IF(fNoEffectConsecutiveDays > 30, 1, 0), 1),
         fFailedCause = '',
         fOptimizeStatus = 1,
+        fNoEffectConsecutiveDays = IF(fCurrentPosition &gt; 0 AND fCurrentPosition &lt; 15 AND fOptimizedCount &gt; 0, 0, fNoEffectConsecutiveDays + 1),
         fOptimizeDate = CURRENT_DATE(),
         fQueryCount = 0,
         fQueryDate = CURRENT_DATE(),
@@ -1826,9 +1827,10 @@
         fQueryInterval = (24*60*60)/fOptimizeTodayCount,
         fOptimizeRemainingCount = fOptimizeTodayCount,
         fInvalidRefreshCount = 0,
-        fInvalidFlag = IF(fInvalidDays &gt; #{invalidMaxDays}, 1, 0),
+        fInvalidFlag = IF(fInvalidDays &lt;= #{invalidMaxDays}, IF(fNoEffectConsecutiveDays > 30, 1, 0), 1),
         fFailedCause = '',
         fOptimizeStatus = 1,
+        fNoEffectConsecutiveDays = IF(fCurrentPosition &gt; 0 AND fCurrentPosition &lt; 15 AND fOptimizedCount &gt; 0, 0, fNoEffectConsecutiveDays + 1),
         fOptimizeDate = CURRENT_DATE(),
         fQueryCount = 0,
         fQueryDate = CURRENT_DATE(),
@@ -1839,7 +1841,7 @@
 
     <update id="updateCustomerKeywordInvalidDays">
         UPDATE t_customer_keyword
-        SET fInvalidDays = IF(fOptimizedCount > 0, 0, fInvalidDays + 1)
+        SET fInvalidDays = IF(fOptimizedCount &gt; 0, 0, fInvalidDays + 1)
         WHERE fStatus = 1
         AND fFailedCause &gt; ''
         AND fInvalidRefreshCount &gt;= 3
@@ -1867,7 +1869,8 @@
             GROUP_CONCAT(
                 CAST( ck.fUuid AS CHAR )
                 ORDER BY
-                IF (ck.fCurrentPosition > 0, ck.fCurrentPosition, 100 ),
+                IF (ck.fCurrentPosition &gt; 0, ck.fCurrentPosition, 100 ),
+                FLOOR(ck.fNoEffectConsecutiveDays / 10),
                 ck.fType,
                 ck.fPositionFirstFee DESC,
                 ck.fUuid
@@ -1887,7 +1890,7 @@
             ck.fSearchEngine,
             ck.fKeyword
         HAVING
-            COUNT( 1 ) > 6
+            COUNT( 1 ) &gt; 6
     </select>
 
     <update id="updateCustomerKeywordOptimizeStatus">
