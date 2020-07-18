@@ -15,7 +15,7 @@
 
     <insert id="insertIntoTemporaryData">
         insert into t_qz_customer_keyword(fUuid, fOperaStatus )
-        SELECT fUuid, IF(fCurrentPosition = 0 and fOptimizedCount = 0 and fInvalidDays >= 4 and fLastOptimizeDateTime &gt; current_date(), 0, 1)
+        SELECT fUuid, IF(fCurrentPosition = 0 and fOptimizedCount = 0 and fInvalidDays >= 4, 0, 1)
         FROM t_customer_keyword
         WHERE fQZSettingUuid = #{qsId} AND fStatus	= 1
     </insert>
