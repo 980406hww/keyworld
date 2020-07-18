@@ -296,7 +296,7 @@ public class CustomerKeyword extends BaseEntity {
     private int invalidDays;
 
     @TableField(value = "fOptimizeStatus")
-    private int optimizeStatus;
+    private Integer optimizeStatus;
 
     @TableField(value = "fNoEffectConsecutiveDays")
     private int noEffectConsecutiveDays;
@@ -1159,11 +1159,11 @@ public class CustomerKeyword extends BaseEntity {
         this.invalidDays = invalidDays;
     }
 
-    public int getOptimizeStatus() {
+    public Integer getOptimizeStatus() {
         return optimizeStatus;
     }
 
-    public void setOptimizeStatus(int optimizeStatus) {
+    public void setOptimizeStatus(Integer optimizeStatus) {
         this.optimizeStatus = optimizeStatus;
     }
 
