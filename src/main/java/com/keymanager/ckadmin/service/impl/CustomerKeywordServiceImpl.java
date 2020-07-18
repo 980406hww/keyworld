@@ -1066,7 +1066,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Date capturePositionQueryTime, String ip, String city,String captureType) {
+    public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, int existsTimestamp, Date capturePositionQueryTime, String ip, String city,String captureType) {
         Double todayFee = null;
         CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordFee(customerKeywordUuid);
         //captureType
@@ -1088,9 +1088,9 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
             }
         }
         if ("update".equals(captureType)) {
-            customerKeywordDao.updateNewPosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee, ip, city);
+            customerKeywordDao.updateNewPosition(customerKeywordUuid, position, existsTimestamp, capturePositionQueryTime, todayFee, ip, city);
         } else {
-            customerKeywordDao.updatePosition(customerKeywordUuid, position, capturePositionQueryTime, todayFee, ip, city);
+            customerKeywordDao.updatePosition(customerKeywordUuid, position, existsTimestamp, capturePositionQueryTime, todayFee, ip, city);
         }
         if (capturePositionQueryTime != null) {
             ckPositionSummaryService.savePositionSummary(customerKeywordUuid, customerKeyword.getSearchEngine(), customerKeyword.getTerminalType(),

@@ -68,6 +68,8 @@ public class KeywordCriteria extends BaseCriteria {
 
     private Integer optimizeStatus;
 
+    private Integer existsTimestamp;
+
     public Long getQzUuid() {
         return qzUuid;
     }
@@ -454,5 +456,13 @@ public class KeywordCriteria extends BaseCriteria {
 
     public void setOptimizeStatus(Integer optimizeStatus) {
         this.optimizeStatus = optimizeStatus;
+    }
+
+    public Integer getExistsTimestamp() {
+        return existsTimestamp;
+    }
+
+    public void setExistsTimestamp(Integer existsTimestamp) {
+        this.existsTimestamp = existsTimestamp;
     }
 }

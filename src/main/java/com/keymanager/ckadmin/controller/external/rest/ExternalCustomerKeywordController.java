@@ -101,9 +101,10 @@ public class ExternalCustomerKeywordController extends SpringMVCBaseController {
                 String clientID = (String) requestMap.get("clientID");
                 String city = (String) requestMap.get("capturePositionCity");
                 String captureType = (null != requestMap.get("captureType") ? (String) requestMap.get("captureType"):"saveBest");
+                int existsTimestamp = (null != requestMap.get("existsTimestamp") ? (Integer) requestMap.get("existsTimestamp"): 0);
                 Date startTime = new Date((Long) requestMap.get("startTime"));
                 if (null != position && position > -1) {
-                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, Utils.getCurrentTimestamp(), ip, city,captureType);
+                    customerKeywordService.updateCustomerKeywordPosition(customerKeywordUuid, position, existsTimestamp, Utils.getCurrentTimestamp(), ip, city,captureType);
                 } else {
                     customerKeywordService.updateCustomerKeywordQueryTime(customerKeywordUuid, capturePositionFailIdentify, startTime);
                 }

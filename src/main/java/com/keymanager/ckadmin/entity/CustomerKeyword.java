@@ -301,6 +301,9 @@ public class CustomerKeyword extends BaseEntity {
     @TableField(value = "fNoEffectConsecutiveDays")
     private int noEffectConsecutiveDays;
 
+    @TableField(value = "fExistsTimestamp")
+    private int existsTimestamp;
+
     @TableField(exist = false)
     private String runImmediate;
 
@@ -1170,5 +1173,13 @@ public class CustomerKeyword extends BaseEntity {
 
     public void setNoEffectConsecutiveDays(int noEffectConsecutiveDays) {
         this.noEffectConsecutiveDays = noEffectConsecutiveDays;
+    }
+
+    public int getExistsTimestamp() {
+        return existsTimestamp;
+    }
+
+    public void setExistsTimestamp(int existsTimestamp) {
+        this.existsTimestamp = existsTimestamp;
     }
 }

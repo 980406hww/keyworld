@@ -160,9 +160,9 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     CustomerKeyword getCustomerKeywordFee(@Param("uuid") Long uuid);
 
-    void updatePosition(@Param("uuid") Long uuid, @Param("position") Integer position, @Param("capturePositionQueryTime") Date capturePositionQueryTime, @Param("todayFee") Double todayFee, @Param("ip") String ip, @Param("city") String city);
+    void updatePosition(@Param("uuid") Long uuid, @Param("position") Integer position, @Param("existsTimestamp") Integer existsTimestamp, @Param("capturePositionQueryTime") Date capturePositionQueryTime, @Param("todayFee") Double todayFee, @Param("ip") String ip, @Param("city") String city);
 
-    void updateNewPosition(@Param("uuid") Long uuid, @Param("position") Integer position, @Param("capturePositionQueryTime") Date capturePositionQueryTime, @Param("todayFee") Double todayFee, @Param("ip") String ip, @Param("city") String city);
+    void updateNewPosition(@Param("uuid") Long uuid, @Param("position") Integer position, @Param("existsTimestamp") Integer existsTimestamp, @Param("capturePositionQueryTime") Date capturePositionQueryTime, @Param("todayFee") Double todayFee, @Param("ip") String ip, @Param("city") String city);
 
     void updateCustomerKeywordQueryTime(@Param("customerKeywordUuid") Long customerKeywordUuid, @Param("capturePositionFailIdentify") Integer capturePositionFailIdentify, @Param("capturePositionQueryTime") Date capturePositionQueryTime);
 
