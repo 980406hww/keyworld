@@ -1876,7 +1876,7 @@
                 CAST( ck.fUuid AS CHAR )
                 ORDER BY
                 IF (ck.fCurrentPosition &gt; 0, ck.fCurrentPosition, 100 ),
-                IF (ck.fNoEffectConsecutiveDays &gt; 10, -1, ck.fNoEffectConsecutiveDays) DESC,
+                FLOOR(ck.fNoEffectConsecutiveDays / 10),
                 ck.fType,
                 ck.fPositionFirstFee DESC,
                 ck.fUuid
