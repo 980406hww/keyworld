@@ -204,6 +204,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
                 {field: 'paymentStatus', title: '付费状态', width: '80', hide: true },
                 {field: 'remarks', title: '备注', width: '100', hide: true, templet: '#remarksTpl'},
                 {field: 'failedCause', title: '失败原因', width: '80', hide: true},
+                {field: 'existsTimestamp', title: '特殊优化', hide: true, align: 'left', width: '80', templet:"#showExistsTimestamp"},
                 {field: 'capturePositionFailIdentify', title: '抓排名失败标识', width: '100', hide: true}
             ]],
             height: 'full-110',

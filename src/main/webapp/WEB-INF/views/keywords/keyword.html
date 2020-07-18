@@ -253,6 +253,16 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">特殊优化</label>
+                                            <div class="layui-input-inline" style="width: 120px">
+                                                <select name="existsTimestamp" id="existsTimestamp">
+                                                    <option value="">全部</option>
+                                                    <option value="1">可优化</option>
+                                                    <option value="0">不可优化</option>
+                                                </select>
+                                            </div>
+                                        </div>
 
                                         <@shiro.hasRole name="Technical">
                                         <div class="layui-inline">

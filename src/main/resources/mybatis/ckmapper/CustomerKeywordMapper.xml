@@ -556,6 +556,9 @@
         <if test="keywordCriteria.optimizeStatus != null">
             AND ck.fOptimizeStatus = #{keywordCriteria.optimizeStatus}
         </if>
+        <if test="keywordCriteria.existsTimestamp != null">
+            AND ck.fExistsTimestamp = #{keywordCriteria.existsTimestamp}
+        </if>
     </sql>
 
     <sql id="updateCustomerKeywordsCriteria">
@@ -689,6 +692,9 @@
         <if test="keywordCriteria.optimizeStatus != null">
             AND ck.fOptimizeStatus = #{keywordCriteria.optimizeStatus}
         </if>
+        <if test="keywordCriteria.existsTimestamp != null">
+            AND ck.fExistsTimestamp = #{keywordCriteria.existsTimestamp}
+        </if>
     </sql>
 
     <select id="searchKeywords" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
@@ -724,7 +730,8 @@
         ck.fOptimizeGroupName AS 'optimizeGroupName',
         ck.fMachineGroup AS 'machineGroup',
         ck.fCapturePositionFailIdentify AS 'capturePositionFailIdentify',
-        ck.fInvalidDays AS 'invalidDays'
+        ck.fInvalidDays AS 'invalidDays',
+        ck.fExistsTimestamp AS 'existsTimestamp'
         FROM
         t_customer_keyword ck,
         t_customer c
@@ -854,7 +861,8 @@
         ck.fOptimizeGroupName AS 'optimizeGroupName',
         ck.fMachineGroup AS 'machineGroup',
         ck.fCapturePositionQueryTime AS 'capturePositionQueryTime',
-        ck.fInvalidDays AS 'invalidDays'
+        ck.fInvalidDays AS 'invalidDays',
+        ck.fExistsTimestamp AS 'existsTimestamp'
         FROM
         t_customer_keyword ck,
         t_customer c
@@ -1474,6 +1482,7 @@
         fCapturePositionQueryTime = IFNULL(#{capturePositionQueryTime}, fCapturePositionQueryTime),
         fTodayFee = if(fLastReachStandardDate = CURRENT_DATE(), if(fTodayFee > #{todayFee} OR #{todayFee} is null, fTodayFee, #{todayFee}), #{todayFee}),
         fCapturePositionIP = #{ip}, fCapturePositionCity = #{city},
+        fExistsTimestamp = #{existsTimestamp},
         <if test="todayFee != null">
             fLastReachStandardDate = CURRENT_DATE(),
         </if>
@@ -1491,6 +1500,7 @@
         fCapturePositionQueryTime = IFNULL(#{capturePositionQueryTime}, fCapturePositionQueryTime),
         fTodayFee = #{todayFee},
         fCapturePositionIP = #{ip}, fCapturePositionCity = #{city},
+        fExistsTimestamp = #{existsTimestamp},
         <choose>
             <when test="todayFee != null">
                 fLastReachStandardDate = CURRENT_DATE(),

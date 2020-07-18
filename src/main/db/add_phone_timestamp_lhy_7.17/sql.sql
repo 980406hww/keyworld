@@ -1,0 +1,1 @@
+ALTER TABLE t_customer_keyword ADD COLUMN `fExistsTimestamp` int(4) NOT NULL DEFAULT 0 COMMENT '是否有时间戳' AFTER `fNoEffectConsecutiveDays`;
