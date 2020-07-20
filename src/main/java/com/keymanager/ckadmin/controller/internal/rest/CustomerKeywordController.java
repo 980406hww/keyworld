@@ -839,6 +839,31 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         return mv;
     }
 
+    @RequiresPermissions("/internal/customerKeyword/searchCustomerKeywords")
+    @GetMapping(value = "/toKeywordsWithQZForSpecial/{businessType}/{terminalType}/{customerUuid}/{searchEngine}/{specialType}/{qzUuid}")
+    public ModelAndView toKeywordsWithQZForSpecial(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
+            @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "searchEngine") String searchEngine,
+            @PathVariable(name = "qzUuid") String qzUuid, @PathVariable(name = "specialType") String specialType) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("keywords/customerKeyword");
+        mv.addObject("businessType", businessType);
+        mv.addObject("terminalType2", terminalType);
+        mv.addObject("customerUuid", customerUuid);
+        mv.addObject("status", 1);
+        mv.addObject("searchEngine", searchEngine);
+        mv.addObject("qzUuid", qzUuid);
+        if (specialType.equals("optimizeStopCount")){
+            mv.addObject("optimizeStatus", 0);
+        }else if (specialType.equals("importantCount")){
+            mv.addObject("keywordEffect", "Important");
+        }else if (specialType.equals("invalidDaysStopCount")){
+            mv.addObject("gtInvalidDays", 4);
+        }else if (specialType.equals("noEffectStopCount")){
+            mv.addObject("gtNoEffectDays", 30);
+        }
+        return mv;
+    }
+
     @RequiresPermissions("/internal/customerKeyword/saveCustomerKeyword")
     @GetMapping(value = "/toUpdateBelongCustomer")
     public ModelAndView toUpdateBelongCustomer() {

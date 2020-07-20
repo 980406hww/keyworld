@@ -559,6 +559,12 @@
         <if test="keywordCriteria.existsTimestamp != null">
             AND ck.fExistsTimestamp = #{keywordCriteria.existsTimestamp}
         </if>
+        <if test="keywordCriteria.gtNoEffectDays != null">
+            AND ck.fNoEffectConsecutiveDays &gt;= #{keywordCriteria.gtNoEffectDays}
+        </if>
+        <if test="keywordCriteria.ltNoEffectDays != null">
+            AND ck.fNoEffectConsecutiveDays &lt;= #{keywordCriteria.ltNoEffectDays}
+        </if>
     </sql>
 
     <sql id="updateCustomerKeywordsCriteria">
@@ -695,6 +701,12 @@
         <if test="keywordCriteria.existsTimestamp != null">
             AND ck.fExistsTimestamp = #{keywordCriteria.existsTimestamp}
         </if>
+        <if test="keywordCriteria.gtNoEffectDays != null">
+            AND ck.fNoEffectConsecutiveDays &gt;= #{keywordCriteria.gtNoEffectDays}
+        </if>
+        <if test="keywordCriteria.ltNoEffectDays != null">
+            AND ck.fNoEffectConsecutiveDays &lt;= #{keywordCriteria.ltNoEffectDays}
+        </if>
     </sql>
 
     <select id="searchKeywords" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
@@ -731,7 +743,8 @@
         ck.fMachineGroup AS 'machineGroup',
         ck.fCapturePositionFailIdentify AS 'capturePositionFailIdentify',
         ck.fInvalidDays AS 'invalidDays',
-        ck.fExistsTimestamp AS 'existsTimestamp'
+        ck.fExistsTimestamp AS 'existsTimestamp',
+        ck.fNoEffectConsecutiveDays AS 'noEffectConsecutiveDays'
         FROM
         t_customer_keyword ck,
         t_customer c
@@ -862,7 +875,8 @@
         ck.fMachineGroup AS 'machineGroup',
         ck.fCapturePositionQueryTime AS 'capturePositionQueryTime',
         ck.fInvalidDays AS 'invalidDays',
-        ck.fExistsTimestamp AS 'existsTimestamp'
+        ck.fExistsTimestamp AS 'existsTimestamp',
+        ck.fNoEffectConsecutiveDays AS 'noEffectConsecutiveDays'
         FROM
         t_customer_keyword ck,
         t_customer c

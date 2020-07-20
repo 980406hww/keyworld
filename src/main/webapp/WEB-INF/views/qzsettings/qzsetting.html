@@ -210,11 +210,21 @@
             height: 150px
         }
 
-        .layui-table-col-special .body .user-id .line1,
+        /*.layui-table-col-special .body .user-id .line1,*/
         .layui-table-col-special .body .standard-info .line1 {
             text-align: center;
             height: 100px !important;
             margin-top: 50px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #000;
+            font-size: 14px;
+        }
+
+        .layui-table-col-special .body .user-id .line1 {
+            text-align: center;
+            /*height: 100px !important;*/
+            /*margin-top: 50px;*/
             overflow: hidden;
             text-overflow: ellipsis;
             color: #000;
@@ -354,7 +364,7 @@
 
         .layui-table-col-special .body .other-rank_2 {
             float: left;
-            width: 152px;
+            width: 132px;
             border-left: 1px solid #e6e6e6;
         }
 
@@ -638,7 +648,16 @@
             height: 18px;
             line-height: 18px;
             text-align: left;
-            text-indent: 36px;
+            text-indent: 56px;
+        }
+        .special-count{
+            line-height: 16px !important;
+            margin-top: 3px !important;
+        }
+
+        .special-count > div div {
+            margin-left: 10px;
+            text-align: left;
         }
     </style>
     <script>
@@ -2054,6 +2073,10 @@
                 div.parent().find(".other-rank .line1").find("div[name='newCount'] a").text(customerKeywordCount["newCount"]);
                 div.parent().find(".other-rank .line1").find("div[name='activeCount'] a").text(customerKeywordCount["activeCount"]);
                 div.parent().find(".other-rank .line1").find("div[name='stopCount'] a").text(customerKeywordCount["stopCount"]);
+                div.parent().find(".special-count").find("div[name='importantCount'] a").text(customerKeywordCount["importantCount"]);
+                div.parent().find(".special-count").find("div[name='noEffectStopCount'] a").text(customerKeywordCount["noEffectStopCount"]);
+                div.parent().find(".special-count").find("div[name='invalidDaysStopCount'] a").text(customerKeywordCount["invalidDaysStopCount"]);
+                div.parent().find(".special-count").find("div[name='optimizeStopCount'] a").text(customerKeywordCount["optimizeStopCount"]);
             }
             if (categoryTagNames) {
                 if (categoryTagNames.length > 0) {
@@ -3183,6 +3206,15 @@
             common.updateOrNewTab(url, tit, id);
         };
 
+        window.searchCustomerKeywordsForSpecial = function (customerUuid, pcGroup, phoneGroup, searchEngine, specialType, uuid) {
+            let group = phoneGroup && phoneGroup !== 'null' ? phoneGroup : pcGroup;
+            let terminalType = document.getElementById('terminalType').value;
+            let url = '/internal/customerKeyword/toKeywordsWithQZForSpecial/qz/' + terminalType + '/' + customerUuid + '/' + searchEngine + '/' + specialType + '/' + uuid;
+            let tit = group + '--关键字列表';
+            let id = customerUuid + "-" + specialType;
+            common.updateOrNewTab(url, tit, id);
+        };
+
         window.updCKStatusFromQZ = function (qzUuid, oldStatus, newStatus, ele) {
             let msg = '';
             switch (newStatus) {
@@ -3508,21 +3540,40 @@
     </div>
     <div class="layui-row body">
         <!--   身体左侧基本信息    -->
-        <div class="layui-col-md2 user-id">
-            <div class="layui-col-md12 line1">
-                <div class="layui-col-md12">
-                    <a href="javascript:;">
-                        <span title="{{d.userID}}">{{d.userID}}</span>
-                    </a>
+        <div class="layui-col-md2" style="width: 80px;border-right: 1px solid #e6e6e6">
+            <div class="layui-col-md12 other-rank" style="width: 80px">
+                <div class="layui-col-md12 line1">
+                    <div class="layui-col-md12">
+                        <a href="javascript:;">
+                            <span title="{{d.userID}}">{{d.userID}}</span>
+                        </a>
+                    </div>
+                    <div class="layui-col-md12">
+                        <span>用户</span>
+                    </div>
                 </div>
-                <div class="layui-col-md12">
-                    <span>用户</span>
+                <div class="lyui-col-md6 other-rank" style="width: 80px;border-right: 1px solid #e6e6e6">
+                <div class="layui-col-md12 line1" style="border-bottom:none">
+                    <div class="layui-col-md12" style="height: 26px">
+                            <span class="show-table">
+                                <a href="javascript:;" qzsettinguuid="{{d.uuid}}">
+                                {{#  if(d.organizationName !== '优化部') { }}
+                                    <font  onmouseover="showTableTip(this,'{{d.uuid}}')" onmouseout="closeTableTip()"
+                                           style="background-color: palevioletred;font-size: 14px;">￥ 0</font>
+                                {{#  } }}
+                                </a>
+                            </span>
+                    </div>
+                    <div class="layui-col-md12">
+                        <span>达标信息</span>
+                    </div>
                 </div>
+            </div>
             </div>
         </div>
 
-        <div class="layui-col-md5" style="width: 164px">
-            <div class="layui-col-md12 other-rank" style="width: 164px">
+        <div class="layui-col-md6" style="width: 184px">
+            <div class="layui-col-md12 other-rank" style="width: 184px">
                 <div class="layui-col-md12 line1 count-show" style="height: 73px !important;">
                     <div class="layui-col-md12">
                         <input type="hidden" id="qz_uuid" value="{{d.uuid}}">
@@ -3559,24 +3610,7 @@
                 </div>
             </div>
             <div class="layui-col-md12">
-                <div class="lyui-col-md6 other-rank" style="width: 80px;border-right: 1px solid #e6e6e6">
-                    <div class="layui-col-md12 line1" style="border-bottom:none">
-                        <div class="layui-col-md12" style="height: 26px">
-                            <span class="show-table">
-                                <a href="javascript:;" qzsettinguuid="{{d.uuid}}">
-                                {{#  if(d.organizationName !== '优化部') { }}
-                                    <font  onmouseover="showTableTip(this,'{{d.uuid}}')" onmouseout="closeTableTip()"
-                                           style="background-color: palevioletred;font-size: 14px;">￥ 0</font>
-                                {{#  } }}
-                                </a>
-                            </span>
-                        </div>
-                        <div class="layui-col-md12">
-                            <span>达标信息</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="lyui-col-md6 other-rank">
+                <div class="lyui-col-md6 other-rank" style="border-right: 1px solid #e6e6e6">
                     <div class="layui-col-md12 line1" style="border-bottom:none">
                         <div class="layui-col-md12" style="height: 26px">
                             <span style="cursor: pointer" onmouseover="showTip(this,'{{d.chargeStatusUuid}}')" onmouseout="closeTip()">
@@ -3598,10 +3632,34 @@
                         </div>
                     </div>
                 </div>
+                <div class="lyui-col-md6 other-rank" style="width: 100px">
+                    <div class="layui-col-md12 line1 special-count" style="height: 67px !important; border-bottom: none;">
+                        <div class="layui-col-md12">
+                            <span>
+                                <div name="importantCount">
+                                    <label>重点词: </label>
+                                    <a href="javascript:searchCustomerKeywordsForSpecial('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 'importantCount','{{d.uuid}}');">0</a>
+                                </div>
+                                <div name="noEffectStopCount">
+                                    <label>无效暂停: </label>
+                                    <a href="javascript:searchCustomerKeywordsForSpecial('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 'noEffectStopCount' ,'{{d.uuid}}');">0</a>
+                                </div>
+                                <div name="invalidDaysStopCount">
+                                    <label>无法操作: </label>
+                                    <a href="javascript:searchCustomerKeywordsForSpecial('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 'invalidDaysStopCount' ,'{{d.uuid}}');">0</a>
+                                </div>
+                                <div name="optimizeStopCount">
+                                    <label>重复暂停: </label>
+                                    <a href="javascript:searchCustomerKeywordsForSpecial('{{d.customerUuid}}', '{{d.pcGroup}}', '{{d.phoneGroup}}', '{{d.searchEngine}}', 'optimizeStopCount' ,'{{d.uuid}}');">0</a>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="layui-col-md4 other-rank_2">
+        <div class="layui-col-md3 other-rank_2">
             <div class="layui-col-md12 line1">
                 <div class="layui-col-md12" id="optimizationGroup">
                     <span><a href="javascript:;">暂无</a></span>

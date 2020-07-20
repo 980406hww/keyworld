@@ -63,6 +63,8 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
     function init_search() {
         init_keyword_type();
         init_searchEngine();
+        init_optimizeStatus();
+        init_keywordEffect();
         getQzSettings(searchEngine, function (data) {
             initQzUuid(data);
         });
@@ -198,6 +200,28 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
         });
     }
 
+    function init_optimizeStatus(){
+        if (optimizeStatus !== ""){
+            let optimizeStatuses = document.getElementById('optimizeStatus').children;
+            for (let i = 0; i < optimizeStatuses.length; i++) {
+                if (optimizeStatuses[i].value === optimizeStatus) {
+                    optimizeStatuses[i].setAttribute('selected', '');
+                }
+            }
+        }
+    }
+
+    function init_keywordEffect(){
+        if (keywordEffect !== ""){
+            let keywordEffects = document.getElementById('keywordEffect').children;
+            for (let i = 0; i < keywordEffects.length; i++) {
+                if (keywordEffects[i].value === keywordEffect) {
+                    keywordEffects[i].setAttribute('selected', '');
+                }
+            }
+        }
+    }
+
     function get_keywords(whereCondition) {
         if (!whereCondition.optimizeGroupNameLike) {
             whereCondition.optimizeGroupNameLike = '';
@@ -241,6 +265,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer', 
                 },
                 {field: 'status', title: '状态', align: 'center', width: '80', templet: '#statusTpl'},
                 {field: 'invalidDays', title: '无效天数', align: 'left', width: '80', hide: true},
+                {field: 'noEffectConsecutiveDays', title: '连续无效操作天数', align: 'left', width: '100', hide: true},
                 {field: 'failedCause', title: '失败原因', align: 'left', width: '80',},
                 {field: 'optimizeGroupName', title: '优化分组', align: 'left', width: '80'},
                 {field: 'machineGroup', title: '机器分组', align: 'left', width: '80'},
