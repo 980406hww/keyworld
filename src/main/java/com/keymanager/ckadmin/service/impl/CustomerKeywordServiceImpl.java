@@ -1066,7 +1066,7 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, int existsTimestamp, Date capturePositionQueryTime, String ip, String city,String captureType) {
+    public void updateCustomerKeywordPosition(Long customerKeywordUuid, int position, Integer existsTimestamp, Date capturePositionQueryTime, String ip, String city,String captureType) {
         Double todayFee = null;
         CustomerKeyword customerKeyword = customerKeywordDao.getCustomerKeywordFee(customerKeywordUuid);
         //captureType

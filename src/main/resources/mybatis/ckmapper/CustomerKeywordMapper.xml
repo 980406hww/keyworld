@@ -1482,7 +1482,9 @@
         fCapturePositionQueryTime = IFNULL(#{capturePositionQueryTime}, fCapturePositionQueryTime),
         fTodayFee = if(fLastReachStandardDate = CURRENT_DATE(), if(fTodayFee > #{todayFee} OR #{todayFee} is null, fTodayFee, #{todayFee}), #{todayFee}),
         fCapturePositionIP = #{ip}, fCapturePositionCity = #{city},
-        fExistsTimestamp = #{existsTimestamp},
+        <if test="existsTimestamp != null">
+            fExistsTimestamp = #{existsTimestamp},
+        </if>
         <if test="todayFee != null">
             fLastReachStandardDate = CURRENT_DATE(),
         </if>
@@ -1500,7 +1502,9 @@
         fCapturePositionQueryTime = IFNULL(#{capturePositionQueryTime}, fCapturePositionQueryTime),
         fTodayFee = #{todayFee},
         fCapturePositionIP = #{ip}, fCapturePositionCity = #{city},
-        fExistsTimestamp = #{existsTimestamp},
+        <if test="existsTimestamp != null">
+            fExistsTimestamp = #{existsTimestamp},
+        </if>
         <choose>
             <when test="todayFee != null">
                 fLastReachStandardDate = CURRENT_DATE(),
