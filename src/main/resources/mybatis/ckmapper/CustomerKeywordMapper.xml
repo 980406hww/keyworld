@@ -1764,6 +1764,7 @@
                     </choose>
                 </foreach>
             </trim>
+            fInvalidDays = if(fOptimizedCount > 0, 0, fInvalidDays),
             fInvalidFlag = if(fOptimizeStatus = 0 OR fInvalidRefreshCount > 8, 1, 0),
             fLastOptimizeDateTime = now(),
             fQueryTime = if(fOptimizeTodayCount > fOptimizedCount, fQueryTime,DATE_ADD(NOW(), INTERVAL 1 DAY)),
@@ -1824,15 +1825,16 @@
 
     <update id="resetOptimizationInfoForNoOptimizeDate" timeout="200000">
         UPDATE t_customer_keyword
-        SET fOptimizedCount = 0,
+        SET
         fOptimizeTodayCount = fOptimizePlanCount * ROUND((RAND()*0.7+0.5),1),
         fQueryInterval = (24*60*60)/fOptimizeTodayCount,
         fOptimizeRemainingCount = fOptimizeTodayCount,
-        fInvalidRefreshCount = 0,
+        fNoEffectConsecutiveDays = IF(fCurrentPosition &gt; 0 AND fCurrentPosition &lt; 15 AND fOptimizedCount &gt; 0, 0, fNoEffectConsecutiveDays + 1),
         fInvalidFlag = IF(fInvalidDays &lt;= #{invalidMaxDays}, IF(fNoEffectConsecutiveDays > 30, 1, 0), 1),
+        fInvalidRefreshCount = 0,
+        fOptimizedCount = 0,
         fFailedCause = '',
         fOptimizeStatus = 1,
-        fNoEffectConsecutiveDays = IF(fCurrentPosition &gt; 0 AND fCurrentPosition &lt; 15 AND fOptimizedCount &gt; 0, 0, fNoEffectConsecutiveDays + 1),
         fOptimizeDate = CURRENT_DATE(),
         fQueryCount = 0,
         fQueryDate = CURRENT_DATE(),
@@ -1842,15 +1844,16 @@
 
     <update id="resetOptimizationInfo">
         UPDATE t_customer_keyword
-        SET fOptimizedCount = 0,
+        SET
         fOptimizeTodayCount = fOptimizePlanCount * ROUND((RAND()*0.7+0.5),1),
         fQueryInterval = (24*60*60)/fOptimizeTodayCount,
         fOptimizeRemainingCount = fOptimizeTodayCount,
-        fInvalidRefreshCount = 0,
+        fNoEffectConsecutiveDays = IF(fCurrentPosition &gt; 0 AND fCurrentPosition &lt; 15 AND fOptimizedCount &gt; 0, 0, fNoEffectConsecutiveDays + 1),
         fInvalidFlag = IF(fInvalidDays &lt;= #{invalidMaxDays}, IF(fNoEffectConsecutiveDays > 30, 1, 0), 1),
+        fInvalidRefreshCount = 0,
+        fOptimizedCount = 0,
         fFailedCause = '',
         fOptimizeStatus = 1,
-        fNoEffectConsecutiveDays = IF(fCurrentPosition &gt; 0 AND fCurrentPosition &lt; 15 AND fOptimizedCount &gt; 0, 0, fNoEffectConsecutiveDays + 1),
         fOptimizeDate = CURRENT_DATE(),
         fQueryCount = 0,
         fQueryDate = CURRENT_DATE(),
