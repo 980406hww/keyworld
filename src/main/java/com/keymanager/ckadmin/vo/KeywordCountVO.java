@@ -12,7 +12,9 @@ public class KeywordCountVO {
     private String terminalType;
     private Integer totalCount;
     private Integer activeCount;
-    private Integer invalidPauseCount;
+    private Integer invalidDaysStopCount;
+    private Integer optimizeStopCount;
+    private Integer noEffectStopCount;
 
     public String getTerminalType() {
         return terminalType;
@@ -38,11 +40,27 @@ public class KeywordCountVO {
         this.activeCount = activeCount;
     }
 
-    public Integer getInvalidPauseCount() {
-        return invalidPauseCount;
+    public Integer getInvalidDaysStopCount() {
+        return invalidDaysStopCount;
     }
 
-    public void setInvalidPauseCount(Integer invalidPauseCount) {
-        this.invalidPauseCount = invalidPauseCount;
+    public void setInvalidDaysStopCount(Integer invalidDaysStopCount) {
+        this.invalidDaysStopCount = invalidDaysStopCount;
+    }
+
+    public Integer getOptimizeStopCount() {
+        return optimizeStopCount;
+    }
+
+    public void setOptimizeStopCount(Integer optimizeStopCount) {
+        this.optimizeStopCount = optimizeStopCount;
+    }
+
+    public Integer getNoEffectStopCount() {
+        return noEffectStopCount;
+    }
+
+    public void setNoEffectStopCount(Integer noEffectStopCount) {
+        this.noEffectStopCount = noEffectStopCount;
     }
 }

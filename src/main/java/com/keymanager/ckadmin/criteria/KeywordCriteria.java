@@ -70,6 +70,9 @@ public class KeywordCriteria extends BaseCriteria {
 
     private Integer existsTimestamp;
 
+    private Integer gtNoEffectDays;//无效操作天数起始
+    private Integer ltNoEffectDays;//无效操作天数结束
+
     public Long getQzUuid() {
         return qzUuid;
     }
@@ -464,5 +467,21 @@ public class KeywordCriteria extends BaseCriteria {
 
     public void setExistsTimestamp(Integer existsTimestamp) {
         this.existsTimestamp = existsTimestamp;
+    }
+
+    public Integer getGtNoEffectDays() {
+        return gtNoEffectDays;
+    }
+
+    public void setGtNoEffectDays(Integer gtNoEffectDays) {
+        this.gtNoEffectDays = gtNoEffectDays;
+    }
+
+    public Integer getLtNoEffectDays() {
+        return ltNoEffectDays;
+    }
+
+    public void setLtNoEffectDays(Integer ltNoEffectDays) {
+        this.ltNoEffectDays = ltNoEffectDays;
     }
 }

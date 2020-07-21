@@ -192,7 +192,11 @@
         SELECT
         COUNT(ck.fStatus = 2 OR NULL) AS 'newCount',
         COUNT(ck.fStatus = 1 OR NULL) AS 'activeCount',
-        COUNT(ck.fStatus = 0 OR NULL) AS 'stopCount'
+        COUNT(ck.fStatus = 0 OR NULL) AS 'stopCount',
+        SUM( IF(ck.fStatus = 1 AND ck.fOptimizeStatus = 0, 1, 0)) AS 'optimizeStopCount',
+        SUM( IF(ck.fStatus = 1 AND ck.fInvalidDays > 3, 1, 0)) AS 'invalidDaysStopCount',
+        SUM( IF(ck.fStatus = 1 AND ck.fKeywordEffect = 'Important', 1, 0)) AS 'importantCount',
+        SUM( IF(ck.fStatus = 1 AND ck.fNoEffectConsecutiveDays > 30, 1, 0)) AS 'noEffectStopCount'
         FROM t_customer_keyword ck
         WHERE ck.fQZSettingUuid = #{qzUuid}
         AND ck.fTerminalType = #{terminalType}

@@ -148,14 +148,14 @@
 
                                         <div class="layui-inline">
                                             <label class="layui-form-label" style="width: 90px">熊掌号</label>
-                                            <div class="layui-input-inline" style="width: 160px">
+                                            <div class="layui-input-inline" style="width: 140px">
                                                 <input type="text" name="bearPawNumber" id="bearPawNumber" value="" placeholder="请输入熊掌号" autocomplete="off" class="layui-input">
                                             </div>
                                         </div>
 
                                         <div class="layui-inline">
                                             <label class="layui-form-label" style="width: 90px">关键字来源</label>
-                                            <div class="layui-input-inline" style="width: 130px">
+                                            <div class="layui-input-inline" style="width: 162px">
                                                 <select name="customerKeywordSource" id="customerKeywordSource">
                                                     <option value="">关键字来源</option>
                                                     <option value="Capture">机器采集词</option>
@@ -168,14 +168,14 @@
                                         </div>
                                         <div class="layui-inline">
                                             <label class="layui-form-label" style="width: 90px">备注</label>
-                                            <div class="layui-input-inline" style="width: 120px">
+                                            <div class="layui-input-inline" style="width: 128px">
                                                 <input type="text" name="remarks" id="remarks" placeholder="请输入备注" autocomplete="off" class="layui-input">
                                             </div>
                                         </div>
 
                                         <div class="layui-inline">
                                             <label class="layui-form-label" style="width: 90px">失败原因</label>
-                                            <div class="layui-input-inline" style="width: 120px">
+                                            <div class="layui-input-inline" style="width: 130px">
                                                 <select name="failedCause" id="failedCause">
                                                     <option value="" selected="selected">失败原因</option>
                                                     <option value="爬取中">爬取中</option>
@@ -213,6 +213,18 @@
                                             </div>
                                         </div>
 
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label" style="width: 90px">指数范围</label>
+                                            <div class="layui-input-inline" style="width: 60px;">
+                                                <input type="number" name="gtCurrentIndexCount" placeholder=">=" autocomplete="off" class="layui-input"
+                                                       onkeyup="this.value=this.value.replace(/[^.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
+                                            </div>
+                                            <div class="layui-input-inline" style="width: 60px;">
+                                                <input type="number" name="ltCurrentIndexCount" placeholder="<=" autocomplete="off" class="layui-input"
+                                                       onkeyup="this.value=this.value.replace(/[^.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" />
+                                            </div>
+                                        </div>
+
                                         <div class="layui-inline" id="invalidRefreshCountDiv">
                                             <label class="layui-form-label" style="width: 90px">无效点击数</label>
                                             <div class="layui-input-inline" style="width: 140px">
@@ -244,8 +256,8 @@
                                             </div>
                                         </div>
                                         <div class="layui-inline">
-                                            <label class="layui-form-label">操作状态</label>
-                                            <div class="layui-input-inline" style="width: 120px">
+                                            <label class="layui-form-label" style="width: 90px;">操作状态</label>
+                                            <div class="layui-input-inline" style="width: 130px">
                                                 <select name="optimizeStatus" id="optimizeStatus">
                                                     <option value="">全部</option>
                                                     <option value="0">暂不操作</option>
@@ -254,8 +266,19 @@
                                             </div>
                                         </div>
                                         <div class="layui-inline">
+                                            <label class="layui-form-label" style="width: 90px">无效操作天数</label>
+                                            <div class="layui-input-inline" style="width: 60px;">
+                                                <input type="number" name="gtNoEffectDays" placeholder=">=" autocomplete="off" class="layui-input" value="<#if gtNoEffectDays?exists>${gtNoEffectDays}</#if>"
+                                                       onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" lay-verify="num">
+                                            </div>
+                                            <div class="layui-input-inline" style="width: 60px;">
+                                                <input type="number" name="ltNoEffectDays" placeholder="<=" autocomplete="off" class="layui-input" value="<#if ltNoEffectDays?exists>${ltNoEffectDays}</#if>"
+                                                       onkeyup="this.value=this.value.replace(/[^\.\d]/g,'');this.value=this.value.replace('.','');this.value=this.value.replace('-','');" lay-verify="num">
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
                                             <label class="layui-form-label">特殊优化</label>
-                                            <div class="layui-input-inline" style="width: 120px">
+                                            <div class="layui-input-inline" style="width: 129px">
                                                 <select name="existsTimestamp" id="existsTimestamp">
                                                     <option value="">全部</option>
                                                     <option value="1">可优化</option>
@@ -264,9 +287,23 @@
                                             </div>
                                         </div>
 
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">关键词作用</label>
+                                            <div class="layui-input-inline"  style="width: 129px">
+                                                <select name="keywordEffect" id="keywordEffect">
+                                                    <option value="">全部</option>
+                                                    <option value="Common">一般词</option>
+                                                    <option value="Curve">曲线词</option>
+                                                    <option value="Appointment">指定词</option>
+                                                    <option value="Present">赠送词</option>
+                                                    <option value="Important">重点词</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
                                         <@shiro.hasRole name="Technical">
                                         <div class="layui-inline">
-                                            <label class="layui-form-label" style="width: 100px">抓排名失败标识</label>
+                                            <label class="layui-form-label" style="width: 110px">抓排名失败标识</label>
                                             <div class="layui-input-inline" style="width: 120px">
                                                 <input type="text" name="capturePositionFailIdentify" id="capturePositionFailIdentify" placeholder="请输入失败标识" autocomplete="off" class="layui-input">
                                             </div>
