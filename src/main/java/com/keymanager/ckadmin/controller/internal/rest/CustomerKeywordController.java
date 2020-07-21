@@ -342,9 +342,9 @@ public class CustomerKeywordController extends SpringMVCBaseController {
     }
 
     @RequiresPermissions("/internal/customerKeyword/toCustomerKeywords")
-    @GetMapping(value = {"/toCustomerKeywords/{businessType}/{terminalType}/{customerUuid}", "/toCustomerKeywords/{businessType}/{terminalType}/{customerUuid}/{invalidDays}"})
+    @GetMapping(value = {"/toCustomerKeywords/{businessType}/{terminalType}/{customerUuid}", "/toCustomerKeywords/{businessType}/{terminalType}/{customerUuid}/{pauseType}"})
     public ModelAndView toCustomerKeywords(@PathVariable(name = "businessType") String businessType, @PathVariable(name = "terminalType") String terminalType,
-        @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "invalidDays", required = false) Integer invalidDays) {
+        @PathVariable(name = "customerUuid") Long customerUuid, @PathVariable(name = "pauseType", required = false) String pauseType) {
         ModelAndView mv = new ModelAndView();
         Customer customer = customerService.getCustomerByCustomerUuid(terminalType, businessType, customerUuid);
         mv.setViewName("keywords/customerKeyword");
@@ -353,8 +353,14 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         mv.addObject("terminalType2", terminalType);
         mv.addObject("customer", customer);
         mv.addObject("customerUuid", customerUuid);
-        if (null != invalidDays){
-            mv.addObject("gtInvalidDays", invalidDays);
+        if (null != pauseType){
+            if (pauseType.equals("optimizeStopCount")){
+                mv.addObject("optimizeStatus", 0);
+            }else if (pauseType.equals("invalidDaysStopCount")){
+                mv.addObject("gtInvalidDays", 4);
+            }else if (pauseType.equals("noEffectStopCount")){
+                mv.addObject("gtNoEffectDays", 30);
+            }
         }
         return mv;
     }
@@ -852,14 +858,16 @@ public class CustomerKeywordController extends SpringMVCBaseController {
         mv.addObject("status", 1);
         mv.addObject("searchEngine", searchEngine);
         mv.addObject("qzUuid", qzUuid);
-        if (specialType.equals("optimizeStopCount")){
-            mv.addObject("optimizeStatus", 0);
-        }else if (specialType.equals("importantCount")){
-            mv.addObject("keywordEffect", "Important");
-        }else if (specialType.equals("invalidDaysStopCount")){
-            mv.addObject("gtInvalidDays", 4);
-        }else if (specialType.equals("noEffectStopCount")){
-            mv.addObject("gtNoEffectDays", 30);
+        if (null != specialType){
+            if (specialType.equals("optimizeStopCount")){
+                mv.addObject("optimizeStatus", 0);
+            }else if (specialType.equals("importantCount")){
+                mv.addObject("keywordEffect", "Important");
+            }else if (specialType.equals("invalidDaysStopCount")){
+                mv.addObject("gtInvalidDays", 4);
+            }else if (specialType.equals("noEffectStopCount")){
+                mv.addObject("gtNoEffectDays", 30);
+            }
         }
         return mv;
     }

@@ -1290,8 +1290,18 @@ function generate_customer_info(contactPerson, data, terminalType, type, custome
                     '|<a href="javascript:void(0)" onclick=changeCustomerKeywordStatus("' + customerUuid + '","1","' + type + '","' + terminalType + '",this)>激活关键字</a>'
             }
             htm += ')</span>';
-            if (data.invalidPauseCount > 0){
-                htm += '<span>无效暂停 : <a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '/4","' + title + '","' + id + '")>' + data.invalidPauseCount + '</a></span>';
+            if (data.invalidDaysStopCount > 0 || data.optimizeStopCount > 0 || data.noEffectStopCount > 0){
+                htm += '<br>';
+                if (data.invalidDaysStopCount > 0){
+                    htm += '<span>无法操作 : <a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '/invalidDaysStopCount","' + title + '","' + id + '")>' + data.invalidDaysStopCount + '  </a></span>';
+                }
+                if (data.optimizeStopCount > 0){
+                    htm += '<span>重复暂停 : <a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '/optimizeStopCount","' + title + '","' + id + '")>' + data.optimizeStopCount + '  </a></span>';
+                }
+                if (data.noEffectStopCount > 0){
+                    htm += '<span>无效暂停 : <a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '/noEffectStopCount","' + title + '","' + id + '")>' + data.noEffectStopCount + '  </a></span>';
+                }
+                htm += '<br>';
             }
         } else {
             htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>查看' + terminalTypeName + '关键字</span></a>';

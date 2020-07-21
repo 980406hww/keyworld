@@ -371,7 +371,9 @@
             ck.fTerminalType AS 'terminalType',
             COUNT(1)         AS 'totalCount',
             SUM(IF(ck.fStatus = 1, 1, 0)) AS 'activeCount',
-            SUM(IF(ck.fInvalidDays &gt; #{invalidMaxDays}, 1, 0)) AS 'invalidPauseCount'
+            SUM(IF(ck.fStatus = 1 AND ck.fInvalidDays &gt; #{invalidMaxDays}, 1, 0)) AS 'invalidDaysStopCount',
+            SUM(IF(ck.fStatus = 1 AND ck.fOptimizeStatus = 0, 1, 0)) AS 'optimizeStopCount',
+            SUM(IF(ck.fStatus = 1 AND ck.fNoEffectConsecutiveDays &gt; 30, 1, 0)) AS 'noEffectStopCount'
         FROM t_customer_keyword ck
         WHERE ck.fCustomerUuid = #{customerUuid}
         AND ck.fType = #{type}
