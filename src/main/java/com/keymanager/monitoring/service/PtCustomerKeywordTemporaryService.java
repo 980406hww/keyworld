@@ -33,8 +33,8 @@ public class PtCustomerKeywordTemporaryService extends ServiceImpl<PtCustomerKey
         ptCustomerKeywordTemporaryDao.insertIntoTemporaryData(cusId, type);
     }
 
-    public void temporarilyStoreData(long userId) {
-        ptCustomerKeywordTemporaryDao.temporarilyStoreData(userId);
+    public void temporarilyStoreData(long userId, String searchEngine) {
+        ptCustomerKeywordTemporaryDao.temporarilyStoreData(userId, searchEngine);
     }
 
     public void updateCustomerKeywordStatus() {

@@ -1982,12 +1982,13 @@ public class CustomerKeywordService extends ServiceImpl<CustomerKeywordDao, Cust
                         for (Map.Entry<Long, HashMap<String, CmsSyncManage>> entry : syncMap.entrySet()) {
                             Long userId = entry.getKey();
                             for (CmsSyncManage syncManage : entry.getValue().values()) {
+                                String customerName = syncManage.getCompanyCode();
                                 // 读取客户记录同步时间的信息
-                                Config lastSyncConfig = configService.getConfig(Constants.CONFIG_TYPE_SYNC_PT_KEYWORD_TIME, syncManage.getCompanyCode());
+                                Config lastSyncConfig = configService.getConfig(Constants.CONFIG_TYPE_SYNC_PT_KEYWORD_TIME, customerName);
                                 // 上次同步时间是否超过30分钟
                                 boolean overHalfAnHour = Utils.getIntervalMines(lastSyncConfig.getValue()) >= 30;
                                 if (overHalfAnHour) {
-                                    com.keymanager.ckadmin.entity.Customer customer = customerService2.selectByName(syncManage.getCompanyCode());
+                                    com.keymanager.ckadmin.entity.Customer customer = customerService2.selectByName(customerName);
                                     if (null != customer) {
                                         // 根据客户id判断当前时间之前的任务是否完成
                                         if (captureRankJobService.checkCaptureJobCompletedByCustomerUuid(customer.getUuid())) {
