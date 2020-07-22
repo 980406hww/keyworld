@@ -24,6 +24,9 @@ public class CmsSyncManage implements Serializable {
     @TableField(value = "TYPE")
     private String type;
 
+    @TableField(value = "SEARCH_ENGINE")
+    private String searchEngine;
+
     @TableField(value = "SYNC_OPERA_STATUS_TIME")
     private String syncOperaStatusTime;
 
@@ -63,6 +66,14 @@ public class CmsSyncManage implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getSearchEngine() {
+        return searchEngine;
+    }
+
+    public void setSearchEngine(String searchEngine) {
+        this.searchEngine = searchEngine;
     }
 
     public String getSyncOperaStatusTime() {

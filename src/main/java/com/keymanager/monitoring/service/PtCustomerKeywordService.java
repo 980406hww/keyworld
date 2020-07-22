@@ -77,33 +77,34 @@ public class PtCustomerKeywordService extends ServiceImpl<PtCustomerKeywordDao, 
                 if (!syncMap.isEmpty()) {
                     for (Map.Entry<Long, HashMap<String, CmsSyncManage>> entry : syncMap.entrySet()) {
                         long userId = entry.getKey();
-                        // 处理有更新的关键词 status = 4
-                        // 清空临时表数据 delete
-                        ptCustomerKeywordTemporaryService.cleanPtCustomerKeyword();
-                        // 临时存放需要更新状态的关键词
-                        ptCustomerKeywordTemporaryService.temporarilyStoreData(userId);
-                        do {
-                            // 修改标识为更新中，行数 rows set fMark = 2
-                            ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 2, 0);
-                            // 处理有更新状态的关键词 keyword, url
-                            ptCustomerKeywordTemporaryService.updateCustomerKeywordStatus();
-                            // 修改标识为已更新，行数 rows set fMark = 1
-                            ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 1, 2);
-                            // 更新 cms_keyword status 4 => 1 limit rows
-                            ptCustomerKeywordDao.updatePtKeywordStatus(userId, rows);
-                        } while (ptCustomerKeywordTemporaryService.searchPtKeywordTemporaryCount() > 0);
-
-                        // 处理已删除的关键词 status = 3 deleteFlag = 1
-                        List<Long> customerKeywordUuids = ptCustomerKeywordDao.selectCustomerDelKeywords(userId);
-                        if (CollectionUtils.isNotEmpty(customerKeywordUuids)) {
-                            customerKeywordService.deleteBatchIds(customerKeywordUuids);
-                        }
-
                         for (CmsSyncManage cmsSyncManage : entry.getValue().values()) {
+                            // 对应的搜索引擎
+                            String searchEngine = cmsSyncManage.getSearchEngine();
+                            // 清空临时表数据 delete
+                            ptCustomerKeywordTemporaryService.cleanPtCustomerKeyword();
+                            // 临时存放需要更新状态的关键词
+                            ptCustomerKeywordTemporaryService.temporarilyStoreData(userId, searchEngine);
+                            do {
+                                // 修改标识为更新中，行数 rows
+                                ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 2, 0);
+                                // 处理有更新状态的关键词 keyword, url
+                                ptCustomerKeywordTemporaryService.updateCustomerKeywordStatus();
+                                // 修改标识为已更新，行数 rows
+                                ptCustomerKeywordTemporaryService.updatePtKeywordMarks(rows, 1, 2);
+                                // 更新 cms_keyword status 4 => 1 limit rows
+                                ptCustomerKeywordDao.updatePtKeywordStatus(userId, searchEngine, rows);
+                            } while (ptCustomerKeywordTemporaryService.searchPtKeywordTemporaryCount() > 0);
+
+                            // 处理已删除的关键词 status = 3 deleteFlag = 1
+                            List<Long> customerKeywordUuids = ptCustomerKeywordDao.selectCustomerDelKeywords(userId, searchEngine);
+                            if (CollectionUtils.isNotEmpty(customerKeywordUuids)) {
+                                customerKeywordService.deleteBatchIds(customerKeywordUuids);
+                            }
+
                             Customer customer = customerService.selectByName(cmsSyncManage.getCompanyCode());
                             if (null != customer) {
                                 // 处理新增状态的关键词 status = 2
-                                List<PtCustomerKeyword> ptKeywords = ptCustomerKeywordDao.selectNewPtKeyword(userId);
+                                List<PtCustomerKeyword> ptKeywords = ptCustomerKeywordDao.selectNewPtKeyword(userId, searchEngine);
                                 if (CollectionUtils.isNotEmpty(ptKeywords)) {
                                     int fromIndex = 0, toIndex = rows;
                                     List<PtCustomerKeyword> tempList;

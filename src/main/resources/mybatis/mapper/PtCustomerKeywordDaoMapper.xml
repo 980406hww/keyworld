@@ -33,6 +33,7 @@
             CURRENT_POSITION AS 'currentPosition'
         FROM cms_keyword
         WHERE USER_ID = #{userId}
+          and SEARCH_ENGINE = #{searchEngine}
           and STATUS = 2
     </select>
 
@@ -40,6 +41,7 @@
         SELECT CUSTOMER_KEYWORD_ID
         FROM cms_keyword
         WHERE USER_ID = #{userId}
+          and SEARCH_ENGINE = #{searchEngine}
           and STATUS = 3
           and DELETE_FLAG = 1
     </select>
@@ -67,6 +69,7 @@
         update cms_keyword
         set STATUS = 1
         where USER_ID = #{userId}
+          and SEARCH_ENGINE = #{searchEngine}
           and STATUS = 4
         limit #{rows}
     </update>

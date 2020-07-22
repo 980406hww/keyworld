@@ -6,7 +6,8 @@
         select ID as id,
                USER_ID as userId,
                COMPANY_CODE as companyCode,
-               TYPE as type
+               TYPE as type,
+               SEARCH_ENGINE as searchEngine
         from cms_sync_manage
         where COMPANY_CODE = #{companyCode}
           and TYPE = #{type}

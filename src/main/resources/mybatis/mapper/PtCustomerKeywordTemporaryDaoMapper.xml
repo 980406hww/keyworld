@@ -24,7 +24,9 @@
         insert into t_pt_customer_keyword(fUuid, fKeyword, fUrl, fTitle )
         SELECT CUSTOMER_KEYWORD_ID, KEYWORD, URL, TITLE
         FROM cms_keyword
-        WHERE USER_ID = #{userId} AND STATUS = 4
+        WHERE USER_ID = #{userId}
+          and SEARCH_ENGINE = #{searchEngine}
+          and STATUS = 4
     </insert>
 
     <update id="updatePtKeywordMarks">
