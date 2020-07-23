@@ -40,7 +40,7 @@
         <if test="criteria.createTime != null and criteria.createTime != ''">
             AND kif.fCreateTime BETWEEN CONCAT(#{criteria.createTime}, ' 00:00:00') AND CONCAT(#{criteria.createTime}, ' 23:59:59')
         </if>
-        ORDER BY createTime DESC
+        ORDER BY fCreateTime DESC
     </select>
 
 </mapper>

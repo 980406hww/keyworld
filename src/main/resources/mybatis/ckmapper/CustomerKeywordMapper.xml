@@ -546,9 +546,6 @@
         <if test="keywordCriteria.ltStartOptimizedTime != null and keywordCriteria.ltStartOptimizedTime != ''">
             AND ck.fStartOptimizedTime &lt;= #{keywordCriteria.ltStartOptimizedTime}
         </if>
-        <if test="keywordCriteria.orderingElement != null and keywordCriteria.orderingElement != ''">
-            ORDER BY ${keywordCriteria.orderingElement}
-        </if>
         <if test="keywordCriteria.gtInvalidDays != null">
             AND ck.fInvalidDays &gt;= #{keywordCriteria.gtInvalidDays}
         </if>
@@ -566,6 +563,9 @@
         </if>
         <if test="keywordCriteria.ltNoEffectDays != null">
             AND ck.fNoEffectConsecutiveDays &lt;= #{keywordCriteria.ltNoEffectDays}
+        </if>
+        <if test="keywordCriteria.orderingElement != null">
+            ORDER BY ${keywordCriteria.orderingElement}
         </if>
     </sql>
 
