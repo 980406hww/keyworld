@@ -30,10 +30,11 @@ public class CustomerExcludeKeywordServiceImpl extends ServiceImpl<CustomerExclu
                 jointKeyword.append(keyword).append(",");
             }
             customerExcludeKeyword.setKeyword(jointKeyword.toString().substring(0, jointKeyword.toString().length() - 1));
-            if (null == qzSettingExcludeCustomerKeywordsCriteria.getExcludeKeywordUuid()) {
+            CustomerExcludeKeyword oldCustomerExcludeKeyword = customerExcludeKeywordDao.searchCustomerExcludeKeyword(customerExcludeKeyword.getQzSettingUuid(), customerExcludeKeyword.getTerminalType());
+            if (null == oldCustomerExcludeKeyword) {
                 customerExcludeKeywordDao.insert(customerExcludeKeyword);
             } else {
-                customerExcludeKeyword.setUuid(qzSettingExcludeCustomerKeywordsCriteria.getExcludeKeywordUuid());
+                customerExcludeKeyword.setUuid(oldCustomerExcludeKeyword.getUuid());
                 customerExcludeKeyword.setUpdateTime(new Date());
                 customerExcludeKeywordDao.updateById(customerExcludeKeyword);
             }
