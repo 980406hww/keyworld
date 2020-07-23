@@ -7,6 +7,7 @@
         FROM t_exclude_keyword
         WHERE fQZSettingUuid = #{qzSettingUuid}
         AND fTerminalType = #{terminalType}
+        LIMIT 1
     </select>
 
     <select id="getCustomerExcludeKeyword" resultType="java.lang.String">
@@ -21,6 +22,7 @@
                 AND ek.fQZSettingUuid IN (SELECT qs.fUuid FROM t_qz_setting qs WHERE qs.fCustomerUuid = #{customerUuid} AND qs.fDomain LIKE '%${url}')
             </otherwise>
         </choose>
+        LIMIT 1
     </select>
 
     <delete id="deleteByQZSettingUuid">
