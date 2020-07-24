@@ -236,9 +236,14 @@ public class IndustryInfoController {
         try {
             HttpSession session = request.getSession();
             String loginName = (String) session.getAttribute("username");
-            UserInfo user = userInfoService.getUserInfo(loginName);
-            if (!userRoleService.isDepartmentManager(user.getUuid())) {
-                industryCriteria.setLoginName(loginName);
+            UserInfo userInfo = userInfoService.getUserInfo(loginName);
+//            if (!userRoleService.isDepartmentManager(user.getUuid())) {
+//                industryCriteria.setLoginName(loginName);
+//            }
+            if (userInfo.getDataAuthority().equals("self")){
+                industryCriteria.setLoginName(userInfo.getLoginName());
+            }else if (userInfo.getDataAuthority().equals("department")){
+                industryCriteria.setOrganizationID(userInfo.getOrganizationID());
             }
             Page<IndustryInfo> page = new Page<>(industryCriteria.getPage(), industryCriteria.getLimit());
             page = industryInfoService.searchIndustries(page, industryCriteria);
@@ -261,7 +266,8 @@ public class IndustryInfoController {
             HttpSession session = request.getSession();
             String loginName = (String) session.getAttribute("username");
             UserInfo user = userInfoService.getUserInfo(loginName);
-            List<UserInfo> activeUsers = userInfoService.findActiveUsers();
+//            List<UserInfo> activeUsers = userInfoService.findActiveUsers();
+            List<UserInfo> activeUsers = userInfoService.getActiveUsersByAuthority(loginName);
             Map<String, String> searchEngineMap = configService.getSearchEngineMap(industryCriteria.getTerminalType());
             Map<String, Object> data = new HashMap<>();
             data.put("user", user);

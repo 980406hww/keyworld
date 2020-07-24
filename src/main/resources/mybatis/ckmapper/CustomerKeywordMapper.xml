@@ -567,6 +567,9 @@
         <if test="keywordCriteria.ltNoEffectDays != null">
             AND ck.fNoEffectConsecutiveDays &lt;= #{keywordCriteria.ltNoEffectDays}
         </if>
+        <if test="keywordCriteria.organizationID != null">
+            AND u.fOrganizationID = #{keywordCriteria.organizationID}
+        </if>
     </sql>
 
     <sql id="updateCustomerKeywordsCriteria">
@@ -709,6 +712,9 @@
         <if test="keywordCriteria.ltNoEffectDays != null">
             AND ck.fNoEffectConsecutiveDays &lt;= #{keywordCriteria.ltNoEffectDays}
         </if>
+        <if test="keywordCriteria.organizationID != null">
+            AND u.fOrganizationID = #{keywordCriteria.organizationID}
+        </if>
     </sql>
 
     <select id="searchKeywords" resultType="com.keymanager.ckadmin.entity.CustomerKeyword">
@@ -749,8 +755,10 @@
         ck.fNoEffectConsecutiveDays AS 'noEffectConsecutiveDays'
         FROM
         t_customer_keyword ck,
-        t_customer c
+        t_customer c,
+        t_userinfo u
         WHERE c.fUuid = ck.fCustomerUuid
+        AND u.fLoginName = c.fUserID
         <include refid="searchCustomerKeywordsCriteria"/>
     </select>
 
@@ -759,8 +767,10 @@
         COUNT(1)
         FROM
         t_customer_keyword ck,
-        t_customer c
+        t_customer c,
+        t_userinfo u
         WHERE c.fUuid = ck.fCustomerUuid
+        AND u.fLoginName = c.fUserID
         <include refid="searchCustomerKeywordsCriteria"/>
     </select>
 
@@ -774,28 +784,31 @@
 
     <update id="updateOptimizeGroupName" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria">
         UPDATE
-        t_customer_keyword ck,t_customer c
+        t_customer_keyword ck,t_customer c, t_userinfo u
         SET
         ck.fOptimizeGroupName = #{keywordCriteria.targetOptimizeGroupName},
         ck.fUpdateTime = NOW()
         WHERE c.fUuid = ck.fCustomerUuid
+        AND u.fLoginName = c.fUserID
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
 
     <update id="updateMachineGroup">
-        UPDATE t_customer_keyword ck, t_customer c
+        UPDATE t_customer_keyword ck, t_customer c, t_userinfo u
         SET ck.fMachineGroup = #{keywordCriteria.targetMachineGroup}, ck.fUpdateTime = NOW()
         WHERE c.fUuid = ck.fCustomerUuid
+        AND u.fLoginName = c.fUserID
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
 
     <update id="updateBearPawNumber" parameterType="com.keymanager.ckadmin.criteria.KeywordCriteria">
         UPDATE
-        t_customer_keyword ck,t_customer c
+        t_customer_keyword ck,t_customer c, t_userinfo u
         SET
         ck.fBearPawNumber = #{keywordCriteria.targetBearPawNumber},
         ck.fUpdateTime = NOW()
         WHERE c.fUuid = ck.fCustomerUuid
+        AND u.fLoginName = c.fUserID
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
 
@@ -888,11 +901,12 @@
 
     <update id="updateOptimizePlanCount">
         UPDATE
-        t_customer_keyword ck,t_customer c
+        t_customer_keyword ck,t_customer c, t_userinfo u
         SET
         ck.fOptimizePlanCount = #{keywordCriteria.targetOptimizePlanCount},
         ck.fUpdateTime = NOW()
         WHERE c.fUuid = ck.fCustomerUuid
+        AND u.fLoginName = c.fUserID
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
 
@@ -966,9 +980,10 @@
     </select>
 
     <update id="updateSearchEngine">
-        UPDATE t_customer_keyword ck, t_customer c
+        UPDATE t_customer_keyword ck, t_customer c, t_userinfo u
         SET ck.fSearchEngine = #{keywordCriteria.targetSearchEngine}, ck.fUpdateTime = NOW()
         WHERE c.fUuid = ck.fCustomerUuid
+        AND u.fLoginName = c.fUserID
         <include refid="updateCustomerKeywordsCriteria"/>
     </update>
 
@@ -1184,8 +1199,10 @@
         COUNT(DISTINCT c.fUserID) AS 'userCount'
         FROM
         t_customer_keyword ck,
-        t_customer c
+        t_customer c,
+        t_userinfo u
         WHERE c.fUuid = ck.fCustomerUuid
+        AND u.fLoginName = c.fUserID
         AND ck.fType IN ('pt', 'qt')
         AND ck.fTerminalType = #{keywordCriteria.terminalType}
         <if test="keywordCriteria.keyword != null and keywordCriteria.keyword != ''">
@@ -1196,6 +1213,9 @@
         </if>
         <if test="keywordCriteria.userName != null and keywordCriteria.userName != ''">
             AND c.fUserID = #{keywordCriteria.userName}
+        </if>
+        <if test="keywordCriteria.organizationID != null">
+            AND u.fOrganizationID = #{keywordCriteria.organizationID}
         </if>
         GROUP BY ck.fKeyword, ck.fSearchEngine
         ORDER BY keywordCount DESC

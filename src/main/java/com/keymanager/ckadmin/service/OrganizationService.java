@@ -12,4 +12,6 @@ public interface OrganizationService extends IService<Organization> {
     List<Tree> selectUserFulTree ();
 
     List<UserTree> selectUserFulTree2();
+
+    List<UserTree> selectUserFulTreeByOrganizationId (Integer organizationId);
 }

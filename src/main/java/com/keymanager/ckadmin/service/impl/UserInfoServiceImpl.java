@@ -46,6 +46,21 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
     }
 
     @Override
+    public List<UserInfo> getActiveUsersByAuthority(String loginName){
+        Config config = configDao.getConfig(Constants.CONFIG_TYPE_EXTERNALUSER, Constants.CONFIG_KEY_EXTERNALUSER);
+        UserInfo userInfo = userInfoDao.getUserInfo(loginName);
+        if (userInfo.getDataAuthority().equals("all")){
+            return userInfoDao.findActiveUsers(config.getValue());
+        }else if (userInfo.getDataAuthority().equals("department")){
+            return userInfoDao.findActiveUsersByDepartment(config.getValue(), userInfo.getOrganizationID());
+        }else{
+            List<UserInfo> selfUser = new ArrayList<>();
+            selfUser.add(userInfo);
+            return selfUser;
+        }
+    }
+
+    @Override
     public Long getUuidByLoginName(String loginName) {
         return userInfoDao.getUuidByLoginName(loginName);
     }
@@ -97,6 +112,39 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
 //        List<UserTree> list = new ArrayList<>();
 //        list.add(userTree2);
 //        return list;
+        return trees;
+    }
+    @Override
+    public Object selectUserInfoTreesByAuthority(String loginName){
+        List<UserTree> trees = new ArrayList<>();
+        UserInfo loginUserInfo = userInfoDao.getUserInfo(loginName);
+        if (loginUserInfo.getDataAuthority().equals("all")){
+            trees = organizationService.selectUserFulTree2();
+        }else if (loginUserInfo.getDataAuthority().equals("department")){
+            trees = organizationService.selectUserFulTreeByOrganizationId(loginUserInfo.getOrganizationID());
+        }
+        else{
+            UserTree userTree = new UserTree();
+            userTree.setId(0L);
+            userTree.setName("请选择用户");
+            trees.add(userTree);
+            return trees;
+        }
+        for (UserTree tree : trees) {
+            List<UserInfo> userInfos = userInfoDao.selectUserInfos(tree.getId());
+            if (CollectionUtils.isNotEmpty(userInfos)) {
+                List<UserTree> userInfoTreeList = new ArrayList<>();
+                for (UserInfo userInfo : userInfos) {
+                    UserTree userTree = new UserTree();
+                    userTree.setId(userInfo.getUuid());
+                    userTree.setName(userInfo.getUserName());
+                    userTree.setParentTId(tree.getId());
+                    userInfoTreeList.add(userTree);
+                }
+                tree.setChildren(userInfoTreeList);
+            }
+        }
+
         return trees;
     }
 

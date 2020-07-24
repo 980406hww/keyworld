@@ -15,11 +15,15 @@ public interface UserInfoService extends IService<UserInfo> {
 
     List<UserInfo> findActiveUsers();
 
+    List<UserInfo> getActiveUsersByAuthority(String loginName);
+
     Long getUuidByLoginName(String userName);
 
     List<Tree> selectUserInfoTrees();
 
     Object selectUserInfoTrees2();
+
+    Object selectUserInfoTreesByAuthority(String loginName);
 
     List<String> selectUserNames();
 

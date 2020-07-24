@@ -35,4 +35,14 @@
         WHERE fOrganizationName NOT IN ('负面销售部', '财务部', '运维部', '外部')
         ORDER BY fSequence
     </select>
+
+    <select id="selectOrganizationUserFulByOrganizationId" resultType="com.keymanager.ckadmin.entity.Organization">
+        SELECT
+            fUuid AS 'id',
+            fOrganizationName AS 'organizationName',
+            fIcon AS 'icon',
+            fParentId AS 'pid'
+        FROM t_organization
+        WHERE fUuid = #{organizationId}
+    </select>
 </mapper>

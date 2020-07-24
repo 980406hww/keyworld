@@ -134,9 +134,15 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             return resultBean;
         }
         try {
-            Set<String> roles = getCurrentUser().getRoles();
-            if (!roles.contains("DepartmentManager")) {
-                keywordCriteria.setUserName((String) request.getSession().getAttribute("username"));
+//            Set<String> roles = getCurrentUser().getRoles();
+//            if (!roles.contains("DepartmentManager")) {
+//                keywordCriteria.setUserName((String) request.getSession().getAttribute("username"));
+//            }
+            UserInfo userInfo = userInfoService.getUserInfo(getCurrentUser().getLoginName());
+            if (userInfo.getDataAuthority().equals("self")){
+                keywordCriteria.setUserName(userInfo.getLoginName());
+            }else if (userInfo.getDataAuthority().equals("department")){
+                keywordCriteria.setOrganizationID(userInfo.getOrganizationID());
             }
             Page<CustomerKeyword> page = new Page<>(keywordCriteria.getPage(), keywordCriteria.getLimit());
             String orderByField = ReflectUtils.getTableFieldValue(CustomerKeyword.class, keywordCriteria.getOrderBy());
@@ -722,7 +728,8 @@ public class CustomerKeywordController extends SpringMVCBaseController {
             HttpSession session = request.getSession();
             String loginName = (String) session.getAttribute("username");
             UserInfo user = userInfoService.getUserInfo(loginName);
-            List<UserInfo> activeUsers = userInfoService.findActiveUsers();
+//            List<UserInfo> activeUsers = userInfoService.findActiveUsers();
+            List<UserInfo> activeUsers = userInfoService.getActiveUsersByAuthority(loginName);
             Map<String, String> searchEngineMap = configService.getSearchEngineMap(ptKeywordCriteria.getTerminalType());
             Map<String, Object> data = new HashMap<>(3);
             data.put("user", user);
@@ -754,6 +761,12 @@ public class CustomerKeywordController extends SpringMVCBaseController {
                 if (keywordCriteria.getOrderMode() != null && keywordCriteria.getOrderMode() == 0) {
                     page.setAsc(false);
                 }
+            }
+            UserInfo userInfo = userInfoService.getUserInfo(getCurrentUser().getLoginName());
+            if (userInfo.getDataAuthority().equals("self")){
+                keywordCriteria.setUserName(userInfo.getLoginName());
+            }else if (userInfo.getDataAuthority().equals("department")){
+                keywordCriteria.setOrganizationID(userInfo.getOrganizationID());
             }
             page = customerKeywordService.searchPTKeywordCount(page, keywordCriteria);
             List<PTkeywordCountVO> keywords = page.getRecords();
