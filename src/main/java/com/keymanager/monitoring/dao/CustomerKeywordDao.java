@@ -174,10 +174,6 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     List<String> getCustomerKeywordInfo(@Param("customerKeywordCriteria") CustomerKeywordCriteria customerKeywordCriteria);
 
-    void moveOutNoRankingCustomerKeyword(@Param("monitorConfigs") List<String> monitorConfigs, @Param("noRankOptimizeGroupNameConfigType") String noRankOptimizeGroupNameConfigType);
-
-    void moveOutDefaultCustomerKeyword(@Param("noRankConfigs") List<Config> noRankConfigs, @Param("defaultOptimizeGroupNameConfigType") String defaultOptimizeGroupNameConfigType);
-
     List<CustomerKeywordSortVO> sortCustomerKeywordForOptimize(@Param("monitorConfigs") List<String> monitorConfigs);
 
     void setNoRankingCustomerKeyword(@Param("needMoveUuids") List<String> needMoveUuids, @Param("noRankOptimizeGroupNameConfigType") String noRankOptimizeGroupNameConfigType);

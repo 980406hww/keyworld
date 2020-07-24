@@ -1941,4 +1941,48 @@
             #{customerKeywordUuid}
         </foreach>
     </update>
+
+    <update id="moveOutNoRankingCustomerKeyword">
+        UPDATE t_customer_keyword
+        SET fOptimizeGroupName = (
+        SELECT c.fValue FROM t_config c
+        WHERE c.fConfigType = #{noRankOptimizeGroupNameConfigType}
+        AND c.fKey = CONCAT(fSearchEngine, '_', fTerminalType)
+        ), fMachineGroup = 'no'
+        WHERE fInvalidFlag = 1
+        AND (fCurrentPosition = 0 OR fCurrentPosition > 900)
+        AND fQueryCount > 0
+        AND fOptimizeGroupName IN
+        <foreach item="item" collection="monitorConfigs" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="setNoRankingCustomerKeyword">
+        UPDATE t_customer_keyword
+        SET fOptimizeGroupName = (
+        SELECT c.fValue FROM t_config c
+        WHERE c.fConfigType = #{noRankOptimizeGroupNameConfigType}
+        AND c.fKey = CONCAT(fSearchEngine, '_', fTerminalType)
+        ), fMachineGroup = 'no'
+        WHERE fUuid IN
+        <foreach item="item" collection="needMoveUuids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="moveOutDefaultCustomerKeyword">
+        UPDATE t_customer_keyword ck
+        SET ck.fOptimizeGroupName = (
+        SELECT c.fValue
+        FROM t_config c
+        WHERE c.fConfigType = #{defaultOptimizeGroupNameConfigType}
+        AND c.fKey = CONCAT(ck.fSearchEngine, '_', ck.fTerminalType)
+        ), ck.fMachineGroup = ck.fType
+        WHERE (ck.fInvalidFlag = 0 OR ck.fCurrentPosition &gt; 0)
+        AND ck.fOptimizeGroupName IN
+        <foreach item="item" collection="noRankConfigs" open="(" separator="," close=")">
+            #{item.value}
+        </foreach>
+    </update>
 </mapper>

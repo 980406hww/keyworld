@@ -1632,6 +1632,56 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
         }
 
     }
+
+    public void changeOptimizeGroupName() {
+        // 移出noRankingOptimizeGroupName有刷量有排名关键字
+        List<Config> noRankConfigs = configService.findConfigs(com.keymanager.util.Constants.CONFIG_TYPE_NORANK_OPTIMIZE_GROUPNAME);
+        customerKeywordDao.moveOutDefaultCustomerKeyword(noRankConfigs, com.keymanager.util.Constants.CONFIG_TYPE_DEFAULT_OPTIMIZE_GROUPNAME);
+        // 移出monitoringOptimizeGroupName没刷量没排名关键字
+        List<String> monitorConfigs = configService.getMonitorOptimizeGroupName(com.keymanager.util.Constants.CONFIG_TYPE_MONITOR_OPTIMIZE_GROUPNAME);
+        customerKeywordDao.moveOutNoRankingCustomerKeyword(monitorConfigs, com.keymanager.util.Constants.CONFIG_TYPE_NORANK_OPTIMIZE_GROUPNAME);
+        // 排序关键字（优先排名，其次第一报价）
+//        List<CustomerKeywordSortVO> customerKeywordSortVOList = customerKeywordDao.sortCustomerKeywordForOptimize(monitorConfigs);
+        // 限制分组下相同关键字个数
+//        List<String> needMoveUuids = new ArrayList<String>();
+//        Map<String, Integer> sameCustomerKeywordCountMap = configService.getSameCustomerKeywordCount();
+//        for (CustomerKeywordSortVO customerKeywordSortVO : customerKeywordSortVOList) {
+//            List<String> uuids = Arrays.asList(customerKeywordSortVO.getUuids().split(","));
+//            String key = customerKeywordSortVO.getSearchEngine() + "_" + customerKeywordSortVO.getTerminalType();
+//            Integer maxCount = sameCustomerKeywordCountMap.get(key);
+//            if (maxCount != null && uuids.size() > maxCount) {
+//                int split = 0;
+//                for (String uuid : uuids) {
+//                    if (uuid.indexOf("0") == 0) {
+//                        split++;
+//                    } else {
+//                        int count = uuids.size();
+//                        int hasPositionKeywordCount = count - split;
+//                        if (hasPositionKeywordCount >= maxCount) {
+//                            needMoveUuids.addAll(uuids.subList(0, split));
+//                            if (hasPositionKeywordCount > maxCount) {
+//                                needMoveUuids.addAll(uuids.subList(split + maxCount, count));
+//                            }
+//                        } else {
+//                            needMoveUuids.addAll(uuids.subList(maxCount - hasPositionKeywordCount, split));
+//                        }
+//                        break;
+//                    }
+//                    if (split == uuids.size() && CollectionUtils.isEmpty(needMoveUuids)) {
+//                        needMoveUuids.addAll(uuids.subList(maxCount, uuids.size()));
+//                    }
+//                }
+//            }
+//        }
+//        // 移出超出个数的关键字到noRankingOptimizeGroupName
+//        if (CollectionUtils.isNotEmpty(needMoveUuids)) {
+//            List<String> uuidList = new ArrayList<String>();
+//            for (String needMoveUuid : needMoveUuids) {
+//                uuidList.add(needMoveUuid.substring(needMoveUuid.indexOf("_") + 1));
+//            }
+//            customerKeywordDao.setNoRankingCustomerKeyword(uuidList, Constants.CONFIG_TYPE_NORANK_OPTIMIZE_GROUPNAME);
+//        }
+    }
 }
 
 

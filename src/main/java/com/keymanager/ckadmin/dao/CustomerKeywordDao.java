@@ -2,32 +2,16 @@ package com.keymanager.ckadmin.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
-import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
-import com.keymanager.ckadmin.criteria.KeywordCriteria;
-import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
-import com.keymanager.ckadmin.criteria.PTKeywordCountCriteria;
-import com.keymanager.ckadmin.criteria.QZRateKewordCountCriteria;
-import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
-import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
+import com.keymanager.ckadmin.criteria.*;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
-import com.keymanager.ckadmin.vo.CodeNameVo;
-import com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO;
-import com.keymanager.ckadmin.vo.CustomerKeywordIncludeVO;
-import com.keymanager.ckadmin.vo.CustomerKeywordRepeatedVO;
-import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
-import com.keymanager.ckadmin.vo.ExternalCustomerKeywordIndexVO;
-import com.keymanager.ckadmin.vo.GroupVO;
-import com.keymanager.ckadmin.vo.KeywordCountVO;
-import com.keymanager.ckadmin.vo.OptimizationKeywordVO;
-import com.keymanager.ckadmin.vo.PTkeywordCountVO;
-import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
-import com.keymanager.monitoring.vo.ExternalCustomerKeywordVO;
+import com.keymanager.ckadmin.vo.*;
+import com.keymanager.ckadmin.entity.Config;
 import com.keymanager.monitoring.vo.UpdateOptimizedCountSimpleVO;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
-import java.util.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.*;
 
 @Repository("customerKeywordDao2")
 public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
@@ -206,4 +190,7 @@ public interface CustomerKeywordDao extends BaseMapper<CustomerKeyword> {
 
     void updateCustomerKeywordOptimizeStatus(@Param("customerKeywordUuids") List<Long> customerKeywordUuids);
 
+    void moveOutNoRankingCustomerKeyword(@Param("monitorConfigs") List<String> monitorConfigs, @Param("noRankOptimizeGroupNameConfigType") String noRankOptimizeGroupNameConfigType);
+
+    void moveOutDefaultCustomerKeyword(@Param("noRankConfigs") List<Config> noRankConfigs, @Param("defaultOptimizeGroupNameConfigType") String defaultOptimizeGroupNameConfigType);
 }

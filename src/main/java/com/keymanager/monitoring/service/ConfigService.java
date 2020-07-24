@@ -119,16 +119,6 @@ public class ConfigService extends ServiceImpl<ConfigDao, Config>{
         return configDao.findConfigs(configType);
     }
 
-    public List<String> getMonitorOptimizeGroupName(String configType) {
-        List<String> configList = new ArrayList<String>();
-        List<Config> configs = findConfigs(configType);
-        for (Config config : configs) {
-            String[] temp = config.getValue().split(",");
-            configList.addAll(Arrays.asList(temp));
-        }
-        return configList;
-    }
-
     public Map<String, Integer> getSameCustomerKeywordCount() {
         Map<String, Integer> sameCustomerKeywordCountMap = new HashMap<String, Integer>();
         List<Config> configs = findConfigs(Constants.CONFIG_TYPE_SAME_CUSTOMER_KEYWORD_COUNT);

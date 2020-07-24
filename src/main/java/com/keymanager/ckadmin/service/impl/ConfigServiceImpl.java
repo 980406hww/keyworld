@@ -5,15 +5,11 @@ import com.keymanager.ckadmin.entity.Config;
 import com.keymanager.ckadmin.service.ConfigCacheService;
 import com.keymanager.ckadmin.service.ConfigService;
 import com.keymanager.ckadmin.util.Constants;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service("configService2")
 public class ConfigServiceImpl implements ConfigService {
@@ -134,5 +130,16 @@ public class ConfigServiceImpl implements ConfigService {
             return Integer.parseInt(config.getValue());
         }
         return null;
+    }
+
+    @Override
+    public List<String> getMonitorOptimizeGroupName(String configType) {
+        List<String> configList = new ArrayList<String>();
+        List<Config> configs = findConfigs(configType);
+        for (Config config : configs) {
+            String[] temp = config.getValue().split(",");
+            configList.addAll(Arrays.asList(temp));
+        }
+        return configList;
     }
 }
