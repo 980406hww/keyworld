@@ -19,13 +19,15 @@
     <select id="searchIndustries" resultType="com.keymanager.ckadmin.entity.IndustryInfo">
         SELECT
         <include refid="selectCol"/>
-        FROM t_industry_info tii
-        WHERE 1 = 1
+        FROM t_industry_info tii,
+        u_userinfo u
+        WHERE u.fLoginName = tii.fUserID
         <if test="industryCriteria.loginName != null and industryCriteria.loginName != ''">AND tii.fUserID = #{industryCriteria.loginName}</if>
         <if test="industryCriteria.searchEngine != null and industryCriteria.searchEngine != ''">AND tii.fSearchEngine = #{industryCriteria.searchEngine}</if>
         <if test="industryCriteria.industryName != null and industryCriteria.industryName != ''">AND tii.fIndustryName like CONCAT('%', #{industryCriteria.industryName}, '%')</if>
         <if test="industryCriteria.terminalType != null and industryCriteria.terminalType != ''">AND tii.fTerminalType = #{industryCriteria.terminalType}</if>
         <if test="industryCriteria.status != null">AND tii.fStatus = #{industryCriteria.status}</if>
+        <if test="industryCriteria.organizationID != null">AND u.fOrganizationID = #{industryCriteria.organizationID}</if>
         ORDER BY tii.fCreateTime DESC
     </select>
 

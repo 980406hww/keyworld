@@ -13,6 +13,7 @@ public class IndustryCriteria extends BaseCriteria {
     private String industryName;
     private String terminalType;
     private Integer status;
+    private Integer organizationID;
 
     public String getLoginName () {
         return loginName;
@@ -52,5 +53,13 @@ public class IndustryCriteria extends BaseCriteria {
 
     public void setStatus (Integer status) {
         this.status = status;
+    }
+
+    public Integer getOrganizationID() {
+        return organizationID;
+    }
+
+    public void setOrganizationID(Integer organizationID) {
+        this.organizationID = organizationID;
     }
 }

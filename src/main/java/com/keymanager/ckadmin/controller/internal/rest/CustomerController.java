@@ -86,10 +86,16 @@ public class CustomerController extends SpringMVCBaseController {
             if (customerCriteria.getOrderMode() != null && customerCriteria.getOrderMode() == 0) {
                 page.setAsc(false);
             }
-            String loginName = (String) session.getAttribute("username");
-            boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(loginName));
-            if (!isDepartmentManager) {
-                customerCriteria.setLoginName(loginName);
+//            String loginName = (String) session.getAttribute("username");
+//            boolean isDepartmentManager = userRoleService.isDepartmentManager(userInfoService.getUuidByLoginName(loginName));
+//            if (!isDepartmentManager) {
+//                customerCriteria.setLoginName(loginName);
+//            }
+            UserInfo userInfo = userInfoService.getUserInfo(getCurrentUser().getLoginName());
+            if (userInfo.getDataAuthority().equals("self")){
+                customerCriteria.setLoginName(userInfo.getLoginName());
+            }else if (userInfo.getDataAuthority().equals("department")){
+                customerCriteria.setOrganizationID(userInfo.getOrganizationID());
             }
             page = customerService.searchCustomers(page, customerCriteria);
             List<Customer> customers = page.getRecords();
@@ -268,10 +274,16 @@ public class CustomerController extends SpringMVCBaseController {
     public ResultBean getActiveCustomers(CustomerCriteria customerCriteria, HttpSession session) {
         ResultBean resultBean = new ResultBean(200, "success");
         try {
-            Set<String> roles = getCurrentUser().getRoles();
-            if (!roles.contains("DepartmentManager")) {
-                String loginName = (String) session.getAttribute("username");
-                customerCriteria.setLoginName(loginName);
+//            Set<String> roles = getCurrentUser().getRoles();
+//            if (!roles.contains("DepartmentManager")) {
+//                String loginName = (String) session.getAttribute("username");
+//                customerCriteria.setLoginName(loginName);
+//            }
+            UserInfo userInfo = userInfoService.getUserInfo(getCurrentUser().getLoginName());
+            if (userInfo.getDataAuthority().equals("self")){
+                customerCriteria.setLoginName(userInfo.getLoginName());
+            }else if (userInfo.getDataAuthority().equals("department")){
+                customerCriteria.setOrganizationID(userInfo.getOrganizationID());
             }
             List<Customer> customerList = customerService.getActiveCustomerSimpleInfo(customerCriteria);
             resultBean.setData(customerList);

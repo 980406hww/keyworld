@@ -315,7 +315,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
 
     function init_belong_user() {
         $.ajax({
-            url: '/internal/customer/getActiveUsers',
+            url: '/internal/user/getActiveUsersByAuthority',
             dataType: 'json',
             type: 'get',
             success: function (res) {
@@ -1301,7 +1301,6 @@ function generate_customer_info(contactPerson, data, terminalType, type, custome
                 if (data.noEffectStopCount > 0){
                     htm += '<span>无效暂停 : <a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '/noEffectStopCount","' + title + '","' + id + '")>' + data.noEffectStopCount + '  </a></span>';
                 }
-                htm += '<br>';
             }
         } else {
             htm += '<a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '","' + title + '","' + id + '")><span>查看' + terminalTypeName + '关键字</span></a>';

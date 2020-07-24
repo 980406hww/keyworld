@@ -57,6 +57,9 @@ public class QZSettingController extends SpringMVCBaseController {
     @Resource(name = "qzChargeRuleService2")
     private QZChargeRuleService qzChargeRuleService;
 
+    @Resource(name = "userInfoService2")
+    private UserInfoService userInfoService;
+
     /**
      * 获取网站分类标签
      */
@@ -87,8 +90,14 @@ public class QZSettingController extends SpringMVCBaseController {
         resultBean.setCode(200);
         try {
             CustomerCriteria customerCriteria = new CustomerCriteria();
-            if (!getCurrentUser().getRoles().contains("DepartmentManager")) {
-                customerCriteria.setLoginName((String) request.getSession().getAttribute("username"));
+//            if (!getCurrentUser().getRoles().contains("DepartmentManager")) {
+//                customerCriteria.setLoginName((String) request.getSession().getAttribute("username"));
+//            }
+            UserInfo userInfo = userInfoService.getUserInfo(getCurrentUser().getLoginName());
+            if (userInfo.getDataAuthority().equals("self")){
+                customerCriteria.setLoginName(userInfo.getLoginName());
+            }else if (userInfo.getDataAuthority().equals("department")){
+                customerCriteria.setOrganizationID(userInfo.getOrganizationID());
             }
             resultBean.setData(customerService.getActiveCustomerSimpleInfo(customerCriteria));
         } catch (Exception e) {
@@ -179,11 +188,16 @@ public class QZSettingController extends SpringMVCBaseController {
         try {
             Page<QZSetting> page = new Page<>(qzSettingCriteria.getPage(),
                 qzSettingCriteria.getLimit());
-            if (!getCurrentUser().getRoles().contains("DepartmentManager")) {
-                String loginName = (String) request.getSession().getAttribute("username");
-                qzSettingCriteria.setLoginName(loginName);
+//            if (!getCurrentUser().getRoles().contains("DepartmentManager")) {
+//                String loginName = (String) request.getSession().getAttribute("username");
+//                qzSettingCriteria.setLoginName(loginName);
+//            }
+            UserInfo userInfo = userInfoService.getUserInfo(getCurrentUser().getLoginName());
+            if (userInfo.getDataAuthority().equals("self")){
+                qzSettingCriteria.setLoginName(userInfo.getLoginName());
+            }else if (userInfo.getDataAuthority().equals("department")){
+                qzSettingCriteria.setOrganizationID(Long.valueOf(userInfo.getOrganizationID()));
             }
-            request.getSession().getAttribute("username");
             page = qzSettingService.searchQZSetting(page, qzSettingCriteria);
             resultBean.setData(page.getRecords());
             resultBean.setCount(page.getTotal());
@@ -380,9 +394,15 @@ public class QZSettingController extends SpringMVCBaseController {
         resultBean.setCode(200);
         CustomerCriteria customerCriteria = new CustomerCriteria();
         customerCriteria.setEntryType("qz");
-        if (!getCurrentUser().getRoles().contains("DepartmentManager")) {
-            String loginName = (String) request.getSession().getAttribute("username");
-            customerCriteria.setLoginName(loginName);
+//        if (!getCurrentUser().getRoles().contains("DepartmentManager")) {
+//            String loginName = (String) request.getSession().getAttribute("username");
+//            customerCriteria.setLoginName(loginName);
+//        }
+        UserInfo userInfo = userInfoService.getUserInfo(getCurrentUser().getLoginName());
+        if (userInfo.getDataAuthority().equals("self")){
+            customerCriteria.setLoginName(userInfo.getLoginName());
+        }else if (userInfo.getDataAuthority().equals("department")){
+            customerCriteria.setOrganizationID(userInfo.getOrganizationID());
         }
         Map<String, Object> map = new HashMap<>(2);
         try {

@@ -21,6 +21,7 @@ public class CustomerCriteria extends BaseCriteria {
     private String entryType;
     private Integer status;
     private String terminalType;
+    private Integer organizationID;
 
     public String getContactPerson() {
         return contactPerson;
@@ -100,5 +101,13 @@ public class CustomerCriteria extends BaseCriteria {
 
     public void setSaleRemark(String saleRemark) {
         this.saleRemark = saleRemark;
+    }
+
+    public Integer getOrganizationID() {
+        return organizationID;
+    }
+
+    public void setOrganizationID(Integer organizationID) {
+        this.organizationID = organizationID;
     }
 }

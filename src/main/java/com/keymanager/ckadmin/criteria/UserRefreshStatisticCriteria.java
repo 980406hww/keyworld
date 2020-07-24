@@ -17,6 +17,8 @@ public class UserRefreshStatisticCriteria extends BaseCriteria {
 
     private String userName;
 
+    private Integer organizationID;
+
     public String getEntryType() {
         return entryType;
     }
@@ -63,5 +65,13 @@ public class UserRefreshStatisticCriteria extends BaseCriteria {
 
     public void setHistoryDate(String historyDate) {
         this.historyDate = historyDate;
+    }
+
+    public Integer getOrganizationID() {
+        return organizationID;
+    }
+
+    public void setOrganizationID(Integer organizationID) {
+        this.organizationID = organizationID;
     }
 }

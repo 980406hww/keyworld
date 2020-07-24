@@ -72,6 +72,9 @@
         <if test="customerCriteria.saleRemark != null and customerCriteria.saleRemark != ''">
             AND c.fSaleRemark LIKE CONCAT(#{customerCriteria.saleRemark},'%')
         </if>
+        <if test="customerCriteria.organizationID != null">
+            AND u.fOrganizationID = #{customerCriteria.organizationID}
+        </if>
         ORDER BY c.fUpdateTime DESC
     </select>
 
@@ -79,8 +82,10 @@
         SELECT
         c.fContactPerson AS 'contactPerson',
         c.fUuid AS 'uuid'
-        FROM t_customer c
+        FROM t_customer c,
+        t_userinfo u
         WHERE c.fStatus = 1
+        AND u.fLoginName = c.fUserID
         <if test="customerCriteria.loginName != null and customerCriteria.loginName != ''">
             AND c.fUserID  = #{customerCriteria.loginName}
         </if>
@@ -99,7 +104,9 @@
                 </otherwise>
             </choose>)
         </if>
-        order by c.fContactPerson
+        <if test="customerCriteria.organizationID != null">
+            AND u.fOrganizationID = #{customerCriteria.organizationID}
+        </if>
     </select>
 
     <select id="selectLastId" resultType="long">

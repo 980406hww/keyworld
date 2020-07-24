@@ -73,6 +73,8 @@ public class KeywordCriteria extends BaseCriteria {
     private Integer gtNoEffectDays;//无效操作天数起始
     private Integer ltNoEffectDays;//无效操作天数结束
 
+    private Integer organizationID;
+
     public Long getQzUuid() {
         return qzUuid;
     }
@@ -483,5 +485,13 @@ public class KeywordCriteria extends BaseCriteria {
 
     public void setLtNoEffectDays(Integer ltNoEffectDays) {
         this.ltNoEffectDays = ltNoEffectDays;
+    }
+
+    public Integer getOrganizationID() {
+        return organizationID;
+    }
+
+    public void setOrganizationID(Integer organizationID) {
+        this.organizationID = organizationID;
     }
 }

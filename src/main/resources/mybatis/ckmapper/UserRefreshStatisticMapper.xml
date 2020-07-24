@@ -18,14 +18,16 @@
         SUM(ck.fOptimizedCount) AS "totalOptimizedCount",
         SUM(ck.fOptimizeRemainingCount) AS "needOptimizeCount",
         SUM(ck.fQueryCount) AS "queryCount"
-        FROM t_customer_keyword ck, t_customer tc
+        FROM t_customer_keyword ck, t_customer tc, t_userinfo tu
         WHERE ck.fCustomerUuid = tc.fUuid
+        AND tu.fLoginName = tc.fUserID
         AND ck.fStatus = 1
         <if test="criteria.groupName != null and criteria.groupName != ''">AND ck.fOptimizeGroupName = #{criteria.groupName}</if>
         <if test="criteria.terminalType != null and criteria.terminalType != ''">AND ck.fTerminalType = #{criteria.terminalType}</if>
         <if test="criteria.entryType != null and criteria.entryType !=''">AND ck.fType = #{criteria.entryType}</if>
         AND EXISTS(SELECT 1 FROM t_userinfo tu WHERE tc.fUserID = tu.fLoginName)
         <if test="criteria.userName != null and criteria.userName != ''">AND tc.fUserID = #{criteria.userName}</if>
+        <if test="criteria.organizationID != null">AND tu.fOrganizationID = #{criteria.organizationID}</if>
         <if test="criteria.customerName != null and criteria.customerName !=''">AND tc.fContactPerson like concat('%', #{criteria.customerName}, '%')</if>
         GROUP BY tc.fUserID, ck.fType, ck.fTerminalType
         ORDER BY tc.fUserID;
@@ -47,13 +49,15 @@
         ursi.fUnworkMachineCount AS 'unworkMachineCount',
         ursi.fMaxInvalidCount AS 'maxInvalidCount',
         ursi.fIdleTotalMinutes AS 'idleTotalMinutes'
-        FROM t_user_refresh_statistic_info ursi
-        WHERE ursi.fCreateDate = date_format(#{criteria.historyDate}, '%Y-%m-%d')
+        FROM t_user_refresh_statistic_info ursi, t_userinfo u
+        WHERE ursi.fUserName = u.fLoginName
+        AND ursi.fCreateDate = date_format(#{criteria.historyDate}, '%Y-%m-%d')
         AND ursi.fType = #{criteria.entryType}
         AND ursi.fTerminalType = #{criteria.terminalType}
-        <if test="criteria.groupName != null and criteria.groupName != '' ">and fGroupName = #{criteria.groupName}</if>
-        <if test="criteria.userName != null and criteria.userName != ''">and fUserName = #{criteria.userName}</if>
-        <if test="criteria.customerName != null and criteria.customerName != ''">and fCustomerName = #{criteria.customerName}</if>
+        <if test="criteria.groupName != null and criteria.groupName != '' ">and ursi.fGroupName = #{criteria.groupName}</if>
+        <if test="criteria.userName != null and criteria.userName != ''">and ursi.fUserName = #{criteria.userName}</if>
+        <if test="criteria.customerName != null and criteria.customerName != ''">and ursi.fCustomerName = #{criteria.customerName}</if>
+        <if test="criteria.organizationID != null">AND tu.fOrganizationID = #{criteria.organizationID}</if>
         GROUP BY ursi.fUuid
         ORDER BY ursi.fUserName
     </select>

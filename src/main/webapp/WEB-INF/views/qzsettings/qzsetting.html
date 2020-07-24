@@ -762,14 +762,12 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <@shiro.hasPermission name = "/internal/qzsetting/deleteQZSettings">
                                         <div class="layui-inline">
                                             <label class="layui-form-label">用户</label>
                                             <div class="layui-input-inline">
                                                 <input type="text" id="tree" lay-filter="tree" class="layui-input">
                                             </div>
                                         </div>
-                                        </@shiro.hasPermission>
                                     <div class="layui-inline">
                                         <label class="layui-form-label">分类标签</label>
                                         <div class="layui-input-inline">
@@ -949,10 +947,9 @@
             });
         }
 
-        <@shiro.hasPermission name = "/internal/qzsetting/deleteQZSettings">
         treeSelect.render({
             elem: '#tree',
-            data: '/internal/user/trees2',
+            data: '/internal/user/treeByAuthority',
             type: 'get',
             placeholder: '用户名称',
             click: function (d) {
@@ -967,7 +964,6 @@
             success: function (d) {
             }
         });
-        </@shiro.hasPermission>
 
         window.checkDomain = function () {
             var domain = $("#domain").val().replace(/\s*/g, "");

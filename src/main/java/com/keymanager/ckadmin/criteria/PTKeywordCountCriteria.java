@@ -9,6 +9,7 @@ public class PTKeywordCountCriteria extends BaseCriteria {
     private String searchEngine;
     private String entryType;
     private String terminalType;
+    private Integer organizationID;
 
     public String getEntryType() {
         return entryType;
@@ -48,5 +49,13 @@ public class PTKeywordCountCriteria extends BaseCriteria {
 
     public void setTerminalType(String terminalType) {
         this.terminalType = terminalType;
+    }
+
+    public Integer getOrganizationID() {
+        return organizationID;
+    }
+
+    public void setOrganizationID(Integer organizationID) {
+        this.organizationID = organizationID;
     }
 }

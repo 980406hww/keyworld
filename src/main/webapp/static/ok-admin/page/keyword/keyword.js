@@ -105,7 +105,7 @@ layui.use(['element', 'table', 'form', 'jquery', 'laydate', 'okLayer', 'layer','
     function init_belong_user() {
         var userName= $("#userName").val();
         $.ajax({
-            url: '/internal/customer/getActiveUsers',
+            url: '/internal/user/getActiveUsersByAuthority',
             dataType: 'json',
             type: 'get',
             success: function (res) {

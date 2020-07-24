@@ -1,0 +1,1 @@
+ALTER TABLE t_userinfo ADD fDataAuthority varchar(40) NOT NULL DEFAULT 'self' comment '数据权限属性：self 只看自己、department 查看部门、all 查看所有';
