@@ -55,7 +55,7 @@
         <if test="keywordInfoCriteria.createTime != null and keywordInfoCriteria.createTime != ''">
             AND kif.fCreateTime BETWEEN CONCAT(#{keywordInfoCriteria.createTime}, ' 00:00:00') AND CONCAT(#{keywordInfoCriteria.createTime}, ' 23:59:59')
         </if>
-        ORDER BY createTime DESC
+        ORDER BY fCreateTime DESC
     </select>
 
 </mapper>

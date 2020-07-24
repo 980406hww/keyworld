@@ -1427,33 +1427,37 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     @Override
     public void addCustomerKeywordsFromSeoSystem(List<PtCustomerKeyword> ptKeywords, Long customerUuid, String optimizeGroupName, String machineGroupName) {
         for (PtCustomerKeyword ptKeyword : ptKeywords) {
-            ptKeyword.setStatus(1);
-            CustomerKeyword customerKeyword = new CustomerKeyword();
-            customerKeyword.setCustomerUuid(customerUuid);
-            customerKeyword.setType("pt");
-            customerKeyword.setStatus(1);
-            customerKeyword.setKeyword(ptKeyword.getKeyword());
-            customerKeyword.setUrl(ptKeyword.getUrl());
-            customerKeyword.setSearchEngine(ptKeyword.getSearchEngine());
-            customerKeyword.setTerminalType(ptKeyword.getTerminalType());
-            customerKeyword.setOriginalUrl(ptKeyword.getUrl());
-            customerKeyword.setCurrentPosition(ptKeyword.getCurrentPosition());
-            customerKeyword.setTitle(ptKeyword.getTitle());
+            CustomerKeyword existingKeyword = ptKeyword.getCustomerKeywordId() == null ? null : customerKeywordDao.selectById(ptKeyword.getCustomerKeywordId());
 
-            Double fee = ptKeyword.getPricePreDay();
-            customerKeyword.setPositionFirstFee(fee);
-            customerKeyword.setPositionSecondFee(fee);
-            customerKeyword.setPositionThirdFee(fee);
-            customerKeyword.setPositionForthFee(fee);
-            customerKeyword.setPositionFifthFee(fee);
-            customerKeyword.setPositionFirstPageFee(fee);
+            if (null == existingKeyword) {
+                ptKeyword.setStatus(1);
+                CustomerKeyword customerKeyword = new CustomerKeyword();
+                customerKeyword.setCustomerUuid(customerUuid);
+                customerKeyword.setType("pt");
+                customerKeyword.setStatus(1);
+                customerKeyword.setKeyword(ptKeyword.getKeyword());
+                customerKeyword.setUrl(ptKeyword.getUrl());
+                customerKeyword.setSearchEngine(ptKeyword.getSearchEngine());
+                customerKeyword.setTerminalType(ptKeyword.getTerminalType());
+                customerKeyword.setOriginalUrl(ptKeyword.getUrl());
+                customerKeyword.setCurrentPosition(ptKeyword.getCurrentPosition());
+                customerKeyword.setTitle(ptKeyword.getTitle());
 
-            customerKeyword.setMachineGroup(machineGroupName);
-            customerKeyword.setOptimizeGroupName(optimizeGroupName);
-            setCustomerKeywordProperValue(customerKeyword);
+                Double fee = ptKeyword.getPricePreDay();
+                customerKeyword.setPositionFirstFee(fee);
+                customerKeyword.setPositionSecondFee(fee);
+                customerKeyword.setPositionThirdFee(fee);
+                customerKeyword.setPositionForthFee(fee);
+                customerKeyword.setPositionFifthFee(fee);
+                customerKeyword.setPositionFirstPageFee(fee);
 
-            customerKeywordDao.insert(customerKeyword);
-            ptKeyword.setCustomerKeywordId(customerKeyword.getUuid());
+                customerKeyword.setMachineGroup(machineGroupName);
+                customerKeyword.setOptimizeGroupName(optimizeGroupName);
+                setCustomerKeywordProperValue(customerKeyword);
+
+                customerKeywordDao.insert(customerKeyword);
+                ptKeyword.setCustomerKeywordId(customerKeyword.getUuid());
+            }
         }
     }
 
