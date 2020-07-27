@@ -45,6 +45,7 @@
         });
         $("#userEditSex").val('${user.sex}');
         $("#userEditStatus").val('${user.status}');
+        $("#userDataAuthority").val('${user.dataAuthority}');
     });
 </script>
 <div class="easyui-layout" data-options="fit:true,border:false">
@@ -85,6 +86,14 @@
                     <td><select id="userEditStatus" name="status" value="${user.status}" class="easyui-combobox" data-options="width:140,height:29,editable:false,panelHeight:'auto'">
                             <option value="0">正常</option>
                             <option value="1">停用</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td>数据权限</td>
+                    <td><select id="userDataAuthority" name="dataAuthority" value="${user.dataAuthority}" class="easyui-combobox" data-options="width:140,height:29,editable:false,panelHeight:'auto'">
+                        <option value="self">仅自己</option>
+                        <option value="department">全部门</option>
+                        <option value="all">全公司</option>
                     </select></td>
                 </tr>
             </table>

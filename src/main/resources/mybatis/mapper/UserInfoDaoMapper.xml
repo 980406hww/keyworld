@@ -13,6 +13,7 @@
         u.fEmail AS "email",
         u.fSalt AS 'salt',
         u.fStatus AS 'status',
+        u.fDataAuthority AS 'dataAuthority',
         u.fResetPasswordApplicationTime AS "resetPasswordApplicationTime",
         u.fUpdateTime AS 'updateTime',
         u.fCreateTime AS 'createTime'
@@ -29,6 +30,7 @@
         <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="phone" property="phone" jdbcType="VARCHAR"/>
         <result column="organizationName" property="organizationName" jdbcType="VARCHAR"/>
+        <result column="dataAuthority" property="dataAuthority" jdbcType="VARCHAR"/>
 
         <collection property="rolesList" ofType="Role">
             <id column="uuid" property="uuid"/>
@@ -47,6 +49,7 @@
         u.fOrganizationID AS `organizationID`,
         u.fPhone AS `phone`,
         u.fcreateTime AS `createTime`,
+        u.fDataAuthority AS `dataAuthority`,
         og.fOrganizationName AS `organizationName`,
         r.fUuid AS `uuid`,
         r.fRoleName AS `roleName`

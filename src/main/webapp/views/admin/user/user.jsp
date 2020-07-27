@@ -158,7 +158,7 @@
         parent.$.modalDialog({
             title : '编辑',
             width : 480,
-            height : 250,
+            height : 300,
             href : '${path }/user/editPage?id=' + id,
             buttons : [ {
                 text : '确定',

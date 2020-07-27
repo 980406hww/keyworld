@@ -44,6 +44,9 @@ public class UserInfo extends BaseEntity {
 	@TableField(value = "fResetPasswordApplicationTime")
 	private Date resetPasswordApplicationTime;
 
+	@TableField(value = "fDataAuthority")
+	private String dataAuthority;
+
 	@TableField(exist = false)
 	private List<Role> roleList;
 
@@ -134,5 +137,13 @@ public class UserInfo extends BaseEntity {
 
 	public void setResetPasswordApplicationTime(Date resetPasswordApplicationTime) {
 		this.resetPasswordApplicationTime = resetPasswordApplicationTime;
+	}
+
+	public String getDataAuthority() {
+		return dataAuthority;
+	}
+
+	public void setDataAuthority(String dataAuthority) {
+		this.dataAuthority = dataAuthority;
 	}
 }

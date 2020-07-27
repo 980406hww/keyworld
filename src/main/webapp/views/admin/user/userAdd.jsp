@@ -82,6 +82,14 @@
                         </select>
                     </td>
                 </tr>
+                <tr>
+                    <td>数据权限</td>
+                    <td><select id="userDataAuthority" name="dataAuthority" class="easyui-combobox" data-options="width:140,height:29,editable:false,panelHeight:'auto'">
+                        <option value="self">仅自己</option>
+                        <option value="department">全部门</option>
+                        <option value="all">全公司</option>
+                    </select></td>
+                </tr>
             </table>
         </form>
     </div>

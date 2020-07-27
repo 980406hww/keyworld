@@ -43,6 +43,8 @@ public class UserVO implements Serializable {
 
 	private Date createTime;
 
+	private String dataAuthority;
+
 	private List<Role> rolesList;
 
 	private String organizationName;
@@ -146,6 +148,14 @@ public class UserVO implements Serializable {
 
 	public void setOrganizationName(String organizationName) {
 		this.organizationName = organizationName;
+	}
+
+	public String getDataAuthority() {
+		return dataAuthority;
+	}
+
+	public void setDataAuthority(String dataAuthority) {
+		this.dataAuthority = dataAuthority;
 	}
 
 	public String getRoleIds() {
