@@ -41,11 +41,5 @@ public class TerminalRefreshStatInfoSchedule {
         } catch (Exception e) {
             logger.error("machineGroup refresh WorkInfo is error" + e.getMessage());
         }
-        logger.info("============= "+" Change Optimize Group Name Task "+"===================");
-        try {
-            customerKeywordService.changeOptimizeGroupName();
-        } catch (Exception e) {
-            logger.error(" Change Optimize Group Name is error" + e.getMessage());
-        }
     }
 }

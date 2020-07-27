@@ -75,13 +75,11 @@
                                             <option value=''>搜索引擎</option>
                                         </select>
                                     </div>
-                                    <@shiro.hasRole name="DepartmentManager">
                                     <div class="layui-inline">
                                         <select name="userName" id="userName">
                                             <option value="<#if userName?exists>${userName}<#else></#if>"><#if userName?exists>${userName}<#else>所属用户</#if></option>
                                         </select>
                                     </div>
-                                    </@shiro.hasRole>
                                     <div class="layui-inline" style="width: 140px">
                                         <input type="text" name="keyword" id="keyword" value="<#if Keyword?exists>${Keyword}<#else></#if>" placeholder="请输入关键字"
                                                onkeyup="this.value = this.value.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');"
@@ -349,7 +347,7 @@
         terminal: terminal225
     };
 </script>
-<script src="/static/ok-admin/page/keyword/keyword.js"></script>
+<script src="/static/ok-admin/page/keyword/keyword.js?v=1"></script>
 <#include  "./keywordTpl.html" />
 </body>
 </html>

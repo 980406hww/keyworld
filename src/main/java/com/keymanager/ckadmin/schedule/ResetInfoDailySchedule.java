@@ -1,17 +1,18 @@
 package com.keymanager.ckadmin.schedule;
 
 import com.keymanager.ckadmin.entity.Config;
-import com.keymanager.ckadmin.util.Constants;
 import com.keymanager.ckadmin.service.ConfigService;
-import com.keymanager.monitoring.service.CustomerKeywordInvalidCountLogService;
 import com.keymanager.ckadmin.service.CustomerKeywordService;
+import com.keymanager.ckadmin.util.Constants;
+import com.keymanager.monitoring.service.CustomerKeywordInvalidCountLogService;
 import com.keymanager.monitoring.service.MachineInfoService;
 import com.keymanager.monitoring.service.PerformanceService;
-import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 @Component
 public class ResetInfoDailySchedule {
@@ -62,6 +63,13 @@ public class ResetInfoDailySchedule {
 			logger.info("============= Reset information Daily Task starting 6===================");
 			machineInfoService.resetOptimizationInfo();
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "ended");
+
+			logger.info("============= "+" Change Optimize Group Name Task "+"===================");
+			try {
+				customerKeywordService.changeOptimizeGroupName();
+			} catch (Exception e) {
+				logger.error(" Change Optimize Group Name is error" + e.getMessage());
+			}
 			logger.info("============= "+" End Reset information Daily Task "+"===================");
 		} catch (Exception e) {
 			performanceService.addPerformanceLog("ResetInfoDailySchedule", System.currentTimeMillis() - startMilleSeconds, "error occured");

@@ -136,13 +136,11 @@
                                     <div class="layui-inline">
                                         <input type="text" name="groupName" id="groupName" autocomplete="off" placeholder="请输入分组查询" class="layui-input">
                                     </div>
-                                    <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
                                     <div class="layui-inline">
                                         <select name="userName" id="userName">
                                             <option value="">用户名</option>
                                         </select>
                                     </div>
-                                    </@shiro.hasPermission>
                                     <div class="layui-inline">
                                         <input type="text" name="customerName" id="customerName" autocomplete="off" placeholder="请输入客户名称" class="layui-input">
                                     </div>
@@ -195,13 +193,12 @@
             , max: 'nowTime'
         });
 
-    <@shiro.hasPermission name="/internal/qzsetting/deleteQZSettings">
         init__user_list();
 
         function init__user_list() {
             $("#userName").empty();
             $.ajax({
-                url: '/internal/customer/getActiveUsers',
+                url: '/internal/user/getActiveUsersByAuthority',
                 dataType: 'json',
                 type: 'get',
                 success: function (res) {
@@ -221,7 +218,6 @@
                 }
             });
         }
-    </@shiro.hasPermission>
 
     <@shiro.hasPermission name = "/internal/customerKeyword/searchCustomerKeywordLists" >
         window.searchCustomerKeywords = function (userName) {

@@ -1,9 +1,8 @@
 package com.keymanager.ckadmin.service;
 
 import com.keymanager.ckadmin.entity.Config;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
+import java.util.*;
 
 public interface ConfigService {
 
@@ -32,4 +31,7 @@ public interface ConfigService {
     void evictAllConfigCache();
 
     Integer getOnceGetKeywordNum();
+
+    List<String> getMonitorOptimizeGroupName(String configType);
+
 }

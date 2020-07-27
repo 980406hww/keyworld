@@ -15,6 +15,7 @@
         u.fSalt AS 'salt',
         u.fStatus AS 'status',
         u.fResetPasswordApplicationTime AS 'resetPasswordApplicationTime',
+        u.fDataAuthority AS 'dataAuthority',
         u.fUpdateTime AS 'updateTime',
         u.fCreateTime AS 'createTime'
     </sql>
@@ -26,6 +27,16 @@
         t_userinfo u
         WHERE u.fStatus = 0
         AND u.fLoginName != #{externalLoginName}
+    </select>
+
+    <select id="findActiveUsersByDepartment" resultType="com.keymanager.ckadmin.entity.UserInfo">
+        SELECT
+        <include refid="colID" />
+        FROM
+        t_userinfo u
+        WHERE u.fStatus = 0
+        AND u.fLoginName != #{externalLoginName}
+        AND u.fOrganizationID = #{organizationId}
     </select>
 
     <select id="selectUserInfos" resultType="com.keymanager.ckadmin.entity.UserInfo">

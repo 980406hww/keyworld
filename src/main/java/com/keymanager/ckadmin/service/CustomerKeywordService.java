@@ -2,37 +2,15 @@ package com.keymanager.ckadmin.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
-import com.keymanager.ckadmin.criteria.CustomerKeywordCleanTitleCriteria;
-import com.keymanager.ckadmin.criteria.CustomerKeywordUpdateStatusCriteria;
-import com.keymanager.ckadmin.criteria.GroupSettingCriteria;
-import com.keymanager.ckadmin.criteria.KeywordCriteria;
-import com.keymanager.ckadmin.criteria.KeywordStandardCriteria;
-import com.keymanager.ckadmin.criteria.PTKeywordCountCriteria;
-import com.keymanager.ckadmin.criteria.QZRateKewordCountCriteria;
-import com.keymanager.ckadmin.criteria.QZSettingExcludeCustomerKeywordsCriteria;
-import com.keymanager.ckadmin.criteria.RefreshStatisticsCriteria;
+import com.keymanager.ckadmin.criteria.*;
 import com.keymanager.ckadmin.entity.CustomerKeyword;
 import com.keymanager.ckadmin.entity.MachineInfo;
-import com.keymanager.ckadmin.vo.CodeNameVo;
-import com.keymanager.ckadmin.vo.CustomerKeyWordCrawlRankVO;
-import com.keymanager.ckadmin.vo.CustomerKeywordIncludeVO;
-import com.keymanager.ckadmin.vo.CustomerKeywordSummaryInfoVO;
-import com.keymanager.ckadmin.vo.CustomerKeywordUploadVO;
-import com.keymanager.ckadmin.vo.ExternalCustomerKeywordIndexVO;
-import com.keymanager.ckadmin.vo.GroupVO;
-import com.keymanager.ckadmin.vo.KeywordStandardVO;
-import com.keymanager.ckadmin.vo.KeywordStatusBatchUpdateVO;
-
-import com.keymanager.ckadmin.vo.OptimizationMachineVO;
-import com.keymanager.ckadmin.vo.OptimizationVO;
-import com.keymanager.ckadmin.vo.PTkeywordCountVO;
-import com.keymanager.ckadmin.vo.QZRateKeywordCountVO;
-import com.keymanager.ckadmin.vo.SearchEngineResultVO;
+import com.keymanager.ckadmin.vo.*;
 import com.keymanager.monitoring.entity.PtCustomerKeyword;
 import com.keymanager.monitoring.entity.SysCustomerKeyword;
 import com.keymanager.monitoring.vo.UpdateOptimizedCountVO;
 import com.keymanager.value.CustomerKeywordForCapturePosition;
-import com.keymanager.ckadmin.vo.MachineGroupQueueVO;
+
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
@@ -202,4 +180,6 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
     int getNotResetKeywordCount();
 
     void updateRepeatedCustomerKeywordOptimizeStatus(int invalidMaxDays);
+
+    void changeOptimizeGroupName();
 }

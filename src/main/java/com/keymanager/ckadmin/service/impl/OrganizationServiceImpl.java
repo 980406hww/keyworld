@@ -36,6 +36,17 @@ public class OrganizationServiceImpl
         return this.treeFixDataInfo2(organizationList);
     }
 
+    @Override
+    public List<UserTree> selectUserFulTreeByOrganizationId (Integer organizationId){
+        List<Organization> organizationList = new ArrayList<>();
+        Organization organization = new Organization();
+        organization.setOrganizationName("请选择用户");
+        organization.setId(0L);
+        organizationList.add(organization);
+        organizationList.add(organizationDao.selectOrganizationUserFulByOrganizationId(organizationId));
+        return this.treeFixDataInfo2(organizationList);
+    }
+
     private List<Tree> treeFixDataInfo(List<Organization> organizationList) {
         List<Tree> trees = new ArrayList<>();
         if (organizationList != null) {

@@ -4,7 +4,9 @@ import com.keymanager.ckadmin.common.result.ResultBean;
 import com.keymanager.ckadmin.common.shiro.ShiroUser;
 import com.keymanager.ckadmin.controller.SpringMVCBaseController;
 import com.keymanager.ckadmin.criteria.UserRefreshStatisticCriteria;
+import com.keymanager.ckadmin.entity.UserInfo;
 import com.keymanager.ckadmin.entity.UserRefreshStatisticInfo;
+import com.keymanager.ckadmin.service.UserInfoService;
 import com.keymanager.ckadmin.service.UserRefreshStatisticService;
 import com.keymanager.ckadmin.util.StringUtil;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -28,6 +30,9 @@ public class UserRefreshStatisticInfoController extends SpringMVCBaseController 
     @Resource(name = "userRefreshStatisticService")
     private UserRefreshStatisticService userRefreshStatisticService;
 
+    @Resource(name = "userInfoService2")
+    private UserInfoService userInfoService;
+
     /**
      * 跳转用户刷量统计
      */
@@ -50,10 +55,16 @@ public class UserRefreshStatisticInfoController extends SpringMVCBaseController 
             return resultBean;
         }
         try {
-            ShiroUser shiroUser = getCurrentUser();
-            Set<String> roles = shiroUser.getRoles();
-            if (!roles.contains("DepartmentManager")) {
-                criteria.setUserName(shiroUser.getLoginName());
+//            ShiroUser shiroUser = getCurrentUser();
+//            Set<String> roles = shiroUser.getRoles();
+//            if (!roles.contains("DepartmentManager")) {
+//                criteria.setUserName(shiroUser.getLoginName());
+//            }
+            UserInfo userInfo = userInfoService.getUserInfo(getCurrentUser().getLoginName());
+            if (userInfo.getDataAuthority().equals("self")){
+                criteria.setUserName(userInfo.getLoginName());
+            }else if (userInfo.getDataAuthority().equals("department")){
+                criteria.setOrganizationID(userInfo.getOrganizationID());
             }
             List<UserRefreshStatisticInfo> userRefreshStatisticInfos;
             String nowDate = DateFormatUtils.format(new Date(), "yyyy-MM-dd");
