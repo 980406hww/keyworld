@@ -183,6 +183,7 @@
                         where fCustomerUuid = #{customerUuid}
                           and fCaptureRankJobStatus = 1
                           and fExectionTime &lt; current_time()
+                          and fExectionType = 'Everyday'
                     ) AS jobCount,
                     (
                         select COUNT(1)
@@ -193,6 +194,7 @@
                           and fLastExecutionDate = current_date()
                           and fEndTime &gt; current_date()
                           and fExectionStatus = 'Complete'
+                          and fExectionType = 'Everyday'
                     ) AS completedCount
          ) AS counts
     </select>
