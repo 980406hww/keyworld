@@ -1621,8 +1621,8 @@ public class CustomerKeywordServiceImpl extends ServiceImpl<CustomerKeywordDao, 
     }
 
     @Override
-    public void updateRepeatedCustomerKeywordOptimizeStatus(int invalidMaxDays){
-        List<String> loginNames = userInfoService.selectUserLoginNamesByOrganizationName("整站销售部");
+    public void updateRepeatedCustomerKeywordOptimizeStatus(String departmentName, int invalidMaxDays){
+        List<String> loginNames = userInfoService.selectUserLoginNamesByOrganizationName(departmentName);
         List<CustomerKeywordRepeatedVO> repeatedKeywords = customerKeywordDao.getRepeatedKeyword(invalidMaxDays, loginNames);
         List<Long> updateKeywordUuids = new ArrayList<>();
         for (CustomerKeywordRepeatedVO repeatedKeyword: repeatedKeywords){

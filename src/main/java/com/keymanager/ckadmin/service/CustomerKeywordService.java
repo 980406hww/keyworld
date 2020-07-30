@@ -179,7 +179,7 @@ public interface CustomerKeywordService extends IService<CustomerKeyword> {
 
     int getNotResetKeywordCount();
 
-    void updateRepeatedCustomerKeywordOptimizeStatus(int invalidMaxDays);
+    void updateRepeatedCustomerKeywordOptimizeStatus(String departmentName, int invalidMaxDays);
 
     void changeOptimizeGroupName();
 }
