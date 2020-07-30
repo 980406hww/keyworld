@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.controller.rest.internal;
+package com.keymanager.ckadmin.controller.internal.shiro;
 
 import com.keymanager.monitoring.entity.UserOnline;
 import com.keymanager.monitoring.service.SessionService;
@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping(value = "/internal/useronline")
 public class SessionController {
 
-    private static Logger logger = LoggerFactory.getLogger(CustomerRestController.class);
+    private static Logger logger = LoggerFactory.getLogger(SessionController.class);
 
     @Autowired
     private SessionService sessionService;

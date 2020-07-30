@@ -2,10 +2,8 @@ package com.keymanager.monitoring.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.keymanager.monitoring.controller.rest.internal.ScreenedWebsiteListCacheService;
 import com.keymanager.monitoring.criteria.ScreenedWebsiteCriteria;
 import com.keymanager.monitoring.dao.ScreenedWebsiteDao;
-import com.keymanager.monitoring.entity.CustomerKeyword;
 import com.keymanager.monitoring.entity.ScreenedWebsite;
 import com.keymanager.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
