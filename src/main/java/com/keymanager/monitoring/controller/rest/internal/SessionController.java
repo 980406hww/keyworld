@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping(value = "/internal/useronline")
 public class SessionController {
 
-    private static Logger logger = LoggerFactory.getLogger(CustomerRestController.class);
+    private static Logger logger = LoggerFactory.getLogger(SessionController.class);
 
     @Autowired
     private SessionService sessionService;

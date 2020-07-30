@@ -19,7 +19,6 @@ import javax.annotation.Resource;
 import java.util.Map;
 
 /**
- * @ClassName ExternalAlgorithmAutoTestRestController
  * @Description 算法自动测试外部接口
  * @Author lhc
  * @Date 2019/8/17 10:05
