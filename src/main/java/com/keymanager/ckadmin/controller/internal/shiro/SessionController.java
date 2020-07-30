@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.controller.rest.internal;
+package com.keymanager.ckadmin.controller.internal.shiro;
 
 import com.keymanager.monitoring.entity.UserOnline;
 import com.keymanager.monitoring.service.SessionService;
