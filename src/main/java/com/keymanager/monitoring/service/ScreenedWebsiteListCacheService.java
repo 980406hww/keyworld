@@ -1,4 +1,4 @@
-package com.keymanager.monitoring.controller.rest.internal;
+package com.keymanager.monitoring.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

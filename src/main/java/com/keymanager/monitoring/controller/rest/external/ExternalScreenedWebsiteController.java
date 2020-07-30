@@ -1,7 +1,7 @@
 package com.keymanager.monitoring.controller.rest.external;
 
 import com.keymanager.monitoring.controller.SpringMVCBaseController;
-import com.keymanager.monitoring.controller.rest.internal.ScreenedWebsiteListCacheService;
+import com.keymanager.monitoring.service.ScreenedWebsiteListCacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
