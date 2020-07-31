@@ -1299,7 +1299,7 @@ function generate_customer_info(contactPerson, data, terminalType, type, custome
                     htm += '<span>重复暂停 : <a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '/optimizeStopCount","' + title + '","' + id + '")>' + data.optimizeStopCount + '  </a></span>';
                 }
                 if (data.noEffectStopCount > 0){
-                    htm += '<span>无效暂停 : <a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '/noEffectStopCount","' + title + '","' + id + '")>' + data.noEffectStopCount + '  </a></span>';
+                    htm += '<span>上不去 : <a href="javascript:void(0)" onclick=updateOrNewTab("' + url + '/noEffectStopCount","' + title + '","' + id + '")>' + data.noEffectStopCount + '  </a></span>';
                 }
             }
         } else {

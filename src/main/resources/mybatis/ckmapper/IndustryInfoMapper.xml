@@ -20,7 +20,7 @@
         SELECT
         <include refid="selectCol"/>
         FROM t_industry_info tii,
-        u_userinfo u
+        t_userinfo u
         WHERE u.fLoginName = tii.fUserID
         <if test="industryCriteria.loginName != null and industryCriteria.loginName != ''">AND tii.fUserID = #{industryCriteria.loginName}</if>
         <if test="industryCriteria.searchEngine != null and industryCriteria.searchEngine != ''">AND tii.fSearchEngine = #{industryCriteria.searchEngine}</if>
