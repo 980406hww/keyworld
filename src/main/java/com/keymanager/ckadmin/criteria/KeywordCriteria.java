@@ -75,6 +75,8 @@ public class KeywordCriteria extends BaseCriteria {
 
     private Integer organizationID;
 
+    private Integer isTherePrice;
+
     public Long getQzUuid() {
         return qzUuid;
     }
@@ -493,5 +495,13 @@ public class KeywordCriteria extends BaseCriteria {
 
     public void setOrganizationID(Integer organizationID) {
         this.organizationID = organizationID;
+    }
+
+    public Integer getIsTherePrice() {
+        return isTherePrice;
+    }
+
+    public void setIsTherePrice(Integer isTherePrice) {
+        this.isTherePrice = isTherePrice;
     }
 }

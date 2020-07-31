@@ -189,7 +189,7 @@
                         <label class="layui-form-label">首页报价</label>
                         <div class="layui-input-block">
                             <input type="number" name="positionFirstPageFee" id="positionFirstPageFee" autocomplete="on" class="layui-input"
-                                   step="0.1" lay-verify="amount"/>
+                                   step="0.1" lay-verify="amount" oninput="getFirstPageFee(this.value)"/>
                         </div>
                     </div>
                 </div>
@@ -272,6 +272,7 @@
 
     let layui_ = null;
     let uuid_ = null;
+    let valueIsFollow = false;
 
     function initForm(data) {
         uuid_ = data.uuid;
@@ -285,11 +286,35 @@
 
     function getFirstFee(val) {
         document.getElementById('positionSecondFee').value = val;
-        document.getElementById('positionThirdFee').value = val
+        document.getElementById('positionThirdFee').value = val;
+        valueIsFollow = false;
     }
 
     function getForthFee(val) {
-        document.getElementById('positionFifthFee').value = val
+        document.getElementById('positionFifthFee').value = val;
+        valueIsFollow = false;
+    }
+
+    function getFirstPageFee(val){
+        let positionFirstFee = document.getElementById('positionFirstFee');
+        let positionSecondFee = document.getElementById('positionSecondFee');
+        let positionThirdFee = document.getElementById('positionThirdFee');
+        let positionForthFee = document.getElementById('positionForthFee');
+        let positionFifthFee = document.getElementById('positionFifthFee');
+        if ((positionFirstFee.value === 0 || positionFirstFee.value === "") &&
+            (positionSecondFee.value === 0 || positionSecondFee.value === "") &&
+            (positionThirdFee.value === 0 || positionThirdFee.value === "") &&
+            (positionForthFee.value === 0 || positionForthFee.value === "") &&
+            (positionFifthFee.value === 0 || positionFifthFee.value === "") ){
+            valueIsFollow = true;
+        }
+        if (valueIsFollow){
+            positionFirstFee.value = val;
+            positionSecondFee.value = val;
+            positionThirdFee.value = val;
+            positionForthFee.value = val;
+            positionFifthFee.value = val;
+        }
     }
 
     function setForm(layui_, uuid) {

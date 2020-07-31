@@ -567,6 +567,17 @@
         <if test="keywordCriteria.organizationID != null">
             AND u.fOrganizationID = #{keywordCriteria.organizationID}
         </if>
+        <if test="keywordCriteria.isTherePrice != null">
+            AND
+            <choose>
+                <when test="keywordCriteria.isTherePrice == 1">
+                    IFNULL( fPositionFirstFee, 0 ) + IFNULL( fPositionSecondFee, 0 ) + IFNULL( fPositionThirdFee, 0 ) + IFNULL( fPositionForthFee, 0 ) + IFNULL( fPositionFifthFee, 0 ) + IFNULL( fPositionFirstPageFee, 0 ) &gt; 0
+                </when>
+                <otherwise>
+                    IFNULL( fPositionFirstFee, 0 ) + IFNULL( fPositionSecondFee, 0 ) + IFNULL( fPositionThirdFee, 0 ) + IFNULL( fPositionForthFee, 0 ) + IFNULL( fPositionFifthFee, 0 ) + IFNULL( fPositionFirstPageFee, 0 ) &lt;= 0
+                </otherwise>
+            </choose>
+        </if>
         <if test="keywordCriteria.orderingElement != null">
             ORDER BY ${keywordCriteria.orderingElement}
         </if>
@@ -714,6 +725,17 @@
         </if>
         <if test="keywordCriteria.organizationID != null">
             AND u.fOrganizationID = #{keywordCriteria.organizationID}
+        </if>
+        <if test="keywordCriteria.isTherePrice != null">
+            AND
+            <choose>
+                <when test="keywordCriteria.isTherePrice == 1">
+                    IFNULL( fPositionFirstFee, 0 ) + IFNULL( fPositionSecondFee, 0 ) + IFNULL( fPositionThirdFee, 0 ) + IFNULL( fPositionForthFee, 0 ) + IFNULL( fPositionFifthFee, 0 ) + IFNULL( fPositionFirstPageFee, 0 ) &gt; 0
+                </when>
+                <otherwise>
+                    IFNULL( fPositionFirstFee, 0 ) + IFNULL( fPositionSecondFee, 0 ) + IFNULL( fPositionThirdFee, 0 ) + IFNULL( fPositionForthFee, 0 ) + IFNULL( fPositionFifthFee, 0 ) + IFNULL( fPositionFirstPageFee, 0 ) &lt;= 0
+                </otherwise>
+            </choose>
         </if>
     </sql>
 
