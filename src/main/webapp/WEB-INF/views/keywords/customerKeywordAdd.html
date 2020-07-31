@@ -297,23 +297,15 @@
 
     function getFirstPageFee(val){
         let positionFirstFee = document.getElementById('positionFirstFee');
-        let positionSecondFee = document.getElementById('positionSecondFee');
-        let positionThirdFee = document.getElementById('positionThirdFee');
-        let positionForthFee = document.getElementById('positionForthFee');
-        let positionFifthFee = document.getElementById('positionFifthFee');
-        if ((positionFirstFee.value === 0 || positionFirstFee.value === "") &&
-            (positionSecondFee.value === 0 || positionSecondFee.value === "") &&
-            (positionThirdFee.value === 0 || positionThirdFee.value === "") &&
-            (positionForthFee.value === 0 || positionForthFee.value === "") &&
-            (positionFifthFee.value === 0 || positionFifthFee.value === "") ){
+        if (positionFirstFee.value === 0 || positionFirstFee.value === ""){
             valueIsFollow = true;
         }
         if (valueIsFollow){
             positionFirstFee.value = val;
-            positionSecondFee.value = val;
-            positionThirdFee.value = val;
-            positionForthFee.value = val;
-            positionFifthFee.value = val;
+            document.getElementById('positionSecondFee').value = val;
+            document.getElementById('positionThirdFee').value = val;
+            document.getElementById('positionForthFee').value = val;
+            document.getElementById('positionFifthFee').value = val;
         }
     }
 

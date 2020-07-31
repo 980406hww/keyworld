@@ -174,7 +174,7 @@
                         <label class="layui-form-label">首页报价</label>
                         <div class="layui-input-block" onclick="checkItem(this)" >
                             <input type="number" name="positionFirstPageFee" id="positionFirstPageFee" placeholder="" autocomplete="off" class="layui-input"
-                                   step="0.1" lay-verify="amount"/>
+                                   step="0.1" lay-verify="amount" oninput="getFirstPageFee(this.val)"/>
                         </div>
                     </div>
                 </div>
@@ -256,6 +256,7 @@
 <script>
 
     var baseData = null;
+    let valueIsFollow = false;
 
     function initForm(data) {
         baseData = data;
@@ -316,11 +317,27 @@
         window.getFirstFee = function(val) {
             $('#positionSecondFee').val(val);
             $('#positionThirdFee').val(val);
+            valueIsFollow = false;
         };
 
         window.getForthFee = function (val) {
             $('#positionFifthFee').val(val);
+            valueIsFollow = false;
         };
+
+        window.getFirstPageFee = function (val) {
+            let positionFirstFee = document.getElementById('positionFirstFee');
+            if (positionFirstFee.value === 0 || positionFirstFee.value === ""){
+                valueIsFollow = true;
+            }
+            if (valueIsFollow){
+                document.getElementById('positionFirstFee').value = val;
+                document.getElementById('positionSecondFee').value = val;
+                document.getElementById('positionThirdFee').value = val;
+                document.getElementById('positionForthFee').value = val;
+                document.getElementById('positionFifthFee').value = val;
+            }
+        }
 
         window.checkItem = function (self) {
             var id = $(self).children()[0].id;
