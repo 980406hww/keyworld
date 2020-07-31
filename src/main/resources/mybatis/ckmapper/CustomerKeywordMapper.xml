@@ -571,10 +571,10 @@
             AND
             <choose>
                 <when test="keywordCriteria.isTherePrice == 1">
-                    IFNULL( fPositionFirstFee, 0 ) + IFNULL( fPositionSecondFee, 0 ) + IFNULL( fPositionThirdFee, 0 ) + IFNULL( fPositionForthFee, 0 ) + IFNULL( fPositionFifthFee, 0 ) + IFNULL( fPositionFirstPageFee, 0 ) &gt; 0
+                    fPositionFirstFee &gt; 0
                 </when>
                 <otherwise>
-                    IFNULL( fPositionFirstFee, 0 ) + IFNULL( fPositionSecondFee, 0 ) + IFNULL( fPositionThirdFee, 0 ) + IFNULL( fPositionForthFee, 0 ) + IFNULL( fPositionFifthFee, 0 ) + IFNULL( fPositionFirstPageFee, 0 ) &lt;= 0
+                    (fPositionFirstFee &lt;= 0 OR fPositionFirstFee IS NULL)
                 </otherwise>
             </choose>
         </if>
