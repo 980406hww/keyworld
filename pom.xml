@@ -300,7 +300,7 @@
 	    <dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
-			<version>2.2.1</version>
+			<version>2.3.2</version>
 		</dependency>
 
 		<!-- ehcache和redis必选其一，也可同时使用（需要注意） -->
