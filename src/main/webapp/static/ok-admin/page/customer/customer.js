@@ -361,6 +361,10 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
         $('#type').val(customerType);
         $('#searchBtn').click();
     };
+    window.showCustomerOderyBy = function (timeOrname){
+        $('#oderyByTimeAndName').val(timeOrname);
+        $('#searchBtn').click();
+    };
 
     form.on('checkbox(checkAll)', function (data) {
         if ($(this)[0].checked) {
@@ -375,6 +379,7 @@ layui.use(['element', 'form', 'jquery', 'laypage', 'okLayer', 'layer', 'common',
         form.render('checkbox')
 
     });
+
 
     form.on("submit(search)", function (data) {
         searchOpen = true;

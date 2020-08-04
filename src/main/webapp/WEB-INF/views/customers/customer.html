@@ -50,6 +50,14 @@
                                 <option value="测试客户">测试客户</option>
                             </select>
                         </div>
+                        <div class="layui-inline" style="width: 140px">
+                            <select name="oderyByTimeAndName" id="oderyByTimeAndName">
+                                <option value="">排序规则</option>
+                                <option value="修改时间">修改时间</option>
+                                <option value="创建时间">创建时间</option>
+                                <option value="用户名称">用户名称</option>
+                            </select>
+                        </div>
                         <@shiro.hasPermission name="/internal/customer/deleteCustomers">
                         <div class="layui-inline">
                             <select name="loginName" id="loginName">

@@ -1,7 +1,8 @@
 package com.keymanager.ckadmin.criteria;
 
 import com.keymanager.ckadmin.criteria.base.BaseCriteria;
-import java.util.List;
+
+import java.util.Date;
 
 /**
  * @ClassName CustomerCriteria
@@ -22,6 +23,15 @@ public class CustomerCriteria extends BaseCriteria {
     private Integer status;
     private String terminalType;
     private Integer organizationID;
+    private String oderyByTimeAndName;
+
+    public String getOderyByTimeAndName() {
+        return oderyByTimeAndName;
+    }
+
+    public void setOderyByTimeAndName(String oderyByTimeAndName) {
+        this.oderyByTimeAndName = oderyByTimeAndName;
+    }
 
     public String getContactPerson() {
         return contactPerson;
