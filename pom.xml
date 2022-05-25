@@ -10,7 +10,7 @@
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 		<shiro.version>1.4.2</shiro.version>
 		<ehcache.version>2.6.11</ehcache.version>
-		<springframework.version>4.3.8.RELEASE</springframework.version>
+		<springframework.version>5.2.22.RELEASE</springframework.version>
 	</properties>
 
 	<dependencies>
